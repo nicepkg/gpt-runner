@@ -2,7 +2,8 @@
   "extends": ["@antfu"],
   "rules": {
     "yml/no-empty-document": "off",
-    "react/no-unknown-property": "off"
+    "react/no-unknown-property": "off",
+    "no-console": "off"
   },
   "overrides": [
     {

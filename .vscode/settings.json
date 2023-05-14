@@ -6,7 +6,10 @@
   },
   "editor.formatOnSave": false,
   "cSpell.words": [
+    "Chatgpt",
+    "langchain",
     "nicepkg",
+    "OPENAI",
     "tagify"
   ],
   "workbench.colorCustomizations": {
