@@ -3,7 +3,8 @@
   "rules": {
     "yml/no-empty-document": "off",
     "react/no-unknown-property": "off",
-    "no-console": "off"
+    "no-console": "off",
+    "no-mixed-operators": "off"
   },
   "overrides": [
     {

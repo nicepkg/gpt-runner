@@ -2,7 +2,7 @@ import { defineBuildConfig } from 'unbuild'
 
 export default defineBuildConfig({
   entries: [
-    'client/src/index',
+    'index',
     'server/src/index',
   ],
   clean: true,

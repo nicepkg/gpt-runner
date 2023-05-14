@@ -8,8 +8,8 @@ import type { ControllerConfig } from './../types'
 export interface ChatStreamReqParams {
   messages: BaseChatMessage[]
   prompt: string
-  systemPrompt: string
-  temperature: number
+  systemPrompt?: string
+  temperature?: number
 }
 export const chatgptControllers: ControllerConfig = {
   namespacePath: '/chatgpt',
@@ -24,7 +24,7 @@ export const chatgptControllers: ControllerConfig = {
           'Connection': 'keep-alive',
         })
 
-        const { messages, prompt, systemPrompt, temperature } = req.body as ChatStreamReqParams
+        const { messages, prompt, systemPrompt, temperature = 0.7 } = req.body as ChatStreamReqParams
 
         const sendSuccessData = (options: Omit<SuccessResponse, 'type'>) => {
           return res.write(`data: ${JSON.stringify(buildSuccessResponse(options))}\n\n`)
@@ -55,6 +55,9 @@ export const chatgptControllers: ControllerConfig = {
           console.log('error', error)
         }
         finally {
+          sendSuccessData({
+            data: '[DONE]',
+          })
           res.end()
         }
       },
