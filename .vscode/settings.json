@@ -1,0 +1,17 @@
+{
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "prettier.enable": false,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
+  "editor.formatOnSave": false,
+  "cSpell.words": [
+    "nicepkg",
+    "tagify"
+  ],
+  "workbench.colorCustomizations": {
+    "activityBar.background": "#22285E",
+    "titleBar.activeBackground": "#303884",
+    "titleBar.activeForeground": "#FCFCFE"
+  }
+}

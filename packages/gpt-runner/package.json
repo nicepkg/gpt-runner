@@ -1,0 +1,50 @@
+{
+  "name": "@nicepkg/gpt-runner",
+  "version": "0.0.1",
+  "description": "",
+  "author": "Jinming Yang <2214962083@qq.com>",
+  "license": "MIT",
+  "funding": "https://github.com/sponsors/2214962083",
+  "homepage": "https://github.com/nicepkg/gpt-runner#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nicepkg/gpt-runner"
+  },
+  "sponsor": {
+    "url": "https://github.com/sponsors/2214962083"
+  },
+  "bugs": {
+    "url": "https://github.com/nicepkg/gpt-runner/issues"
+  },
+  "keywords": [
+    "gpt-runner",
+    "chatgpt",
+    "prompt",
+    "ai"
+  ],
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "require": "./dist/index.cjs",
+      "import": "./dist/index.mjs"
+    }
+  },
+  "main": "dist/index.cjs",
+  "module": "dist/index.mjs",
+  "types": "index.d.ts",
+  "files": [
+    "dist",
+    "*.d.ts"
+  ],
+  "engines": {
+    "node": ">=14"
+  },
+  "scripts": {
+    "build": "unbuild",
+    "stub": "unbuild --stub"
+  },
+  "dependencies": {
+    "@nicepkg/gpt-runner-core": "workspace:*"
+  }
+}

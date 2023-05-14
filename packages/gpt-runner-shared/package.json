@@ -1,0 +1,8 @@
+{
+  "name": "@nicepkg/gpt-runner-shared",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "@nicepkg/gpt-runner-core": "workspace:*"
+  }
+}

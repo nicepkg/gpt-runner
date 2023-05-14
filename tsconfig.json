@@ -1,0 +1,34 @@
+{
+  "compilerOptions": {
+    "target": "es2018",
+    "module": "esnext",
+    "lib": ["esnext"],
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "strict": true,
+    "strictNullChecks": true,
+    "resolveJsonModule": true,
+    "skipDefaultLibCheck": true,
+    "skipLibCheck": true,
+    "jsx": "preserve",
+    "types": [
+      "node",
+      "vite/client"
+    ],
+    "paths": {
+      "@nicepkg/gpt-runner": ["./packages/gpt-runner/src/index.ts"],
+      "@nicepkg/gpt-runner-cli": ["./packages/gpt-runner-cli/src/index.ts"],
+      "@nicepkg/gpt-runner-config": ["./packages/gpt-runner-config/src/index.ts"],
+      "@nicepkg/gpt-runner-core": ["./packages/gpt-runner-core/src/index.ts"],
+      "@nicepkg/gpt-runner-shared": ["./packages/gpt-runner-shared/src/index.ts"],
+    }
+  },
+  "exclude": [
+    "**/dist/**",
+    "**/node_modules/**",
+    "**/playground/**",
+    "**/examples/**",
+    "**/fixtures/**",
+    "**/test/dts/**"
+  ]
+}

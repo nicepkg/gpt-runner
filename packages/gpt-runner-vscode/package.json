@@ -1,0 +1,78 @@
+{
+  "publisher": "2214962083",
+  "name": "@nicepkg/gpt-runner-vscode",
+  "displayName": "GPT Runner",
+  "version": "0.0.1",
+  "private": true,
+  "description": "GPT Runner for VS Code",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nicepkg/gpt-runner",
+    "directory": "packages/gpt-runner-vscode"
+  },
+  "categories": [
+    "Other"
+  ],
+  "main": "./dist/index.js",
+  "preview": true,
+  "icon": "res/logo.png",
+  "engines": {
+    "vscode": "^1.71.0"
+  },
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "gpt-runner.reload",
+        "title": "Reload GPT Runner",
+        "category": "GPT Runner"
+      }
+    ],
+    "configuration": {
+      "type": "object",
+      "title": "GPT Runner",
+      "properties": {
+        "gpt-runner.disable": {
+          "type": "boolean",
+          "default": false,
+          "description": "Disable the GPT Runner extension"
+        },
+        "gpt-runner.languageIds": {
+          "type": [
+            "array"
+          ],
+          "items": {
+            "type": "string"
+          }
+        },
+        "gpt-runner.root": {
+          "type": [
+            "array",
+            "string"
+          ],
+          "items": {
+            "type": "string"
+          },
+          "description": "Project root that contains the GPT Runner configuration file"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch src",
+    "publish": "esno ./scripts/publish.ts"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.71.0",
+    "@nicepkg/gpt-runner": "workspace:*",
+    "esno": "^0.16.3",
+    "jiti": "^1.18.2",
+    "prettier": "^2.8.8",
+    "tsup": "^6.7.0",
+    "unconfig": "^0.3.7"
+  }
+}

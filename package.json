@@ -1,0 +1,73 @@
+{
+  "name": "gpt-runner",
+  "type": "module",
+  "version": "0.0.1",
+  "private": true,
+  "packageManager": "pnpm@8.4.0",
+  "scripts": {
+    "taze": "taze minor -wIr && pnpm -r --parallel run update-post",
+    "build": "rimraf packages/*/dist && esno scripts/copy-files.ts && pnpm -r --filter=./packages/* run build && pnpm -r run build-post",
+    "dev": "pnpm stub",
+    "play": "npm -C playground run dev",
+    "lint": "eslint --cache .",
+    "lint:fix": "pnpm lint --fix",
+    "release": "bumpp -r",
+    "stub": "pnpm -r --filter=./packages/* --parallel run stub",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest",
+    "test:update": "vitest -u",
+    "test:ci": "pnpm build && pnpm typecheck && pnpm lint && pnpm test"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "^0.38.6",
+    "@types/fs-extra": "^11.0.1",
+    "@types/node": "^18.16.4",
+    "@types/prettier": "^2.7.2",
+    "@types/react": "^18.2.6",
+    "@nicepkg/gpt-runner": "workspace:*",
+    "@nicepkg/gpt-runner-cli": "workspace:*",
+    "@nicepkg/gpt-runner-config": "workspace:*",
+    "@nicepkg/gpt-runner-core": "workspace:*",
+    "@nicepkg/gpt-runner-shared": "workspace:*",
+    "@vitejs/plugin-legacy": "^4.0.3",
+    "@vitest/ui": "^0.31.0",
+    "bumpp": "^9.1.0",
+    "eslint": "8.39.0",
+    "esno": "^0.16.3",
+    "execa": "^7.1.1",
+    "fast-glob": "^3.2.12",
+    "fs-extra": "^11.1.1",
+    "jsdom": "^22.0.0",
+    "lint-staged": "^13.2.2",
+    "msw": "1.0.1",
+    "pnpm": "8.4.0",
+    "prettier": "^2.8.8",
+    "react": "^18.2.0",
+    "rollup": "^3.21.5",
+    "semver": "^7.5.0",
+    "simple-git-hooks": "^2.8.1",
+    "taze": "^0.10.1",
+    "terser": "^5.17.1",
+    "tsup": "^6.7.0",
+    "typescript": "^5.0.4",
+    "unbuild": "^0.8.11",
+    "unplugin-auto-import": "^0.15.3",
+    "vite": "^4.3.5",
+    "vite-plugin-inspect": "^0.7.25",
+    "vite-plugin-pages": "^0.29.0",
+    "vitest": "^0.31.0"
+  },
+  "pnpm": {
+    "overrides": {
+      "magic-string": "^0.30.0"
+    }
+  },
+  "simple-git-hooks": {
+    "pre-commit": "npx lint-staged"
+  },
+  "lint-staged": {
+    "*.{js,ts,tsx,vue,md}": [
+      "eslint --cache --fix"
+    ]
+  }
+}
