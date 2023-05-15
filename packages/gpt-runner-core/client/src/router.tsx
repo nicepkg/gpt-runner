@@ -5,6 +5,7 @@ import { VSCodeProgressRing } from '@vscode/webview-ui-toolkit/react'
 import Home from './pages/home/index'
 import Error404 from './pages/error/404'
 import { useLoading } from './hooks/use-loading.hook'
+import Chat from './pages/chat'
 
 export const AppRouter: FC = () => {
   const { loading } = useLoading()
@@ -16,10 +17,7 @@ export const AppRouter: FC = () => {
         <Router>
           <Routes>
             <Route index element={<Home />} />
-
-            {/* Using path="*"" means "match anything", so this route
-        acts like a catch-all for URLs that we don't have explicit
-        routes for. */}
+            <Route path="chat" element={<Chat />} />
             <Route path="*" element={<Error404 />} />
           </Routes>
         </Router>
