@@ -1,17 +1,9 @@
 import { EventEmitter } from 'eventemitter3'
 import { useEffect, useRef } from 'react'
 import type { ClientEventName } from '../../../index'
-import type { MessageItemModel } from '../types/chat'
 
 export interface ClientEventData {
-  [ClientEventName.SyncState]: void
-  [ClientEventName.SetIsReady]: boolean
-  [ClientEventName.SetHasSelection]: boolean
-  [ClientEventName.AddMessageAction]: MessageItemModel
-  [ClientEventName.UpdateMessageAction]: MessageItemModel
-  [ClientEventName.ClearMessageAction]: void
-  [ClientEventName.ConfirmPrompt]: string
-  [ClientEventName.InsertCodeSnippet]: string
+  [ClientEventName.AddMessageAction]: void
 }
 
 if (!window.__emitter__)

@@ -12,10 +12,12 @@
   // "typescript.inlayHints.functionLikeReturnTypes.enabled": true,
   "cSpell.words": [
     "Chatgpt",
+    "codicon",
     "langchain",
     "nicepkg",
     "OPENAI",
-    "tagify"
+    "tagify",
+    "zustand"
   ],
   "workbench.colorCustomizations": {
     "activityBar.background": "#22285E",

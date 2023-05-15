@@ -1,7 +1,7 @@
 import type { EventSourceMessage } from '@microsoft/fetch-event-source'
 import { fetchEventSource } from '@microsoft/fetch-event-source'
 import type { ChatStreamReqParams } from '../../../server/src/controllers/chatgpt.controller'
-import { getConfig } from '../../src/utils/config'
+import { getConfig } from '../constant/config'
 
 export interface fetchChatStreamReqParams extends ChatStreamReqParams {
   namespace?: string

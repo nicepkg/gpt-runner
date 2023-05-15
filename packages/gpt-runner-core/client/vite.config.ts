@@ -6,7 +6,7 @@ const resolvePath = (...paths: string[]) => path.resolve(__dirname, ...paths)
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  root: resolvePath('./client'),
+  root: resolvePath('./'),
   plugins: [
     React(),
   ],

@@ -1,6 +1,6 @@
 import React from 'react'
 import { createRoot } from 'react-dom/client'
-import { getConfig } from './utils/config'
+import { getConfig } from './constant/config'
 import { GlobalStyle } from './styles/global.styles'
 import { ChatPage } from './views/chat'
 
