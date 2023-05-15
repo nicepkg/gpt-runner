@@ -1,25 +1,22 @@
-import * as React from 'react'
+import type { FC } from 'react'
 import { useCallback } from 'react'
 import { VSCodeButton } from '@vscode/webview-ui-toolkit/react'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
-import { useEventEmitter } from '../../hooks/use-emitter.hook'
-import { ClientEventName } from '../../../../index'
 
 export interface MessageCodeBlockProps {
   contents: string
   language: string
 }
 
-export function MessageCodeBlock(props: MessageCodeBlockProps) {
+export const MessageCodeBlock: FC<MessageCodeBlockProps> = (props) => {
   const { contents, language } = props
-  const { emit } = useEventEmitter()
 
   const handleCopyAction = useCallback(() => {
     navigator.clipboard.writeText(contents)
   }, [contents])
 
   const handleInsertCodeSnippetAction = useCallback(async () => {
-    emit(ClientEventName.InsertCodeSnippet, contents)
+
   }, [contents])
 
   return (

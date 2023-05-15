@@ -1,12 +1,12 @@
-import * as React from 'react'
-import { useRef } from 'react'
-import { useAnimationFrame } from '../../hooks/use-animation-frame.hook'
+import type { FC } from 'react'
+import { useEffect, useRef } from 'react'
+import { motion, useAnimation } from 'framer-motion'
 
 function cubicBezier(t: number) {
   return 3 * (1 - t) * t ** 2 * 0.7 + t ** 3
 }
 
-export function IndeterminateProgressBar() {
+export const IndeterminateProgressBar: FC = () => {
   const indicatorRef = useRef<HTMLDivElement>(null)
 
   const shortLength = 20
@@ -14,24 +14,23 @@ export function IndeterminateProgressBar() {
   const lengthRatio = 100 + shortLength + longLength
 
   const duration = 2.1 * 1e3
-  const elapsedRef = useRef(0)
 
-  useAnimationFrame((deltaTime) => {
-    if (!indicatorRef.current)
-      return
+  const controls = useAnimation()
 
-    const progress = cubicBezier(elapsedRef.current / duration)
-
-    const newLeft = (100 + lengthRatio) * progress - lengthRatio
-    if (progress > 1) {
-      indicatorRef.current.style.left = `-${lengthRatio}%`
-      elapsedRef.current = 0
+  useEffect(() => {
+    const animateIndicator = async () => {
+      await controls.start({
+        x: ['0%', `${100 + lengthRatio}%`],
+        transition: {
+          duration: duration / 1000,
+          ease: (t: number) => cubicBezier(t),
+          loop: Infinity,
+        },
+      })
     }
-    else {
-      indicatorRef.current.style.left = `${newLeft}%`
-      elapsedRef.current += deltaTime
-    }
-  })
+
+    animateIndicator()
+  }, [controls])
 
   return (
     <div
@@ -42,8 +41,9 @@ export function IndeterminateProgressBar() {
         position: 'relative',
       }}
     >
-      <div
+      <motion.div
         ref={indicatorRef}
+        animate={controls}
         style={{
           position: 'absolute',
           width: `${lengthRatio}%`,
@@ -69,7 +69,7 @@ export function IndeterminateProgressBar() {
             right: 0,
           }}
         />
-      </div>
+      </motion.div>
     </div>
   )
 }

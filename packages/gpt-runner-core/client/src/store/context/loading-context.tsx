@@ -14,7 +14,7 @@ export interface ILoadingContext {
 export const LoadingContext = createContext<ILoadingContext | null>(null)
 
 export function LoadingProvider({ children }: LoadingContextProviderProps) {
-  const [loading, setLoading] = useState<boolean>(true)
+  const [loading, setLoading] = useState<boolean>(false)
   const debouncedLoading = useDebouncedState(loading, show =>
     show ? 300 : 0,
   )
