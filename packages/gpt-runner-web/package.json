@@ -1,0 +1,75 @@
+{
+  "name": "@nicepkg/gpt-runner-web",
+  "version": "0.0.1",
+  "description": "",
+  "author": "Jinming Yang <2214962083@qq.com>",
+  "license": "MIT",
+  "funding": "https://github.com/sponsors/2214962083",
+  "homepage": "https://github.com/nicepkg/gpt-runner/tree/main/packages/gpt-runner-web#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nicepkg/gpt-runner",
+    "directory": "packages/core"
+  },
+  "bugs": {
+    "url": "https://github.com/nicepkg/gpt-runner/issues"
+  },
+  "keywords": [
+    "gpt-runner",
+    "chatgpt",
+    "prompt",
+    "langchain",
+    "ai"
+  ],
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "require": "./dist/index.cjs",
+      "import": "./dist/index.mjs"
+    }
+  },
+  "main": "dist/index.cjs",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "dev": "pnpm dev:server & pnpm dev:client",
+    "dev:client": "vite --config ./client/vite.config.ts",
+    "dev:server": "esno src/server/src/index.ts",
+    "build": "unbuild",
+    "stub": "unbuild --stub"
+  },
+  "dependencies": {
+    "@microsoft/fetch-event-source": "^2.0.1",
+    "@nicepkg/gpt-runner-core": "workspace:*",
+    "@tanstack/react-query": "^4.29.7",
+    "@vscode/webview-ui-toolkit": "^1.2.2",
+    "clsx": "^1.2.1",
+    "eventemitter": "^0.3.3",
+    "express": "^4.18.2",
+    "framer-motion": "^10.12.12",
+    "langchain": "^0.0.78",
+    "lodash-es": "^4.17.21",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-error-boundary": "^4.0.4",
+    "react-markdown": "^8.0.7",
+    "react-router-dom": "^6.11.2",
+    "react-syntax-highlighter": "^15.5.0",
+    "styled-components": "^6.0.0-rc.1",
+    "zustand": "^4.3.8"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.17",
+    "@types/lodash-es": "^4.17.7",
+    "@types/react": "^18.2.6",
+    "@types/react-dom": "^18.2.4",
+    "@types/react-syntax-highlighter": "^15.5.6",
+    "@vitejs/plugin-react": "^4.0.0",
+    "unconfig": "^0.3.7",
+    "vite": "^4.3.8"
+  }
+}

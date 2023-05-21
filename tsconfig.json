@@ -19,8 +19,9 @@
       "@nicepkg/gpt-runner": ["./packages/gpt-runner/src/index.ts"],
       "@nicepkg/gpt-runner-cli": ["./packages/gpt-runner-cli/src/index.ts"],
       "@nicepkg/gpt-runner-config": ["./packages/gpt-runner-config/src/index.ts"],
-      "@nicepkg/gpt-runner-core/client": ["./packages/gpt-runner-core/client/src/index"],
-      "@nicepkg/gpt-runner-core/server": ["./packages/gpt-runner-core/server/src/index"],
+      "@nicepkg/gpt-runner-core": ["./packages/gpt-runner-core/src/index.ts"],
+      "@nicepkg/gpt-runner-web/client": ["./packages/gpt-runner-web/client/src/index"],
+      "@nicepkg/gpt-runner-web/server": ["./packages/gpt-runner-web/server/src/index"],
       "@nicepkg/gpt-runner-shared": ["./packages/gpt-runner-shared/src/index.ts"],
     }
   },
