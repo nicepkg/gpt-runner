@@ -5,3 +5,5 @@ export * from '@nicepkg/gpt-runner-core'
 export function defineConfig(config: UserConfig) {
   return config
 }
+
+export interface UserConfigDefaults {}

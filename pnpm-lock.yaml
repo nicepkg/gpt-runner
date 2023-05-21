@@ -166,9 +166,9 @@ importers:
 
   packages/gpt-runner-config:
     dependencies:
-      '@nicepkg/gpt-runner-core':
+      '@nicepkg/gpt-runner':
         specifier: workspace:*
-        version: link:../gpt-runner-core
+        version: link:../gpt-runner
       unconfig:
         specifier: ^0.3.7
         version: 0.3.7
