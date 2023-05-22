@@ -1,4 +1,4 @@
-import { createGlobalStyle } from 'styled-components'
+import { createGlobalStyle, styled } from 'styled-components'
 
 export const GlobalStyle = createGlobalStyle`
   #root {
@@ -24,4 +24,24 @@ export const GlobalStyle = createGlobalStyle`
       padding: 0;
       margin: 0;
   }
+`
+
+export const FlexRow = styled.div`
+  display: flex;
+  flex-direction: row;
+`
+
+export const FlexColumn = styled.div`
+  display: flex;
+  flex-direction: column;
+`
+
+export const FlexRowCenter = styled(FlexRow)`
+  justify-content: center;
+  align-items: center;
+`
+
+export const FlexColumnCenter = styled(FlexColumn)`
+  justify-content: center;
+  align-items: center;
 `

@@ -55,7 +55,7 @@ export const IndeterminateProgressBar: FC = () => {
         <div
           style={{
             position: 'absolute',
-            background: 'var(--vscode-progressBar-background)',
+            background: 'var(--progressBar-background)',
             width: `${(longLength / lengthRatio) * 100}%`,
             height: '100%',
           }}
@@ -63,7 +63,7 @@ export const IndeterminateProgressBar: FC = () => {
         <div
           style={{
             position: 'absolute',
-            background: 'var(--vscode-progressBar-background)',
+            background: 'var(--progressBar-background)',
             width: `${(shortLength / lengthRatio) * 100}%`,
             height: '100%',
             right: 0,
