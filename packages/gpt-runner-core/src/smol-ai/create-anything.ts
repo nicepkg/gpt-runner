@@ -41,7 +41,8 @@ export async function createAnything({
   })
 
   try {
-    const filepaths = JSON.parse(filepathsJson) as string[]
+    // eslint-disable-next-line no-eval
+    const filepaths = eval(filepathsJson) as string[]
 
     let sharedDependenciesInfo = await FileManager.readFile({
       directory,
@@ -105,5 +106,6 @@ export async function createAnything({
   }
   catch (e) {
     console.error('Failed to parse result:', filepathsJson)
+    console.error(e)
   }
 }

@@ -46,7 +46,7 @@ export class FileManager {
     directory,
     exclude,
   }: ReadDirParams) {
-    const isExit = await fs.stat(directory).then(stat => stat.isDirectory())
+    const isExit = existsSync(directory) && statSync(directory).isDirectory()
     const relativePathContentMap: Record<string, string> = {}
 
     if (!isExit)
@@ -104,7 +104,7 @@ export class FileManager {
     directory,
     exclude,
   }: CleanDirParams) {
-    const isExit = await fs.stat(directory).then(stat => stat.isDirectory())
+    const isExit = existsSync(directory) && statSync(directory).isDirectory()
     if (!isExit)
       return
 

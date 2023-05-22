@@ -11,6 +11,8 @@ export class Openai {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${openaiKey}`,
           },
+          rejectUnauthorized: false, // ignore ssl certificate errors
+
         },
         (response) => {
           let responseData = ''
