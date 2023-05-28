@@ -21,8 +21,13 @@ export enum ChatRole {
   SYSTEM = 'system',
 }
 
+export interface ChatMessage {
+  name: ChatRole
+  text: string
+}
+
 function mapStoredMessagesToChatMessages(
-  messages: BaseChatMessage[],
+  messages: ChatMessage[],
 ): BaseChatMessage[] {
   return messages.map((message) => {
     switch (message.name) {
@@ -39,7 +44,7 @@ function mapStoredMessagesToChatMessages(
 }
 
 export interface ChatgptChainParams {
-  messages: BaseChatMessage[]
+  messages: ChatMessage[]
   systemPrompt?: string
   temperature?: number
   openaiKey: string

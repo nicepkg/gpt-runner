@@ -1,21 +1,31 @@
 import type { Request, Response } from 'express'
-import type { BaseChatMessage } from 'langchain/schema'
+import type { ChatMessage } from '../services'
 import { chatgptChain } from '../services'
 import type { FailResponse, SuccessResponse } from '../utils/request'
-import { buildFailResponse, buildSuccessResponse } from '../utils/request'
+import { buildFailResponse, buildSuccessResponse, sendSuccessResponse } from '../utils/request'
 import { EnvConfig } from '../../../env-config'
 import type { ControllerConfig } from './../types'
 
 export interface ChatStreamReqParams {
-  messages: BaseChatMessage[]
+  messages: ChatMessage[]
   prompt: string
   openaiKey?: string
   systemPrompt?: string
   temperature?: number
 }
+
 export const chatgptControllers: ControllerConfig = {
   namespacePath: '/chatgpt',
   controllers: [
+    {
+      url: '/health',
+      method: 'get',
+      handler: async (req: Request, res: Response) => {
+        sendSuccessResponse(res, {
+          data: 'ok',
+        })
+      },
+    },
     {
       url: '/chat-stream',
       method: 'post',
@@ -26,7 +36,13 @@ export const chatgptControllers: ControllerConfig = {
           'Connection': 'keep-alive',
         })
 
-        const { messages, prompt, systemPrompt, openaiKey, temperature = 0.7 } = req.body as ChatStreamReqParams
+        const {
+          messages = [],
+          prompt = '',
+          systemPrompt = '',
+          openaiKey = process.env.OPENAI_API_KEY,
+          temperature = 0.7,
+        } = req.body as ChatStreamReqParams
 
         const sendSuccessData = (options: Omit<SuccessResponse, 'type'>) => {
           return res.write(`data: ${JSON.stringify(buildSuccessResponse(options))}\n\n`)
@@ -55,7 +71,7 @@ export const chatgptControllers: ControllerConfig = {
           })
         }
         catch (error) {
-          console.log('error', error)
+          console.log('chatgptChain error', error)
         }
         finally {
           sendSuccessData({

@@ -45,12 +45,12 @@ export const Sidebar: FC<SidebarProps> = (props) => {
 
     return <>
       {!isLeaf && <Icon style={{
-        marginRight: '4px',
+        marginRight: '0.25rem',
       }} className={clsx(isExpanded ? 'codicon-chevron-down' : 'codicon-chevron-right')}></Icon >}
 
       <Icon style={{
-        marginLeft: !isLeaf ? '0' : '10px',
-        marginRight: '6px',
+        marginLeft: !isLeaf ? '0' : '0.6rem',
+        marginRight: '0.45rem',
       }} className={getIconClassName()}></Icon>
     </>
   }, [])

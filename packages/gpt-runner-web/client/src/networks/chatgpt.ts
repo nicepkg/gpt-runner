@@ -1,10 +1,11 @@
 import type { EventSourceMessage } from '@microsoft/fetch-event-source'
 import { fetchEventSource } from '@microsoft/fetch-event-source'
 import type { ChatStreamReqParams } from '../../../server/src/controllers/chatgpt.controller'
-import { getConfig } from '../constant/config'
+import { EnvConfig } from '../../../env-config'
 
 export interface fetchChatStreamReqParams extends ChatStreamReqParams {
   namespace?: string
+  signal?: AbortSignal
   onMessage?: (ev: EventSourceMessage) => void
   onError?: (error: any) => void
 }
@@ -14,6 +15,7 @@ export async function fetchChatgptStream(
 ) {
   const {
     messages,
+    signal,
     prompt,
     systemPrompt,
     temperature,
@@ -22,11 +24,10 @@ export async function fetchChatgptStream(
     onError = () => {},
   } = params
 
-  const ctrl = new AbortController()
-
   try {
-    fetchEventSource(`${getConfig()}/api/chatgpt/chat-stream`, {
+    await fetchEventSource(`${EnvConfig.get('BASE_SERVER_URL')}/api/chatgpt/chat-stream`, {
       method: 'POST',
+      signal,
       headers: {
         'Content-Type': 'application/json',
         'namespace': namespace || 'default-namespace',
@@ -37,13 +38,12 @@ export async function fetchChatgptStream(
         systemPrompt,
         temperature,
       }),
-      signal: ctrl.signal,
       onmessage: onMessage,
+      onerror: onError,
     })
   }
   catch (error) {
+    console.log('fetchChatgptStream error', error)
     onError(error)
   }
-
-  return ctrl
 }

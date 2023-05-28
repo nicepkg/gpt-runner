@@ -27,7 +27,9 @@ const config: Record<EnvName, EnvVarConfig> = {
     defaultValue: 'production',
   },
   OPENAI_KEY: {},
-  BASE_SERVER_URL: {},
+  BASE_SERVER_URL: {
+    defaultValue: 'http://localhost:3003',
+  },
 }
 
 export class EnvConfig {

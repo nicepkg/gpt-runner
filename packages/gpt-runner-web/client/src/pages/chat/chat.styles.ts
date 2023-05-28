@@ -1,4 +1,5 @@
 import { css, styled } from 'styled-components'
+import { VSCodePanels } from '@vscode/webview-ui-toolkit/react'
 import { withBreakpoint } from '../../helpers/with-breakpoint'
 
 export const SidebarWrapper = styled.div`
@@ -12,4 +13,25 @@ export const SidebarWrapper = styled.div`
     max-width: 100%;
     width: 100%;
   `)}
+`
+
+export const ChatPanelWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  border-left: 1px solid var(--panel-view-border);
+  max-height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+
+  ${withBreakpoint('sm', css`
+    border-left: none;
+  `)}
+`
+
+export const StyledVSCodePanels = styled(VSCodePanels)`
+  &::part(tabpanel) {
+    height: 100%;
+    overflow: hidden;
+  }
 `

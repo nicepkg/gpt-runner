@@ -11,6 +11,7 @@ export const MessageTextView: FC<MessageTextViewProps> = (props) => {
 
   return (
     <ReactMarkdown
+      className='markdown-body'
       components={{
         pre({ children, ...props }) {
           if (children.length !== 1) {

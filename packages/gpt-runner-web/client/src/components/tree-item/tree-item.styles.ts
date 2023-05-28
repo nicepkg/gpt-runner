@@ -12,7 +12,7 @@ export const TreeItemRow = styled.div<{ $isFocused: boolean }>`
   align-items: center;
   user-select: none;
   font-size: var(--type-ramp-plus1-font-size);
-  padding: 4px 4px 4px 0;
+  padding: 0.25rem 0.25rem 0.25rem 0;
 
   ${({ $isFocused }) => ($isFocused
 ? `
@@ -27,7 +27,7 @@ export const TreeItemRow = styled.div<{ $isFocused: boolean }>`
 
   &:focus {
     outline: none;
-    background: var(--list-hover-background);
+    background: var(--list-active-selection-background);
   }
 `
 
@@ -56,6 +56,6 @@ export const Children = styled.div`
   display: flex;
   flex-direction: column;
   padding-left: var(--type-ramp-plus1-font-size);
-  border-left: var(--border-width) solid var(--foreground);
+  border-left:  1px solid var(--panel-view-border);
   border-radius: var(--corner-radius);
 `

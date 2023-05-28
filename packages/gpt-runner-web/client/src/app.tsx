@@ -5,6 +5,7 @@ import { ErrorBoundary } from 'react-error-boundary'
 import { AppRouter } from './router'
 import { GlobalStyle } from './styles/global.styles'
 import { LoadingProvider } from './store/context/loading-context'
+import { MarkdownStyle } from './styles/markdown.styles'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -45,6 +46,7 @@ export const App: FC = () => {
   return (
     <AppProviders>
       <GlobalStyle />
+      <MarkdownStyle />
       <AppRouter />
     </AppProviders>
   )

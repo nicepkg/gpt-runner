@@ -1,7 +1,9 @@
 import type { FC } from 'react'
 import { useCallback } from 'react'
-import { VSCodeButton } from '@vscode/webview-ui-toolkit/react'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
+import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism'
+import { IconButton } from '../icon-button'
+import { CodeBlockHeader, CodeBlockWrapper } from './chat-message-code-block.styles'
 
 export interface MessageCodeBlockProps {
   contents: string
@@ -19,33 +21,47 @@ export const MessageCodeBlock: FC<MessageCodeBlockProps> = (props) => {
 
   }, [contents])
 
+  const handleDiffAction = useCallback(async () => {
+  }, [contents])
+
   return (
-    <>
-      <div className="chat-msg-block-toolbar">
-        <VSCodeButton
-          appearance="icon"
-          ariaLabel="Copy"
-          title="Copy"
+    <CodeBlockWrapper>
+      <CodeBlockHeader>
+        <IconButton
+          text='Copy'
+          iconClassName='codicon-copy'
           onClick={handleCopyAction}
         >
-          <span className="codicon codicon-copy"></span>
-        </VSCodeButton>
-        <VSCodeButton
-          appearance="icon"
-          ariaLabel="Insert or Replace"
-          title="Insert or Replace"
+        </IconButton>
+
+        <IconButton
+          style={{
+            marginLeft: '0.5rem',
+          }}
+          text='Insert'
+          iconClassName='codicon-insert'
           onClick={handleInsertCodeSnippetAction}
         >
-          <span className="codicon codicon-insert"></span>
-        </VSCodeButton>
-      </div>
+        </IconButton>
+
+        <IconButton
+          style={{
+            marginLeft: '0.5rem',
+          }}
+          text='Diff'
+          iconClassName='codicon-arrow-swap'
+          onClick={handleDiffAction}
+        >
+        </IconButton>
+      </CodeBlockHeader>
       <SyntaxHighlighter
-        useInlineStyles={false}
+        useInlineStyles={true}
         codeTagProps={{ style: {} }}
+        style={vscDarkPlus}
         language={language}
       >
         {contents}
       </SyntaxHighlighter>
-    </>
+    </CodeBlockWrapper>
   )
 }
