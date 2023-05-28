@@ -91,7 +91,7 @@ export const TreeItem: React.FC<TreeItemProps> = (props) => {
             {name}
           </NameWrapper>
         </TreeItemRowLeftSlot>
-        <TreeItemRowRightSlot onClick={e => e.stopPropagation()}>
+        <TreeItemRowRightSlot onClick={(e: React.MouseEvent) => e.stopPropagation()}>
           {renderRightSlot?.(stateProps)}
         </TreeItemRowRightSlot>
       </TreeItemRow>

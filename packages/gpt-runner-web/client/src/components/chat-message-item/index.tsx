@@ -38,16 +38,10 @@ export const MessageItem: FC<MessageItemProps> = (props) => {
         <IconButton
           text='Edit'
           iconClassName='codicon-edit'
-          style={{
-            marginLeft: '0.5rem',
-          }}
         >
         </IconButton>
 
         {showRegenerateIcon && <IconButton
-          style={{
-            marginLeft: '0.5rem',
-          }}
           text={status === ChatMessageStatus.Error ? 'Retry' : 'Regenerate'}
           iconClassName='codicon-sync'
           disabled={[ChatMessageStatus.Pending, ChatMessageStatus.Idle].includes(status)}
@@ -56,9 +50,6 @@ export const MessageItem: FC<MessageItemProps> = (props) => {
         <IconButton
           text='Delete'
           iconClassName='codicon-trash'
-          style={{
-            marginLeft: '0.5rem',
-          }}
         >
         </IconButton>
 

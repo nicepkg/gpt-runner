@@ -119,3 +119,17 @@ export function removeSearchParams(urlLike: string,
     return urlBase
   return `${urlBase}?${urlSearchParams}`
 }
+
+type TreeItem<T> = T & { children?: TreeItem<T>[] }
+export function travelTree<T extends TreeItem<Record<string, any>>, R extends TreeItem<Record<string, any>> = TreeItem<Record<string, any>> >(tree: T[], callback: (item: T, parent?: T) => void | R): R[] {
+  const travel = (tree: T[], parent?: T) => {
+    return tree.map((item) => {
+      const finalItem = callback(item, parent) || item
+      if (item.children)
+        finalItem.children = travel(item.children as T[], item)
+
+      return finalItem
+    })
+  }
+  return travel(tree) as R[]
+}

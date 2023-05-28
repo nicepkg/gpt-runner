@@ -14,12 +14,7 @@ import {
   MessagesPlaceholder,
   SystemMessagePromptTemplate,
 } from 'langchain/prompts'
-
-export enum ChatRole {
-  User = 'user',
-  ASSISTANT = 'assistant',
-  SYSTEM = 'system',
-}
+import { ChatRole } from '../core/types'
 
 export interface ChatMessage {
   name: ChatRole

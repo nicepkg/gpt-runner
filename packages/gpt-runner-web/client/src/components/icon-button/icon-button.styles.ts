@@ -1,7 +1,6 @@
-import { VSCodeButton } from '@vscode/webview-ui-toolkit/react'
 import { styled } from 'styled-components'
 
-export const StyledVSCodeButton = styled(VSCodeButton)<{ $hoverShowText?: boolean }>`
+export const ButtonWrapper = styled.div<{ $hoverShowText?: boolean }>`
   ${({ $hoverShowText }) => ($hoverShowText
   ? `
   & .icon-button-text {
@@ -16,10 +15,14 @@ export const StyledVSCodeButton = styled(VSCodeButton)<{ $hoverShowText?: boolea
   }
   `
 : '')}
+
+  & + .icon-button {
+      padding-left: 0.5rem;
+  }
 `
 
 export const Text = styled.div`
-  transition: all 0.2s ease-in-out;
+  transition: all 0.1s ease-in-out;
   margin-left: 0.5rem;
   overflow: hidden;
   font-size: var(--type-ramp-base-font-size);

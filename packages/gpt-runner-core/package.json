@@ -40,9 +40,8 @@
     "stub": "unbuild --stub"
   },
   "dependencies": {
-    "langchain": "^0.0.78"
-  },
-  "devDependencies": {
-    "unconfig": "^0.3.7"
+    "ignore": "^5.2.4",
+    "langchain": "^0.0.84",
+    "unconfig": "^0.3.9"
   }
 }

@@ -1,8 +1,6 @@
 import type { CSSProperties, FC } from 'react'
 import { useCallback, useEffect, useState } from 'react'
 import { VSCodePanelTab, VSCodePanelView } from '@vscode/webview-ui-toolkit/react'
-import type { SidebarProps } from '../../components/sidebar'
-import { Sidebar } from '../../components/sidebar'
 import { useIsMobile } from '../../hooks/use-is-mobile.hook'
 import type { ChatMessagePanelProps } from '../../components/chat-message-panel'
 import { ChatMessagePanel } from '../../components/chat-message-panel'
@@ -14,6 +12,7 @@ import { ChatMessageStatus, ChatRole } from '../../store/zustand/global/chat.sli
 import { useScrollDown } from '../../hooks/use-scroll-down.hook'
 import { IconButton } from '../../components/icon-button'
 import { ChatPanelWrapper, SidebarWrapper, StyledVSCodePanels } from './chat.styles'
+import { ChatSidebar } from './chat-sidebar'
 
 const Chat: FC = () => {
   const isMobile = useIsMobile()
@@ -44,42 +43,6 @@ const Chat: FC = () => {
     }
   }, [chatId])
 
-  const sidebar: SidebarProps = {
-    topToolbar: {
-      title: 'GPT Runner',
-      actions: [],
-    },
-    onCreateChat: () => { },
-    onDeleteChat: () => { },
-    onRenameChat: () => { },
-    tree: {
-      items: [
-        {
-          id: '1',
-          name: 'aaa',
-          path: 'aaa',
-          isLeaf: false,
-          children: [
-            {
-              id: '1-1',
-              name: 'bbb',
-              path: 'aaa/bbb',
-              isLeaf: false,
-              children: [
-                {
-                  id: '1-1-1',
-                  name: 'ccc',
-                  path: 'aaa/bbb/ccc',
-                  isLeaf: true,
-                },
-              ],
-            },
-          ],
-        },
-      ],
-    },
-  }
-
   const messagePanelProps: ChatMessagePanelProps = {
     messageItems: chatInstance?.messages.map((message, i) => {
       const isLast = i === chatInstance.messages.length - 1
@@ -96,27 +59,20 @@ const Chat: FC = () => {
   }
 
   const renderInputToolbar = useCallback(() => {
-    const commonIconStyle: CSSProperties = {
-      marginLeft: '0.5rem',
-    }
-
     return <>
       <IconButton
         text='Pre Chat'
         iconClassName='codicon-chevron-left'></IconButton>
 
       <IconButton
-        style={commonIconStyle}
         text='Next Chat'
         iconClassName='codicon-chevron-right'></IconButton>
 
       <IconButton
-        style={commonIconStyle}
         text='Clean All'
         iconClassName='codicon-trash'></IconButton>
 
       <IconButton
-        style={commonIconStyle}
         text='New Chat'
         iconClassName='codicon-add'></IconButton>
 
@@ -140,7 +96,6 @@ const Chat: FC = () => {
       ></IconButton>}
 
       <IconButton
-        style={commonIconStyle}
         disabled={!chatInstance?.inputtingPrompt}
         text='Send'
         hoverShowText={false}
@@ -153,9 +108,9 @@ const Chat: FC = () => {
 
   const renderSidebar = useCallback(() => {
     return <SidebarWrapper>
-      <Sidebar {...sidebar}></Sidebar>
+      <ChatSidebar rootPath='/Users/yangxiaoming/Documents/codes/gpt-runner'></ChatSidebar>
     </SidebarWrapper>
-  }, [sidebar])
+  }, [])
 
   const renderChatPanel = useCallback(() => {
     return <ChatPanelWrapper>

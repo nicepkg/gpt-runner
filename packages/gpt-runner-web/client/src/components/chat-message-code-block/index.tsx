@@ -35,9 +35,6 @@ export const MessageCodeBlock: FC<MessageCodeBlockProps> = (props) => {
         </IconButton>
 
         <IconButton
-          style={{
-            marginLeft: '0.5rem',
-          }}
           text='Insert'
           iconClassName='codicon-insert'
           onClick={handleInsertCodeSnippetAction}
@@ -45,9 +42,6 @@ export const MessageCodeBlock: FC<MessageCodeBlockProps> = (props) => {
         </IconButton>
 
         <IconButton
-          style={{
-            marginLeft: '0.5rem',
-          }}
           text='Diff'
           iconClassName='codicon-arrow-swap'
           onClick={handleDiffAction}
