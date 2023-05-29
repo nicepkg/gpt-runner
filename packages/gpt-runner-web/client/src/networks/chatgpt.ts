@@ -1,7 +1,7 @@
 import type { EventSourceMessage } from '@microsoft/fetch-event-source'
 import { fetchEventSource } from '@microsoft/fetch-event-source'
-import type { ChatStreamReqParams } from '../../../server/src/controllers/chatgpt.controller'
-import { EnvConfig } from '../../../env-config'
+import type { ChatStreamReqParams } from '@nicepkg/gpt-runner-shared/common'
+import { EnvConfig } from '@nicepkg/gpt-runner-shared/common'
 
 export interface fetchChatStreamReqParams extends ChatStreamReqParams {
   namespace?: string

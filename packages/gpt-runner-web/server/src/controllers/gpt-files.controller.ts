@@ -1,8 +1,8 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import { getGptFiles, getGptFilesInfo, gptFilesInfoToTree, loadUserConfig } from '@nicepkg/gpt-runner-core'
+import { sendFailResponse, sendSuccessResponse } from '@nicepkg/gpt-runner-shared/node'
 import type { ControllerConfig } from '../types'
-import { sendFailResponse, sendSuccessResponse } from '../utils/request'
 
 export const gptFilesControllers: ControllerConfig = {
   namespacePath: '/gpt-files',

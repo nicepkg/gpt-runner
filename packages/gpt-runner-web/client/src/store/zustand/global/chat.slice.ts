@@ -1,34 +1,8 @@
-import type { BaseChatMessage } from 'langchain/schema'
 import type { StateCreator } from 'zustand'
+import type { SingleChat } from '@nicepkg/gpt-runner-shared/common'
+import { ChatMessageStatus, ChatRole } from '@nicepkg/gpt-runner-shared/common'
 import type { GetState } from '../types'
 import { fetchChatgptStream } from '../../../networks/chatgpt'
-
-export enum ChatMessageStatus {
-  Idle = 'idle',
-  Pending = 'pending',
-  Success = 'success',
-  Error = 'error',
-}
-
-export enum ChatRole {
-  User = 'user',
-  ASSISTANT = 'assistant',
-  SYSTEM = 'system',
-}
-
-export type SingleChatMessage = Pick<BaseChatMessage, 'name' | 'text'> & {
-  name: ChatRole
-}
-
-export interface SingleChat {
-  id: string
-  title: string
-  inputtingPrompt: string
-  systemPrompt: string
-  temperature: number
-  messages: SingleChatMessage[]
-  status: ChatMessageStatus
-}
 
 export interface ChatSlice {
   openaiKey: string

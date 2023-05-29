@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/prefer-ts-expect-error */
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import debug from 'debug'
 
 export class Debug {
@@ -9,6 +11,8 @@ export class Debug {
     this.label = `gpt-runner:${label}`
     debug.enable(this.label)
     this.debugger = debug(this.label)
+
+    // @ts-ignore
     this.debugger.useColors = true
     this.debugger.color = String(debug.selectColor(this.label))
   }

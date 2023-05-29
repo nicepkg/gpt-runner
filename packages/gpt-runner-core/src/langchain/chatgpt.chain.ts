@@ -14,12 +14,8 @@ import {
   MessagesPlaceholder,
   SystemMessagePromptTemplate,
 } from 'langchain/prompts'
-import { ChatRole } from '../core/types'
-
-export interface ChatMessage {
-  name: ChatRole
-  text: string
-}
+import type { ChatMessage } from '@nicepkg/gpt-runner-shared/common'
+import { ChatRole } from '@nicepkg/gpt-runner-shared/common'
 
 function mapStoredMessagesToChatMessages(
   messages: ChatMessage[],

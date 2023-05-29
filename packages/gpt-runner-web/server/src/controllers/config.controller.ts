@@ -1,6 +1,6 @@
+import { sendSuccessResponse } from '@nicepkg/gpt-runner-shared/node'
 import pkg from '../../../package.json'
 import type { ControllerConfig } from '../types'
-import { sendSuccessResponse } from '../utils/request'
 
 export const configControllers: ControllerConfig = {
   namespacePath: '/config',

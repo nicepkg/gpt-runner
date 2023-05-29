@@ -1,18 +1,10 @@
 import type { Request, Response } from 'express'
-import type { ChatMessage } from '../services'
+import type { ChatStreamReqParams } from '@nicepkg/gpt-runner-shared/common'
+import { EnvConfig } from '@nicepkg/gpt-runner-shared/common'
+import type { FailResponse, SuccessResponse } from '@nicepkg/gpt-runner-shared/node'
+import { buildFailResponse, buildSuccessResponse, sendSuccessResponse } from '@nicepkg/gpt-runner-shared/node'
 import { chatgptChain } from '../services'
-import type { FailResponse, SuccessResponse } from '../utils/request'
-import { buildFailResponse, buildSuccessResponse, sendSuccessResponse } from '../utils/request'
-import { EnvConfig } from '../../../env-config'
 import type { ControllerConfig } from './../types'
-
-export interface ChatStreamReqParams {
-  messages: ChatMessage[]
-  prompt: string
-  openaiKey?: string
-  systemPrompt?: string
-  temperature?: number
-}
 
 export const chatgptControllers: ControllerConfig = {
   namespacePath: '/chatgpt',

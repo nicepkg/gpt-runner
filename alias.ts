@@ -10,5 +10,7 @@ export const alias: Record<string, string> = {
   '@nicepkg/gpt-runner-config': r('./packages/gpt-runner-config/src/'),
   '@nicepkg/gpt-runner-web/client': r('./packages/gpt-runner-web/client/src/'),
   '@nicepkg/gpt-runner-web/server': r('./packages/gpt-runner-web/server/src/'),
-  '@nicepkg/gpt-runner-shared': r('./packages/gpt-runner-shared/src/'),
+  '@nicepkg/gpt-runner-shared/browser': r('./packages/gpt-runner-shared/src/browser'),
+  '@nicepkg/gpt-runner-shared/common': r('./packages/gpt-runner-shared/src/common'),
+  '@nicepkg/gpt-runner-shared/node': r('./packages/gpt-runner-shared/src/node'),
 }

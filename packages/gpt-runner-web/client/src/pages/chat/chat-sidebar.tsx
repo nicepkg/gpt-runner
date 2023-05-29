@@ -1,11 +1,11 @@
 import type { FC } from 'react'
 import { useEffect, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
+import { travelTree } from '@nicepkg/gpt-runner-shared/common'
 import type { SidebarProps } from '../../components/sidebar'
 import { Sidebar } from '../../components/sidebar'
 import { fetchGptFilesTree } from '../../networks/gpt-files'
 import type { TreeItemProps } from '../../components/tree-item'
-import { travelTree } from '../../helpers/utils'
 
 export interface ChatSidebarProps {
   rootPath: string

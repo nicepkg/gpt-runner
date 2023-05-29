@@ -22,7 +22,9 @@
       "@nicepkg/gpt-runner-core": ["./packages/gpt-runner-core/src/index.ts"],
       "@nicepkg/gpt-runner-web/client": ["./packages/gpt-runner-web/client/src/index"],
       "@nicepkg/gpt-runner-web/server": ["./packages/gpt-runner-web/server/src/index"],
-      "@nicepkg/gpt-runner-shared": ["./packages/gpt-runner-shared/src/index.ts"],
+      "@nicepkg/gpt-runner-shared/browser": ["./packages/gpt-runner-shared/src/browser/index.ts"],
+      "@nicepkg/gpt-runner-shared/common": ["./packages/gpt-runner-shared/src/common/index.ts"],
+      "@nicepkg/gpt-runner-shared/node": ["./packages/gpt-runner-shared/src/node/index.ts"],
     }
   },
   "exclude": [

@@ -1,10 +1,6 @@
+import type { ClientEventData, ClientEventName } from '@nicepkg/gpt-runner-shared/common'
 import { EventEmitter } from 'eventemitter3'
 import { useEffect, useRef } from 'react'
-import type { ClientEventName } from '../../../index'
-
-export interface ClientEventData {
-  [ClientEventName.AddMessageAction]: void
-}
 
 if (!window.__emitter__)
   window.__emitter__ = new EventEmitter()

@@ -1,6 +1,6 @@
 import type { GptFilesInfoToTree } from '@nicepkg/gpt-runner-core'
-import { EnvConfig } from '../../../env-config'
-import type { BaseResponse } from '../types/common'
+import type { BaseResponse } from '@nicepkg/gpt-runner-shared/common'
+import { EnvConfig } from '@nicepkg/gpt-runner-shared/common'
 
 export interface FetchGptFilesTreeParams {
   rootPath: string

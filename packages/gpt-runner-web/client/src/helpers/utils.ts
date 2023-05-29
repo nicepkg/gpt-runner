@@ -1,4 +1,5 @@
 import type { ParsedUrlQuery } from 'node:querystring'
+import { formatSourceValue } from '@nicepkg/gpt-runner-shared/common'
 import type { MutableRefObject, Ref } from 'react'
 
 export function createEl<T extends keyof HTMLElementTagNameMap>(tag: T,
@@ -10,10 +11,6 @@ export function createEl<T extends keyof HTMLElementTagNameMap>(tag: T,
   return el
 }
 
-export function sleep(ms: number) {
-  return new Promise(resolve => setTimeout(resolve, ms))
-}
-
 export function mergeRefs<T>(...refs: (Ref<T> | undefined)[]) {
   return (value: T) => {
     refs.forEach((ref) => {
@@ -23,43 +20,6 @@ export function mergeRefs<T>(...refs: (Ref<T> | undefined)[]) {
         (ref as MutableRefObject<T>).current = value
     })
   }
-}
-
-/**
- * Checks if an object has its own property with the specified name.
- *
- * @param obj - The object to check.
- * @param prop - The name of the property to check for.
- * @returns True if the object has its own property with the specified name, false otherwise.
- */
-export function hasOwn<T extends object, K extends keyof T>(
-  obj: T,
-  prop: K,
-): boolean {
-  return Object.prototype.hasOwnProperty.call(obj, prop)
-}
-
-export function formatSourceValue<T = any>(value: any): T {
-  let result
-  if (value === 'true') {
-    result = true
-  }
-  else if (value === 'false') {
-    result = false
-  }
-  else if (/^-?\d*\.?\d+$/.test(value)) {
-    // regex pattern for matching float numbers
-    result = parseFloat(value)
-  }
-  else if (/^-?\d+$/.test(value)) {
-    // regex pattern for matching integer numbers
-    result = parseInt(value, 10)
-  }
-  else {
-    result = value
-  }
-
-  return result as T
 }
 
 export function formatRouteQuery<T extends object>(query?: ParsedUrlQuery): Partial<T> {
@@ -84,52 +44,4 @@ export function getErrorMsg(error: any) {
     (error as Error)?.message || error || '',
   )
   return errorMessage
-}
-
-export function getSearchParams(val: string, url?: string): string {
-  const defaultUrl = typeof window !== 'undefined' ? window.location.href : ''
-  const finalUrl = url || defaultUrl || ''
-  const searchParams = finalUrl.split('?')?.[1] || ''
-  const params = new URLSearchParams(searchParams)
-  return params.get(val) || ''
-}
-
-export function addSearchParams(urlLike: string,
-  searchParams: Record<string, any>) {
-  const [urlBase = '', urlSearch = ''] = urlLike.split('?')
-  const params = new URLSearchParams(urlSearch)
-  Object.keys(searchParams).forEach((key) => {
-    params.set(key, searchParams[key])
-  })
-  const urlSearchParams = params.toString()
-  if (!urlSearchParams)
-    return urlBase
-  return `${urlBase}?${urlSearchParams}`
-}
-
-export function removeSearchParams(urlLike: string,
-  searchParamKeys: string[]) {
-  const [urlBase = '', urlSearch = ''] = urlLike.split('?')
-  const params = new URLSearchParams(urlSearch)
-  searchParamKeys.forEach((key) => {
-    params.delete(key)
-  })
-  const urlSearchParams = params.toString()
-  if (!urlSearchParams)
-    return urlBase
-  return `${urlBase}?${urlSearchParams}`
-}
-
-type TreeItem<T> = T & { children?: TreeItem<T>[] }
-export function travelTree<T extends TreeItem<Record<string, any>>, R extends TreeItem<Record<string, any>> = TreeItem<Record<string, any>> >(tree: T[], callback: (item: T, parent?: T) => void | R): R[] {
-  const travel = (tree: T[], parent?: T) => {
-    return tree.map((item) => {
-      const finalItem = callback(item, parent) || item
-      if (item.children)
-        finalItem.children = travel(item.children as T[], item)
-
-      return finalItem
-    })
-  }
-  return travel(tree) as R[]
 }

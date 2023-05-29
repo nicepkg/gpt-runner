@@ -38,6 +38,7 @@
   },
   "dependencies": {
     "@nicepkg/gpt-runner": "workspace:*",
+    "@nicepkg/gpt-runner-shared": "workspace:*",
     "unconfig": "^0.3.7"
   }
 }
