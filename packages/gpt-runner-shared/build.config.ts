@@ -11,6 +11,8 @@ export default defineBuildConfig({
   externals: [
     'unconfig',
     'express',
+    'debug',
+    'minimatch',
   ],
   rollup: {
     emitCJS: true,

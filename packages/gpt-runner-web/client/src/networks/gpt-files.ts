@@ -1,5 +1,4 @@
-import type { GptFilesInfoToTree } from '@nicepkg/gpt-runner-core'
-import type { BaseResponse } from '@nicepkg/gpt-runner-shared/common'
+import type { BaseResponse, GptFileInfo, GptFileInfoTree } from '@nicepkg/gpt-runner-shared/common'
 import { EnvConfig } from '@nicepkg/gpt-runner-shared/common'
 
 export interface FetchGptFilesTreeParams {
@@ -7,13 +6,14 @@ export interface FetchGptFilesTreeParams {
 }
 
 export type FetchGptFilesTreeResponse = BaseResponse<{
-  tree: GptFilesInfoToTree
+  filesInfo: GptFileInfo[]
+  filesInfoTree: GptFileInfoTree
 }>
 
 export async function fetchGptFilesTree(params: FetchGptFilesTreeParams): Promise<FetchGptFilesTreeResponse> {
   const { rootPath } = params
 
-  const res = await fetch(`${EnvConfig.get('BASE_SERVER_URL')}/api/gpt-files/tree?rootPath=${rootPath}`, {
+  const res = await fetch(`${EnvConfig.get('BASE_SERVER_URL')}/api/gpt-files-info?rootPath=${rootPath}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',

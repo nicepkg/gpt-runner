@@ -1,4 +1,5 @@
 export * from './common'
+export * from './create-filter-pattern'
 export * from './debug'
 export * from './env-config'
 export * from './is'

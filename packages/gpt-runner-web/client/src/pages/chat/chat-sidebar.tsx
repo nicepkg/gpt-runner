@@ -25,16 +25,13 @@ export const ChatSidebar: FC<ChatSidebarProps> = (props) => {
   const [treeItems, setTreeItems] = useState<TreeItemProps[]>([])
 
   useEffect(() => {
-    if (!fetchGptFilesTreeRes?.data?.tree)
+    if (!fetchGptFilesTreeRes?.data?.filesInfoTree)
       return
 
-    const _treeItems = travelTree(fetchGptFilesTreeRes.data.tree, (item) => {
-      const titleParts = item.singleFileConfig?.title?.split('/') || []
-      const pathParts = item.path.split('/') || []
-
+    const _treeItems = travelTree(fetchGptFilesTreeRes.data.filesInfoTree, (item) => {
       return {
-        id: item.path,
-        name: titleParts[titleParts.length - 1] || pathParts[pathParts.length - 1] || 'unknown',
+        id: item.id,
+        name: item.name,
         path: item.path,
         isLeaf: false,
       }

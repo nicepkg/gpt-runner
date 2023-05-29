@@ -172,15 +172,15 @@ importers:
 
   packages/gpt-runner-config:
     dependencies:
-      '@nicepkg/gpt-runner':
+      '@nicepkg/gpt-runner-core':
         specifier: workspace:*
-        version: link:../gpt-runner
+        version: link:../gpt-runner-core
       '@nicepkg/gpt-runner-shared':
         specifier: workspace:*
         version: link:../gpt-runner-shared
       unconfig:
-        specifier: ^0.3.7
-        version: 0.3.7
+        specifier: ^0.3.9
+        version: 0.3.9
 
   packages/gpt-runner-core:
     dependencies:
@@ -198,6 +198,13 @@ importers:
         version: 0.3.9
 
   packages/gpt-runner-shared:
+    dependencies:
+      debug:
+        specifier: ^4.3.4
+        version: 4.3.4
+      minimatch:
+        specifier: ^9.0.1
+        version: 9.0.1
     devDependencies:
       '@types/express':
         specifier: ^4.17.17
@@ -447,6 +454,7 @@ packages:
 
   /@antfu/utils@0.5.2:
     resolution: {integrity: sha512-CQkeV+oJxUazwjlHD0/3ZD08QWKuGQkhnrKo3e6ly5pd48VUpXbb77q0xMU4+vc2CkJnDS02Eq/M9ugyX20XZA==}
+    dev: true
 
   /@antfu/utils@0.7.2:
     resolution: {integrity: sha512-vy9fM3pIxZmX07dL+VX1aZe7ynZ+YyB0jY+jE6r3hOK6GNY2t6W8rzpFC4tgpbXUYABkFQwgJq2XYXlxbXAI0g==}
@@ -2200,7 +2208,7 @@ packages:
     dependencies:
       '@npmcli/name-from-folder': 2.0.0
       glob: 10.2.3
-      minimatch: 9.0.0
+      minimatch: 9.0.1
       read-package-json-fast: 3.0.2
     dev: true
 
@@ -2400,7 +2408,7 @@ packages:
     engines: {node: ^14.17.0 || ^16.13.0 || >=18.0.0}
     dependencies:
       '@tufjs/canonical-json': 1.0.0
-      minimatch: 9.0.0
+      minimatch: 9.0.1
     dev: true
 
   /@types/body-parser@1.19.2:
@@ -3183,7 +3191,6 @@ packages:
     resolution: {integrity: sha512-XnAIvQ8eM+kC6aULx6wuQiwVsnzsi9d3WxzV3FpWTGA19F621kwdbsAcFKXgKUHZWsy+mY6iL1sHTxWEFCytDA==}
     dependencies:
       balanced-match: 1.0.2
-    dev: true
 
   /braces@3.0.2:
     resolution: {integrity: sha512-b8um+L1RzM3WDSzvhm6gIz1yfTbBt6YTlcEKAvsmqCZZFw46z626lVj9j1yEPW33H5H+lBQpZMP1k8l+78Ha0A==}
@@ -5387,7 +5394,7 @@ packages:
     dependencies:
       foreground-child: 3.1.1
       jackspeak: 2.2.0
-      minimatch: 9.0.0
+      minimatch: 9.0.1
       minipass: 5.0.0
       path-scurry: 1.8.0
     dev: true
@@ -5671,7 +5678,7 @@ packages:
     resolution: {integrity: sha512-C7FfFoTA+bI10qfeydT8aZbvr91vAEU+2W5BZUlzPec47oNb07SsOfwYrtxuvOYdUApPP/Qlh4DtAO51Ekk2QA==}
     engines: {node: ^14.17.0 || ^16.13.0 || >=18.0.0}
     dependencies:
-      minimatch: 9.0.0
+      minimatch: 9.0.1
     dev: true
 
   /ignore@5.2.4:
@@ -6904,12 +6911,11 @@ packages:
       brace-expansion: 2.0.1
     dev: true
 
-  /minimatch@9.0.0:
-    resolution: {integrity: sha512-0jJj8AvgKqWN05mrwuqi8QYKx1WmYSUoKSxu5Qhs9prezTz10sxAHGNZe9J9cqIJzta8DWsleh2KaVaLl6Ru2w==}
+  /minimatch@9.0.1:
+    resolution: {integrity: sha512-0jWhJpD/MdhPXwPuiRkCbfYfSKp2qnn2eOc279qI7f+osl/l+prKSrvhg157zSYvx/1nmgn2NqdT6k2Z7zSH9w==}
     engines: {node: '>=16 || 14 >=14.17'}
     dependencies:
       brace-expansion: 2.0.1
-    dev: true
 
   /minimist@1.2.8:
     resolution: {integrity: sha512-2yyAR8qBkN3YuheJanUpWC5U3bb5osDywNB8RzDVlDwDHbocAJveqqj1u8+SVD7jkWT4yvsHCpWqqWqAxb0zCA==}
@@ -9276,6 +9282,7 @@ packages:
       '@antfu/utils': 0.5.2
       defu: 6.1.2
       jiti: 1.18.2
+    dev: true
 
   /unconfig@0.3.9:
     resolution: {integrity: sha512-8yhetFd48M641mxrkWA+C/lZU4N0rCOdlo3dFsyFPnBHBjMJfjT/3eAZBRT2RxCRqeBMAKBVgikejdS6yeBjMw==}
@@ -9441,7 +9448,7 @@ packages:
       '@rollup/pluginutils': 5.0.2(rollup@3.21.7)
       local-pkg: 0.4.3
       magic-string: 0.30.0
-      minimatch: 9.0.0
+      minimatch: 9.0.1
       unimport: 3.0.6(rollup@3.21.7)
       unplugin: 1.3.1
     transitivePeerDependencies:

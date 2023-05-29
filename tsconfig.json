@@ -2,15 +2,20 @@
   "compilerOptions": {
     "target": "es2018",
     "module": "esnext",
-    "lib": ["esnext"],
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
     "moduleResolution": "node",
+    "useDefineForClassFields": true,
     "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
     "strict": true,
+    "allowJs": false,
     "strictNullChecks": true,
     "resolveJsonModule": true,
+    "isolatedModules": true,
     "skipDefaultLibCheck": true,
     "skipLibCheck": true,
-    "jsx": "preserve",
+    "jsx": "react-jsx",
     "types": [
       "node",
       "vite/client"

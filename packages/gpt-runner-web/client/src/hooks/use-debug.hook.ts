@@ -1,4 +1,4 @@
-import { Debug } from '../helpers/debug'
+import { Debug } from '@nicepkg/gpt-runner-shared/common'
 import { useSingleRef } from './use-single-ref.hook'
 
 export function useDebug(place: string) {

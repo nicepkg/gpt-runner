@@ -1,10 +1,10 @@
-export enum ChatRole {
+export const enum ChatRole {
   User = 'user',
   ASSISTANT = 'assistant',
   SYSTEM = 'system',
 }
 
-export enum ChatMessageStatus {
+export const enum ChatMessageStatus {
   Idle = 'idle',
   Pending = 'pending',
   Success = 'success',
@@ -13,4 +13,10 @@ export enum ChatMessageStatus {
 
 export const enum ClientEventName {
   AddMessageAction = 'add-message-action',
+}
+
+export const enum GptFileTreeItemType {
+  Folder = 'folder',
+  File = 'file',
+  Chat = 'chat',
 }

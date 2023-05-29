@@ -1,14 +1,13 @@
-import fs from 'node:fs'
 import path from 'node:path'
-import { getGptFiles, getGptFilesInfo, gptFilesInfoToTree, loadUserConfig } from '@nicepkg/gpt-runner-core'
-import { sendFailResponse, sendSuccessResponse } from '@nicepkg/gpt-runner-shared/node'
+import { getGptFilesInfo, loadUserConfig } from '@nicepkg/gpt-runner-core'
+import { PathUtils, sendFailResponse, sendSuccessResponse } from '@nicepkg/gpt-runner-shared/node'
 import type { ControllerConfig } from '../types'
 
 export const gptFilesControllers: ControllerConfig = {
-  namespacePath: '/gpt-files',
+  namespacePath: '/gpt-files-info',
   controllers: [
     {
-      url: '/tree',
+      url: '/',
       method: 'get',
       handler: async (req, res) => {
         const { rootPath } = req.query
@@ -31,7 +30,7 @@ export const gptFilesControllers: ControllerConfig = {
 
         const finalPath = path.resolve(rootPath)
 
-        if (!fs.existsSync(finalPath) || fs.statSync(finalPath).isFile()) {
+        if (!PathUtils.isDirectory(finalPath)) {
           sendFailResponse(res, {
             message: 'rootPath is not a valid directory',
           })
@@ -44,28 +43,16 @@ export const gptFilesControllers: ControllerConfig = {
         if (userConfig.openai?.openaiKey)
           userConfig.openai.openaiKey = ''
 
-        const gptFilePaths = await getGptFiles({
-          rootPath: finalPath,
-          exts: userConfig.exts,
-          includes: userConfig.includes,
-          excludes: userConfig.excludes,
-          respectGitignore: userConfig.respectGitignore,
-        })
+        console.log('userConfig', userConfig)
 
-        console.log('gptFilePaths', gptFilePaths, userConfig)
-
-        const gptFilesInfo = await getGptFilesInfo({
-          filepaths: gptFilePaths,
+        const { filesInfo, filesInfoTree } = await getGptFilesInfo({
           userConfig,
-        })
-
-        const gptFilesInfoTree = await gptFilesInfoToTree({
-          gptFilesInfo,
         })
 
         sendSuccessResponse(res, {
           data: {
-            tree: gptFilesInfoTree,
+            filesInfo,
+            filesInfoTree,
           },
         })
       },

@@ -37,8 +37,8 @@
     "stub": "unbuild --stub"
   },
   "dependencies": {
-    "@nicepkg/gpt-runner": "workspace:*",
+    "@nicepkg/gpt-runner-core": "workspace:*",
     "@nicepkg/gpt-runner-shared": "workspace:*",
-    "unconfig": "^0.3.7"
+    "unconfig": "^0.3.9"
   }
 }

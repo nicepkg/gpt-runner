@@ -8,6 +8,9 @@ const resolvePath = (...paths: string[]) => path.resolve(__dirname, ...paths)
 export default defineConfig({
   root: resolvePath('./'),
   publicDir: resolvePath('./public'),
+  optimizeDeps: {
+    include: ['@nicepkg/gpt-runner-shared'],
+  },
   plugins: [
     React(),
   ],

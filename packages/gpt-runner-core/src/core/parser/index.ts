@@ -1,22 +1,22 @@
 import path from 'node:path'
-import type { UserConfig } from '../types'
-import { getSingleFileConfig, resolveSingleFileConfig } from '../config'
+import type { SingleFileConfig, UserConfig } from '@nicepkg/gpt-runner-shared/common'
+import { resolveSingleFileConfig } from '../config'
 import { gptMdFileParser } from './md'
 
-export interface parseGptFileProps {
-  filepath: string
+export interface parseGptFileParams {
+  filePath: string
   userConfig: UserConfig
 }
 
-export function parseGptFile(props: parseGptFileProps) {
-  const { filepath, userConfig } = props
+export async function parseGptFile(params: parseGptFileParams): Promise<SingleFileConfig> {
+  const { filePath, userConfig } = params
 
-  const ext = path.extname(filepath)
+  const ext = path.extname(filePath)
 
   switch (ext) {
     case '.md':
-      return gptMdFileParser({
-        filepath,
+      return await gptMdFileParser({
+        filePath,
         userConfig,
       })
     default:
@@ -25,6 +25,6 @@ export function parseGptFile(props: parseGptFileProps) {
 
   return resolveSingleFileConfig({
     userConfig,
-    singleFileConfig: getSingleFileConfig({}),
+    singleFileConfig: {},
   })
 }

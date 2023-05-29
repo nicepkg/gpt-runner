@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
 import cloneDeep from 'lodash-es/cloneDeep'
-import { EnvConfig } from '@nicepkg/gpt-runner-shared'
+import { EnvConfig } from '@nicepkg/gpt-runner-shared/common'
 
 /**
  * The resetStateQueue is an array that holds callbacks to reset all stores.

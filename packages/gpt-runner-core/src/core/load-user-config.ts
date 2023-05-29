@@ -2,8 +2,8 @@ import { dirname, resolve } from 'node:path'
 import fs from 'node:fs'
 import type { LoadConfigResult, LoadConfigSource } from 'unconfig'
 import { createConfigLoader as createLoader } from 'unconfig'
-import type { UserConfig } from './types'
-import { getUserConfig } from './config'
+import type { UserConfig } from '@nicepkg/gpt-runner-shared/common'
+import { userConfigWithDefault } from './config'
 
 export type { LoadConfigResult, LoadConfigSource }
 export type IUserConfig = UserConfig & { configFile?: false | string }
@@ -58,7 +58,9 @@ export async function loadUserConfig<U extends IUserConfig = IUserConfig>(
   })
 
   const result = await loader.load()
-  result.config = getUserConfig(Object.assign(defaults, result.config || inlineConfig)) as U
+  result.config = userConfigWithDefault(Object.assign({
+    rootPath: cwd,
+  }, defaults, result.config || inlineConfig)) as U
 
   return result
 }

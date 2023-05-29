@@ -1,5 +1,5 @@
-import type { Rule } from './common'
-import type { ChatRole } from './enum'
+import type { FilterPattern, TreeItem } from './common'
+import type { ChatRole, GptFileTreeItemType } from './enum'
 
 export interface OpenaiConfig {
   openaiKey: string
@@ -26,12 +26,51 @@ export interface UserConfig {
     presencePenalty?: number
   }
 
+  /**
+   * @default process.cwd()
+   */
   rootPath?: string
-  includes?: Rule[]
-  excludes?: Rule[]
+
+  /**
+   * @default ['.gpt.md']
+   */
   exts?: string[]
+
+  /**
+   * @default null
+   */
+  includes?: FilterPattern
+
+  /**
+   * @default null
+   */
+  excludes?: FilterPattern
+
+  /**
+     * @default true
+     */
   respectGitignore?: boolean
 }
+
+export interface GptPathBaseInfo {
+  id: string
+  path: string
+  name: string
+  type: GptFileTreeItemType
+}
+
+export interface GptFileInfo extends GptPathBaseInfo {
+  type: GptFileTreeItemType.File
+  content: string
+  singleFileConfig: SingleFileConfig
+}
+
+export interface GptFolderInfo extends GptPathBaseInfo {
+  type: GptFileTreeItemType.Folder
+}
+
+export type GptFileInfoTreeItem = TreeItem<GptFolderInfo | GptFileInfo>
+export type GptFileInfoTree = GptFileInfoTreeItem[]
 
 export interface SingleChatMessage {
   name: ChatRole

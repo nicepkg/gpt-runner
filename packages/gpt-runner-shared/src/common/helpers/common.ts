@@ -1,3 +1,5 @@
+import type { TreeItem } from '../types'
+
 export function sleep(ms: number) {
   return new Promise(resolve => setTimeout(resolve, ms))
 }
@@ -39,7 +41,6 @@ export function formatSourceValue<T = any>(value: any): T {
   return result as T
 }
 
-export type TreeItem<T> = T & { children?: TreeItem<T>[] }
 export function travelTree<T extends TreeItem<Record<string, any>>, R extends TreeItem<Record<string, any>> = TreeItem<Record<string, any>> >(tree: T[], callback: (item: T, parent?: T) => void | R): R[] {
   const travel = (tree: T[], parent?: T) => {
     return tree.map((item) => {
@@ -51,4 +52,13 @@ export function travelTree<T extends TreeItem<Record<string, any>>, R extends Tr
     })
   }
   return travel(tree) as R[]
+}
+
+export function tryParseJson(str: string) {
+  try {
+    return JSON.parse(str)
+  }
+  catch (e) {
+    return {}
+  }
 }
