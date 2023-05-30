@@ -1,110 +1,30 @@
 import type { CSSProperties, FC } from 'react'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect } from 'react'
 import { VSCodePanelTab, VSCodePanelView } from '@vscode/webview-ui-toolkit/react'
-import type { SingleChat } from '@nicepkg/gpt-runner-shared/common'
-import { ChatMessageStatus, ChatRole } from '@nicepkg/gpt-runner-shared/common'
+import { ChatMessageStatus } from '@nicepkg/gpt-runner-shared/common'
 import { useIsMobile } from '../../hooks/use-is-mobile.hook'
-import type { ChatMessagePanelProps } from '../../components/chat-message-panel'
-import { ChatMessagePanel } from '../../components/chat-message-panel'
 import { FlexRow } from '../../styles/global.styles'
-import { ChatMessageInput } from '../../components/chat-message-input'
-import { useGlobalStore } from '../../store/zustand/global'
 import { useScrollDown } from '../../hooks/use-scroll-down.hook'
-import { IconButton } from '../../components/icon-button'
+import { useChatInstance } from '../../hooks/use-chat-instance.hook'
 import { ChatPanelWrapper, SidebarWrapper, StyledVSCodePanels } from './chat.styles'
 import { ChatSidebar } from './chat-sidebar'
+import { ChatPanel } from './chat-panel'
 
 const Chat: FC = () => {
   const isMobile = useIsMobile()
   const chatId = '1'
-  const { getChatInstance, addChatInstance, updateChatInstance, generateChatAnswer } = useGlobalStore()
-  const [chatInstance, setChatInstance] = useState<SingleChat>()
+  const { chatInstance } = useChatInstance({ chatId })
   const [scrollDownRef, scrollDown] = useScrollDown()
+
+  const lastMessageTextLength = chatInstance ? chatInstance.messages[chatInstance.messages.length - 1].text.length : 0
+  useEffect(() => {
+    if (chatInstance?.status === ChatMessageStatus.Pending)
+      scrollDown()
+  }, [chatInstance?.status, lastMessageTextLength, isMobile, scrollDown])
 
   useEffect(() => {
     scrollDown()
-  }, [chatInstance?.messages.length, isMobile])
-
-  useEffect(() => {
-    const instance = getChatInstance(chatId)
-    if (instance) {
-      setChatInstance(instance)
-    }
-    else {
-      setChatInstance(addChatInstance({
-        id: chatId,
-        title: 'GPT Runner',
-        inputtingPrompt: '...',
-        systemPrompt: '',
-        temperature: 1,
-        messages: [],
-        status: ChatMessageStatus.Idle,
-      }))
-    }
-  }, [chatId])
-
-  const messagePanelProps: ChatMessagePanelProps = {
-    messageItems: chatInstance?.messages.map((message, i) => {
-      const isLast = i === chatInstance.messages.length - 1
-      const isLastTwo = i >= chatInstance.messages.length - 2
-      const isAi = message.name === ChatRole.ASSISTANT
-
-      return {
-        ...message,
-        status: isLast ? chatInstance.status : ChatMessageStatus.Success,
-        showToolbar: isLastTwo ? 'always' : 'hover',
-        showRegenerateIcon: isAi && isLast,
-      }
-    }) ?? [],
-  }
-
-  const renderInputToolbar = useCallback(() => {
-    return <>
-      <IconButton
-        text='Pre Chat'
-        iconClassName='codicon-chevron-left'></IconButton>
-
-      <IconButton
-        text='Next Chat'
-        iconClassName='codicon-chevron-right'></IconButton>
-
-      <IconButton
-        text='Clean All'
-        iconClassName='codicon-trash'></IconButton>
-
-      <IconButton
-        text='New Chat'
-        iconClassName='codicon-add'></IconButton>
-
-      {/* right icon */}
-      {chatInstance?.status === ChatMessageStatus.Pending && <IconButton
-        style={{
-          marginLeft: 'auto',
-        }}
-        disabled={chatInstance?.status !== ChatMessageStatus.Pending}
-        text='Stop'
-        iconClassName='codicon-chrome-maximize'
-      ></IconButton>}
-
-      {chatInstance?.status === ChatMessageStatus.Success && <IconButton
-        style={{
-          marginLeft: 'auto',
-        }}
-        disabled={chatInstance?.status !== ChatMessageStatus.Success}
-        text='Continue'
-        iconClassName='codicon-debug-continue-small'
-      ></IconButton>}
-
-      <IconButton
-        disabled={!chatInstance?.inputtingPrompt}
-        text='Send'
-        hoverShowText={false}
-        iconClassName='codicon-send'
-        onClick={() => {
-          generateChatAnswer(chatId)
-        }}></IconButton>
-    </>
-  }, [chatId, chatInstance])
+  }, [scrollDownRef.current])
 
   const renderSidebar = useCallback(() => {
     return <SidebarWrapper>
@@ -114,20 +34,9 @@ const Chat: FC = () => {
 
   const renderChatPanel = useCallback(() => {
     return <ChatPanelWrapper>
-      <ChatMessagePanel ref={scrollDownRef} {...messagePanelProps}></ChatMessagePanel>
-      <ChatMessageInput
-        value={chatInstance?.inputtingPrompt || ''}
-
-        onChange={(value) => {
-          updateChatInstance(chatId, {
-            inputtingPrompt: value,
-          }, false)
-        }}
-
-        toolbarSlot={renderInputToolbar()}
-      ></ChatMessageInput>
+      <ChatPanel scrollDownRef={scrollDownRef} chatId={chatId}></ChatPanel>
     </ChatPanelWrapper >
-  }, [chatInstance, chatId, messagePanelProps])
+  }, [chatId, scrollDownRef])
 
   if (isMobile) {
     const viewStyle: CSSProperties = {

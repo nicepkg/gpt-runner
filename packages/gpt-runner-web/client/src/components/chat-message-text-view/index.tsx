@@ -1,17 +1,20 @@
 import ReactMarkdown from 'react-markdown'
 import type { FC } from 'react'
+import remarkGfm from 'remark-gfm'
+import type { MessageCodeBlockProps } from '../chat-message-code-block'
 import { MessageCodeBlock } from '../chat-message-code-block'
 
-export interface MessageTextViewProps {
+export interface MessageTextViewProps extends Partial<MessageCodeBlockProps> {
   contents: string
 }
 
 export const MessageTextView: FC<MessageTextViewProps> = (props) => {
-  const { contents } = props
+  const { contents, ...messageCodeBlockProps } = props
 
   return (
     <ReactMarkdown
       className='markdown-body'
+      remarkPlugins={[remarkGfm]}
       components={{
         pre({ children, ...props }) {
           if (children.length !== 1) {
@@ -25,6 +28,7 @@ export const MessageTextView: FC<MessageTextViewProps> = (props) => {
             = /language-(\w+)/.exec(codeClassName || '') || []
           return (
             <MessageCodeBlock
+              {...messageCodeBlockProps}
               contents={codeContents}
               language={languageMatch[1] || ''}
             />

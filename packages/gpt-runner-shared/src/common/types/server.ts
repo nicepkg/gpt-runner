@@ -1,4 +1,4 @@
-import type { ChatRole } from './enum'
+import type { OpenaiBaseConfig, SingleChatMessage } from './config'
 
 export interface BaseResponse<T = any> {
   type: 'Success' | 'Fail'
@@ -10,15 +10,12 @@ export interface BaseResponse<T = any> {
 export type SuccessResponse<T = any> = Omit<BaseResponse<T>, 'type'> & { type: 'Success' }
 export type FailResponse<T = any> = Omit<BaseResponse<T>, 'type'> & { type: 'Fail' }
 
-export interface ChatMessage {
-  name: ChatRole
-  text: string
+export interface ChatStreamReqParams extends Partial<OpenaiBaseConfig> {
+  messages: SingleChatMessage[]
+  prompt: string
+  systemPrompt?: string
 }
 
-export interface ChatStreamReqParams {
-  messages: ChatMessage[]
-  prompt: string
-  openaiKey?: string
-  systemPrompt?: string
-  temperature?: number
+export interface GetGptFilesReqParams {
+  rootPath: string
 }

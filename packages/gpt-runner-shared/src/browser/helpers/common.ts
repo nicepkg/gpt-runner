@@ -38,3 +38,7 @@ export function removeSearchParams(urlLike: string,
     return urlBase
   return `${urlBase}?${urlSearchParams}`
 }
+
+export function copy(text: string) {
+  navigator.clipboard.writeText(text)
+}

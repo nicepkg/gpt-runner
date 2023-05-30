@@ -1,84 +1,36 @@
-import type { FC } from 'react'
 import { useCallback, useState } from 'react'
 import { VSCodeTextField } from '@vscode/webview-ui-toolkit/react'
-import clsx from 'clsx'
 import type { TreeProps } from '../tree'
 import { Tree } from '../tree'
 import type { TopToolbarProps } from '../top-toolbar'
 import { TopToolbar } from '../top-toolbar'
-import { Icon } from '../icon'
-import type { TreeItemBaseState, TreeItemProps, TreeItemState } from '../tree-item'
+import type { TreeItemBaseStateOtherInfo, TreeItemProps } from '../tree-item'
 import { SidebarWrapper } from './sidebar.styles'
 
-export interface SidebarProps {
+export interface SidebarProps<OtherInfo extends TreeItemBaseStateOtherInfo = TreeItemBaseStateOtherInfo> {
   defaultSearchKeyword?: string
   placeholder?: string
   topToolbar?: TopToolbarProps
-  tree?: TreeProps
-  onCreateChat: (props: TreeItemBaseState) => void
-  onRenameChat: (props: TreeItemBaseState) => void
-  onDeleteChat: (props: TreeItemBaseState) => void
+  tree?: TreeProps<OtherInfo>
+  renderTreeLeftSlot?: TreeItemProps<OtherInfo>['renderLeftSlot']
+  renderTreeRightSlot?: TreeItemProps<OtherInfo>['renderRightSlot']
 }
 
-export const Sidebar: FC<SidebarProps> = (props) => {
+export function Sidebar<OtherInfo extends TreeItemBaseStateOtherInfo = TreeItemBaseStateOtherInfo>(props: SidebarProps<OtherInfo>) {
   const {
     defaultSearchKeyword = '',
     placeholder,
     tree,
     topToolbar,
+    renderTreeLeftSlot,
+    renderTreeRightSlot,
   } = props
 
   const [searchKeyword, setSearchKeyword] = useState(defaultSearchKeyword)
 
-  const renderTreeLeftSlot = useCallback((props: TreeItemState) => {
-    const { isLeaf, isExpanded } = props
-
-    const getIconClassName = () => {
-      if (isLeaf)
-        return 'codicon-comment'
-
-      if (isExpanded)
-        return 'codicon-folder-opened'
-
-      return 'codicon-folder'
-    }
-
-    return <>
-      {!isLeaf && <Icon style={{
-        marginRight: '0.25rem',
-      }} className={clsx(isExpanded ? 'codicon-chevron-down' : 'codicon-chevron-right')}></Icon >}
-
-      <Icon style={{
-        marginLeft: !isLeaf ? '0' : '0.6rem',
-        marginRight: '0.45rem',
-      }} className={getIconClassName()}></Icon>
-    </>
-  }, [])
-
-  const renderTreeRightSlot = useCallback((props: TreeItemState) => {
-    const { isLeaf, children } = props
-    const childrenAllIsLeaf = children?.every(child => child.isLeaf)
-
-    if (isLeaf) {
-      return <>
-        <Icon style={{
-          marginLeft: '6px',
-        }} className={'codicon-trash'}></Icon>
-      </>
-    }
-
-    if (childrenAllIsLeaf) {
-      return <Icon style={{
-        marginLeft: '6px',
-      }} className='codicon-new-file' ></Icon>
-    }
-
-    return <></>
-  }, [])
-
   const filterTreeItems = tree?.items.filter(file => searchKeyword ? file.name.includes(searchKeyword) : true)
 
-  const processTreeItem = useCallback((items: TreeItemProps[]): TreeItemProps[] => {
+  const processTreeItem = useCallback((items: TreeItemProps<OtherInfo>[]): TreeItemProps<OtherInfo>[] => {
     return items.map((item) => {
       return {
         ...item,

@@ -47,6 +47,7 @@ export const MsgContent = styled.div<{ $showToolbar: MessageItemProps['showToolb
     top: 0;
     ${$isMe ? 'right' : 'left'}: 0;
     z-index: 1;
+    min-height: 100%;
 
     & .msg-content-footer {
       opacity: 0;

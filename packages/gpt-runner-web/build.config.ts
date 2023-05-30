@@ -9,6 +9,7 @@ export default defineBuildConfig({
   declaration: true,
   externals: [
     'unconfig',
+    'langchain',
   ],
   rollup: {
     emitCJS: true,

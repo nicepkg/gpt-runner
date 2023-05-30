@@ -1,17 +1,17 @@
-import type { TreeItemProps } from '../tree-item'
+import type { TreeItemBaseStateOtherInfo, TreeItemProps } from '../tree-item'
 import { TreeItem } from '../tree-item'
 
-export interface TreeProps {
-  items: TreeItemProps[]
-  onFileContextMenu?: TreeItemProps['onContextMenu']
-  onFileClick?: TreeItemProps['onClick']
-  onFileExpand?: TreeItemProps['onExpand']
-  onFileCollapse?: TreeItemProps['onCollapse']
-  renderItemLeftSlot?: TreeItemProps['renderLeftSlot']
-  renderItemRightSlot?: TreeItemProps['renderRightSlot']
+export interface TreeProps<OtherInfo extends TreeItemBaseStateOtherInfo = TreeItemBaseStateOtherInfo> {
+  items: TreeItemProps<OtherInfo>[]
+  onFileContextMenu?: TreeItemProps<OtherInfo>['onContextMenu']
+  onFileClick?: TreeItemProps<OtherInfo>['onClick']
+  onFileExpand?: TreeItemProps<OtherInfo>['onExpand']
+  onFileCollapse?: TreeItemProps<OtherInfo>['onCollapse']
+  renderItemLeftSlot?: TreeItemProps<OtherInfo>['renderLeftSlot']
+  renderItemRightSlot?: TreeItemProps<OtherInfo>['renderRightSlot']
 }
 
-export const Tree: React.FC<TreeProps> = (props) => {
+export function Tree<OtherInfo extends TreeItemBaseStateOtherInfo = TreeItemBaseStateOtherInfo>(props: TreeProps<OtherInfo>) {
   const {
     items,
     onFileContextMenu,
@@ -46,7 +46,7 @@ export const Tree: React.FC<TreeProps> = (props) => {
       file.onCollapse?.(state)
       onFileCollapse?.(state)
     },
-  } as TreeItemProps))
+  } as TreeItemProps<OtherInfo>))
 
   return (
     <div>

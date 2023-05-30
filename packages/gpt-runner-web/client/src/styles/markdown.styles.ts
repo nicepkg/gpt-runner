@@ -3,6 +3,11 @@ import { createGlobalStyle } from 'styled-components'
 export const MarkdownStyle = createGlobalStyle`
   .markdown-body {
     line-height: 1.5;
+    min-width: 1rem;
+
+    & > *:last-child {
+      margin-bottom: 0;
+    }
 
     a {
       color: var(--link-foreground);
@@ -177,7 +182,6 @@ export const MarkdownStyle = createGlobalStyle`
     }
     table tr {
       border-top: 1px solid var(--panel-view-border);
-      background-color: white;
       margin: 0;
       padding: 0;
     }

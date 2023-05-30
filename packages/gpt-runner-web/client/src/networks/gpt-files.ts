@@ -13,7 +13,7 @@ export type FetchGptFilesTreeResponse = BaseResponse<{
 export async function fetchGptFilesTree(params: FetchGptFilesTreeParams): Promise<FetchGptFilesTreeResponse> {
   const { rootPath } = params
 
-  const res = await fetch(`${EnvConfig.get('BASE_SERVER_URL')}/api/gpt-files-info?rootPath=${rootPath}`, {
+  const res = await fetch(`${EnvConfig.get('BASE_SERVER_URL')}/api/gpt-files?rootPath=${rootPath}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',

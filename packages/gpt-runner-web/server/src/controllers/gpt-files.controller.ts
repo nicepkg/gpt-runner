@@ -1,33 +1,22 @@
 import path from 'node:path'
 import { getGptFilesInfo, loadUserConfig } from '@nicepkg/gpt-runner-core'
-import { PathUtils, sendFailResponse, sendSuccessResponse } from '@nicepkg/gpt-runner-shared/node'
+import { PathUtils, sendFailResponse, sendSuccessResponse, verifyParamsByZod } from '@nicepkg/gpt-runner-shared/node'
+import type { GetGptFilesReqParams } from '@nicepkg/gpt-runner-shared/common'
+import { GetGptFilesReqParamsSchema } from '@nicepkg/gpt-runner-shared/common'
 import type { ControllerConfig } from '../types'
 
 export const gptFilesControllers: ControllerConfig = {
-  namespacePath: '/gpt-files-info',
+  namespacePath: '/gpt-files',
   controllers: [
     {
       url: '/',
       method: 'get',
       handler: async (req, res) => {
-        const { rootPath } = req.query
+        const query = req.query as GetGptFilesReqParams
 
-        if (!rootPath) {
-          sendFailResponse(res, {
-            message: 'rootPath is required',
-          })
+        verifyParamsByZod(query, GetGptFilesReqParamsSchema)
 
-          return
-        }
-
-        if (typeof rootPath !== 'string') {
-          sendFailResponse(res, {
-            message: 'rootPath must be a string',
-          })
-
-          return
-        }
-
+        const { rootPath } = query
         const finalPath = path.resolve(rootPath)
 
         if (!PathUtils.isDirectory(finalPath)) {
@@ -40,8 +29,8 @@ export const gptFilesControllers: ControllerConfig = {
 
         const { config: userConfig } = await loadUserConfig(finalPath)
 
-        if (userConfig.openai?.openaiKey)
-          userConfig.openai.openaiKey = ''
+        if (userConfig.model?.openaiKey)
+          userConfig.model.openaiKey = ''
 
         console.log('userConfig', userConfig)
 

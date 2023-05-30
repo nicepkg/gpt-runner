@@ -1,18 +1,22 @@
 import './fixes'
-import {
-  ChatPromptTemplate, HumanMessagePromptTemplate, SystemMessagePromptTemplate,
-} from 'langchain/prompts'
-import { LLMChain } from 'langchain/chains'
 import { ChatOpenAI } from 'langchain/chat_models/openai'
-import type { OpenaiBaseConfig, SingleChatMessage } from '@nicepkg/gpt-runner-shared/common'
 import { CallbackManager } from 'langchain/callbacks'
-import { mapStoredMessageToChatTemplateMessages } from './helper'
+import { BufferMemory, ChatMessageHistory } from 'langchain/memory'
+import { ConversationChain } from 'langchain/chains'
+import {
+  ChatPromptTemplate,
+  HumanMessagePromptTemplate,
+  MessagesPlaceholder,
+  SystemMessagePromptTemplate,
+} from 'langchain/prompts'
+import type { OpenaiBaseConfig, SingleChatMessage } from '@nicepkg/gpt-runner-shared/common'
+import { mapStoredMessagesToChatMessages } from './helper'
 import type { BaseStreamChainParams } from './types'
 
-export interface ChatgptChainParams extends BaseStreamChainParams<SingleChatMessage>, OpenaiBaseConfig {
+export interface ChatgptMemoryChainParams extends BaseStreamChainParams<SingleChatMessage>, OpenaiBaseConfig {
 }
 
-export async function chatgptChain(params: ChatgptChainParams) {
+export async function chatgptMemoryChain(params: ChatgptMemoryChainParams) {
   const {
     messages,
     systemPrompt,
@@ -62,14 +66,25 @@ export async function chatgptChain(params: ChatgptChainParams) {
     }),
   })
 
+  const lcChatMessageHistory = new ChatMessageHistory(
+    mapStoredMessagesToChatMessages(messages),
+  )
+  const memory = new BufferMemory({
+    chatHistory: lcChatMessageHistory,
+    returnMessages: true,
+    memoryKey: 'history',
+  })
+
   const chatPrompt = ChatPromptTemplate.fromPromptMessages([
     SystemMessagePromptTemplate.fromTemplate(systemPrompt || 'You are a friendly assistant.'),
-    ...mapStoredMessageToChatTemplateMessages(messages),
+    new MessagesPlaceholder('history'),
     HumanMessagePromptTemplate.fromTemplate('{global.input}'),
   ])
-  const chain = new LLMChain({
-    prompt: chatPrompt,
+
+  const chain = new ConversationChain({
+    memory,
     llm: chat,
+    prompt: chatPrompt,
   })
 
   // const res = await chain.call({

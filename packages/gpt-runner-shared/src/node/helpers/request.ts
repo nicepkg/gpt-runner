@@ -1,4 +1,6 @@
 import type { Response } from 'express'
+import type { z } from 'zod'
+import { verifyZod } from '../../common'
 
 interface CustomResponse<T = any> {
   type: 'Success' | 'Fail'
@@ -32,4 +34,8 @@ export function sendSuccessResponse<T>(res: Response, options: Omit<SuccessRespo
 
 export function sendFailResponse<T>(res: Response, options: Omit<FailResponse<T>, 'type'>): Response {
   return res.status(options.status || 400).json(buildFailResponse(options))
+}
+
+export function verifyParamsByZod<T>(params: T, schema: z.ZodSchema<T>): void {
+  verifyZod(schema, params)
 }

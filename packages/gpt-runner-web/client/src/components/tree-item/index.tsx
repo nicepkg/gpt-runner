@@ -3,31 +3,33 @@ import type { Variants } from 'framer-motion'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Children, IconWrapper, NameWrapper, TreeItemRow, TreeItemRowLeftSlot, TreeItemRowRightSlot, TreeItemWrapper } from './tree-item.styles'
 
-export interface TreeItemBaseState {
+export type TreeItemBaseStateOtherInfo = Record<string, any>
+export interface TreeItemBaseState<OtherInfo extends TreeItemBaseStateOtherInfo = TreeItemBaseStateOtherInfo> {
   id: string
   name: string
   path: string
   isLeaf: boolean
-  children?: TreeItemProps[]
+  children?: TreeItemProps<OtherInfo>[]
   isFocused?: boolean
+  otherInfo?: OtherInfo
 }
 
-export interface TreeItemState extends TreeItemBaseState {
+export interface TreeItemState<OtherInfo extends TreeItemBaseStateOtherInfo = TreeItemBaseStateOtherInfo> extends TreeItemBaseState<OtherInfo> {
   isHovering: boolean
   isExpanded: boolean
 }
 
-export interface TreeItemProps extends TreeItemBaseState {
+export interface TreeItemProps<OtherInfo extends TreeItemBaseStateOtherInfo = TreeItemBaseStateOtherInfo> extends TreeItemBaseState<OtherInfo> {
   defaultIsExpanded?: boolean
-  renderLeftSlot?: (props: TreeItemState) => React.ReactNode
-  renderRightSlot?: (props: TreeItemState) => React.ReactNode
-  onExpand?: (props: TreeItemState) => void
-  onCollapse?: (props: TreeItemState) => void
-  onClick?: (props: TreeItemState) => void
-  onContextMenu?: (props: TreeItemState) => void
+  renderLeftSlot?: (props: TreeItemState<OtherInfo>) => React.ReactNode
+  renderRightSlot?: (props: TreeItemState<OtherInfo>) => React.ReactNode
+  onExpand?: (props: TreeItemState<OtherInfo>) => void
+  onCollapse?: (props: TreeItemState<OtherInfo>) => void
+  onClick?: (props: TreeItemState<OtherInfo>) => void
+  onContextMenu?: (props: TreeItemState<OtherInfo>) => void
 }
 
-export const TreeItem: React.FC<TreeItemProps> = (props) => {
+export function TreeItem<OtherInfo extends TreeItemBaseStateOtherInfo = TreeItemBaseStateOtherInfo>(props: TreeItemProps<OtherInfo>) {
   const { renderLeftSlot, renderRightSlot, onExpand, onCollapse, onClick, onContextMenu, ...baseStateProps } = props
   const {
     name,

@@ -8,21 +8,25 @@ import { CodeBlockHeader, CodeBlockWrapper } from './chat-message-code-block.sty
 export interface MessageCodeBlockProps {
   contents: string
   language: string
+  onCopyCode?: (value: string) => void
+  onInsertCode?: (value: string) => void
+  onDiffCode?: (value: string) => void
 }
 
 export const MessageCodeBlock: FC<MessageCodeBlockProps> = (props) => {
-  const { contents, language } = props
+  const { contents, language, onCopyCode, onInsertCode, onDiffCode } = props
 
-  const handleCopyAction = useCallback(() => {
-    navigator.clipboard.writeText(contents)
-  }, [contents])
+  const handleCopyCode = useCallback(() => {
+    onCopyCode?.(contents)
+  }, [contents, onCopyCode])
 
-  const handleInsertCodeSnippetAction = useCallback(async () => {
+  const handleInsertCode = useCallback(() => {
+    onInsertCode?.(contents)
+  }, [contents, onInsertCode])
 
-  }, [contents])
-
-  const handleDiffAction = useCallback(async () => {
-  }, [contents])
+  const handleDiffCode = useCallback(() => {
+    onDiffCode?.(contents)
+  }, [contents, onDiffCode])
 
   return (
     <CodeBlockWrapper>
@@ -30,21 +34,21 @@ export const MessageCodeBlock: FC<MessageCodeBlockProps> = (props) => {
         <IconButton
           text='Copy'
           iconClassName='codicon-copy'
-          onClick={handleCopyAction}
+          onClick={handleCopyCode}
         >
         </IconButton>
 
         <IconButton
           text='Insert'
           iconClassName='codicon-insert'
-          onClick={handleInsertCodeSnippetAction}
+          onClick={handleInsertCode}
         >
         </IconButton>
 
         <IconButton
           text='Diff'
           iconClassName='codicon-arrow-swap'
-          onClick={handleDiffAction}
+          onClick={handleDiffCode}
         >
         </IconButton>
       </CodeBlockHeader>

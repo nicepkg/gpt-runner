@@ -1,4 +1,4 @@
-import type { Request, Response } from 'express'
+import type { NextFunction, Request, Response } from 'express'
 
 export interface ControllerConfig {
   namespacePath: string
@@ -7,5 +7,5 @@ export interface ControllerConfig {
 export interface Controller {
   url: string
   method: 'all' | 'get' | 'post' | 'put' | 'delete' | 'patch' | 'options' | 'head'
-  handler: (req: Request, res: Response) => Promise<void>
+  handler: (req: Request<Record<string, any>, any, any, Record<string, any>>, res: Response, next: NextFunction) => Promise<void>
 }

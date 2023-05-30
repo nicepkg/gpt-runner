@@ -1,30 +1,63 @@
 import type { FilterPattern, TreeItem } from './common'
 import type { ChatRole, GptFileTreeItemType } from './enum'
 
-export interface OpenaiConfig {
+export interface BaseModelConfig {
+  /**
+   * mode type
+   */
+  type: string
+
+  /**
+   * Model name to use
+   */
+  modelName?: string
+}
+
+export interface OpenaiConfig extends BaseModelConfig {
+  /**
+   * mode type
+   */
+  type: 'openai'
+
+  /**
+   * The API key to use for OpenAI API requests.
+   */
   openaiKey: string
-  model?: string
+
+  /**
+   * Sampling temperature to use
+   */
   temperature?: number
+
+  /**
+   * Maximum number of tokens to generate in the completion. -1 returns as many
+   * tokens as possible given the prompt and the model's maximum context size.
+   */
   maxTokens?: number
+
+  /**
+   * Total probability mass of tokens to consider at each step
+   */
   topP?: number
-  topK?: number
+
+  /**
+   * Penalizes repeated tokens according to frequency
+   */
   frequencyPenalty?: number
+
+  /**
+   * Penalizes repeated tokens
+   */
   presencePenalty?: number
 }
 
-export interface UserConfig {
-  mode?: 'openai'
+export type OpenaiBaseConfig = Omit<OpenaiConfig, 'type'>
 
-  openai?: {
-    openaiKey: string
-    model?: string
-    temperature?: number
-    maxTokens?: number
-    topP?: number
-    topK?: number
-    frequencyPenalty?: number
-    presencePenalty?: number
-  }
+export interface UserConfig {
+  /**
+   * chat model
+   */
+  model?: OpenaiConfig
 
   /**
    * @default process.cwd()
@@ -78,8 +111,7 @@ export interface SingleChatMessage {
 }
 
 export interface SingleFileConfig {
-  mode?: 'openai'
-  openai?: Partial<OpenaiConfig>
+  model?: UserConfig['model']
   title?: string
   userPrompt?: string
   systemPrompt?: string
@@ -94,32 +126,33 @@ export interface FormOption {
   value: string
 }
 
-export interface FormInputConfig {
-  type: 'input'
-  defaultValue?: string
+export interface FormFieldBaseConfig<DefaultValue = string> {
+  type: string
+  defaultValue?: DefaultValue
+  description?: string
 }
 
-export interface FormTextareaConfig {
+export interface FormInputConfig extends FormFieldBaseConfig {
+  type: 'input'
+}
+
+export interface FormTextareaConfig extends FormFieldBaseConfig {
   type: 'textarea'
-  defaultValue?: string
   row?: number
 }
 
-export interface FormSelectConfig {
+export interface FormSelectConfig extends FormFieldBaseConfig {
   type: 'select'
-  defaultValue?: string
   options: FormOption[]
 }
 
-export interface FormCheckboxGroupConfig {
+export interface FormCheckboxGroupConfig extends FormFieldBaseConfig<string[]> {
   type: 'checkbox-group'
-  defaultValue?: string[]
   options: FormOption[]
 }
 
-export interface FormRadioGroupConfig {
+export interface FormRadioGroupConfig extends FormFieldBaseConfig {
   type: 'radio-group'
-  defaultValue?: string
   options: FormOption[]
 }
 

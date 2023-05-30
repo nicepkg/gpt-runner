@@ -1,5 +1,5 @@
-import type { Router } from 'express'
-import type { ControllerConfig } from '../types'
+import type { NextFunction, Router } from 'express'
+import type { Controller, ControllerConfig } from '../types'
 import { chatgptControllers } from './chatgpt.controller'
 import { configControllers } from './config.controller'
 import { gptFilesControllers } from './gpt-files.controller'
@@ -16,7 +16,18 @@ export function processControllers(router: Router) {
 
     controllers.forEach((controller) => {
       const { url, method, handler } = controller
-      router[method](`${namespacePath}${url}`, handler)
+
+      const withCatchHandler: Controller['handler'] = async function (this: any, ...args) {
+        try {
+          return await handler.apply(this, args)
+        }
+        catch (error) {
+          const next = args[args.length - 1] as NextFunction
+          next(error)
+        }
+      }
+
+      router[method](`${namespacePath}${url}`, withCatchHandler)
     })
   })
 }

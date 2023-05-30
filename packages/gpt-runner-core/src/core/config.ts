@@ -13,20 +13,20 @@ export function singleFileConfigWithDefault(singleFileConfig?: Partial<SingleFil
 
 export function userConfigWithDefault(userConfig?: Partial<UserConfig>): UserConfig {
   return {
-    mode: 'openai',
+    model: {
+      type: 'openai',
+      openaiKey: process.env.OPENAI_KEY!,
+      modelName: 'gpt-3.5-turbo',
+      temperature: 0.9,
+      maxTokens: 2000,
+      ...userConfig?.model,
+    },
     rootPath: process.cwd(),
     includes: null,
     excludes: null,
     exts: ['.gpt.md'],
     respectGitignore: true,
     ...userConfig,
-    openai: {
-      openaiKey: process.env.OPENAI_KEY!,
-      model: 'gpt-3.5-turbo',
-      temperature: 0.9,
-      maxTokens: 2000,
-      ...userConfig?.openai,
-    },
   }
 }
 
@@ -41,11 +41,10 @@ export function resolveSingleFileConfig(params: ResolveSingleFileCConfigParams):
 
   const resolvedConfig: SingleFileConfig = {
     ...singleFileConfig,
-    mode: singleFileConfig.mode ?? userConfig.mode,
-    openai: {
-      ...userConfig.openai,
-      ...singleFileConfig.openai,
-    },
+    model: {
+      ...userConfig.model,
+      ...singleFileConfig.model,
+    } as SingleFileConfig['model'],
   }
 
   return resolvedConfig
