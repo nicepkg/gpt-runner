@@ -6,6 +6,7 @@ import { MessageCodeBlock } from '../chat-message-code-block'
 
 export interface MessageTextViewProps extends Partial<MessageCodeBlockProps> {
   contents: string
+
 }
 
 export const MessageTextView: FC<MessageTextViewProps> = (props) => {
