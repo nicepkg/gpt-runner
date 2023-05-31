@@ -1,7 +1,6 @@
 import type { SingleFileConfig, UserConfig } from '@nicepkg/gpt-runner-shared/common'
-import { tryParseJson } from '@nicepkg/gpt-runner-shared/common'
+import { resolveSingleFileConfig, singleFileConfigWithDefault, tryParseJson } from '@nicepkg/gpt-runner-shared/common'
 import { FileUtils } from '@nicepkg/gpt-runner-shared/node'
-import { resolveSingleFileConfig, singleFileConfigWithDefault } from '../config'
 
 export interface GptMdFileParserParams {
   filePath: string

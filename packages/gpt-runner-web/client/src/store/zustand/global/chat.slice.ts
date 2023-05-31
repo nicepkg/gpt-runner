@@ -1,8 +1,11 @@
 import type { StateCreator } from 'zustand'
-import type { SingleChat } from '@nicepkg/gpt-runner-shared/common'
-import { ChatMessageStatus, ChatRole } from '@nicepkg/gpt-runner-shared/common'
+import type { GptFileInfo, SingleChat, SingleFileConfig, UserConfig } from '@nicepkg/gpt-runner-shared/common'
+import { ChatMessageStatus, ChatRole, resolveSingleFileConfig } from '@nicepkg/gpt-runner-shared/common'
+import { v4 as uuidv4 } from 'uuid'
 import type { GetState } from '../types'
 import { fetchChatgptStream } from '../../../networks/chatgpt'
+import { fetchUserConfig } from '../../../networks/config'
+import type { SidebarTreeItem, SidebarTreeSlice } from './sidebar-tree.slice'
 
 export enum GenerateAnswerType {
   Generate = 'generate',
@@ -10,55 +13,127 @@ export enum GenerateAnswerType {
 }
 
 export interface ChatSlice {
-  openaiKey: string
+  activeChatId: string
+  userConfig: UserConfig
   chatInstances: SingleChat[]
-  getChatInstance: (id: string) => SingleChat | undefined
-  addChatInstance: (chat: SingleChat) => SingleChat
-  updateChatInstance: {
-    (id: string, chat: Partial<SingleChat>, replace: false): void
-    (id: string, chat: SingleChat, replace: true): void
+  updateActiveChatId: (activeChatId: string) => void
+  updateUserConfig: (userConfig: Partial<UserConfig>) => void
+  updateUserConfigFromRemote: (rootPath: string) => Promise<void>
+  resolveSingleFileConfig: (singleFileConfig: SingleFileConfig) => SingleFileConfig
+  getChatInstance: (chatId: string) => SingleChat | undefined
+  addChatInstance: (gptFileId: string, instance: Omit<SingleChat, 'id'>) => {
+    chatSidebarTreeItem: SidebarTreeItem
+    chatInstance: SingleChat
   }
-  removeChatInstance: (id: string) => void
-  generateChatAnswer: (id: string, type?: GenerateAnswerType) => Promise<void>
-  regenerateLastChatAnswer: (id: string) => Promise<void>
-  stopGeneratingChatAnswer: (id: string) => void
+  updateChatInstance: {
+    (chatId: string, chat: Partial<SingleChat>, replace: false): void
+    (chatId: string, chat: SingleChat, replace: true): void
+  }
+  removeChatInstance: (chatId: string) => void
+  generateChatAnswer: (chatId: string, type?: GenerateAnswerType) => Promise<void>
+  regenerateLastChatAnswer: (chatId: string) => Promise<void>
+  stopGeneratingChatAnswer: (chatId: string) => void
 }
 
 export type ChatState = GetState<ChatSlice>
 
 function getInitialState() {
-  return <ChatState>{
-    openaiKey: '',
+  return {
+    activeChatId: '',
+    userConfig: {},
     chatInstances: [],
-  }
+  } satisfies ChatState
 }
 
 const chatIdAbortCtrlMap = new Map<string, AbortController>()
 
 export const createChatSlice: StateCreator<
-  ChatSlice,
+  ChatSlice & SidebarTreeSlice,
   [],
   [],
   ChatSlice
 > = (set, get) => ({
   ...getInitialState(),
-  getChatInstance(id: string) {
-    return get().chatInstances.find(chatInstance => chatInstance.id === id)
+  updateActiveChatId(activeChatId) {
+    set({ activeChatId })
+  },
+  updateUserConfig(userConfig) {
+    set(state => ({
+      userConfig: {
+        ...state.userConfig,
+        ...userConfig,
+      },
+    }))
+  },
+  async updateUserConfigFromRemote(rootPath: string) {
+    const state = get()
+    const res = await fetchUserConfig({
+      rootPath,
+    })
+
+    state.updateUserConfig(res.data?.userConfig || {})
+  },
+  resolveSingleFileConfig(singleFileConfig) {
+    const state = get()
+    const { userConfig } = state
+    return resolveSingleFileConfig({
+      userConfig,
+      singleFileConfig,
+    }, false)
+  },
+  getChatInstance(chatId) {
+    return get().chatInstances.find(chatInstance => chatInstance.id === chatId)
   },
 
-  addChatInstance(chat: SingleChat) {
+  addChatInstance(gptFileId, instance) {
     const state = get()
+    const chatId = uuidv4()
+    const gptFileIdTreeItem = state.getSidebarTreeItem(gptFileId)
+    const mergedSingleFileConfig = {
+      ...(gptFileIdTreeItem as GptFileInfo | undefined)?.singleFileConfig || {},
+      ...instance.singleFileConfig,
+    }
+
+    const finalInstance: SingleChat = {
+      ...instance,
+      id: chatId,
+      singleFileConfig: mergedSingleFileConfig,
+    }
+
+    const chatInfo = state.getChatInfo(finalInstance)
+    chatInfo.parentId = gptFileId
+    const chatSidebarTreeItem = state.chatInfo2SidebarTreeItem(chatInfo)
+
+    state.updateSidebarTreeItem(gptFileId, (oldItem) => {
+      if (!oldItem.children)
+        oldItem.children = []
+
+      oldItem.children.push(chatSidebarTreeItem)
+
+      return oldItem
+    })
+
+    state.updateChatIdsByGptFileId(gptFileId, (oldChatIds) => {
+      if (oldChatIds.includes(chatId))
+        return oldChatIds
+
+      return [...oldChatIds, chatId]
+    })
+
     set(state => ({
-      chatInstances: [...state.chatInstances, { ...chat }],
+      chatInstances: [...state.chatInstances, finalInstance],
     }))
 
-    return state.getChatInstance(chat.id)!
+    return {
+      chatSidebarTreeItem,
+      chatInstance: state.getChatInstance(chatId)!,
+    }
   },
 
-  updateChatInstance(id: string, chat: SingleChat | Partial<SingleChat>, replace = false) {
+  updateChatInstance(chatId, chat, replace = false) {
     set(state => ({
       chatInstances: state.chatInstances.map((chatInstance) => {
-        if (chatInstance.id === id)
+        if (chatInstance.id === chatId)
           return replace ? chat as SingleChat : Object.assign(chatInstance, chat)
 
         return chatInstance
@@ -66,19 +141,19 @@ export const createChatSlice: StateCreator<
     }))
   },
 
-  removeChatInstance(id: string) {
+  removeChatInstance(chatId) {
     set(state => ({
-      chatInstances: state.chatInstances.filter(chatInstance => chatInstance.id !== id),
+      chatInstances: state.chatInstances.filter(chatInstance => chatInstance.id !== chatId),
     }))
   },
 
-  async generateChatAnswer(id: string, type = GenerateAnswerType.Generate) {
+  async generateChatAnswer(chatId, type = GenerateAnswerType.Generate) {
     const state = get()
-    const chatInstance = state.getChatInstance(id)
+    const chatInstance = state.getChatInstance(chatId)
     if (!chatInstance)
-      throw new Error(`Chat instance with id ${id} not found`)
+      throw new Error(`Chat instance with id ${chatId} not found`)
 
-    const { inputtingPrompt, systemPrompt, temperature, messages, status } = chatInstance
+    const { inputtingPrompt, systemPrompt, singleFileConfig, messages, status } = chatInstance
 
     if (status === ChatMessageStatus.Pending)
       return
@@ -137,7 +212,9 @@ export const createChatSlice: StateCreator<
       return inputtingPrompt
     })()
 
-    state.updateChatInstance(id, {
+    const sendSingleFileConfig = state.resolveSingleFileConfig(singleFileConfig)
+
+    state.updateChatInstance(chatId, {
       status: nextStatus,
       inputtingPrompt: nextInputtingPrompt,
       messages: nextMessages,
@@ -145,18 +222,17 @@ export const createChatSlice: StateCreator<
 
     const abortCtrl = new AbortController()
 
-    chatIdAbortCtrlMap.set(id, abortCtrl)
+    chatIdAbortCtrlMap.set(chatId, abortCtrl)
 
     await fetchChatgptStream({
       signal: abortCtrl.signal,
       messages: sendMessages,
       prompt: sendInputtingPrompt,
       systemPrompt,
-      temperature,
-      openaiKey: state.openaiKey,
+      singleFileConfig: sendSingleFileConfig,
       onError(e) {
         console.error('fetchChatgptStream error:', e)
-        state.updateChatInstance(id, {
+        state.updateChatInstance(chatId, {
           status: ChatMessageStatus.Error,
         }, false)
         abortCtrl.abort()
@@ -167,7 +243,7 @@ export const createChatSlice: StateCreator<
         const res = JSON.parse(data)
 
         if (res.data === '[DONE]') {
-          state.updateChatInstance(id, {
+          state.updateChatInstance(chatId, {
             status: ChatMessageStatus.Success,
           }, false)
           abortCtrl.abort()
@@ -176,33 +252,33 @@ export const createChatSlice: StateCreator<
           const prePartMessage = chatInstance.messages
           prePartMessage[prePartMessage.length - 1].text += res.data
 
-          state.updateChatInstance(id, {
+          state.updateChatInstance(chatId, {
             messages: [...prePartMessage],
           }, false)
         }
       },
     })
   },
-  async regenerateLastChatAnswer(id: string) {
+  async regenerateLastChatAnswer(chatId) {
     const state = get()
-    const chatInstance = state.getChatInstance(id)
+    const chatInstance = state.getChatInstance(chatId)
 
     if (!chatInstance)
       return
 
-    state.updateChatInstance(id, {
+    state.updateChatInstance(chatId, {
       messages: chatInstance.messages.slice(0, -1),
     }, false)
 
-    return await state.generateChatAnswer(id, GenerateAnswerType.Regenerate)
+    return await state.generateChatAnswer(chatId, GenerateAnswerType.Regenerate)
   },
-  stopGeneratingChatAnswer(id: string) {
+  stopGeneratingChatAnswer(chatId) {
     const state = get()
-    const abortCtrl = chatIdAbortCtrlMap.get(id)
+    const abortCtrl = chatIdAbortCtrlMap.get(chatId)
     if (abortCtrl)
       abortCtrl.abort()
 
-    state.updateChatInstance(id, {
+    state.updateChatInstance(chatId, {
       status: ChatMessageStatus.Success,
     }, false)
   },

@@ -3,7 +3,7 @@ import fs from 'node:fs'
 import type { LoadConfigResult, LoadConfigSource } from 'unconfig'
 import { createConfigLoader as createLoader } from 'unconfig'
 import type { UserConfig } from '@nicepkg/gpt-runner-shared/common'
-import { userConfigWithDefault } from './config'
+import { userConfigWithDefault } from '@nicepkg/gpt-runner-shared/common'
 
 export type { LoadConfigResult, LoadConfigSource }
 export type IUserConfig = UserConfig & { configFile?: false | string }

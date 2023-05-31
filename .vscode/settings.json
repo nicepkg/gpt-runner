@@ -23,6 +23,7 @@
     "tagify",
     "tanstack",
     "unconfig",
+    "uuidv",
     "zustand"
   ],
   "workbench.colorCustomizations": {

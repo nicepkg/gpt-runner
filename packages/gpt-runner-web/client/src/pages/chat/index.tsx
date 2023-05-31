@@ -6,17 +6,20 @@ import { useIsMobile } from '../../hooks/use-is-mobile.hook'
 import { FlexRow } from '../../styles/global.styles'
 import { useScrollDown } from '../../hooks/use-scroll-down.hook'
 import { useChatInstance } from '../../hooks/use-chat-instance.hook'
+import { useGlobalStore } from '../../store/zustand/global'
+import { globalConfig } from '../../helpers/global-config'
+import { ErrorView } from '../../components/error-view'
 import { ChatPanelWrapper, SidebarWrapper, StyledVSCodePanels } from './chat.styles'
 import { ChatSidebar } from './chat-sidebar'
 import { ChatPanel } from './chat-panel'
 
 const Chat: FC = () => {
   const isMobile = useIsMobile()
-  const chatId = '1'
-  const { chatInstance } = useChatInstance({ chatId })
+  const { activeChatId } = useGlobalStore()
+  const { chatInstance } = useChatInstance({ chatId: activeChatId })
   const [scrollDownRef, scrollDown] = useScrollDown()
 
-  const lastMessageTextLength = chatInstance ? chatInstance.messages[chatInstance.messages.length - 1].text.length : 0
+  const lastMessageTextLength = chatInstance ? chatInstance.messages[chatInstance.messages.length - 1]?.text?.length : 0
   useEffect(() => {
     if (chatInstance?.status === ChatMessageStatus.Pending)
       scrollDown()
@@ -27,16 +30,22 @@ const Chat: FC = () => {
   }, [scrollDownRef.current])
 
   const renderSidebar = useCallback(() => {
+    if (!globalConfig.rootPath)
+      return null
+
     return <SidebarWrapper>
-      <ChatSidebar rootPath='/Users/yangxiaoming/Documents/codes/gpt-runner'></ChatSidebar>
+      <ChatSidebar rootPath={globalConfig.rootPath}></ChatSidebar>
     </SidebarWrapper>
   }, [])
 
   const renderChatPanel = useCallback(() => {
     return <ChatPanelWrapper>
-      <ChatPanel scrollDownRef={scrollDownRef} chatId={chatId}></ChatPanel>
+      <ChatPanel scrollDownRef={scrollDownRef} chatId={activeChatId}></ChatPanel>
     </ChatPanelWrapper >
-  }, [chatId, scrollDownRef])
+  }, [activeChatId, scrollDownRef])
+
+  if (!globalConfig.rootPath)
+    return <ErrorView text="Please provide the root path!"></ErrorView>
 
   if (isMobile) {
     const viewStyle: CSSProperties = {

@@ -1,6 +1,6 @@
 import path from 'node:path'
 import type { SingleFileConfig, UserConfig } from '@nicepkg/gpt-runner-shared/common'
-import { resolveSingleFileConfig } from '../config'
+import { resolveSingleFileConfig } from '@nicepkg/gpt-runner-shared/common'
 import { gptMdFileParser } from './md'
 
 export interface parseGptFileParams {

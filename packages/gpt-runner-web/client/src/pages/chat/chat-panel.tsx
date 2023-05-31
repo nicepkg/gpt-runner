@@ -8,6 +8,7 @@ import { ChatMessageInput } from '../../components/chat-message-input'
 import { IconButton } from '../../components/icon-button'
 import { useChatInstance } from '../../hooks/use-chat-instance.hook'
 import type { MessageItemProps } from '../../components/chat-message-item'
+import { ErrorView } from '../../components/error-view'
 
 export interface ChatPanelProps {
   scrollDownRef: RefObject<any>
@@ -75,11 +76,6 @@ export const ChatPanel: FC<ChatPanelProps> = (props) => {
       }
 
       const handleDeleteMessage = () => {
-        if (status === ChatMessageStatus.Pending) {
-          // is generating, stop first
-          stopCurrentGeneratingChatAnswer()
-        }
-
         updateCurrentChatInstance({
           messages: chatInstance.messages.filter((_, index) => index !== i),
         }, false)
@@ -130,19 +126,19 @@ export const ChatPanel: FC<ChatPanelProps> = (props) => {
             onClick={handleRegenerateMessage}
           ></IconButton>}
 
-          <IconButton
-            text='Delete'
-            iconClassName='codicon-trash'
-            onClick={handleDeleteMessage}
-          >
-          </IconButton>
-
-          {status === ChatMessageStatus.Pending && isLast && <IconButton
-            text='Stop'
-            iconClassName='codicon-chrome-maximize'
-            hoverShowText={false}
-            onClick={handleStopGenerateAnswer}
-          ></IconButton>}
+          {status === ChatMessageStatus.Pending && isLast
+            ? <IconButton
+              text='Stop'
+              iconClassName='codicon-chrome-maximize'
+              hoverShowText={false}
+              onClick={handleStopGenerateAnswer}
+            ></IconButton>
+            : <IconButton
+              text='Delete'
+              iconClassName='codicon-trash'
+              onClick={handleDeleteMessage}
+            >
+            </IconButton>}
         </>
       }
 
@@ -202,6 +198,9 @@ export const ChatPanel: FC<ChatPanelProps> = (props) => {
         onClick={handleGenerateAnswer}></IconButton>}
     </>
   }
+
+  if (!chatId)
+    return <ErrorView text="Please select a chat or new a chat!"></ErrorView>
 
   return <>
     <ChatMessagePanel ref={scrollDownRef} {...messagePanelProps}></ChatMessagePanel>

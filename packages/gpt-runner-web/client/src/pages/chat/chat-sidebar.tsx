@@ -1,14 +1,16 @@
 import type { FC } from 'react'
-import { useEffect, useState } from 'react'
-import { useQuery } from '@tanstack/react-query'
+import { useCallback, useEffect } from 'react'
 import type { GptFileInfoTreeItem } from '@nicepkg/gpt-runner-shared/common'
-import { travelTree } from '@nicepkg/gpt-runner-shared/common'
+import { ChatMessageStatus, GptFileTreeItemType } from '@nicepkg/gpt-runner-shared/common'
 import clsx from 'clsx'
 import type { SidebarProps } from '../../components/sidebar'
 import { Sidebar } from '../../components/sidebar'
-import { fetchGptFilesTree } from '../../networks/gpt-files'
-import type { TreeItemProps, TreeItemState } from '../../components/tree-item'
+import type { TreeItemState } from '../../components/tree-item'
 import { Icon } from '../../components/icon'
+import { IconButton } from '../../components/icon-button'
+import { ErrorView } from '../../components/error-view'
+import { useGlobalStore } from '../../store/zustand/global'
+import { useChatInstance } from '../../hooks/use-chat-instance.hook'
 
 export interface ChatSidebarProps {
   rootPath: string
@@ -18,45 +20,48 @@ export type GptTreeItemOtherInfo = GptFileInfoTreeItem
 
 export const ChatSidebar: FC<ChatSidebarProps> = (props) => {
   const { rootPath } = props
-
-  const { data: fetchGptFilesTreeRes } = useQuery({
-    queryKey: ['chat-sidebar'],
-    enabled: Boolean(rootPath),
-    queryFn: () => fetchGptFilesTree({
-      rootPath,
-    }),
+  const { activeChatId, sidebarTree, updateActiveChatId, updateSidebarTreeItem, updateUserConfigFromRemote, addChatInstance, updateSidebarTreeFromRemote } = useGlobalStore()
+  const { removeChatInstance } = useChatInstance({
+    chatId: activeChatId,
   })
 
-  const [treeItems, setTreeItems] = useState<TreeItemProps<GptTreeItemOtherInfo>[]>([])
-
   useEffect(() => {
-    if (!fetchGptFilesTreeRes?.data?.filesInfoTree)
-      return
+    updateUserConfigFromRemote(rootPath)
+    updateSidebarTreeFromRemote(rootPath)
+  }, [rootPath])
 
-    const _treeItems = travelTree(fetchGptFilesTreeRes.data.filesInfoTree, (item) => {
-      return {
-        id: item.id,
-        name: item.name,
-        path: item.path,
-        isLeaf: false,
-        otherInfo: item,
-      }
-    }) satisfies TreeItemProps<GptTreeItemOtherInfo>[]
+  const handleCreateChat = useCallback((gptFileId: string) => {
+    const { chatInstance } = addChatInstance(gptFileId, {
+      name: 'New Chat',
+      inputtingPrompt: '',
+      systemPrompt: '',
+      messages: [],
+      singleFileConfig: {},
+      status: ChatMessageStatus.Success,
+    })
 
-    setTreeItems(_treeItems)
-  }, [fetchGptFilesTreeRes])
+    updateSidebarTreeItem(gptFileId, {
+      defaultIsExpanded: true,
+    })
+
+    updateActiveChatId(chatInstance.id)
+  }, [addChatInstance, updateSidebarTreeItem, updateActiveChatId])
+
+  const handleDeleteChat = useCallback((chatId: string) => {
+    removeChatInstance(chatId)
+  }, [removeChatInstance])
 
   const renderTreeLeftSlot = (props: TreeItemState<GptTreeItemOtherInfo>) => {
-    const { isLeaf, isExpanded } = props
+    const { isLeaf, isExpanded, otherInfo } = props
 
     const getIconClassName = () => {
       if (isLeaf)
         return 'codicon-comment'
 
-      if (isExpanded)
-        return 'codicon-folder-opened'
+      if (otherInfo?.type === GptFileTreeItemType.File)
+        return 'codicon-repo'
 
-      return 'codicon-folder'
+      return isExpanded ? 'codicon-folder-opened' : 'codicon-folder'
     }
 
     return <>
@@ -72,21 +77,26 @@ export const ChatSidebar: FC<ChatSidebarProps> = (props) => {
   }
 
   const renderTreeRightSlot = (props: TreeItemState<GptTreeItemOtherInfo>) => {
-    const { isLeaf, children } = props
-    const childrenAllIsLeaf = children?.every(child => child.isLeaf)
+    const { isLeaf, otherInfo } = props
 
-    if (isLeaf) {
+    if (otherInfo?.type === GptFileTreeItemType.Chat && isLeaf) {
       return <>
-        <Icon style={{
-          marginLeft: '6px',
-        }} className={'codicon-trash'}></Icon>
+        <IconButton
+          text='Delete Chat'
+          showText={false}
+          iconClassName='codicon-trash'
+          onClick={() => handleDeleteChat(otherInfo.id)}
+        ></IconButton>
       </>
     }
 
-    if (childrenAllIsLeaf) {
-      return <Icon style={{
-        marginLeft: '6px',
-      }} className='codicon-new-file' ></Icon>
+    if (otherInfo?.type === GptFileTreeItemType.File) {
+      return <IconButton
+        text='New Chat'
+        showText={false}
+        iconClassName='codicon-add'
+        onClick={() => handleCreateChat(otherInfo.id)}
+      ></IconButton>
     }
 
     return <></>
@@ -100,7 +110,7 @@ export const ChatSidebar: FC<ChatSidebarProps> = (props) => {
     renderTreeLeftSlot,
     renderTreeRightSlot,
     tree: {
-      items: treeItems,
+      items: sidebarTree,
       // items: [
       //   {
       //     id: '1',
@@ -127,6 +137,9 @@ export const ChatSidebar: FC<ChatSidebarProps> = (props) => {
       // ],
     },
   }
+
+  if (!rootPath)
+    return <ErrorView text="Please provide the root path!"></ErrorView>
 
   return <Sidebar {...sidebar}></Sidebar>
 }

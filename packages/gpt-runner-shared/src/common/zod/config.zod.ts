@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import type { BaseModelConfig, FilterPattern, FormCheckboxGroupConfig, FormFieldBaseConfig, FormInputConfig, FormItemConfig, FormOption, FormRadioGroupConfig, FormSelectConfig, FormTextareaConfig, OpenaiBaseConfig, OpenaiConfig, SingleChatMessage, UserConfig } from '../types'
+import type { BaseModelConfig, FilterPattern, FormCheckboxGroupConfig, FormFieldBaseConfig, FormInputConfig, FormItemConfig, FormOption, FormRadioGroupConfig, FormSelectConfig, FormTextareaConfig, OpenaiBaseConfig, OpenaiConfig, SingleChatMessage, SingleFileConfig, UserConfig } from '../types'
 import { ChatRoleSchema } from './enum.zod'
 
 export const FilterPatternSchema = z.union([
@@ -17,6 +17,7 @@ export const BaseModelConfigSchema = z.object({
 }) satisfies z.ZodType<BaseModelConfig>
 
 export const OpenaiBaseConfigSchema = BaseModelConfigSchema.extend({
+  type: z.literal('openai'),
   openaiKey: z.string(),
   temperature: z.number().optional(),
   maxTokens: z.number().optional(),
@@ -88,3 +89,12 @@ export const FormItemConfigSchema = z.union([
   FormCheckboxGroupConfigSchema,
   FormRadioGroupConfigSchema,
 ]) satisfies z.ZodType<FormItemConfig>
+
+export const SingleFileConfigSchema = z.object({
+  model: OpenaiBaseConfigSchema.optional(),
+  title: z.string().optional(),
+  userPrompt: z.string().optional(),
+  systemPrompt: z.string().optional(),
+  messages: z.array(SingleChatMessageSchema).optional(),
+  forms: z.record(FormItemConfigSchema).optional(),
+}) as z.ZodType<SingleFileConfig>

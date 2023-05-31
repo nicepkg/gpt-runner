@@ -1,6 +1,8 @@
 import { styled } from 'styled-components'
 
 export const ButtonWrapper = styled.div<{ $hoverShowText?: boolean }>`
+  display: flex;
+
   ${({ $hoverShowText }) => ($hoverShowText
   ? `
   & .icon-button-text {

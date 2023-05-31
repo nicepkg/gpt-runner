@@ -9,16 +9,10 @@ export interface UseChatInstanceProps {
    * The chat id to use
    */
   chatId: string
-
-  /**
-   * If true, will create a new chat instance if not found
-   * @default true
-   */
-  autoCreate?: boolean
 }
 
 export function useChatInstance(props: UseChatInstanceProps) {
-  const { chatId, autoCreate } = props
+  const { chatId } = props
   const [chatInstance, setChatInstance] = useState<SingleChat>()
   const { getChatInstance, addChatInstance, updateChatInstance, removeChatInstance, generateChatAnswer, regenerateLastChatAnswer, stopGeneratingChatAnswer } = useGlobalStore()
 
@@ -32,17 +26,6 @@ export function useChatInstance(props: UseChatInstanceProps) {
       }
 
       setChatInstance(instance)
-    }
-    else if (autoCreate) {
-      setChatInstance(addChatInstance({
-        id: chatId,
-        title: 'GPT Runner',
-        inputtingPrompt: '...',
-        systemPrompt: '',
-        temperature: 1,
-        messages: [],
-        status: ChatMessageStatus.Idle,
-      }))
     }
   }, [chatId])
 

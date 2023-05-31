@@ -1,7 +1,6 @@
-import path from 'node:path'
 import { getGptFilesInfo, loadUserConfig } from '@nicepkg/gpt-runner-core'
 import { PathUtils, sendFailResponse, sendSuccessResponse, verifyParamsByZod } from '@nicepkg/gpt-runner-shared/node'
-import type { GetGptFilesReqParams } from '@nicepkg/gpt-runner-shared/common'
+import type { GetGptFilesReqParams, GptFilesTreeResData } from '@nicepkg/gpt-runner-shared/common'
 import { GetGptFilesReqParamsSchema } from '@nicepkg/gpt-runner-shared/common'
 import type { ControllerConfig } from '../types'
 
@@ -17,7 +16,7 @@ export const gptFilesControllers: ControllerConfig = {
         verifyParamsByZod(query, GetGptFilesReqParamsSchema)
 
         const { rootPath } = query
-        const finalPath = path.resolve(rootPath)
+        const finalPath = PathUtils.resolve(rootPath)
 
         if (!PathUtils.isDirectory(finalPath)) {
           sendFailResponse(res, {
@@ -42,7 +41,7 @@ export const gptFilesControllers: ControllerConfig = {
           data: {
             filesInfo,
             filesInfoTree,
-          },
+          } satisfies GptFilesTreeResData,
         })
       },
     },

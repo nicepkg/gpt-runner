@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import type { Variants } from 'framer-motion'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Children, IconWrapper, NameWrapper, TreeItemRow, TreeItemRowLeftSlot, TreeItemRowRightSlot, TreeItemWrapper } from './tree-item.styles'
@@ -10,17 +10,18 @@ export interface TreeItemBaseState<OtherInfo extends TreeItemBaseStateOtherInfo 
   path: string
   isLeaf: boolean
   children?: TreeItemProps<OtherInfo>[]
-  isFocused?: boolean
+  defaultIsExpanded?: boolean
   otherInfo?: OtherInfo
 }
 
 export interface TreeItemState<OtherInfo extends TreeItemBaseStateOtherInfo = TreeItemBaseStateOtherInfo> extends TreeItemBaseState<OtherInfo> {
   isHovering: boolean
   isExpanded: boolean
+  isFocused?: boolean
 }
 
 export interface TreeItemProps<OtherInfo extends TreeItemBaseStateOtherInfo = TreeItemBaseStateOtherInfo> extends TreeItemBaseState<OtherInfo> {
-  defaultIsExpanded?: boolean
+  isFocused?: boolean
   renderLeftSlot?: (props: TreeItemState<OtherInfo>) => React.ReactNode
   renderRightSlot?: (props: TreeItemState<OtherInfo>) => React.ReactNode
   onExpand?: (props: TreeItemState<OtherInfo>) => void
@@ -40,6 +41,10 @@ export function TreeItem<OtherInfo extends TreeItemBaseStateOtherInfo = TreeItem
   } = baseStateProps
   const [isHovering, setIsHovering] = useState(false)
   const [isExpanded, setIsExpanded] = useState(defaultIsExpanded)
+
+  useEffect(() => {
+    setIsExpanded(defaultIsExpanded)
+  }, [defaultIsExpanded])
 
   const stateProps = { ...baseStateProps, isHovering, isExpanded }
 

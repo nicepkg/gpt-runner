@@ -1,54 +1,9 @@
-import type { GptFileInfo, GptFileInfoTree, GptFileInfoTreeItem, SingleFileConfig, UserConfig } from '@nicepkg/gpt-runner-shared/common'
-import { GptFileTreeItemType } from '@nicepkg/gpt-runner-shared/common'
+import type { GptFileInfo, GptFileInfoTree, GptFileInfoTreeItem, UserConfig } from '@nicepkg/gpt-runner-shared/common'
+import { GptFileTreeItemType, userConfigWithDefault } from '@nicepkg/gpt-runner-shared/common'
 import { FileUtils, PathUtils } from '@nicepkg/gpt-runner-shared/node'
 import type { Ignore } from 'ignore'
 import ignore from 'ignore'
 import { parseGptFile } from './parser'
-
-export function singleFileConfigWithDefault(singleFileConfig?: Partial<SingleFileConfig>): SingleFileConfig {
-  return {
-    ...singleFileConfig,
-  }
-}
-
-export function userConfigWithDefault(userConfig?: Partial<UserConfig>): UserConfig {
-  return {
-    model: {
-      type: 'openai',
-      openaiKey: process.env.OPENAI_KEY!,
-      modelName: 'gpt-3.5-turbo',
-      temperature: 0.9,
-      maxTokens: 2000,
-      ...userConfig?.model,
-    },
-    rootPath: process.cwd(),
-    includes: null,
-    excludes: null,
-    exts: ['.gpt.md'],
-    respectGitignore: true,
-    ...userConfig,
-  }
-}
-
-export interface ResolveSingleFileCConfigParams {
-  userConfig: UserConfig
-  singleFileConfig: SingleFileConfig
-}
-
-export function resolveSingleFileConfig(params: ResolveSingleFileCConfigParams): SingleFileConfig {
-  const userConfig = userConfigWithDefault(params.userConfig)
-  const singleFileConfig = singleFileConfigWithDefault(params.singleFileConfig)
-
-  const resolvedConfig: SingleFileConfig = {
-    ...singleFileConfig,
-    model: {
-      ...userConfig.model,
-      ...singleFileConfig.model,
-    } as SingleFileConfig['model'],
-  }
-
-  return resolvedConfig
-}
 
 export interface GetGptFilesInfoParams {
   userConfig: UserConfig
@@ -122,8 +77,11 @@ export async function getGptFilesInfo(params: GetGptFilesInfoParams): Promise<Ge
 
       const parentTitleParts = titleParts.slice(0, -1)
 
+      const fileId = title || filePath
+
       const fileInfo: GptFileInfo = {
-        id: title,
+        id: fileId,
+        parentId: null,
         path: filePath,
         name: getName(title, filePath),
         content,
@@ -139,13 +97,14 @@ export async function getGptFilesInfo(params: GetGptFilesInfoParams): Promise<Ge
           if (!parentFileInfo.children)
             parentFileInfo.children = []
 
-          parentFileInfo.children.push({ ...fileInfo })
+          parentFileInfo.children.push({ ...fileInfo, parentId: parentFileInfo.id })
         }
         else {
           const parentPath = ''
 
           const parentFileInfo: GptFileInfoTreeItem = {
             id: parentTitle,
+            parentId: null,
             path: parentPath,
             name: getName(parentTitle, parentPath),
             type: GptFileTreeItemType.Folder,

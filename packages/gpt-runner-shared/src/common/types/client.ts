@@ -1,12 +1,12 @@
-import type { SingleChatMessage } from './config'
+import type { SingleChatMessage, SingleFileConfig } from './config'
 import type { ChatMessageStatus } from './enum'
 
 export interface SingleChat {
   id: string
-  title: string
+  name: string
   inputtingPrompt: string
   systemPrompt: string
-  temperature: number
   messages: SingleChatMessage[]
+  singleFileConfig: SingleFileConfig
   status: ChatMessageStatus
 }

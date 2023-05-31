@@ -12,7 +12,9 @@ export const TreeItemRow = styled.div<{ $isFocused: boolean }>`
   align-items: center;
   user-select: none;
   font-size: var(--type-ramp-plus1-font-size);
-  padding: 0.25rem 0.25rem 0.25rem 0;
+  padding: 0.25rem 0 0.25rem 0;
+  height: calc(var(--button-height) + 0.5rem);
+  border-radius: 0.25rem;
 
   ${({ $isFocused }) => ($isFocused
 ? `
@@ -27,7 +29,7 @@ export const TreeItemRow = styled.div<{ $isFocused: boolean }>`
 
   &:focus {
     outline: none;
-    background: var(--list-active-selection-background);
+    background: var(--list-hover-background);
   }
 `
 

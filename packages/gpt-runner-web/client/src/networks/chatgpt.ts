@@ -3,7 +3,7 @@ import { fetchEventSource } from '@microsoft/fetch-event-source'
 import type { ChatStreamReqParams } from '@nicepkg/gpt-runner-shared/common'
 import { EnvConfig } from '@nicepkg/gpt-runner-shared/common'
 
-export interface fetchChatStreamReqParams extends ChatStreamReqParams {
+export interface FetchChatStreamReqParams extends ChatStreamReqParams {
   namespace?: string
   signal?: AbortSignal
   onMessage?: (ev: EventSourceMessage) => void
@@ -11,14 +11,14 @@ export interface fetchChatStreamReqParams extends ChatStreamReqParams {
 }
 
 export async function fetchChatgptStream(
-  params: fetchChatStreamReqParams,
+  params: FetchChatStreamReqParams,
 ) {
   const {
     messages,
     signal,
     prompt,
     systemPrompt,
-    temperature,
+    singleFileConfig,
     namespace,
     onMessage = () => {},
     onError = () => {},
@@ -36,8 +36,8 @@ export async function fetchChatgptStream(
         prompt,
         messages,
         systemPrompt,
-        temperature,
-      }),
+        singleFileConfig,
+      } satisfies ChatStreamReqParams),
       onmessage: onMessage,
       onerror: onError,
     })

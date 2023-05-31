@@ -36,7 +36,10 @@ export const chatgptControllers: ControllerConfig = {
           messages = [],
           prompt = '',
           systemPrompt = '',
+          singleFileConfig,
+        } = body
 
+        const {
           // OpenaiBaseConfig
           openaiKey = EnvConfig.get('OPENAI_KEY'),
           temperature = 0.7,
@@ -44,7 +47,7 @@ export const chatgptControllers: ControllerConfig = {
           topP,
           frequencyPenalty,
           presencePenalty,
-        } = body
+        } = singleFileConfig?.model || {}
 
         const sendSuccessData = (options: Omit<SuccessResponse, 'type'>) => {
           return res.write(`data: ${JSON.stringify(buildSuccessResponse(options))}\n\n`)

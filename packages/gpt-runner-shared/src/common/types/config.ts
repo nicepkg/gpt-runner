@@ -87,6 +87,7 @@ export interface UserConfig {
 
 export interface GptPathBaseInfo {
   id: string
+  parentId: string | null
   path: string
   name: string
   type: GptFileTreeItemType
@@ -102,7 +103,12 @@ export interface GptFolderInfo extends GptPathBaseInfo {
   type: GptFileTreeItemType.Folder
 }
 
-export type GptFileInfoTreeItem = TreeItem<GptFolderInfo | GptFileInfo>
+export interface GptChatInfo extends GptPathBaseInfo {
+  type: GptFileTreeItemType.Chat
+  singleFileConfig: SingleFileConfig
+}
+
+export type GptFileInfoTreeItem = TreeItem<GptFolderInfo | GptFileInfo | GptChatInfo>
 export type GptFileInfoTree = GptFileInfoTreeItem[]
 
 export interface SingleChatMessage {
