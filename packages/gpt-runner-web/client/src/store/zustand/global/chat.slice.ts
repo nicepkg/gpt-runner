@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from 'uuid'
 import type { GetState } from '../types'
 import { fetchChatgptStream } from '../../../networks/chatgpt'
 import { fetchUserConfig } from '../../../networks/config'
+import { globalConfig } from '../../../helpers/global-config'
 import type { SidebarTreeItem, SidebarTreeSlice } from './sidebar-tree.slice'
 
 export enum GenerateAnswerType {
@@ -194,7 +195,7 @@ export const createChatSlice: StateCreator<
       const lastMessage = messages[messages.length - 1]
 
       if (isRegenerate) { // remove last ai message and move user message into sendInputtingPrompt send if it's regenerate
-        if (lastMessage.name === ChatRole.User)
+        if (lastMessage?.name === ChatRole.User)
           return messages.slice(0, -1)
         else
           return messages
@@ -234,6 +235,7 @@ export const createChatSlice: StateCreator<
       prompt: sendInputtingPrompt,
       systemPrompt,
       singleFileConfig: sendSingleFileConfig,
+      rootPath: globalConfig.rootPath,
       onError(e) {
         console.error('fetchChatgptStream error:', e)
         state.updateChatInstance(chatId, {

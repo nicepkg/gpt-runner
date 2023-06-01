@@ -59,9 +59,15 @@ export function useChatInstance(props: UseChatInstanceProps) {
       const chatTreeItem = gptFileTreeItem.children?.find(item => item.id === chatId)
 
       if (chatTreeItem?.name === DEFAULT_CHAT_NAME && chatInstance.inputtingPrompt) {
+        const name = chatInstance.inputtingPrompt
+
         updateSidebarTreeItem(chatTreeItem.id, {
-          name: chatInstance.inputtingPrompt,
+          name,
         })
+
+        updateChatInstance(chatId, {
+          name,
+        }, false)
       }
     }
 

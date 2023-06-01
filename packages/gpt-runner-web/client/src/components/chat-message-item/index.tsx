@@ -6,6 +6,7 @@ import { MessageTextView } from '../chat-message-text-view'
 import { Icon } from '../icon'
 import { useHover } from '../../hooks/use-hover.hook'
 import type { MessageCodeBlockProps } from '../chat-message-code-block'
+import { useIsMobile } from '../../hooks/use-is-mobile.hook'
 import { MsgAvatarWrapper, MsgContent, MsgContentFooterWrapper, MsgContentWrapper, MsgWrapper } from './chat-message-item.styles'
 
 export interface BuildMessageToolbarState extends SingleChatMessage {
@@ -27,6 +28,7 @@ export const MessageItem: FC<MessageItemProps> = (props) => {
     buildMessageToolbar,
   } = props
 
+  const isMobile = useIsMobile()
   const [hoverContentRef, isContentHover] = useHover()
   const contents = status === ChatMessageStatus.Pending ? `${text}\u{258A}` : text
 
@@ -51,9 +53,9 @@ export const MessageItem: FC<MessageItemProps> = (props) => {
 
   return (
     <MsgWrapper $isMe={name === ChatRole.User}>
-      <MsgAvatarWrapper $isMe={name === ChatRole.User}>
+      {!isMobile && <MsgAvatarWrapper $isMe={name === ChatRole.User}>
         <Icon className={clsx(name === ChatRole.User ? 'codicon-account' : 'codicon-github')} />
-      </MsgAvatarWrapper>
+      </MsgAvatarWrapper>}
       <MsgContentWrapper ref={hoverContentRef} $isMe={name === ChatRole.User}>
         {
           showToolbar === 'hover'

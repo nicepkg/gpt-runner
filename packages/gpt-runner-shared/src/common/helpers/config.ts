@@ -30,11 +30,11 @@ export interface ResolveSingleFileCConfigParams {
   singleFileConfig: SingleFileConfig
 }
 
-export function resolveSingleFileConfig(params: ResolveSingleFileCConfigParams, withDefault = true): SingleFileConfig {
+export function resolveSingleFileConfig(params: ResolveSingleFileCConfigParams, withDefault = true, safe = false): SingleFileConfig {
   const userConfig = withDefault ? userConfigWithDefault(params.userConfig) : params.userConfig
   const singleFileConfig = withDefault ? singleFileConfigWithDefault(params.singleFileConfig) : params.singleFileConfig
 
-  const resolvedConfig: SingleFileConfig = {
+  let resolvedConfig: SingleFileConfig = {
     ...singleFileConfig,
     model: {
       ...userConfig.model,
@@ -42,5 +42,22 @@ export function resolveSingleFileConfig(params: ResolveSingleFileCConfigParams, 
     } as SingleFileConfig['model'],
   }
 
+  if (safe)
+    resolvedConfig = resetSingleFileConfigUnsafeKey(resolvedConfig)
+
   return resolvedConfig
+}
+
+export function resetUserConfigUnsafeKey(userConfig: UserConfig): UserConfig {
+  if (userConfig.model?.openaiKey)
+    userConfig.model.openaiKey = ''
+
+  return userConfig
+}
+
+export function resetSingleFileConfigUnsafeKey(singleFileConfig: SingleFileConfig): SingleFileConfig {
+  if (singleFileConfig.model?.openaiKey)
+    singleFileConfig.model.openaiKey = ''
+
+  return singleFileConfig
 }

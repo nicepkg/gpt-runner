@@ -2,7 +2,8 @@ import type { Request, Response } from 'express'
 import type { ChatStreamReqParams } from '@nicepkg/gpt-runner-shared/common'
 import { ChatStreamReqParamsSchema, EnvConfig } from '@nicepkg/gpt-runner-shared/common'
 import type { FailResponse, SuccessResponse } from '@nicepkg/gpt-runner-shared/node'
-import { buildFailResponse, buildSuccessResponse, sendSuccessResponse, verifyParamsByZod } from '@nicepkg/gpt-runner-shared/node'
+import { PathUtils, buildFailResponse, buildSuccessResponse, sendFailResponse, sendSuccessResponse, verifyParamsByZod } from '@nicepkg/gpt-runner-shared/node'
+import { loadUserConfig } from '@nicepkg/gpt-runner-core'
 import { chatgptChain } from '../services'
 import type { ControllerConfig } from './../types'
 
@@ -37,17 +38,33 @@ export const chatgptControllers: ControllerConfig = {
           prompt = '',
           systemPrompt = '',
           singleFileConfig,
+          rootPath,
         } = body
 
-        const {
+        let {
           // OpenaiBaseConfig
-          openaiKey = EnvConfig.get('OPENAI_KEY'),
+          openaiKey = '',
           temperature = 0.7,
           maxTokens,
           topP,
           frequencyPenalty,
           presencePenalty,
         } = singleFileConfig?.model || {}
+
+        if (rootPath) {
+          const finalPath = PathUtils.resolve(rootPath)
+
+          if (!PathUtils.isDirectory(finalPath)) {
+            sendFailResponse(res, {
+              message: 'rootPath is not a valid directory',
+            })
+            return
+          }
+
+          const { config: userConfig } = await loadUserConfig(finalPath)
+
+          openaiKey = openaiKey || userConfig?.model?.openaiKey || EnvConfig.get('OPENAI_KEY')
+        }
 
         const sendSuccessData = (options: Omit<SuccessResponse, 'type'>) => {
           return res.write(`data: ${JSON.stringify(buildSuccessResponse(options))}\n\n`)

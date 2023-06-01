@@ -6,7 +6,7 @@ import { css } from 'styled-components'
  */
 export enum Breakpoints {
   sm = 375,
-  md = 768,
+  md = 558,
   lg = 1000,
   xl = 1240,
 }
@@ -20,7 +20,7 @@ export function withBreakpoint(breakpoint: BreakpointName,
   switch (breakpoint) {
     case 'sm':
       return css`
-        @media (max-width: ${Breakpoints.sm}px) {
+        @media (max-width: ${Breakpoints.md}px) {
           ${style}
         }
       `

@@ -15,6 +15,7 @@ export interface ChatStreamReqParams {
   prompt: string
   systemPrompt?: string
   singleFileConfig?: SingleFileConfig
+  rootPath?: string
 }
 
 export interface GetGptFilesReqParams {

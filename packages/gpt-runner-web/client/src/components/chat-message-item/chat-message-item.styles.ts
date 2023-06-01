@@ -1,4 +1,5 @@
-import { styled } from 'styled-components'
+import { css, styled } from 'styled-components'
+import { withBreakpoint } from '../../helpers/with-breakpoint'
 import type { MessageItemProps } from '.'
 
 export const MsgWrapper = styled.div<{ $isMe: boolean }>`
@@ -25,6 +26,10 @@ export const MsgContentWrapper = styled.div<{ $isMe: boolean }>`
   max-width: calc(100% - 6rem);
   width: 100%;
   position: relative;
+
+  ${withBreakpoint('sm', css`
+    max-width: 100%;
+  `)}
 `
 
 export const MsgContent = styled.div<{ $showToolbar: MessageItemProps['showToolbar']; $isMe: boolean }>`
@@ -39,6 +44,10 @@ export const MsgContent = styled.div<{ $showToolbar: MessageItemProps['showToolb
 
   &:hover {
     outline: 1px solid var(--panel-view-border);
+  }
+
+  & .msg-content-footer {
+    flex-wrap: wrap;
   }
 
   ${({ $showToolbar, $isMe }) => ($showToolbar === 'hover'
