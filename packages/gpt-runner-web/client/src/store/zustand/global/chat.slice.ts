@@ -1,6 +1,6 @@
 import type { StateCreator } from 'zustand'
 import type { GptFileInfo, SingleChat, SingleFileConfig, UserConfig } from '@nicepkg/gpt-runner-shared/common'
-import { ChatMessageStatus, ChatRole, resolveSingleFileConfig } from '@nicepkg/gpt-runner-shared/common'
+import { ChatMessageStatus, ChatRole, resolveSingleFileConfig, travelTree } from '@nicepkg/gpt-runner-shared/common'
 import { v4 as uuidv4 } from 'uuid'
 import type { GetState } from '../types'
 import { fetchChatgptStream } from '../../../networks/chatgpt'
@@ -113,13 +113,6 @@ export const createChatSlice: StateCreator<
       return oldItem
     })
 
-    state.updateChatIdsByGptFileId(gptFileId, (oldChatIds) => {
-      if (oldChatIds.includes(chatId))
-        return oldChatIds
-
-      return [...oldChatIds, chatId]
-    })
-
     set(state => ({
       chatInstances: [...state.chatInstances, finalInstance],
     }))
@@ -142,9 +135,20 @@ export const createChatSlice: StateCreator<
   },
 
   removeChatInstance(chatId) {
+    const state = get()
+
     set(state => ({
       chatInstances: state.chatInstances.filter(chatInstance => chatInstance.id !== chatId),
     }))
+
+    const nextSidebarTree = travelTree(state.sidebarTree, (item) => {
+      if (item.id === chatId)
+        return null
+
+      return item
+    })
+
+    state.updateSidebarTree(nextSidebarTree)
   },
 
   async generateChatAnswer(chatId, type = GenerateAnswerType.Generate) {

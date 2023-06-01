@@ -3,6 +3,7 @@ import type { SingleChat } from '@nicepkg/gpt-runner-shared/common'
 import { ChatMessageStatus } from '@nicepkg/gpt-runner-shared/common'
 import { useGlobalStore } from '../store/zustand/global'
 import type { GenerateAnswerType } from '../store/zustand/global/chat.slice'
+import { DEFAULT_CHAT_NAME } from '../helpers/constant'
 
 export interface UseChatInstanceProps {
   /**
@@ -14,7 +15,17 @@ export interface UseChatInstanceProps {
 export function useChatInstance(props: UseChatInstanceProps) {
   const { chatId } = props
   const [chatInstance, setChatInstance] = useState<SingleChat>()
-  const { getChatInstance, addChatInstance, updateChatInstance, removeChatInstance, generateChatAnswer, regenerateLastChatAnswer, stopGeneratingChatAnswer } = useGlobalStore()
+  const {
+    getChatInstance,
+    addChatInstance,
+    updateChatInstance,
+    removeChatInstance,
+    generateChatAnswer,
+    regenerateLastChatAnswer,
+    stopGeneratingChatAnswer,
+    getGptFileTreeItemFromChatId,
+    updateSidebarTreeItem,
+  } = useGlobalStore()
 
   useEffect(() => {
     const instance = getChatInstance(chatId)
@@ -39,8 +50,23 @@ export function useChatInstance(props: UseChatInstanceProps) {
   const generateCurrentChatAnswer = useCallback(async (type?: GenerateAnswerType) => {
     if (!chatId)
       return
+
+    // update tree item name when first send on single chat
+    const isFirstChat = chatInstance?.messages.length === 0
+
+    if (isFirstChat) {
+      const gptFileTreeItem = getGptFileTreeItemFromChatId(chatId)
+      const chatTreeItem = gptFileTreeItem.children?.find(item => item.id === chatId)
+
+      if (chatTreeItem?.name === DEFAULT_CHAT_NAME && chatInstance.inputtingPrompt) {
+        updateSidebarTreeItem(chatTreeItem.id, {
+          name: chatInstance.inputtingPrompt,
+        })
+      }
+    }
+
     return await generateChatAnswer(chatId, type)
-  }, [chatId])
+  }, [chatId, chatInstance])
 
   const regenerateCurrentLastChatAnswer = useCallback(async () => {
     if (!chatId)

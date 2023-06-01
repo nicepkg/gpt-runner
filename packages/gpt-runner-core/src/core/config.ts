@@ -77,13 +77,15 @@ export async function getGptFilesInfo(params: GetGptFilesInfoParams): Promise<Ge
 
       const parentTitleParts = titleParts.slice(0, -1)
 
-      const fileId = title || filePath
+      const name = getName(title, filePath)
+
+      const fileId = [...titleParts.slice(0, -1), name].join('/') || filePath
 
       const fileInfo: GptFileInfo = {
         id: fileId,
         parentId: null,
         path: filePath,
-        name: getName(title, filePath),
+        name,
         content,
         singleFileConfig,
         type: GptFileTreeItemType.File,

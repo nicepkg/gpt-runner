@@ -1,5 +1,5 @@
 import type { FC, RefObject } from 'react'
-import { useCallback } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { ChatMessageStatus, ChatRole } from '@nicepkg/gpt-runner-shared/common'
 import { copy } from '@nicepkg/gpt-runner-shared/browser'
 import type { ChatMessagePanelProps } from '../../components/chat-message-panel'
@@ -9,41 +9,91 @@ import { IconButton } from '../../components/icon-button'
 import { useChatInstance } from '../../hooks/use-chat-instance.hook'
 import type { MessageItemProps } from '../../components/chat-message-item'
 import { ErrorView } from '../../components/error-view'
+import { useGlobalStore } from '../../store/zustand/global'
+import type { GptFileTreeItem } from '../../store/zustand/global/sidebar-tree.slice'
 
 export interface ChatPanelProps {
   scrollDownRef: RefObject<any>
   chatId: string
+  onChatIdChange: (chatId: string) => void
 }
 
 export const ChatPanel: FC<ChatPanelProps> = (props) => {
-  const { scrollDownRef, chatId } = props
+  const { scrollDownRef, chatId, onChatIdChange } = props
+  const { createChatAndActive, getGptFileTreeItemFromChatId } = useGlobalStore()
   const { chatInstance, updateCurrentChatInstance, generateCurrentChatAnswer, regenerateCurrentLastChatAnswer, stopCurrentGeneratingChatAnswer } = useChatInstance({ chatId })
   const status = chatInstance?.status ?? ChatMessageStatus.Success
+  const [gptFileTreeItem, setGptFileTreeItem] = useState<GptFileTreeItem>()
 
+  useEffect(() => {
+    const gptFileTreeItem = getGptFileTreeItemFromChatId(chatId)
+    setGptFileTreeItem(gptFileTreeItem)
+  }, [chatId, getGptFileTreeItemFromChatId])
+
+  // copy
   const handleCopy = useCallback((value: string) => {
     copy(value)
   }, [])
 
+  // edit
   const handleEditMessage = useCallback((value: string) => {
     updateCurrentChatInstance({
       inputtingPrompt: value,
     }, false)
   }, [updateCurrentChatInstance])
 
+  // pre chat
+  const handleSwitchPreChat = useCallback(() => {
+    const chatIds = gptFileTreeItem?.children?.map(item => item.id) ?? []
+
+    if (chatIds.length === 0)
+      return
+
+    const index = chatIds.indexOf(chatId)
+    let nextIndex = index - 1
+
+    if (nextIndex < 0)
+      nextIndex = chatIds.length - 1
+
+    const nextChatId = chatIds[nextIndex]
+    onChatIdChange(nextChatId)
+  }, [gptFileTreeItem, chatId, onChatIdChange])
+
+  // next chat
+  const handleSwitchNextChat = useCallback(() => {
+    const chatIds = gptFileTreeItem?.children?.map(item => item.id) ?? []
+
+    if (chatIds.length === 0)
+      return
+
+    const index = chatIds.indexOf(chatId)
+    let nextIndex = index + 1
+
+    if (nextIndex >= chatIds.length)
+      nextIndex = 0
+
+    const nextChatId = chatIds[nextIndex]
+    onChatIdChange(nextChatId)
+  }, [gptFileTreeItem, chatId, onChatIdChange])
+
+  // clear all
   const handleClearAll = useCallback(() => {
     updateCurrentChatInstance({
       messages: [],
     }, false)
   }, [updateCurrentChatInstance])
 
-  const handleGenerateAnswer = useCallback(() => {
-    generateCurrentChatAnswer()
-  }, [generateCurrentChatAnswer])
+  // new chat
+  const handleNewChat = useCallback(() => {
+    const gptFileId = gptFileTreeItem?.id
 
-  const handleStopGenerateAnswer = useCallback(() => {
-    stopCurrentGeneratingChatAnswer()
-  }, [stopCurrentGeneratingChatAnswer])
+    if (!gptFileId)
+      return
 
+    createChatAndActive(gptFileId)
+  }, [createChatAndActive, gptFileTreeItem])
+
+  // continue
   const handleContinueGenerateAnswer = useCallback(() => {
     updateCurrentChatInstance({
       inputtingPrompt: 'Please continue',
@@ -51,6 +101,17 @@ export const ChatPanel: FC<ChatPanelProps> = (props) => {
     generateCurrentChatAnswer()
   }, [chatInstance, updateCurrentChatInstance, generateCurrentChatAnswer])
 
+  // stop
+  const handleStopGenerateAnswer = useCallback(() => {
+    stopCurrentGeneratingChatAnswer()
+  }, [stopCurrentGeneratingChatAnswer])
+
+  // send
+  const handleGenerateAnswer = useCallback(() => {
+    generateCurrentChatAnswer()
+  }, [generateCurrentChatAnswer])
+
+  // input change
   const handleInputChange = useCallback((value: string) => {
     updateCurrentChatInstance({
       inputtingPrompt: value,
@@ -156,11 +217,15 @@ export const ChatPanel: FC<ChatPanelProps> = (props) => {
     return <>
       <IconButton
         text='Pre Chat'
-        iconClassName='codicon-chevron-left'></IconButton>
+        iconClassName='codicon-chevron-left'
+        onClick={handleSwitchPreChat}
+      ></IconButton>
 
       <IconButton
         text='Next Chat'
-        iconClassName='codicon-chevron-right'></IconButton>
+        iconClassName='codicon-chevron-right'
+        onClick={handleSwitchNextChat}
+      ></IconButton>
 
       <IconButton
         text='Clear All'
@@ -170,7 +235,9 @@ export const ChatPanel: FC<ChatPanelProps> = (props) => {
 
       <IconButton
         text='New Chat'
-        iconClassName='codicon-add'></IconButton>
+        iconClassName='codicon-add'
+        onClick={handleNewChat}
+      ></IconButton>
 
       {/* right icon */}
       <IconButton

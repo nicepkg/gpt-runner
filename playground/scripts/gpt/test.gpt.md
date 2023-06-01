@@ -1,6 +1,6 @@
 ```json
 {
-  "title": "common/test"
+  "title": "common/"
 }
 ```
 

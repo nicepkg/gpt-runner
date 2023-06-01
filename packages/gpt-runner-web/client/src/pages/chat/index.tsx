@@ -15,7 +15,7 @@ import { ChatPanel } from './chat-panel'
 
 const Chat: FC = () => {
   const isMobile = useIsMobile()
-  const { activeChatId } = useGlobalStore()
+  const { activeChatId, updateActiveChatId } = useGlobalStore()
   const { chatInstance } = useChatInstance({ chatId: activeChatId })
   const [scrollDownRef, scrollDown] = useScrollDown()
 
@@ -40,7 +40,11 @@ const Chat: FC = () => {
 
   const renderChatPanel = useCallback(() => {
     return <ChatPanelWrapper>
-      <ChatPanel scrollDownRef={scrollDownRef} chatId={activeChatId}></ChatPanel>
+      <ChatPanel
+        scrollDownRef={scrollDownRef}
+        chatId={activeChatId}
+        onChatIdChange={updateActiveChatId}
+      ></ChatPanel>
     </ChatPanelWrapper >
   }, [activeChatId, scrollDownRef])
 

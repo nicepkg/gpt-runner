@@ -1,16 +1,17 @@
 import type { FC } from 'react'
 import { useCallback, useEffect } from 'react'
 import type { GptFileInfoTreeItem } from '@nicepkg/gpt-runner-shared/common'
-import { ChatMessageStatus, GptFileTreeItemType } from '@nicepkg/gpt-runner-shared/common'
+import { GptFileTreeItemType } from '@nicepkg/gpt-runner-shared/common'
 import clsx from 'clsx'
 import type { SidebarProps } from '../../components/sidebar'
 import { Sidebar } from '../../components/sidebar'
-import type { TreeItemState } from '../../components/tree-item'
+import type { TreeItemProps, TreeItemState } from '../../components/tree-item'
 import { Icon } from '../../components/icon'
 import { IconButton } from '../../components/icon-button'
 import { ErrorView } from '../../components/error-view'
 import { useGlobalStore } from '../../store/zustand/global'
 import { useChatInstance } from '../../hooks/use-chat-instance.hook'
+import { SidebarTopToolbar } from './chat.styles'
 
 export interface ChatSidebarProps {
   rootPath: string
@@ -20,38 +21,41 @@ export type GptTreeItemOtherInfo = GptFileInfoTreeItem
 
 export const ChatSidebar: FC<ChatSidebarProps> = (props) => {
   const { rootPath } = props
-  const { activeChatId, sidebarTree, updateActiveChatId, updateSidebarTreeItem, updateUserConfigFromRemote, addChatInstance, updateSidebarTreeFromRemote } = useGlobalStore()
+  const { activeChatId, sidebarTree, expandChatTreeItem, createChatAndActive, updateSidebarTreeItem, updateActiveChatId, updateUserConfigFromRemote, updateSidebarTreeFromRemote } = useGlobalStore()
+
   const { removeChatInstance } = useChatInstance({
     chatId: activeChatId,
   })
 
   useEffect(() => {
-    updateUserConfigFromRemote(rootPath)
-    updateSidebarTreeFromRemote(rootPath)
+    expandChatTreeItem(activeChatId)
+  }, [activeChatId, expandChatTreeItem])
+
+  const refreshSidebarTree = useCallback(async () => {
+    await updateUserConfigFromRemote(rootPath)
+    await updateSidebarTreeFromRemote(rootPath)
+  }, [rootPath, updateUserConfigFromRemote, updateSidebarTreeFromRemote])
+
+  useEffect(() => {
+    refreshSidebarTree()
   }, [rootPath])
 
   const handleCreateChat = useCallback((gptFileId: string) => {
-    const { chatInstance } = addChatInstance(gptFileId, {
-      name: 'New Chat',
-      inputtingPrompt: '',
-      systemPrompt: '',
-      messages: [],
-      singleFileConfig: {},
-      status: ChatMessageStatus.Success,
-    })
-
-    updateSidebarTreeItem(gptFileId, {
-      defaultIsExpanded: true,
-    })
-
-    updateActiveChatId(chatInstance.id)
-  }, [addChatInstance, updateSidebarTreeItem, updateActiveChatId])
+    createChatAndActive(gptFileId)
+  }, [createChatAndActive])
 
   const handleDeleteChat = useCallback((chatId: string) => {
     removeChatInstance(chatId)
   }, [removeChatInstance])
 
-  const renderTreeLeftSlot = (props: TreeItemState<GptTreeItemOtherInfo>) => {
+  const handleClickTreeItem = useCallback((props: TreeItemState<GptFileInfoTreeItem>) => {
+    const { otherInfo } = props
+
+    if (otherInfo?.type === GptFileTreeItemType.Chat)
+      updateActiveChatId(otherInfo.id)
+  }, [updateActiveChatId])
+
+  const renderTreeItemLeftSlot = (props: TreeItemState<GptTreeItemOtherInfo>) => {
     const { isLeaf, isExpanded, otherInfo } = props
 
     const getIconClassName = () => {
@@ -76,7 +80,7 @@ export const ChatSidebar: FC<ChatSidebarProps> = (props) => {
     </>
   }
 
-  const renderTreeRightSlot = (props: TreeItemState<GptTreeItemOtherInfo>) => {
+  const renderTreeItemRightSlot = (props: TreeItemState<GptTreeItemOtherInfo>) => {
     const { isLeaf, otherInfo } = props
 
     if (otherInfo?.type === GptFileTreeItemType.Chat && isLeaf) {
@@ -102,40 +106,66 @@ export const ChatSidebar: FC<ChatSidebarProps> = (props) => {
     return <></>
   }
 
+  const buildTopToolbarSlot = () => {
+    return <SidebarTopToolbar>
+      <div>
+        GPT RUNNER
+      </div>
+      <div>
+        <IconButton
+          text='Refresh'
+          showText={false}
+          iconClassName='codicon-refresh'
+          animatingWhenClick
+          onClick={refreshSidebarTree}
+        ></IconButton>
+      </div>
+    </SidebarTopToolbar>
+  }
+
+  const handleExpandChange = useCallback((props: TreeItemState<GptFileInfoTreeItem>) => {
+    updateSidebarTreeItem(props.id, {
+      isExpanded: props.isExpanded,
+    })
+  }, [updateSidebarTreeItem])
+
+  const buildTreeItem = useCallback((item: TreeItemProps<GptTreeItemOtherInfo>) => {
+    if (item.otherInfo?.id === activeChatId)
+      return { ...item, isFocused: true }
+
+    return item
+  }, [activeChatId])
+
+  const sortTreeItems = useCallback((items: TreeItemProps<GptTreeItemOtherInfo>[]) => {
+    return items?.sort((a, b) => {
+      if (a.otherInfo?.type === GptFileTreeItemType.Chat && b.otherInfo?.type === GptFileTreeItemType.Chat) {
+        // sort by create time, new is on before
+        const aCreateTime = a.otherInfo?.createAt
+        const bCreateTime = b.otherInfo?.createAt
+
+        return (aCreateTime > bCreateTime) ? -1 : (aCreateTime < bCreateTime) ? 1 : 0
+      }
+
+      // sort by name, 0-9 a-z A-Z
+      const aName = a.name?.toLowerCase()
+      const bName = b.name?.toLowerCase()
+
+      return (aName < bName) ? -1 : (aName > bName) ? 1 : 0
+    })
+  }, [])
+
   const sidebar: SidebarProps<GptTreeItemOtherInfo> = {
-    topToolbar: {
-      title: 'GPT Runner',
-      actions: [],
-    },
-    renderTreeLeftSlot,
-    renderTreeRightSlot,
     tree: {
       items: sidebarTree,
-      // items: [
-      //   {
-      //     id: '1',
-      //     name: 'aaa',
-      //     path: 'aaa',
-      //     isLeaf: false,
-      //     children: [
-      //       {
-      //         id: '1-1',
-      //         name: 'bbb',
-      //         path: 'aaa/bbb',
-      //         isLeaf: false,
-      //         children: [
-      //           {
-      //             id: '1-1-1',
-      //             name: 'ccc',
-      //             path: 'aaa/bbb/ccc',
-      //             isLeaf: true,
-      //           },
-      //         ],
-      //       },
-      //     ],
-      //   },
-      // ],
+      renderTreeItemLeftSlot,
+      renderTreeItemRightSlot,
+      onTreeItemClick: handleClickTreeItem,
+      onTreeItemCollapse: handleExpandChange,
+      onTreeItemExpand: handleExpandChange,
     },
+    buildTopToolbarSlot,
+    buildTreeItem,
+    sortTreeItems,
   }
 
   if (!rootPath)

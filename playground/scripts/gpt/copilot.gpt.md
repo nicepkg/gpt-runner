@@ -1,6 +1,6 @@
 ```json
 {
-  "title": "common/copilot"
+  "title": "common/"
 }
 ```
 

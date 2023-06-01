@@ -18,17 +18,11 @@ export const TreeItemRow = styled.div<{ $isFocused: boolean }>`
 
   ${({ $isFocused }) => ($isFocused
 ? `
-  color: var(--list-active-selection-foreground);
-  background: var(--list-active-selection-background);
+  background: var(--list-hover-background);
   `
 : '')}
 
   &:hover {
-    background: var(--list-hover-background);
-  }
-
-  &:focus {
-    outline: none;
     background: var(--list-hover-background);
   }
 `
@@ -43,15 +37,19 @@ export const IconWrapper = styled.div`
   height: fit-content;
   overflow: hidden;
   display: flex;
+  flex-shrink: 0;
 `
 
 export const NameWrapper = styled.div`
+  flex: 1;
   font-size: var(--type-ramp-base-font-size);
+  ${textEllipsis}
 `
 export const TreeItemRowRightSlot = styled.div`
   display: flex;
   align-items: center;
   flex-shrink: 0;
+  ${textEllipsis}
 `
 
 export const Children = styled.div`

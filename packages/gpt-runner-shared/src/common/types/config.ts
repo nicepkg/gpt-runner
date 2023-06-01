@@ -105,7 +105,7 @@ export interface GptFolderInfo extends GptPathBaseInfo {
 
 export interface GptChatInfo extends GptPathBaseInfo {
   type: GptFileTreeItemType.Chat
-  singleFileConfig: SingleFileConfig
+  createAt: number
 }
 
 export type GptFileInfoTreeItem = TreeItem<GptFolderInfo | GptFileInfo | GptChatInfo>

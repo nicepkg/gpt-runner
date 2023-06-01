@@ -35,3 +35,12 @@ export const StyledVSCodePanels = styled(VSCodePanels)`
     overflow: hidden;
   }
 `
+
+export const SidebarTopToolbar = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0.5rem 0;
+  font-size: var(--type-ramp-base-font-size);
+`

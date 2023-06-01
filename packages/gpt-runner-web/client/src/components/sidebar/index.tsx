@@ -1,19 +1,18 @@
-import { useCallback, useState } from 'react'
-import { VSCodeTextField } from '@vscode/webview-ui-toolkit/react'
+import { useEffect, useState } from 'react'
+import { travelTreeDeepFirst } from '@nicepkg/gpt-runner-shared/common'
+import { useDebounce } from 'react-use'
 import type { TreeProps } from '../tree'
 import { Tree } from '../tree'
-import type { TopToolbarProps } from '../top-toolbar'
-import { TopToolbar } from '../top-toolbar'
 import type { TreeItemBaseStateOtherInfo, TreeItemProps } from '../tree-item'
-import { SidebarWrapper } from './sidebar.styles'
+import { SidebarHeader, SidebarSearch, SidebarWrapper } from './sidebar.styles'
 
 export interface SidebarProps<OtherInfo extends TreeItemBaseStateOtherInfo = TreeItemBaseStateOtherInfo> {
   defaultSearchKeyword?: string
   placeholder?: string
-  topToolbar?: TopToolbarProps
-  tree?: TreeProps<OtherInfo>
-  renderTreeLeftSlot?: TreeItemProps<OtherInfo>['renderLeftSlot']
-  renderTreeRightSlot?: TreeItemProps<OtherInfo>['renderRightSlot']
+  tree?: Omit<TreeProps<OtherInfo>, 'filter'>
+  buildTreeItem?: (item: TreeItemProps<OtherInfo>) => TreeItemProps<OtherInfo>
+  sortTreeItems?: (items: TreeItemProps<OtherInfo>[]) => TreeItemProps<OtherInfo>[]
+  buildTopToolbarSlot?: () => React.ReactNode
 }
 
 export function Sidebar<OtherInfo extends TreeItemBaseStateOtherInfo = TreeItemBaseStateOtherInfo>(props: SidebarProps<OtherInfo>) {
@@ -21,37 +20,62 @@ export function Sidebar<OtherInfo extends TreeItemBaseStateOtherInfo = TreeItemB
     defaultSearchKeyword = '',
     placeholder,
     tree,
-    topToolbar,
-    renderTreeLeftSlot,
-    renderTreeRightSlot,
+    buildTreeItem,
+    sortTreeItems,
+    buildTopToolbarSlot,
   } = props
 
   const [searchKeyword, setSearchKeyword] = useState(defaultSearchKeyword)
+  const [debouncedSearchKeyword, setDebouncedSearchKeyword] = useState(defaultSearchKeyword)
+  const [finalItems, setFinalItems] = useState<TreeItemProps<OtherInfo>[]>([])
 
-  const filterTreeItems = tree?.items.filter(file => searchKeyword ? file.name.includes(searchKeyword) : true)
+  useDebounce(() => {
+    setDebouncedSearchKeyword(searchKeyword)
+  }, 300, [searchKeyword])
 
-  const processTreeItem = useCallback((items: TreeItemProps<OtherInfo>[]): TreeItemProps<OtherInfo>[] => {
-    return items.map((item) => {
-      return {
-        ...item,
-        renderLeftSlot: renderTreeLeftSlot,
-        renderRightSlot: renderTreeRightSlot,
-        children: item.children ? processTreeItem(item.children) : undefined,
-      }
+  useEffect(() => {
+    let _finalItems: TreeItemProps<OtherInfo>[] = [...(tree?.items || [])]
+
+    _finalItems = travelTreeDeepFirst(tree?.items || [], (item) => {
+      if (buildTreeItem)
+        item = buildTreeItem(item)
+
+      if (debouncedSearchKeyword && !item.name?.match(new RegExp(debouncedSearchKeyword, 'i')) && !item.children?.length)
+        return null
+
+      const sortedChildren
+        = sortTreeItems && item?.children
+          ? sortTreeItems(item.children)
+          : item.children?.sort((a, b) => {
+            // 0-9 a-z A-Z
+            const aName = a.name?.toLowerCase()
+            const bName = b.name?.toLowerCase()
+
+            return (aName < bName) ? -1 : (aName > bName) ? 1 : 0
+          })
+
+      const finalExpanded = debouncedSearchKeyword ? true : item.isExpanded
+
+      return { ...item, isExpanded: finalExpanded, children: sortedChildren }
     })
-  }, [renderTreeLeftSlot])
 
-  const finalTreeItems = filterTreeItems ? processTreeItem(filterTreeItems) : undefined
+    setFinalItems(_finalItems)
+  }, [buildTreeItem, sortTreeItems, debouncedSearchKeyword, tree?.items])
 
   return <SidebarWrapper>
-    {topToolbar && <TopToolbar {...topToolbar} />}
-    <VSCodeTextField placeholder={placeholder}
+    <SidebarHeader>
+      {buildTopToolbarSlot?.()}
+    </SidebarHeader>
+    <SidebarSearch
+      placeholder={placeholder}
       value={searchKeyword}
-      onChange={(e: any) => {
+      onInput={(e: any) => {
         setSearchKeyword(e.target?.value)
       }}>
-      Text Field Label
-    </VSCodeTextField>
-    {finalTreeItems && <Tree {...tree} items={finalTreeItems} />}
+    </SidebarSearch>
+    <Tree
+      {...tree}
+      items={finalItems}
+    />
   </SidebarWrapper>
 }

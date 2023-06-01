@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import type { Variants } from 'framer-motion'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Children, IconWrapper, NameWrapper, TreeItemRow, TreeItemRowLeftSlot, TreeItemRowRightSlot, TreeItemWrapper } from './tree-item.styles'
@@ -10,13 +10,12 @@ export interface TreeItemBaseState<OtherInfo extends TreeItemBaseStateOtherInfo 
   path: string
   isLeaf: boolean
   children?: TreeItemProps<OtherInfo>[]
-  defaultIsExpanded?: boolean
+  isExpanded?: boolean
   otherInfo?: OtherInfo
 }
 
 export interface TreeItemState<OtherInfo extends TreeItemBaseStateOtherInfo = TreeItemBaseStateOtherInfo> extends TreeItemBaseState<OtherInfo> {
   isHovering: boolean
-  isExpanded: boolean
   isFocused?: boolean
 }
 
@@ -36,15 +35,10 @@ export function TreeItem<OtherInfo extends TreeItemBaseStateOtherInfo = TreeItem
     name,
     isLeaf,
     children,
-    defaultIsExpanded = false,
     isFocused = false,
+    isExpanded = false,
   } = baseStateProps
   const [isHovering, setIsHovering] = useState(false)
-  const [isExpanded, setIsExpanded] = useState(defaultIsExpanded)
-
-  useEffect(() => {
-    setIsExpanded(defaultIsExpanded)
-  }, [defaultIsExpanded])
 
   const stateProps = { ...baseStateProps, isHovering, isExpanded }
 
@@ -62,13 +56,12 @@ export function TreeItem<OtherInfo extends TreeItemBaseStateOtherInfo = TreeItem
   }
 
   const handleClick = () => {
-    setIsExpanded(!isExpanded)
     if (!isLeaf) {
       if (isExpanded)
-        onCollapse?.(stateProps)
+        onCollapse?.({ ...stateProps, isExpanded: false })
 
       else
-        onExpand?.(stateProps)
+        onExpand?.({ ...stateProps, isExpanded: true })
     }
     else {
       onClick?.(stateProps)
@@ -89,12 +82,13 @@ export function TreeItem<OtherInfo extends TreeItemBaseStateOtherInfo = TreeItem
         $isFocused={isFocused}
         onClick={handleClick}
         onContextMenu={handleContextMenu}
+        title={name}
       >
         <TreeItemRowLeftSlot>
           <IconWrapper>
             {renderLeftSlot?.(stateProps)}
           </IconWrapper>
-          <NameWrapper>
+          <NameWrapper >
             {name}
           </NameWrapper>
         </TreeItemRowLeftSlot>

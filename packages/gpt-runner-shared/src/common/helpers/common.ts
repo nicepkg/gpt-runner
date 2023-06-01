@@ -41,15 +41,42 @@ export function formatSourceValue<T = any>(value: any): T {
   return result as T
 }
 
-export function travelTree<T extends TreeItem<Record<string, any>>, R extends TreeItem<Record<string, any>> = TreeItem<Record<string, any>> >(tree: T[], callback: (item: T, parent?: T) => void | R): R[] {
+export function travelTree<T extends TreeItem<Record<string, any>>, R extends TreeItem<Record<string, any>> = TreeItem<Record<string, any>> >(tree: T[], callback: (item: T, parent?: T) => void | null | undefined | R): R[] {
   const travel = (tree: T[], parent?: T) => {
-    return tree.map((item) => {
-      const finalItem = callback(item, parent) || item
-      if (item.children)
+    const result: R[] = []
+    tree.forEach((item) => {
+      const callbackResult = callback(item, parent)
+      const finalItem = callbackResult === undefined ? item : callbackResult
+
+      if (finalItem && item.children)
         finalItem.children = travel(item.children as T[], item)
 
-      return finalItem
+      if (finalItem !== null)
+        result.push(finalItem as R)
     })
+
+    return result
+  }
+  return travel(tree) as R[]
+}
+
+export function travelTreeDeepFirst<T extends TreeItem<Record<string, any>>, R extends TreeItem<Record<string, any>> = TreeItem<Record<string, any>> >(tree: T[], callback: (item: T, parent?: T) => void | null | undefined | R): R[] {
+  const travel = (tree: T[], parent?: T) => {
+    const result: R[] = []
+    tree.forEach((item) => {
+      let children: R[] | undefined
+
+      if (item.children)
+        children = travel(item.children as T[], item)
+
+      const callbackResult = callback({ ...item, children }, parent)
+      const finalItem = callbackResult === undefined ? item : callbackResult
+
+      if (finalItem !== null)
+        result.push(finalItem as R)
+    })
+
+    return result
   }
   return travel(tree) as R[]
 }

@@ -1,57 +1,71 @@
+import { useEffect, useState } from 'react'
+import { travelTree } from '@nicepkg/gpt-runner-shared/common'
 import type { TreeItemBaseStateOtherInfo, TreeItemProps } from '../tree-item'
 import { TreeItem } from '../tree-item'
 
 export interface TreeProps<OtherInfo extends TreeItemBaseStateOtherInfo = TreeItemBaseStateOtherInfo> {
   items: TreeItemProps<OtherInfo>[]
-  onFileContextMenu?: TreeItemProps<OtherInfo>['onContextMenu']
-  onFileClick?: TreeItemProps<OtherInfo>['onClick']
-  onFileExpand?: TreeItemProps<OtherInfo>['onExpand']
-  onFileCollapse?: TreeItemProps<OtherInfo>['onCollapse']
-  renderItemLeftSlot?: TreeItemProps<OtherInfo>['renderLeftSlot']
-  renderItemRightSlot?: TreeItemProps<OtherInfo>['renderRightSlot']
+  buildTreeItem?: (item: TreeItemProps<OtherInfo>) => TreeItemProps<OtherInfo>
+  onTreeItemContextMenu?: TreeItemProps<OtherInfo>['onContextMenu']
+  onTreeItemClick?: TreeItemProps<OtherInfo>['onClick']
+  onTreeItemExpand?: TreeItemProps<OtherInfo>['onExpand']
+  onTreeItemCollapse?: TreeItemProps<OtherInfo>['onCollapse']
+  renderTreeItemLeftSlot?: TreeItemProps<OtherInfo>['renderLeftSlot']
+  renderTreeItemRightSlot?: TreeItemProps<OtherInfo>['renderRightSlot']
 }
 
 export function Tree<OtherInfo extends TreeItemBaseStateOtherInfo = TreeItemBaseStateOtherInfo>(props: TreeProps<OtherInfo>) {
   const {
     items,
-    onFileContextMenu,
-    onFileClick,
-    onFileExpand,
-    onFileCollapse,
-    renderItemLeftSlot,
-    renderItemRightSlot,
+    buildTreeItem,
+    onTreeItemContextMenu,
+    onTreeItemClick,
+    onTreeItemExpand,
+    onTreeItemCollapse,
+    renderTreeItemLeftSlot,
+    renderTreeItemRightSlot,
   } = props
 
-  const finalItems = items.map(file => ({
-    ...file,
-    renderLeftSlot(state) {
-      return file.renderLeftSlot?.(state) || renderItemLeftSlot?.(state)
-    },
-    renderRightSlot(state) {
-      return file.renderRightSlot?.(state) || renderItemRightSlot?.(state)
-    },
-    onContextMenu(state) {
-      file.onContextMenu?.(state)
-      onFileContextMenu?.(state)
-    },
-    onClick(state) {
-      file.onClick?.(state)
-      onFileClick?.(state)
-    },
-    onExpand(state) {
-      file.onExpand?.(state)
-      onFileExpand?.(state)
-    },
-    onCollapse(state) {
-      file.onCollapse?.(state)
-      onFileCollapse?.(state)
-    },
-  } as TreeItemProps<OtherInfo>))
+  const [finalItems, setFinalItems] = useState<TreeItemProps<OtherInfo>[]>([])
+
+  useEffect(() => {
+    const _finalItems = travelTree(items, (item) => {
+      if (buildTreeItem)
+        item = buildTreeItem(item)
+
+      return {
+        ...item,
+        renderLeftSlot(state) {
+          return item.renderLeftSlot?.(state) || renderTreeItemLeftSlot?.(state)
+        },
+        renderRightSlot(state) {
+          return item.renderRightSlot?.(state) || renderTreeItemRightSlot?.(state)
+        },
+        onContextMenu(state) {
+          item.onContextMenu?.(state)
+          onTreeItemContextMenu?.(state)
+        },
+        onClick(state) {
+          item.onClick?.(state)
+          onTreeItemClick?.(state)
+        },
+        onExpand(state) {
+          item.onExpand?.(state)
+          onTreeItemExpand?.(state)
+        },
+        onCollapse(state) {
+          item.onCollapse?.(state)
+          onTreeItemCollapse?.(state)
+        },
+      } as TreeItemProps<OtherInfo>
+    })
+    setFinalItems(_finalItems)
+  }, [items, buildTreeItem, onTreeItemContextMenu, onTreeItemClick, onTreeItemExpand, onTreeItemCollapse, renderTreeItemLeftSlot, renderTreeItemRightSlot])
 
   return (
     <div>
-      {finalItems.map(file => (
-        <TreeItem key={file.id} {...file} />
+      {finalItems.map(item => (
+        <TreeItem key={item.id} {...item} />
       ))}
     </div>
   )
