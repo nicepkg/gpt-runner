@@ -50,10 +50,10 @@ export const ChatPanel: FC<ChatPanelProps> = (props) => {
       return
 
     const index = chatIds.indexOf(chatId)
-    let nextIndex = index - 1
+    let nextIndex = index + 1
 
-    if (nextIndex < 0)
-      nextIndex = chatIds.length - 1
+    if (nextIndex >= chatIds.length)
+      nextIndex = 0
 
     const nextChatId = chatIds[nextIndex]
     onChatIdChange(nextChatId)
@@ -67,10 +67,10 @@ export const ChatPanel: FC<ChatPanelProps> = (props) => {
       return
 
     const index = chatIds.indexOf(chatId)
-    let nextIndex = index + 1
+    let nextIndex = index - 1
 
-    if (nextIndex >= chatIds.length)
-      nextIndex = 0
+    if (nextIndex < 0)
+      nextIndex = chatIds.length - 1
 
     const nextChatId = chatIds[nextIndex]
     onChatIdChange(nextChatId)

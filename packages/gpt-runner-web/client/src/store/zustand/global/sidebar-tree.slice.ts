@@ -167,12 +167,13 @@ export const createSidebarTreeSlice: StateCreator<
   },
   createChatAndActive(gptFileId) {
     const state = get()
+    const gptFileTreeItem = state.getSidebarTreeItem(gptFileId) as GptFileTreeItem
     const { chatInstance } = state.addChatInstance(gptFileId, {
       name: DEFAULT_CHAT_NAME,
-      inputtingPrompt: '',
-      systemPrompt: '',
+      inputtingPrompt: gptFileTreeItem?.otherInfo?.singleFileConfig.userPrompt || '',
+      systemPrompt: gptFileTreeItem?.otherInfo?.singleFileConfig.systemPrompt || '',
       messages: [],
-      singleFileConfig: {},
+      singleFileConfig: gptFileTreeItem?.otherInfo?.singleFileConfig || {},
       status: ChatMessageStatus.Success,
     })
 
