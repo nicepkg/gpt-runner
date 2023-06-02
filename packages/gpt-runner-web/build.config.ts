@@ -2,8 +2,15 @@ import { defineBuildConfig } from 'unbuild'
 
 export default defineBuildConfig({
   entries: [
-    'index',
-    'server/src/index',
+    {
+      builder: 'rollup',
+      input: 'server/index',
+      name: 'server',
+    }, {
+      builder: 'rollup',
+      input: 'common/index',
+      name: 'common',
+    },
   ],
   clean: true,
   declaration: true,
@@ -13,6 +20,6 @@ export default defineBuildConfig({
   ],
   rollup: {
     emitCJS: true,
-    inlineDependencies: true,
+    // inlineDependencies: true,
   },
 })

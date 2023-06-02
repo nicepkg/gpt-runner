@@ -2,9 +2,21 @@ import { defineBuildConfig } from 'unbuild'
 
 export default defineBuildConfig({
   entries: [
-    'src/browser',
-    'src/common',
-    'src/node',
+    {
+      builder: 'rollup',
+      input: 'src/browser/index',
+      name: 'browser',
+    },
+    {
+      builder: 'rollup',
+      input: 'src/common/index',
+      name: 'common',
+    },
+    {
+      builder: 'rollup',
+      input: 'src/node/index',
+      name: 'node',
+    },
   ],
   clean: true,
   declaration: true,

@@ -12,8 +12,8 @@ export const TreeItemRow = styled.div<{ $isFocused: boolean }>`
   align-items: center;
   user-select: none;
   font-size: var(--type-ramp-plus1-font-size);
-  padding: 0.25rem 0 0.25rem 0;
-  height: calc(var(--button-height) + 0.5rem);
+  margin: 0.25rem 0 0.25rem 0;
+  height: var(--button-height);
   border-radius: 0.25rem;
 
   ${({ $isFocused }) => ($isFocused
@@ -49,6 +49,7 @@ export const TreeItemRowRightSlot = styled.div`
   display: flex;
   align-items: center;
   flex-shrink: 0;
+  margin-left: 0.5rem;
   ${textEllipsis}
 `
 

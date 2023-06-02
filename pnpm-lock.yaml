@@ -263,6 +263,9 @@ importers:
       clsx:
         specifier: ^1.2.1
         version: 1.2.1
+      connect-history-api-fallback:
+        specifier: ^2.0.0
+        version: 2.0.0
       cors:
         specifier: ^2.8.5
         version: 2.8.5
@@ -321,6 +324,9 @@ importers:
         specifier: ^4.3.8
         version: 4.3.8(react@18.2.0)
     devDependencies:
+      '@types/connect-history-api-fallback':
+        specifier: ^1.5.0
+        version: 1.5.0
       '@types/cors':
         specifier: ^2.8.13
         version: 2.8.13
@@ -2440,6 +2446,13 @@ packages:
     resolution: {integrity: sha512-mEo1sAde+UCE6b2hxn332f1g1E8WfYRu6p5SvTKr2ZKC1f7gFJXk4h5PyGP9Dt6gCaG8y8XhwnXWC6Iy2cmBng==}
     dev: true
 
+  /@types/connect-history-api-fallback@1.5.0:
+    resolution: {integrity: sha512-4x5FkPpLipqwthjPsF7ZRbOv3uoLUFkTA9G9v583qi4pACvq0uTELrB8OLUzPWUI4IJIyvM85vzkV1nyiI2Lig==}
+    dependencies:
+      '@types/express-serve-static-core': 4.17.35
+      '@types/node': 18.16.9
+    dev: true
+
   /@types/connect@3.4.35:
     resolution: {integrity: sha512-cdeYyv4KWoEgpBISTxWvqYsVy444DOqehiF3fM3ne10AmJ62RSyNkUnxMJXHQWRQQX2eR94m5y1IZyDwBjV9FQ==}
     dependencies:
@@ -3599,6 +3612,11 @@ packages:
       semver: 7.5.1
       well-known-symbols: 2.0.0
     dev: true
+
+  /connect-history-api-fallback@2.0.0:
+    resolution: {integrity: sha512-U73+6lQFmfiNPrYbXqr6kZ1i1wiRqXnp2nhMsINseWXO8lDau0LGEffJ8kQi4EjLZympVgRdvqjAgiZ1tgzDDA==}
+    engines: {node: '>=0.8'}
+    dev: false
 
   /consola@2.15.3:
     resolution: {integrity: sha512-9vAdYbHj6x2fLKC4+oPH0kFzY/orMZyG2Aj+kNylHxKGJ/Ed4dpNyAQYwJOdqO4zdM7XpVHmyejQDcQHrnuXbw==}

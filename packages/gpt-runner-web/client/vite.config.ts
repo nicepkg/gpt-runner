@@ -1,6 +1,7 @@
 import path from 'node:path'
 import { defineConfig } from 'vite'
 import React from '@vitejs/plugin-react'
+import { EnvConfig } from '@nicepkg/gpt-runner-shared'
 
 const resolvePath = (...paths: string[]) => path.resolve(__dirname, ...paths)
 
@@ -14,8 +15,17 @@ export default defineConfig({
   plugins: [
     React(),
   ],
+  build: {
+    outDir: resolvePath('../dist/browser'),
+  },
   server: {
     port: 3006,
     host: true,
+    proxy: {
+      '/api': {
+        target: EnvConfig.get('BASE_SERVER_URL'),
+        changeOrigin: true,
+      },
+    },
   },
 })

@@ -2,8 +2,16 @@ import { defineBuildConfig } from 'unbuild'
 
 export default defineBuildConfig({
   entries: [
-    'src/index',
-    'src/cli',
+    {
+      builder: 'rollup',
+      input: 'src/index',
+      name: 'index',
+    },
+    {
+      builder: 'rollup',
+      input: 'src/cli',
+      name: 'cli',
+    },
   ],
   clean: true,
   declaration: true,

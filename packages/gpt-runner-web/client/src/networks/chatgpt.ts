@@ -1,7 +1,6 @@
 import type { EventSourceMessage } from '@microsoft/fetch-event-source'
 import { fetchEventSource } from '@microsoft/fetch-event-source'
 import type { ChatStreamReqParams } from '@nicepkg/gpt-runner-shared/common'
-import { EnvConfig } from '@nicepkg/gpt-runner-shared/common'
 
 export interface FetchChatStreamReqParams extends ChatStreamReqParams {
   namespace?: string
@@ -26,7 +25,7 @@ export async function fetchChatgptStream(
   } = params
 
   try {
-    await fetchEventSource(`${EnvConfig.get('BASE_SERVER_URL')}/api/chatgpt/chat-stream`, {
+    await fetchEventSource('/api/chatgpt/chat-stream', {
       method: 'POST',
       signal,
       headers: {
