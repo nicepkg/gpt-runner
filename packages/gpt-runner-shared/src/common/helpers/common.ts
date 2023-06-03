@@ -89,3 +89,45 @@ export function tryParseJson(str: string) {
     return {}
   }
 }
+
+export function debounce<T extends (...args: any[]) => any>(callback: T, wait: number) {
+  let timeout: ReturnType<typeof setTimeout> | undefined
+
+  return function (this: any, ...args: Parameters<T>) {
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
+    const context = this
+
+    const later = function () {
+      timeout = undefined
+      callback.apply(context, args)
+    }
+
+    clearTimeout(timeout)
+    timeout = setTimeout(later, wait) as any
+  } as T
+}
+
+const keyIsCalledMap = new Map<string, boolean>()
+export function runOnceByKey<T extends (...args: any[]) => any>(callback: T, key: string) {
+  return function (this: any, ...args: Parameters<T>) {
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
+    const context = this
+    const keyIsCalled = keyIsCalledMap.get(key)
+
+    if (keyIsCalled)
+      return
+
+    const result = callback?.apply(context, args)
+
+    if (result instanceof Promise) {
+      result?.then?.(() => {
+        keyIsCalledMap.set(key, true)
+      })
+    }
+    else {
+      keyIsCalledMap.set(key, true)
+    }
+
+    return result
+  } as T
+}

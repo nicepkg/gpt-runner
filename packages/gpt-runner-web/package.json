@@ -57,6 +57,7 @@
     "stub": "unbuild --stub"
   },
   "dependencies": {
+    "@kvs/node-localstorage": "^2.1.3",
     "@microsoft/fetch-event-source": "^2.0.1",
     "@nicepkg/gpt-runner-core": "workspace:*",
     "@nicepkg/gpt-runner-shared": "workspace:*",

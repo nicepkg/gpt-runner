@@ -34,3 +34,20 @@ export interface GetUserConfigReqParams {
 export interface GetUserConfigResData {
   userConfig: UserConfig
 }
+
+export interface GetStateReqParams {
+  key: string
+}
+
+export type FrontendState = Record<string, any> | null | undefined
+
+export interface GetStateResData {
+  state: FrontendState
+}
+
+export interface SaveStateReqParams {
+  key: string
+  state: FrontendState
+}
+
+export type SaveStateResData = null

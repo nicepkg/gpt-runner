@@ -39,24 +39,6 @@
           "type": "boolean",
           "default": false,
           "description": "Disable the GPT Runner extension"
-        },
-        "gpt-runner.languageIds": {
-          "type": [
-            "array"
-          ],
-          "items": {
-            "type": "string"
-          }
-        },
-        "gpt-runner.root": {
-          "type": [
-            "array",
-            "string"
-          ],
-          "items": {
-            "type": "string"
-          },
-          "description": "Project root that contains the GPT Runner configuration file"
         }
       }
     }
@@ -71,9 +53,7 @@
     "@nicepkg/gpt-runner": "workspace:*",
     "@nicepkg/gpt-runner-shared": "workspace:*",
     "esno": "^0.16.3",
-    "jiti": "^1.18.2",
-    "prettier": "^2.8.8",
-    "tsup": "^6.7.0",
+    "eventemitter3": "^5.0.1",
     "unconfig": "^0.3.7"
   }
 }

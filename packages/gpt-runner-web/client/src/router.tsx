@@ -1,6 +1,6 @@
 import type { FC } from 'react'
 import { Suspense } from 'react'
-import { Route, BrowserRouter as Router, Routes } from 'react-router-dom'
+import { Route, HashRouter as Router, Routes } from 'react-router-dom'
 import { VSCodeProgressRing } from '@vscode/webview-ui-toolkit/react'
 import Home from './pages/home/index'
 import Error404 from './pages/error/404'

@@ -17,3 +17,12 @@ export const GetGptFilesReqParamsSchema = z.object({
 export const GetUserConfigReqParamsSchema = z.object({
   rootPath: z.string(),
 }) satisfies z.ZodType<GetUserConfigReqParams>
+
+export const GetStateReqParamsSchema = z.object({
+  key: z.string(),
+})
+
+export const SaveStateReqParamsSchema = z.object({
+  key: z.string(),
+  state: z.record(z.any()).nullable().optional(),
+})

@@ -3,12 +3,14 @@ import type { Controller, ControllerConfig } from '../types'
 import { chatgptControllers } from './chatgpt.controller'
 import { configControllers } from './config.controller'
 import { gptFilesControllers } from './gpt-files.controller'
+import { stateControllers } from './state.controller'
 
 export function processControllers(router: Router) {
   const allControllersConfig: ControllerConfig[] = [
     chatgptControllers,
     configControllers,
     gptFilesControllers,
+    stateControllers,
   ]
 
   allControllersConfig.forEach((controllerConfig) => {
