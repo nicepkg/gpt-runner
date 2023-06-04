@@ -2,11 +2,14 @@ import { sendSuccessResponse, verifyParamsByZod } from '@nicepkg/gpt-runner-shar
 import type { GetStateReqParams, GetStateResData, SaveStateReqParams, SaveStateResData } from '@nicepkg/gpt-runner-shared/common'
 import { GetStateReqParamsSchema, SaveStateReqParamsSchema } from '@nicepkg/gpt-runner-shared/common'
 import { kvsLocalStorage } from '@kvs/node-localstorage'
+import { getGlobalCacheDir } from '../helpers/get-cache-dir'
 import type { ControllerConfig } from '../types'
 
 async function getStorage() {
+  const cacheFolder = await getGlobalCacheDir('gpt-runner-server')
   return await kvsLocalStorage<Record<string, Record<string, any> | null>>({
     name: 'frontend-state',
+    storeFilePath: cacheFolder,
     version: 1,
   })
 }

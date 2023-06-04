@@ -63,6 +63,7 @@
     "@nicepkg/gpt-runner-shared": "workspace:*",
     "@tanstack/react-query": "^4.29.11",
     "@vscode/webview-ui-toolkit": "^1.2.2",
+    "cachedir": "^2.3.0",
     "clsx": "^1.2.1",
     "connect-history-api-fallback": "^2.0.0",
     "cors": "^2.8.5",

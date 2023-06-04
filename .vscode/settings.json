@@ -11,6 +11,7 @@
   "typescript.inlayHints.parameterTypes.enabled": true,
   // "typescript.inlayHints.functionLikeReturnTypes.enabled": true,
   "cSpell.words": [
+    "cachedir",
     "Chatgpt",
     "clsx",
     "codicon",

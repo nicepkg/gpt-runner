@@ -218,12 +218,12 @@ importers:
 
   packages/gpt-runner-vscode:
     devDependencies:
-      '@nicepkg/gpt-runner':
-        specifier: workspace:*
-        version: link:../gpt-runner
       '@nicepkg/gpt-runner-shared':
         specifier: workspace:*
         version: link:../gpt-runner-shared
+      '@nicepkg/gpt-runner-web':
+        specifier: workspace:*
+        version: link:../gpt-runner-web
       '@types/vscode':
         specifier: ^1.71.0
         version: 1.78.0
@@ -234,8 +234,8 @@ importers:
         specifier: ^5.0.1
         version: 5.0.1
       unconfig:
-        specifier: ^0.3.7
-        version: 0.3.7
+        specifier: ^0.3.9
+        version: 0.3.9
 
   packages/gpt-runner-web:
     dependencies:
@@ -257,6 +257,9 @@ importers:
       '@vscode/webview-ui-toolkit':
         specifier: ^1.2.2
         version: 1.2.2(react@18.2.0)
+      cachedir:
+        specifier: ^2.3.0
+        version: 2.3.0
       clsx:
         specifier: ^1.2.1
         version: 1.2.1
@@ -465,10 +468,6 @@ packages:
   /@antfu/ni@0.21.3:
     resolution: {integrity: sha512-iDtQMeMW1kKV4nzQ+tjYOIPUm6nmh7pJe4sM0kx1jdAChKSCBLStqlgIoo5Tce++p+o8cBiWIzC3jg6oHyjzMA==}
     hasBin: true
-    dev: true
-
-  /@antfu/utils@0.5.2:
-    resolution: {integrity: sha512-CQkeV+oJxUazwjlHD0/3ZD08QWKuGQkhnrKo3e6ly5pd48VUpXbb77q0xMU4+vc2CkJnDS02Eq/M9ugyX20XZA==}
     dev: true
 
   /@antfu/utils@0.7.2:
@@ -3381,6 +3380,11 @@ packages:
       tar: 6.1.14
       unique-filename: 3.0.0
     dev: true
+
+  /cachedir@2.3.0:
+    resolution: {integrity: sha512-A+Fezp4zxnit6FanDmv9EqXNAi3vt9DWp51/71UEhXukb7QUuvtv9344h91dyAxuTLoSYJFU299qzR3tzwPAhw==}
+    engines: {node: '>=6'}
+    dev: false
 
   /call-bind@1.0.2:
     resolution: {integrity: sha512-7O+FbCihrB5WGbFYesctwmTKae6rOiIzmz1icreWJ+0aA7LJfuqhEso2T9ncpcFtzMQtzXf2QGGueWJGTYsqrA==}
@@ -9520,14 +9524,6 @@ packages:
       untyped: 0.5.0
     transitivePeerDependencies:
       - supports-color
-    dev: true
-
-  /unconfig@0.3.7:
-    resolution: {integrity: sha512-1589b7oGa8ILBYpta7TndM5mLHLzHUqBfhszeZxuUBrjO/RoQ52VGVWsS3w0C0GLNxO9RPmqkf6BmIvBApaRdA==}
-    dependencies:
-      '@antfu/utils': 0.5.2
-      defu: 6.1.2
-      jiti: 1.18.2
     dev: true
 
   /unconfig@0.3.9:

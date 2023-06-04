@@ -5,6 +5,8 @@ import { log } from './log'
 import { ContextLoader } from './contextLoader'
 import { getExtConfiguration } from './utils'
 import { EXT_DISPLAY_NAME, EXT_NAME } from './constant'
+import { registerWebview } from './register/webview'
+import { registerServer } from './register/server'
 
 async function registerRoot(ext: ExtensionContext, status: StatusBarItem, cwd: string) {
   const contextLoader = new ContextLoader(cwd)
@@ -13,7 +15,8 @@ async function registerRoot(ext: ExtensionContext, status: StatusBarItem, cwd: s
 
   log.appendLine(`📁 Root context loaded: ${cwd}`)
 
-  // registerAnnotations(cwd, contextLoader, status, ext)
+  registerServer(cwd, contextLoader, ext)
+  registerWebview(cwd, contextLoader, ext)
 
   return contextLoader
 }
