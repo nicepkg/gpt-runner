@@ -38,7 +38,7 @@
         {
           "type": "webview",
           "id": "gpt-runner.chatView",
-          "name": "GPT Runner Chat"
+          "name": ""
         }
       ]
     },

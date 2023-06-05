@@ -52,7 +52,7 @@
     "build:server": "unbuild",
     "dev": "pnpm dev:server & pnpm dev:client",
     "dev:client": "vite --config ./client/vite.config.ts",
-    "dev:server": "esno server/index.ts",
+    "dev:server": "pnpm esno server/index.ts",
     "start": "node dist/server.cjs",
     "stub": "unbuild --stub"
   },

@@ -1,6 +1,6 @@
 import type { FC } from 'react'
 import { Suspense, useEffect } from 'react'
-import { Route, HashRouter as Router, Routes, useNavigate } from 'react-router-dom'
+import { Route, HashRouter as Router, Routes, useLocation, useNavigate } from 'react-router-dom'
 import { VSCodeProgressRing } from '@vscode/webview-ui-toolkit/react'
 import Home from './pages/home/index'
 import Error404 from './pages/error/404'
@@ -10,9 +10,11 @@ import { globalConfig } from './helpers/global-config'
 
 const HackRouter: FC = () => {
   const navigate = useNavigate()
+  const location = useLocation()
 
   useEffect(() => {
-    navigate(globalConfig.initialRoutePath)
+    if (location.pathname === '/')
+      navigate(globalConfig.initialRoutePath)
   }, [])
 
   return <></>
