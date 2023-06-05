@@ -43,6 +43,7 @@ export type FrontendState = Record<string, any> | null | undefined
 
 export interface GetStateResData {
   state: FrontendState
+  cacheDir: string
 }
 
 export interface SaveStateReqParams {

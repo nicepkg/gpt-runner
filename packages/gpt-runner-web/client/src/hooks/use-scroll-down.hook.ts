@@ -21,7 +21,7 @@ export function useScrollDown<Ref extends RefObject<any>>({
       if (scrollPercentage <= percentageThreshold)
         ref.current.scrollTop = (percentageThreshold / 100) * (elementHeight - visibleHeight)
     }
-  }, [percentageThreshold])
+  }, [percentageThreshold, ref.current])
 
   return [ref, scrollDown]
 }

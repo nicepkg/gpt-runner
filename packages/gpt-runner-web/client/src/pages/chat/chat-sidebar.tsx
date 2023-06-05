@@ -11,7 +11,6 @@ import { IconButton } from '../../components/icon-button'
 import { ErrorView } from '../../components/error-view'
 import { useGlobalStore } from '../../store/zustand/global'
 import { useChatInstance } from '../../hooks/use-chat-instance.hook'
-import { SidebarTopToolbar } from './chat.styles'
 
 export interface ChatSidebarProps {
   rootPath: string
@@ -106,21 +105,18 @@ export const ChatSidebar: FC<ChatSidebarProps> = (props) => {
     return <></>
   }
 
-  const buildTopToolbarSlot = () => {
-    return <SidebarTopToolbar>
-      <div>
-        GPT RUNNER
-      </div>
-      <div>
-        <IconButton
-          text='Refresh'
-          showText={false}
-          iconClassName='codicon-refresh'
-          animatingWhenClick
-          onClick={refreshSidebarTree}
-        ></IconButton>
-      </div>
-    </SidebarTopToolbar>
+  const buildSearchRightSlot = () => {
+    return <IconButton
+      style={{
+        marginLeft: '0.5rem',
+        height: '100%',
+      }}
+      text='Refresh'
+      showText={false}
+      iconClassName='codicon-refresh'
+      animatingWhenClick
+      onClick={refreshSidebarTree}
+    ></IconButton>
   }
 
   const handleExpandChange = useCallback((props: TreeItemState<GptFileInfoTreeItem>) => {
@@ -155,6 +151,7 @@ export const ChatSidebar: FC<ChatSidebarProps> = (props) => {
   }, [])
 
   const sidebar: SidebarProps<GptTreeItemOtherInfo> = {
+    placeholder: 'GPT RUNNER',
     tree: {
       items: sidebarTree,
       renderTreeItemLeftSlot,
@@ -163,7 +160,7 @@ export const ChatSidebar: FC<ChatSidebarProps> = (props) => {
       onTreeItemCollapse: handleExpandChange,
       onTreeItemExpand: handleExpandChange,
     },
-    buildTopToolbarSlot,
+    buildSearchRightSlot,
     buildTreeItem,
     sortTreeItems,
   }

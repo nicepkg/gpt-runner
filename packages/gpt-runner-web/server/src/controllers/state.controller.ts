@@ -1,17 +1,26 @@
 import { sendSuccessResponse, verifyParamsByZod } from '@nicepkg/gpt-runner-shared/node'
 import type { GetStateReqParams, GetStateResData, SaveStateReqParams, SaveStateResData } from '@nicepkg/gpt-runner-shared/common'
-import { GetStateReqParamsSchema, SaveStateReqParamsSchema } from '@nicepkg/gpt-runner-shared/common'
+import { Debug, GetStateReqParamsSchema, SaveStateReqParamsSchema } from '@nicepkg/gpt-runner-shared/common'
 import { kvsLocalStorage } from '@kvs/node-localstorage'
 import { getGlobalCacheDir } from '../helpers/get-cache-dir'
 import type { ControllerConfig } from '../types'
 
+const debug = new Debug('state.controller')
+
 async function getStorage() {
   const cacheFolder = await getGlobalCacheDir('gpt-runner-server')
-  return await kvsLocalStorage<Record<string, Record<string, any> | null>>({
+  debug.log('cacheFolder', cacheFolder)
+
+  const storage = await kvsLocalStorage<Record<string, Record<string, any> | null>>({
     name: 'frontend-state',
     storeFilePath: cacheFolder,
     version: 1,
   })
+
+  return {
+    cacheDir: cacheFolder,
+    storage,
+  }
 }
 
 export const stateControllers: ControllerConfig = {
@@ -27,12 +36,13 @@ export const stateControllers: ControllerConfig = {
 
         const { key } = query
 
-        const storage = await getStorage()
+        const { storage, cacheDir } = await getStorage()
         const state = await storage.get(key)
 
         sendSuccessResponse(res, {
           data: {
             state,
+            cacheDir,
           } satisfies GetStateResData,
         })
       },
@@ -47,7 +57,7 @@ export const stateControllers: ControllerConfig = {
 
         const { key, state } = body
 
-        const storage = await getStorage()
+        const { storage } = await getStorage()
 
         switch (state) {
           case undefined:

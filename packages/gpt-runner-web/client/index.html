@@ -5,6 +5,21 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
   <title>GPT Runner</title>
+  <script src="/scripts/eventemitter.js"></script>
+  <script>
+    window.__emitter__ = new window.EventEmitter()
+    window.__GLOBAL_CONFIG__ = {}
+    window.setGlobalConfig = (config = {}) => {
+      Object.assign(window.__GLOBAL_CONFIG__, config)
+    }
+
+    window.getGlobalConfig = () => {
+      return {
+        ...window.__DEFAULT_GLOBAL_CONFIG__ || {},
+        ...window.__GLOBAL_CONFIG__ || {},
+      }
+    }
+  </script>
   <script>
     // before-script
   </script>

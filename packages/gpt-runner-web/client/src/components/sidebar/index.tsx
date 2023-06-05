@@ -4,7 +4,7 @@ import { useDebounce } from 'react-use'
 import type { TreeProps } from '../tree'
 import { Tree } from '../tree'
 import type { TreeItemBaseStateOtherInfo, TreeItemProps } from '../tree-item'
-import { SidebarHeader, SidebarSearch, SidebarWrapper } from './sidebar.styles'
+import { SidebarHeader, SidebarSearch, SidebarSearchRightWrapper, SidebarSearchWrapper, SidebarWrapper } from './sidebar.styles'
 
 export interface SidebarProps<OtherInfo extends TreeItemBaseStateOtherInfo = TreeItemBaseStateOtherInfo> {
   defaultSearchKeyword?: string
@@ -13,6 +13,7 @@ export interface SidebarProps<OtherInfo extends TreeItemBaseStateOtherInfo = Tre
   buildTreeItem?: (item: TreeItemProps<OtherInfo>) => TreeItemProps<OtherInfo>
   sortTreeItems?: (items: TreeItemProps<OtherInfo>[]) => TreeItemProps<OtherInfo>[]
   buildTopToolbarSlot?: () => React.ReactNode
+  buildSearchRightSlot?: () => React.ReactNode
 }
 
 export function Sidebar<OtherInfo extends TreeItemBaseStateOtherInfo = TreeItemBaseStateOtherInfo>(props: SidebarProps<OtherInfo>) {
@@ -23,6 +24,7 @@ export function Sidebar<OtherInfo extends TreeItemBaseStateOtherInfo = TreeItemB
     buildTreeItem,
     sortTreeItems,
     buildTopToolbarSlot,
+    buildSearchRightSlot,
   } = props
 
   const [searchKeyword, setSearchKeyword] = useState(defaultSearchKeyword)
@@ -66,13 +68,18 @@ export function Sidebar<OtherInfo extends TreeItemBaseStateOtherInfo = TreeItemB
     <SidebarHeader>
       {buildTopToolbarSlot?.()}
     </SidebarHeader>
-    <SidebarSearch
-      placeholder={placeholder}
-      value={searchKeyword}
-      onInput={(e: any) => {
-        setSearchKeyword(e.target?.value)
-      }}>
-    </SidebarSearch>
+    <SidebarSearchWrapper>
+      <SidebarSearch
+        placeholder={placeholder}
+        value={searchKeyword}
+        onInput={(e: any) => {
+          setSearchKeyword(e.target?.value)
+        }}>
+      </SidebarSearch>
+      <SidebarSearchRightWrapper>
+        {buildSearchRightSlot?.()}
+      </SidebarSearchRightWrapper>
+    </SidebarSearchWrapper>
     <Tree
       {...tree}
       items={finalItems}

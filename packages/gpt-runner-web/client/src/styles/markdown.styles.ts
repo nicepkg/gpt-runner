@@ -5,6 +5,10 @@ export const MarkdownStyle = createGlobalStyle`
     line-height: 1.5;
     min-width: 1rem;
 
+    & > *:first-child {
+      margin-top: 0;
+    }
+
     & > *:last-child {
       margin-bottom: 0;
     }

@@ -52,8 +52,8 @@
     "build:server": "unbuild",
     "dev": "pnpm dev:server & pnpm dev:client",
     "dev:client": "vite --config ./client/vite.config.ts",
-    "dev:server": "pnpm esno server/index.ts",
-    "start": "node dist/server.cjs",
+    "dev:server": "cross-env NODE_OPTIONS='--experimental-fetch' NODE_NO_WARNINGS='1' DEBUG='enabled' pnpm esno server/index.ts",
+    "start": "cross-env NODE_OPTIONS='--experimental-fetch' NODE_NO_WARNINGS='1' DEBUG='enabled' node dist/server.cjs",
     "stub": "unbuild --stub"
   },
   "dependencies": {
@@ -67,6 +67,7 @@
     "clsx": "^1.2.1",
     "connect-history-api-fallback": "^2.0.0",
     "cors": "^2.8.5",
+    "cross-env": "^7.0.3",
     "eventemitter": "^0.3.3",
     "express": "^4.18.2",
     "framer-motion": "^10.12.16",

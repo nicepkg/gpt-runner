@@ -9,26 +9,30 @@ export const MsgWrapper = styled.div<{ $isMe: boolean }>`
 `
 
 export const MsgAvatarWrapper = styled.div<{ $isMe: boolean }>`
+  display: none;
   width: 2rem;
   height: 2rem;
-  display: flex;
   justify-content: center;
   align-items: center;
   border-radius: 50%;
   margin: 0 0.5rem;
-  border: 1px solid var(--panel-view-border);
-  align-self: ${({ $isMe }) => $isMe ? 'flex-end' : 'flex-start'};
+  border: 1px solid ${({ $isMe }) => $isMe ? 'var(--button-primary-background)' : 'var(--panel-view-border)'};
+  align-self: flex-start;
+
+  ${withBreakpoint('lg', css`
+    display: flex;
+  `)}
 `
 
 export const MsgContentWrapper = styled.div<{ $isMe: boolean }>`
   display: flex;
   flex-direction: ${({ $isMe }) => $isMe ? 'row-reverse' : 'row'};
-  max-width: calc(100% - 6rem);
+  max-width: 100%;
   width: 100%;
   position: relative;
 
-  ${withBreakpoint('sm', css`
-    max-width: 100%;
+  ${withBreakpoint('lg', css`
+    max-width: calc(100% - 6rem);
   `)}
 `
 
@@ -40,11 +44,11 @@ export const MsgContent = styled.div<{ $showToolbar: MessageItemProps['showToolb
   padding: 0.5rem;
   max-width: 100%;
   font-size: var(--type-ramp-base-font-size);
-  background: var(--list-hover-background);
+  border: 1px solid var(--panel-view-border);
 
-  &:hover {
-    outline: 1px solid var(--panel-view-border);
-  }
+  background: ${({ $isMe }) => $isMe
+  ? 'linear-gradient(90deg, var(--list-hover-background) 0%, var(--panel-view-background) 100%)'
+  : 'linear-gradient(-90deg, var(--list-hover-background) 0%, var(--panel-view-background) 100%)'};
 
   & .msg-content-footer {
     flex-wrap: wrap;

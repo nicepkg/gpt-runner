@@ -1,6 +1,6 @@
 import type { FC, RefObject } from 'react'
 import { useCallback, useEffect, useState } from 'react'
-import { ChatMessageStatus, ChatRole } from '@nicepkg/gpt-runner-shared/common'
+import { ChatMessageStatus, ChatRole, ClientEventName } from '@nicepkg/gpt-runner-shared/common'
 import { copy } from '@nicepkg/gpt-runner-shared/browser'
 import type { ChatMessagePanelProps } from '../../components/chat-message-panel'
 import { ChatMessagePanel } from '../../components/chat-message-panel'
@@ -11,6 +11,7 @@ import type { MessageItemProps } from '../../components/chat-message-item'
 import { ErrorView } from '../../components/error-view'
 import { useGlobalStore } from '../../store/zustand/global'
 import type { GptFileTreeItem } from '../../store/zustand/global/sidebar-tree.slice'
+import { emitter } from '../../helpers/emitter'
 
 export interface ChatPanelProps {
   scrollDownRef: RefObject<any>
@@ -33,6 +34,16 @@ export const ChatPanel: FC<ChatPanelProps> = (props) => {
   // copy
   const handleCopy = useCallback((value: string) => {
     copy(value)
+  }, [])
+
+  // insert codes
+  const handleInsertCodes = useCallback((value: string) => {
+    emitter.emit(ClientEventName.InsertCodes, { codes: value })
+  }, [])
+
+  // diff codes
+  const handleDiffCodes = useCallback((value: string) => {
+    emitter.emit(ClientEventName.DiffCodes, { codes: value })
   }, [])
 
   // edit
@@ -118,6 +129,31 @@ export const ChatPanel: FC<ChatPanelProps> = (props) => {
     }, false)
   }, [updateCurrentChatInstance])
 
+  const buildCodeToolbar: MessageItemProps['buildCodeToolbar'] = ({ contents }) => {
+    return <>
+      <IconButton
+        text='Copy'
+        iconClassName='codicon-copy'
+        onClick={() => handleCopy(contents)}
+      >
+      </IconButton>
+
+      <IconButton
+        text='Insert'
+        iconClassName='codicon-insert'
+        onClick={() => handleInsertCodes(contents)}
+      >
+      </IconButton>
+
+      <IconButton
+        text='Diff'
+        iconClassName='codicon-arrow-swap'
+        onClick={() => handleDiffCodes(contents)}
+      >
+      </IconButton>
+    </>
+  }
+
   const messagePanelProps: ChatMessagePanelProps = {
     messageItems: chatInstance?.messages.map((message, i) => {
       const isLast = i === chatInstance.messages.length - 1
@@ -140,29 +176,6 @@ export const ChatPanel: FC<ChatPanelProps> = (props) => {
         updateCurrentChatInstance({
           messages: chatInstance.messages.filter((_, index) => index !== i),
         }, false)
-      }
-
-      const buildCodeToolbar: MessageItemProps['buildCodeToolbar'] = ({ contents }) => {
-        return <>
-          <IconButton
-            text='Copy'
-            iconClassName='codicon-copy'
-            onClick={() => handleCopy(contents)}
-          >
-          </IconButton>
-
-          <IconButton
-            text='Insert'
-            iconClassName='codicon-insert'
-          >
-          </IconButton>
-
-          <IconButton
-            text='Diff'
-            iconClassName='codicon-arrow-swap'
-          >
-          </IconButton>
-        </>
       }
 
       const buildMessageToolbar: MessageItemProps['buildMessageToolbar'] = ({ text }) => {
@@ -207,7 +220,7 @@ export const ChatPanel: FC<ChatPanelProps> = (props) => {
         ...message,
         status: isLast ? status : ChatMessageStatus.Success,
         showToolbar: isLastTwo ? 'always' : 'hover',
-        buildCodeToolbar,
+        buildCodeToolbar: status === ChatMessageStatus.Pending ? undefined : buildCodeToolbar,
         buildMessageToolbar,
       } satisfies MessageItemProps
     }) ?? [],

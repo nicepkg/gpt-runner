@@ -13,7 +13,7 @@ export const TreeItemRow = styled.div<{ $isFocused: boolean }>`
   user-select: none;
   font-size: var(--type-ramp-plus1-font-size);
   margin: 0.25rem 0 0.25rem 0;
-  height: var(--button-height);
+  height: var(--my-button-height);
   border-radius: 0.25rem;
 
   ${({ $isFocused }) => ($isFocused

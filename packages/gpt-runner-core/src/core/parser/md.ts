@@ -37,7 +37,7 @@ export async function gptMdFileParser(params: GptMdFileParserParams): Promise<Si
     const titleContentsMap = findContentByTitleName(title, levels, content)
     return {
       ...contentMap,
-      [title]: Object.values(titleContentsMap)?.[0] ?? '',
+      [title]: Object.values(titleContentsMap)?.[0]?.trim() ?? '',
     }
   }, {} as Record<ResolveConfigKey, string>)
 

@@ -4,9 +4,10 @@ import { version } from '../package.json'
 import { log } from './log'
 import { ContextLoader } from './contextLoader'
 import { getExtConfiguration } from './utils'
-import { EXT_DISPLAY_NAME, EXT_NAME } from './constant'
+import { Commands, EXT_DISPLAY_NAME } from './constant'
 import { registerWebview } from './register/webview'
 import { registerServer } from './register/server'
+import { registerInsertCodes } from './register/inser-codes'
 
 async function registerRoot(ext: ExtensionContext, status: StatusBarItem, cwd: string) {
   const contextLoader = new ContextLoader(cwd)
@@ -15,8 +16,11 @@ async function registerRoot(ext: ExtensionContext, status: StatusBarItem, cwd: s
 
   log.appendLine(`📁 Root context loaded: ${cwd}`)
 
-  registerServer(cwd, contextLoader, ext)
-  registerWebview(cwd, contextLoader, ext)
+  await registerServer(cwd, contextLoader, ext)
+  await commands.executeCommand(Commands.RestartServer)
+
+  await registerWebview(cwd, contextLoader, ext)
+  await registerInsertCodes(cwd, contextLoader, ext)
 
   return contextLoader
 }
@@ -43,7 +47,7 @@ export async function activate(ext: ExtensionContext) {
     const contextLoader = registerRoot(ext, status, projectPath)
 
     ext.subscriptions.push(
-      commands.registerCommand(`${EXT_NAME}.reload`, async () => {
+      commands.registerCommand(Commands.Reload, async () => {
         log.appendLine('🔁 Reloading...');
         (await contextLoader).reload()
         log.appendLine('✅ Reloaded.')

@@ -6,7 +6,7 @@ import Home from './pages/home/index'
 import Error404 from './pages/error/404'
 import { useLoading } from './hooks/use-loading.hook'
 import Chat from './pages/chat'
-import { globalConfig } from './helpers/global-config'
+import { getGlobalConfig } from './helpers/global-config'
 
 const HackRouter: FC = () => {
   const navigate = useNavigate()
@@ -14,7 +14,7 @@ const HackRouter: FC = () => {
 
   useEffect(() => {
     if (location.pathname === '/')
-      navigate(globalConfig.initialRoutePath)
+      navigate(getGlobalConfig().initialRoutePath)
   }, [])
 
   return <></>

@@ -5,7 +5,7 @@ export const SidebarWrapper = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  padding: 0 0.5rem;
+  padding: 0 1rem;
 `
 
 export const SidebarHeader = styled.div`
@@ -13,11 +13,23 @@ export const SidebarHeader = styled.div`
   align-items: center;
 `
 
+export const SidebarSearchWrapper = styled.div`
+  display: flex;
+  margin-bottom: 0.5rem;
+  margin-top: 0.5rem;
+  align-items: center;
+  height: var(--my-input-height);
+`
+
 export const SidebarSearch = styled(VSCodeTextField)`
+  flex: 1;
+
   &::part(root) {
     border-radius: 0.25rem;
     overflow: hidden;
   }
+`
 
-  margin-bottom: 0.5rem;
+export const SidebarSearchRightWrapper = styled.div`
+  height: calc(100% - var(--border-width) * 1px * 2);
 `

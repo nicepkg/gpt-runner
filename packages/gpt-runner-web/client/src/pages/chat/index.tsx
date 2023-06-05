@@ -7,7 +7,7 @@ import { FlexRow } from '../../styles/global.styles'
 import { useScrollDown } from '../../hooks/use-scroll-down.hook'
 import { useChatInstance } from '../../hooks/use-chat-instance.hook'
 import { useGlobalStore } from '../../store/zustand/global'
-import { globalConfig } from '../../helpers/global-config'
+import { getGlobalConfig } from '../../helpers/global-config'
 import { ErrorView } from '../../components/error-view'
 import { ChatPanelWrapper, SidebarWrapper, StyledVSCodePanels } from './chat.styles'
 import { ChatSidebar } from './chat-sidebar'
@@ -26,15 +26,17 @@ const Chat: FC = () => {
   }, [chatInstance?.status, lastMessageTextLength, isMobile, scrollDown])
 
   useEffect(() => {
-    scrollDown()
+    setTimeout(() => {
+      scrollDown()
+    }, 0)
   }, [scrollDownRef.current])
 
   const renderSidebar = useCallback(() => {
-    if (!globalConfig.rootPath)
+    if (!getGlobalConfig().rootPath)
       return null
 
     return <SidebarWrapper>
-      <ChatSidebar rootPath={globalConfig.rootPath}></ChatSidebar>
+      <ChatSidebar rootPath={getGlobalConfig().rootPath}></ChatSidebar>
     </SidebarWrapper>
   }, [])
 
@@ -48,7 +50,7 @@ const Chat: FC = () => {
     </ChatPanelWrapper >
   }, [activeChatId, scrollDownRef])
 
-  if (!globalConfig.rootPath)
+  if (!getGlobalConfig().rootPath)
     return <ErrorView text="Please provide the root path!"></ErrorView>
 
   if (isMobile) {

@@ -5,6 +5,9 @@ import * as vscode from 'vscode'
 import type { ContextLoader } from '../contextLoader'
 import { EXT_NAME } from '../constant'
 import { createHash } from '../utils'
+import { state } from '../state'
+import { EventType, emitter } from '../emitter'
+import { log } from '../log'
 
 class ChatViewProvider implements vscode.WebviewViewProvider {
   static readonly viewType = `${EXT_NAME}.chatView`
@@ -25,6 +28,11 @@ class ChatViewProvider implements vscode.WebviewViewProvider {
   ) {
     const { extensionUri } = this.#extContext
     this.#view = webviewView
+    state.sidebarWebviewView = webviewView
+
+    webviewView.webview.onDidReceiveMessage(({ eventName, eventData }) => {
+      emitter.emit(eventName, eventData, EventType.ReceiveMessage)
+    })
 
     const baseUri = vscode.Uri.joinPath(extensionUri, './node_modules/@nicepkg/gpt-runner-web/dist/browser')
 
@@ -55,15 +63,32 @@ class ChatViewProvider implements vscode.WebviewViewProvider {
       /\s+(href|src)="(.+?)"/g,
       (_, attr, url) => ` ${attr}="${webview.asWebviewUri(vscode.Uri.joinPath(baseUri, url))}"`,
     ).replace(/\/\/\s*before-script/g, `
-      window.globalConfig = {
+      window.vscode = acquireVsCodeApi()
+
+      window.__GLOBAL_CONFIG__ = {
         serverBaseUrl: 'http://localhost:3003',
         initialRoutePath: '/chat'
+      }
+
+      window.addEventListener('message', event => {
+        const message = event.data || {}; // The JSON data our extension sent
+        const {eventName, eventData} = message
+        window.__emitter__.emit(eventName, eventData, "${EventType.ReceiveMessage}")
+      })
+
+      oldEmit = window.__emitter__.emit
+      window.__emitter__.emit = function (...args) {
+        const [eventName, eventData, type] = args
+        if (type !== "${EventType.ReceiveMessage}") {
+          vscode.postMessage({eventName, eventData})
+        }
+        return oldEmit.apply(this, args)
       }
     `).replace(/<script\s*([\w\W]+)?>/g,
       (_, attr) => `<script ${attr} nonce="${nonce}">`,
     )
 
-    console.log('indexHtmlWithBaseUri', indexHtmlWithBaseUri)
+    log.appendLine(`indexHtmlWithBaseUri:\n${indexHtmlWithBaseUri}`)
 
     return indexHtmlWithBaseUri
   }
@@ -77,7 +102,12 @@ export async function registerWebview(
   const provider = new ChatViewProvider(ext)
   let webviewDisposer: vscode.Disposable | undefined
 
+  const dispose = () => {
+    webviewDisposer?.dispose?.()
+  }
+
   const registerProvider = () => {
+    dispose()
     webviewDisposer = vscode.window.registerWebviewViewProvider(ChatViewProvider.viewType, provider)
     return webviewDisposer
   }
@@ -88,6 +118,6 @@ export async function registerWebview(
     registerProvider()
   })
   contextLoader.emitter.on('contextUnload', () => {
-    webviewDisposer?.dispose?.()
+    dispose()
   })
 }

@@ -1,5 +1,5 @@
 import type { BaseResponse, GetStateReqParams, GetStateResData, SaveStateReqParams, SaveStateResData } from '@nicepkg/gpt-runner-shared/common'
-import { globalConfig } from '../helpers/global-config'
+import { getGlobalConfig } from '../helpers/global-config'
 
 export interface FetchStateParams extends GetStateReqParams {
 }
@@ -9,7 +9,7 @@ export type FetchStateRes = BaseResponse<GetStateResData>
 export async function fetchState(params: FetchStateParams): Promise<FetchStateRes> {
   const { key } = params
 
-  const res = await fetch(`${globalConfig.serverBaseUrl}/api/state?key=${key}`, {
+  const res = await fetch(`${getGlobalConfig().serverBaseUrl}/api/state?key=${key}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -27,7 +27,7 @@ export type SaveStateRes = BaseResponse<SaveStateResData>
 export async function saveState(params: SaveStateParams): Promise<SaveStateRes> {
   const { key, state } = params
 
-  const res = await fetch(`${globalConfig.serverBaseUrl}/api/state`, {
+  const res = await fetch(`${getGlobalConfig().serverBaseUrl}/api/state`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

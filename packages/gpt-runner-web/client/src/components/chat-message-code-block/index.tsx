@@ -18,9 +18,9 @@ export const MessageCodeBlock: FC<MessageCodeBlockProps> = (props) => {
 
   return (
     <CodeBlockWrapper>
-      <CodeBlockHeader>
-        {buildCodeToolbar?.({ contents })}
-      </CodeBlockHeader>
+      {buildCodeToolbar && <CodeBlockHeader>
+        {buildCodeToolbar({ contents })}
+      </CodeBlockHeader>}
       <SyntaxHighlighter
         useInlineStyles={true}
         codeTagProps={{ style: {} }}

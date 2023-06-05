@@ -52,11 +52,6 @@
         "command": "gpt-runner.restartServer",
         "title": "GPT Runner Restart Server",
         "category": "GPT Runner"
-      },
-      {
-        "command": "gpt-runner.openChat",
-        "title": "GPT Runner Open Chat",
-        "category": "GPT Runner"
       }
     ],
     "configuration": {

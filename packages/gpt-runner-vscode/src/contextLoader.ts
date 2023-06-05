@@ -23,7 +23,7 @@ export class ContextLoader {
   }
 
   async reload() {
-    this.emitter.emit('reload')
+    this.emitter.emit('contextReload', this.context)
   }
 
   async unloadContext() {

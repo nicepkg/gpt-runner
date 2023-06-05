@@ -3,8 +3,11 @@ import path from 'node:path'
 import express from 'express'
 import cors from 'cors'
 import history from 'connect-history-api-fallback'
+import { Debug } from '@nicepkg/gpt-runner-shared/common'
 import { processControllers } from './src/controllers'
 import { errorHandlerMiddleware } from './src/middleware'
+
+const debug = new Debug('server-index')
 
 export const resolvePath = (...paths: string[]) => path.resolve(__dirname, ...paths)
 
@@ -30,4 +33,4 @@ app.set('trust proxy', 1)
 
 app.use(errorHandlerMiddleware)
 
-app.listen(3003, () => globalThis.console.log('Server is running on port 3003'))
+app.listen(3003, () => debug.log('Server is running on port 3003'))

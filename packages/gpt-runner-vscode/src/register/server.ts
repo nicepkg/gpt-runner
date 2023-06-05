@@ -2,7 +2,8 @@ import child_process from 'child_process'
 import type { Disposable, ExtensionContext } from 'vscode'
 import * as vscode from 'vscode'
 import type { ContextLoader } from '../contextLoader'
-import { EXT_NAME } from '../constant'
+import { Commands } from '../constant'
+import { log } from '../log'
 
 export async function registerServer(
   cwd: string,
@@ -20,7 +21,7 @@ export async function registerServer(
   const registerProvider = () => {
     dispose()
 
-    serverDisposable = vscode.commands.registerCommand(`${EXT_NAME}.restartServer`, () => {
+    serverDisposable = vscode.commands.registerCommand(Commands.RestartServer, () => {
       serverProcess?.kill?.()
 
       const { extensionUri } = ext
@@ -31,22 +32,20 @@ export async function registerServer(
           ...process.env,
           NODE_OPTIONS: '--experimental-fetch',
           NODE_NO_WARNINGS: '1',
+          DEBUG: 'enabled',
         },
       })
 
       serverProcess.stdout.on('data', (data: string) => {
-        console.log(`stdout: ${data}`)
-        vscode.window.showInformationMessage(`Server running: ${data}`)
+        log.appendLine(`stdout: ${data}`)
       })
 
       serverProcess.stderr.on('data', (data: string) => {
-        console.error(`stderr: ${data}`)
-        vscode.window.showErrorMessage(`Server error: ${data}`)
+        log.appendLine(`stderr: ${data}`)
       })
 
       serverProcess.on('close', (code: string) => {
-        console.log(`child process exited with code ${code}`)
-        vscode.window.showWarningMessage(`Server stopped with code: ${code}`)
+        log.appendLine(`child process exited with code ${code}`)
       })
     })
 

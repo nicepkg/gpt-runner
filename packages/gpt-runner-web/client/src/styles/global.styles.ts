@@ -18,7 +18,8 @@ export const GlobalStyle = createGlobalStyle`
       color: var(--foreground);
       font-family: var(--font-family);
 
-      --button-height: calc(var(--border-width) * 1px * 2 + var(--button-padding-vertical) * 2 + var(--type-ramp-base-font-size));
+      --my-button-height: calc(var(--border-width) * 1px * 2 + var(--button-padding-vertical) * 2 + var(--type-ramp-base-font-size));
+      --my-input-height: calc(var(--border-width) * 1px * 2 + var(--input-height) * 1px);
   }
 
   * {

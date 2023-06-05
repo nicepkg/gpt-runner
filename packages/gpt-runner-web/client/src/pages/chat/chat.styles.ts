@@ -30,6 +30,11 @@ export const ChatPanelWrapper = styled.div`
 `
 
 export const StyledVSCodePanels = styled(VSCodePanels)`
+  &::part(tablist) {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
   &::part(tabpanel) {
     height: 100%;
     overflow: hidden;

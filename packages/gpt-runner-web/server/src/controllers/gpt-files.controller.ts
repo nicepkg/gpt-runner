@@ -1,8 +1,10 @@
 import { getGptFilesInfo, loadUserConfig } from '@nicepkg/gpt-runner-core'
 import { PathUtils, sendFailResponse, sendSuccessResponse, verifyParamsByZod } from '@nicepkg/gpt-runner-shared/node'
 import type { GetGptFilesReqParams, GptFilesTreeResData } from '@nicepkg/gpt-runner-shared/common'
-import { GetGptFilesReqParamsSchema, resetUserConfigUnsafeKey } from '@nicepkg/gpt-runner-shared/common'
+import { Debug, GetGptFilesReqParamsSchema, resetUserConfigUnsafeKey } from '@nicepkg/gpt-runner-shared/common'
 import type { ControllerConfig } from '../types'
+
+const debug = new Debug('gpt-files.controller')
 
 export const gptFilesControllers: ControllerConfig = {
   namespacePath: '/gpt-files',
@@ -29,7 +31,7 @@ export const gptFilesControllers: ControllerConfig = {
         let { config: userConfig } = await loadUserConfig(finalPath)
         userConfig = resetUserConfigUnsafeKey(userConfig)
 
-        console.log('userConfig', userConfig)
+        debug.log('userConfig', userConfig)
 
         const { filesInfo, filesInfoTree } = await getGptFilesInfo({
           userConfig,

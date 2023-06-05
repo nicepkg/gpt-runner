@@ -11,7 +11,8 @@ export enum ChatMessageStatus {
 }
 
 export enum ClientEventName {
-  AddMessageAction = 'add-message-action',
+  InsertCodes = 'insertCodes',
+  DiffCodes = 'diffCodes',
 }
 
 export enum GptFileTreeItemType {
