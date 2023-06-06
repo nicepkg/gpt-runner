@@ -23,7 +23,7 @@ export default defineConfig({
     host: true,
     proxy: {
       '/api': {
-        target: EnvConfig.get('BASE_SERVER_URL'),
+        target: EnvConfig.get('GPTR_BASE_SERVER_URL'),
         changeOrigin: true,
       },
     },

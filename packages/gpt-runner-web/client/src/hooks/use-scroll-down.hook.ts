@@ -1,27 +1,32 @@
 import type { RefObject } from 'react'
 import { useCallback, useRef } from 'react'
 
-interface UseScrollDownOptions {
-  percentageThreshold?: number
+interface UseScrollDownProps {
 }
 
-export function useScrollDown<Ref extends RefObject<any>>({
-  percentageThreshold = 100,
-}: UseScrollDownOptions = {}): [Ref, () => void] {
+export function useScrollDown<Ref extends RefObject<any>>(_props: UseScrollDownProps = {}): [Ref, () => void, () => number] {
   const ref = useRef(null) as Ref
 
   const scrollDown = useCallback(() => {
     if (ref.current) {
       const elementHeight = ref.current.scrollHeight
+      const visibleHeight = ref.current.clientHeight
+
+      ref.current.scrollTop = (elementHeight - visibleHeight)
+    }
+  }, [ref.current])
+
+  const getBottom = useCallback(() => {
+    if (ref.current) {
+      const elementHeight = ref.current.scrollHeight
       const scrollTop = ref.current.scrollTop
       const visibleHeight = ref.current.clientHeight
 
-      const scrollPercentage = (scrollTop / (elementHeight - visibleHeight)) * 100
-
-      if (scrollPercentage <= percentageThreshold)
-        ref.current.scrollTop = (percentageThreshold / 100) * (elementHeight - visibleHeight)
+      return (elementHeight - visibleHeight - scrollTop)
     }
-  }, [percentageThreshold, ref.current])
 
-  return [ref, scrollDown]
+    return 0
+  }, [ref.current])
+
+  return [ref, scrollDown, getBottom]
 }

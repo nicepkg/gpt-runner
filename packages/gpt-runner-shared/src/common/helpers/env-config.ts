@@ -2,7 +2,7 @@
 export interface Env {
   NODE_ENV?: 'development' | 'production'
   OPENAI_KEY?: string
-  BASE_SERVER_URL?: string
+  GPTR_BASE_SERVER_URL?: string
 }
 
 type EnvName = keyof Env
@@ -27,7 +27,7 @@ const config: Record<EnvName, EnvVarConfig> = {
     defaultValue: 'production',
   },
   OPENAI_KEY: {},
-  BASE_SERVER_URL: {
+  GPTR_BASE_SERVER_URL: {
     defaultValue: 'http://localhost:3003',
   },
 }

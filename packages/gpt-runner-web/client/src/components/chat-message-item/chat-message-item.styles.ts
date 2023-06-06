@@ -16,7 +16,7 @@ export const MsgAvatarWrapper = styled.div<{ $isMe: boolean }>`
   align-items: center;
   border-radius: 50%;
   margin: 0 0.5rem;
-  border: 1px solid ${({ $isMe }) => $isMe ? 'var(--button-primary-background)' : 'var(--panel-view-border)'};
+  border: 1px solid var(--panel-view-border);
   align-self: flex-start;
 
   ${withBreakpoint('lg', css`

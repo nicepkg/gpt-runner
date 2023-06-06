@@ -17,13 +17,20 @@ const Chat: FC = () => {
   const isMobile = useIsMobile()
   const { activeChatId, updateActiveChatId } = useGlobalStore()
   const { chatInstance } = useChatInstance({ chatId: activeChatId })
-  const [scrollDownRef, scrollDown] = useScrollDown()
+  const [scrollDownRef, scrollDown, getScrollBottom] = useScrollDown()
 
+  // any status will scroll down
+  useEffect(() => {
+    scrollDown()
+  }, [chatInstance?.status, scrollDownRef.current, scrollDown])
+
+  // if is pending and scroll bottom is less than 40, scroll down
+  // when you scroll by yourself, scrollDown will stop auto scrollDown
   const lastMessageTextLength = chatInstance ? chatInstance.messages[chatInstance.messages.length - 1]?.text?.length : 0
   useEffect(() => {
-    if (chatInstance?.status === ChatMessageStatus.Pending)
+    if ((chatInstance?.status === ChatMessageStatus.Pending) && getScrollBottom() < 40)
       scrollDown()
-  }, [chatInstance?.status, lastMessageTextLength, isMobile, scrollDown])
+  }, [chatInstance?.status, lastMessageTextLength, isMobile, scrollDown, getScrollBottom])
 
   useEffect(() => {
     setTimeout(() => {
@@ -61,7 +68,7 @@ const Chat: FC = () => {
       overflowY: 'auto',
     }
 
-    return <StyledVSCodePanels style={viewStyle} >
+    return <StyledVSCodePanels style={viewStyle} onChange={scrollDown}>
       <VSCodePanelTab id="explore">Explore</VSCodePanelTab>
       <VSCodePanelTab id="chat">Chat</VSCodePanelTab>
       <VSCodePanelView style={viewStyle} id="explore">

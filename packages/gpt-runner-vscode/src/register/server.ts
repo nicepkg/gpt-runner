@@ -1,9 +1,11 @@
 import child_process from 'child_process'
+import { getPort } from '@nicepkg/gpt-runner-shared/node'
 import type { Disposable, ExtensionContext } from 'vscode'
 import * as vscode from 'vscode'
 import type { ContextLoader } from '../contextLoader'
 import { Commands } from '../constant'
 import { log } from '../log'
+import { state } from '../state'
 
 export async function registerServer(
   cwd: string,
@@ -21,13 +23,20 @@ export async function registerServer(
   const registerProvider = () => {
     dispose()
 
-    serverDisposable = vscode.commands.registerCommand(Commands.RestartServer, () => {
+    serverDisposable = vscode.commands.registerCommand(Commands.RestartServer, async () => {
       serverProcess?.kill?.()
 
       const { extensionUri } = ext
-      const serverUri = vscode.Uri.joinPath(extensionUri, './node_modules/@nicepkg/gpt-runner-web/dist/server.cjs')
+      const serverUri = vscode.Uri.joinPath(extensionUri, './node_modules/@nicepkg/gpt-runner-web/dist/start-server.cjs')
 
-      serverProcess = child_process.spawn('node', [serverUri.fsPath], {
+      const finalPort = await getPort({
+        defaultPort: 3003,
+        autoFreePort: true,
+      })
+
+      state.serverPort = finalPort
+
+      serverProcess = child_process.spawn('node', [serverUri.fsPath, '--port', String(finalPort)], {
         env: {
           ...process.env,
           NODE_OPTIONS: '--experimental-fetch',

@@ -34,6 +34,11 @@
       "require": "./dist/server.cjs",
       "import": "./dist/server.mjs"
     },
+    "./start-server": {
+      "types": "./dist/start-server.d.ts",
+      "require": "./dist/start-server.cjs",
+      "import": "./dist/start-server.mjs"
+    },
     "./common": {
       "types": "./dist/common.d.ts",
       "require": "./dist/common.cjs",
@@ -52,8 +57,8 @@
     "build:server": "unbuild",
     "dev": "pnpm dev:server & pnpm dev:client",
     "dev:client": "vite --config ./client/vite.config.ts",
-    "dev:server": "cross-env NODE_OPTIONS='--experimental-fetch' NODE_NO_WARNINGS='1' DEBUG='enabled' pnpm esno server/index.ts",
-    "start": "cross-env NODE_OPTIONS='--experimental-fetch' NODE_NO_WARNINGS='1' DEBUG='enabled' node dist/server.cjs",
+    "dev:server": "cross-env NODE_OPTIONS='--experimental-fetch' NODE_NO_WARNINGS='1' DEBUG='enabled' pnpm esno server/start-server.ts --auto-free-port",
+    "start": "cross-env NODE_OPTIONS='--experimental-fetch' NODE_NO_WARNINGS='1' DEBUG='enabled' node dist/start-server.cjs --auto-free-port",
     "stub": "unbuild --stub"
   },
   "dependencies": {
@@ -65,6 +70,7 @@
     "@vscode/webview-ui-toolkit": "^1.2.2",
     "cachedir": "^2.3.0",
     "clsx": "^1.2.1",
+    "commander": "^10.0.1",
     "connect-history-api-fallback": "^2.0.0",
     "cors": "^2.8.5",
     "cross-env": "^7.0.3",

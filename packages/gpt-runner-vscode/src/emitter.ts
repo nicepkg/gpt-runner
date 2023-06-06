@@ -9,11 +9,11 @@ export enum EventType {
   ReceiveMessage = 'ReceiveMessage',
 }
 
-const __emitter__ = new EventEmitter<EventEmitterMap>()
+const emitter = new EventEmitter<EventEmitterMap>()
 
 // rewrite emit method to send message to webview
-const oldEmit = __emitter__.emit
-__emitter__.emit = function (...args) {
+const oldEmit = emitter.emit
+emitter.emit = function (...args) {
   const [eventName, eventData, type] = args
 
   if (type !== EventType.ReceiveMessage)
@@ -23,9 +23,15 @@ __emitter__.emit = function (...args) {
 }
 
 // insert codes
-__emitter__.on(ClientEventName.InsertCodes, ({ codes }) => {
+emitter.on(ClientEventName.InsertCodes, ({ codes }) => {
   state.insertCodes = codes
   commands.executeCommand(Commands.InsertCodes)
 })
 
-export const emitter = __emitter__
+// diff codes
+emitter.on(ClientEventName.DiffCodes, ({ codes }) => {
+  state.diffCodes = codes
+  commands.executeCommand(Commands.DiffCodes)
+})
+
+export { emitter }

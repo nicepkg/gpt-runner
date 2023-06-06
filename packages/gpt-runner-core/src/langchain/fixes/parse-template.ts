@@ -70,8 +70,8 @@ export function parseFString(template: string): ParsedFStringNode[] {
 
   for (const match of template.matchAll(reg)) {
     // eslint-disable-next-line unused-imports/no-unused-vars
-    const [_, left, name, right, _index] = match
-    const index = Number(_index)
+    const [_, left, name, right] = match
+    const index = Number(match.index || 0)
 
     // Add a 'literal' node for the text before the current match
     if (index > lastIndex) {

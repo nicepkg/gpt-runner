@@ -67,16 +67,11 @@ export async function chatgptChain(params: ChatgptChainParams) {
     ...mapStoredMessageToChatTemplateMessages(messages),
     HumanMessagePromptTemplate.fromTemplate('{global.input}'),
   ])
+
   const chain = new LLMChain({
     prompt: chatPrompt,
     llm: chat,
   })
-
-  // const res = await chain.call({
-  //   'global.input_language': 'English',
-  //   'global.output_language': 'French',
-  //   'global.input': 'I love programming.',
-  // })
 
   return chain
 }

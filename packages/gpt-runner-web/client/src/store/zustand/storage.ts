@@ -4,10 +4,10 @@ import { debounce, runOnceByKey, tryParseJson } from '@nicepkg/gpt-runner-shared
 import { getGlobalConfig } from '../../helpers/global-config'
 import { fetchState, saveState } from '../../networks/state'
 
-let isUpdateStateFromRemoteOnceRunning = false
+let hasUpdateStateFromRemote = false
 
 const debounceSaveState = debounce(async (key: string, state: FrontendState) => {
-  if (!isUpdateStateFromRemoteOnceRunning)
+  if (!hasUpdateStateFromRemote)
     return
 
   return await saveState({ key, state })
@@ -16,7 +16,8 @@ const debounceSaveState = debounce(async (key: string, state: FrontendState) => 
 function updateStateFromRemoteOnce(key: string) {
   return runOnceByKey(async (key: string) => {
     const res = await fetchState({ key })
-    isUpdateStateFromRemoteOnceRunning = true
+    hasUpdateStateFromRemote = true
+
     return res
   }, key)(key)
 }

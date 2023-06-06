@@ -1,36 +1,54 @@
 import './src/proxy'
 import path from 'node:path'
+import type { Express } from 'express'
 import express from 'express'
 import cors from 'cors'
 import history from 'connect-history-api-fallback'
-import { Debug } from '@nicepkg/gpt-runner-shared/common'
+import { getPort } from '@nicepkg/gpt-runner-shared/node'
 import { processControllers } from './src/controllers'
 import { errorHandlerMiddleware } from './src/middleware'
 
-const debug = new Debug('server-index')
+const resolvePath = (...paths: string[]) => path.resolve(__dirname, ...paths)
 
-export const resolvePath = (...paths: string[]) => path.resolve(__dirname, ...paths)
+export const clientDistPath = resolvePath('../dist/browser')
 
-const clientDistPath = resolvePath('../dist/browser')
+export interface StartServerProps {
+  port?: number
+  autoFreePort?: boolean
+  autoOpen?: boolean
+}
 
-const app = express()
-const router = express.Router()
+export async function startServer(props: StartServerProps): Promise<Express> {
+  const { port = 3003, autoFreePort } = props
 
-app.use(cors())
+  const finalPort = await getPort({
+    defaultPort: port,
+    autoFreePort,
+  })
 
-processControllers(router)
+  process.env.GPTR_BASE_SERVER_URL = `http://localhost:${finalPort}`
 
-app.use(express.json())
-app.use('/api', router)
+  const app = express()
+  const router = express.Router()
 
-// for frontend history mode
-app.use(history({
-  index: '/index.html',
-}))
-app.use(express.static(clientDistPath))
+  app.use(cors())
 
-app.set('trust proxy', 1)
+  processControllers(router)
 
-app.use(errorHandlerMiddleware)
+  app.use(express.json())
+  app.use('/api', router)
 
-app.listen(3003, () => debug.log('Server is running on port 3003'))
+  // for frontend history mode
+  app.use(history({
+    index: '/index.html',
+  }))
+  app.use(express.static(clientDistPath))
+
+  app.set('trust proxy', 1)
+
+  app.use(errorHandlerMiddleware)
+
+  app.listen(finalPort, () => console.log(`Server is running on port ${finalPort}`))
+
+  return app
+}

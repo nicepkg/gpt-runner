@@ -87,11 +87,5 @@ export async function chatgptMemoryChain(params: ChatgptMemoryChainParams) {
     prompt: chatPrompt,
   })
 
-  // const res = await chain.call({
-  //   'global.input_language': 'English',
-  //   'global.output_language': 'French',
-  //   'global.input': 'I love programming.',
-  // })
-
   return chain
 }

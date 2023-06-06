@@ -1,5 +1,6 @@
 import * as vscode from 'vscode'
 import { EXT_NAME } from './constant'
+import { state } from './state'
 
 export function getOpenedTab(uri: vscode.Uri): vscode.Tab | null {
   const targetUriString = uri.toString()
@@ -38,4 +39,8 @@ export function createHash() {
     text += possible.charAt(Math.floor(Math.random() * possible.length))
 
   return text
+}
+
+export function getServerBaseUrl() {
+  return `http://localhost:${state.serverPort || 3003}`
 }

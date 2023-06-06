@@ -8,6 +8,9 @@ import { Commands, EXT_DISPLAY_NAME } from './constant'
 import { registerWebview } from './register/webview'
 import { registerServer } from './register/server'
 import { registerInsertCodes } from './register/inser-codes'
+import { registerDiffCodes } from './register/diff-codes'
+import { registerOpenInBrowser } from './register/open-in-browser'
+import { registerStatusBar } from './register/status-bar'
 
 async function registerRoot(ext: ExtensionContext, status: StatusBarItem, cwd: string) {
   const contextLoader = new ContextLoader(cwd)
@@ -20,7 +23,10 @@ async function registerRoot(ext: ExtensionContext, status: StatusBarItem, cwd: s
   await commands.executeCommand(Commands.RestartServer)
 
   await registerWebview(cwd, contextLoader, ext)
+  await registerOpenInBrowser(cwd, contextLoader, ext)
+  await registerStatusBar(cwd, contextLoader, ext)
   await registerInsertCodes(cwd, contextLoader, ext)
+  await registerDiffCodes(cwd, contextLoader, ext)
 
   return contextLoader
 }

@@ -12,6 +12,7 @@ import { ErrorView } from '../../components/error-view'
 import { useGlobalStore } from '../../store/zustand/global'
 import type { GptFileTreeItem } from '../../store/zustand/global/sidebar-tree.slice'
 import { emitter } from '../../helpers/emitter'
+import { getGlobalConfig } from '../../helpers/global-config'
 
 export interface ChatPanelProps {
   scrollDownRef: RefObject<any>
@@ -138,19 +139,19 @@ export const ChatPanel: FC<ChatPanelProps> = (props) => {
       >
       </IconButton>
 
-      <IconButton
+      {getGlobalConfig().showInsertCodesBtn && <IconButton
         text='Insert'
         iconClassName='codicon-insert'
         onClick={() => handleInsertCodes(contents)}
       >
-      </IconButton>
+      </IconButton>}
 
-      <IconButton
+      {getGlobalConfig().showDiffCodesBtn && <IconButton
         text='Diff'
         iconClassName='codicon-arrow-swap'
         onClick={() => handleDiffCodes(contents)}
       >
-      </IconButton>
+      </IconButton>}
     </>
   }
 

@@ -4,7 +4,7 @@ import type { ExtensionContext } from 'vscode'
 import * as vscode from 'vscode'
 import type { ContextLoader } from '../contextLoader'
 import { EXT_NAME } from '../constant'
-import { createHash } from '../utils'
+import { createHash, getServerBaseUrl } from '../utils'
 import { state } from '../state'
 import { EventType, emitter } from '../emitter'
 import { log } from '../log'
@@ -66,8 +66,10 @@ class ChatViewProvider implements vscode.WebviewViewProvider {
       window.vscode = acquireVsCodeApi()
 
       window.__GLOBAL_CONFIG__ = {
-        serverBaseUrl: 'http://localhost:3003',
-        initialRoutePath: '/chat'
+        serverBaseUrl: '${getServerBaseUrl()}',
+        initialRoutePath: '/chat',
+        showDiffCodesBtn: true,
+        showInsertCodesBtn: true,
       }
 
       window.addEventListener('message', event => {
