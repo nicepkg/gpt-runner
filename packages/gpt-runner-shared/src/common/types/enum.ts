@@ -11,6 +11,7 @@ export enum ChatMessageStatus {
 }
 
 export enum ClientEventName {
+  RefreshTree = 'refreshTree',
   InsertCodes = 'insertCodes',
   DiffCodes = 'diffCodes',
 }

@@ -21,7 +21,7 @@ export async function registerOpenInBrowser(
 
     disposable = vscode.commands.registerCommand(Commands.OpenInBrowser, () => {
       openInBrowser({
-        url: `${getServerBaseUrl()}/#/chat`,
+        url: `${getServerBaseUrl()}/#/chat?rootPath=${cwd}`,
       })
     })
 

@@ -1,6 +1,8 @@
 import type { ClientEventName } from './enum'
 
 export interface ClientEventData {
+  [ClientEventName.RefreshTree]: void
+
   [ClientEventName.InsertCodes]: {
     codes: string
   }
@@ -8,6 +10,7 @@ export interface ClientEventData {
   [ClientEventName.DiffCodes]: {
     codes: string
   }
+
 }
 
 export type EventEmitterMap = {

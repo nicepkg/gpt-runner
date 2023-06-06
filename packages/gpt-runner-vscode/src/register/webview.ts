@@ -14,11 +14,14 @@ class ChatViewProvider implements vscode.WebviewViewProvider {
 
   #view?: vscode.WebviewView
   #extContext: ExtensionContext
+  #projectPath: string
 
   constructor(
     extContext: ExtensionContext,
+    projectPath: string,
   ) {
     this.#extContext = extContext
+    this.#projectPath = projectPath
   }
 
   resolveWebviewView(
@@ -66,6 +69,7 @@ class ChatViewProvider implements vscode.WebviewViewProvider {
       window.vscode = acquireVsCodeApi()
 
       window.__GLOBAL_CONFIG__ = {
+        rootPath: '${this.#projectPath}',
         serverBaseUrl: '${getServerBaseUrl()}',
         initialRoutePath: '/chat',
         showDiffCodesBtn: true,
@@ -101,7 +105,7 @@ export async function registerWebview(
   contextLoader: ContextLoader,
   ext: ExtensionContext,
 ) {
-  const provider = new ChatViewProvider(ext)
+  const provider = new ChatViewProvider(ext, cwd)
   let webviewDisposer: vscode.Disposable | undefined
 
   const dispose = () => {

@@ -1,7 +1,7 @@
 import type { FC } from 'react'
 import { useCallback, useEffect } from 'react'
 import type { GptFileInfoTreeItem } from '@nicepkg/gpt-runner-shared/common'
-import { GptFileTreeItemType } from '@nicepkg/gpt-runner-shared/common'
+import { ClientEventName, GptFileTreeItemType } from '@nicepkg/gpt-runner-shared/common'
 import clsx from 'clsx'
 import type { SidebarProps } from '../../components/sidebar'
 import { Sidebar } from '../../components/sidebar'
@@ -11,6 +11,7 @@ import { IconButton } from '../../components/icon-button'
 import { ErrorView } from '../../components/error-view'
 import { useGlobalStore } from '../../store/zustand/global'
 import { useChatInstance } from '../../hooks/use-chat-instance.hook'
+import { emitter } from '../../helpers/emitter'
 
 export interface ChatSidebarProps {
   rootPath: string
@@ -37,6 +38,12 @@ export const ChatSidebar: FC<ChatSidebarProps> = (props) => {
 
   useEffect(() => {
     refreshSidebarTree()
+
+    emitter.on(ClientEventName.RefreshTree, refreshSidebarTree)
+
+    return () => {
+      emitter.off(ClientEventName.RefreshTree, refreshSidebarTree)
+    }
   }, [rootPath])
 
   const handleCreateChat = useCallback((gptFileId: string) => {
