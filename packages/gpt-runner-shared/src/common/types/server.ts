@@ -1,4 +1,5 @@
 import type { GptFileInfo, GptFileInfoTree, SingleChatMessage, SingleFileConfig, UserConfig } from './config'
+import type { ServerStorageName } from './enum'
 
 export interface BaseResponse<T = any> {
   type: 'Success' | 'Fail'
@@ -35,20 +36,22 @@ export interface GetUserConfigResData {
   userConfig: UserConfig
 }
 
-export interface GetStateReqParams {
+export interface GetStorageReqParams {
+  storageName: ServerStorageName
   key: string
 }
 
-export type FrontendState = Record<string, any> | null | undefined
+export type ServerStorageValue = Record<string, any> | null | undefined
 
-export interface GetStateResData {
-  state: FrontendState
+export interface GetStorageResData {
+  value: ServerStorageValue
   cacheDir: string
 }
 
-export interface SaveStateReqParams {
+export interface SaveStorageReqParams {
+  storageName: ServerStorageName
   key: string
-  state: FrontendState
+  value?: ServerStorageValue
 }
 
-export type SaveStateResData = null
+export type SaveStorageResData = null

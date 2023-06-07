@@ -21,6 +21,7 @@ export default defineBuildConfig({
   clean: true,
   declaration: true,
   externals: [
+    '@kvs/node-localstorage',
     'unconfig',
     'express',
     'debug',
@@ -29,5 +30,14 @@ export default defineBuildConfig({
   rollup: {
     emitCJS: true,
     inlineDependencies: true,
+    dts: {
+      compilerOptions: {
+        baseUrl: '.',
+        paths: {
+          // fix types error
+          '@kvs/storage': ['./node_modules/@kvs/storage/'],
+        },
+      },
+    },
   },
 })

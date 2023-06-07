@@ -199,6 +199,15 @@ importers:
 
   packages/gpt-runner-shared:
     dependencies:
+      '@kvs/node-localstorage':
+        specifier: ^2.1.3
+        version: 2.1.3
+      '@kvs/storage':
+        specifier: ^2.1.3
+        version: 2.1.3
+      cachedir:
+        specifier: ^2.3.0
+        version: 2.3.0
       debug:
         specifier: ^4.3.4
         version: 4.3.4
@@ -252,9 +261,6 @@ importers:
 
   packages/gpt-runner-web:
     dependencies:
-      '@kvs/node-localstorage':
-        specifier: ^2.1.3
-        version: 2.1.3
       '@microsoft/fetch-event-source':
         specifier: ^2.0.1
         version: 2.0.1
@@ -270,9 +276,6 @@ importers:
       '@vscode/webview-ui-toolkit':
         specifier: ^1.2.2
         version: 1.2.2(react@18.2.0)
-      cachedir:
-        specifier: ^2.3.0
-        version: 2.3.0
       clsx:
         specifier: ^1.2.1
         version: 1.2.1

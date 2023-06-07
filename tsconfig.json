@@ -6,6 +6,7 @@
     "moduleResolution": "node",
     "useDefineForClassFields": true,
     "esModuleInterop": true,
+    "noImplicitAny": true,
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,

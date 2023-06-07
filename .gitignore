@@ -4,6 +4,9 @@
 .nuxt
 .output
 .temp
+.gradle
+.qodana
+build
 *.local
 *.log
 *.vsix

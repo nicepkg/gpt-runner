@@ -1,6 +1,7 @@
 import { z } from 'zod'
-import type { ChatStreamReqParams, GetGptFilesReqParams, GetUserConfigReqParams } from '../types'
+import type { ChatStreamReqParams, GetGptFilesReqParams, GetStorageReqParams, GetUserConfigReqParams, SaveStorageReqParams } from '../types'
 import { SingleChatMessageSchema, SingleFileConfigSchema } from './config.zod'
+import { ServerStorageNameSchema } from './enum.zod'
 
 export const ChatStreamReqParamsSchema = z.object({
   messages: z.array(SingleChatMessageSchema),
@@ -18,11 +19,13 @@ export const GetUserConfigReqParamsSchema = z.object({
   rootPath: z.string(),
 }) satisfies z.ZodType<GetUserConfigReqParams>
 
-export const GetStateReqParamsSchema = z.object({
+export const GetStorageReqParamsSchema = z.object({
+  storageName: ServerStorageNameSchema,
   key: z.string(),
-})
+}) satisfies z.ZodType<GetStorageReqParams>
 
-export const SaveStateReqParamsSchema = z.object({
+export const SaveStorageReqParamsSchema = z.object({
+  storageName: ServerStorageNameSchema,
   key: z.string(),
-  state: z.record(z.any()).nullable().optional(),
-})
+  value: z.record(z.any()).nullable().optional(),
+}) satisfies z.ZodType<SaveStorageReqParams>

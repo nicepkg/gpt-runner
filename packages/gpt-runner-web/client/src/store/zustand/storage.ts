@@ -1,26 +1,35 @@
 import type { StateStorage } from 'zustand/middleware'
-import type { FrontendState } from '@nicepkg/gpt-runner-shared/common'
-import { debounce, runOnceByKey, tryParseJson } from '@nicepkg/gpt-runner-shared/common'
+import type { ServerStorageValue } from '@nicepkg/gpt-runner-shared/common'
+import { ServerStorageName, debounce, tryParseJson } from '@nicepkg/gpt-runner-shared/common'
 import { getGlobalConfig } from '../../helpers/global-config'
-import { fetchState, saveState } from '../../networks/state'
+import { getServerStorage, saveServerStorage } from '../../networks/server-storage'
 
-let hasUpdateStateFromRemote = false
-
-const debounceSaveState = debounce(async (key: string, state: FrontendState) => {
-  if (!hasUpdateStateFromRemote)
+// just only request once onload
+let hasUpdateStateFromRemote: 'pending' | 'finish' | false = false
+async function getStateFromServerOnce(key: string) {
+  if (hasUpdateStateFromRemote !== false)
     return
 
-  return await saveState({ key, state })
-}, 1000)
-
-function updateStateFromRemoteOnce(key: string) {
-  return runOnceByKey(async (key: string) => {
-    const res = await fetchState({ key })
-    hasUpdateStateFromRemote = true
-
-    return res
-  }, key)(key)
+  hasUpdateStateFromRemote = 'pending'
+  const res = await getServerStorage({
+    storageName: ServerStorageName.FrontendState,
+    key,
+  })
+  hasUpdateStateFromRemote = 'finish'
+  return res?.data?.value
 }
+
+// will save each action state to server
+const debounceSaveStateToServer = debounce(async (key: string, value: ServerStorageValue) => {
+  if (hasUpdateStateFromRemote !== 'finish')
+    return
+
+  return await saveServerStorage({
+    storageName: ServerStorageName.FrontendState,
+    key,
+    value,
+  })
+}, 1000)
 
 export class CustomStorage implements StateStorage {
   #storage: Storage
@@ -36,7 +45,7 @@ export class CustomStorage implements StateStorage {
 
   getItem = async (key: string) => {
     const finalKey = CustomStorage.prefixKey + key
-    const remoteSourceValue = (await updateStateFromRemoteOnce(finalKey))?.data?.state
+    const remoteSourceValue = await getStateFromServerOnce(finalKey)
 
     if (remoteSourceValue !== undefined) {
       const remoteString = JSON.stringify(remoteSourceValue)
@@ -52,7 +61,7 @@ export class CustomStorage implements StateStorage {
     const finalKey = CustomStorage.prefixKey + key
 
     // save to server
-    debounceSaveState(finalKey, tryParseJson(value))
+    debounceSaveStateToServer(finalKey, tryParseJson(value))
 
     return this.#storage.setItem(finalKey, value)
   }
@@ -61,7 +70,7 @@ export class CustomStorage implements StateStorage {
     const finalKey = CustomStorage.prefixKey + key
 
     // save to server
-    debounceSaveState(finalKey, null)
+    debounceSaveStateToServer(finalKey, null)
 
     return this.#storage.removeItem(finalKey)
   }

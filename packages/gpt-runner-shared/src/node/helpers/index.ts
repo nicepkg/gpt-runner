@@ -1,4 +1,6 @@
 export * from './file-utils'
+export * from './get-cache-dir'
+export * from './get-storage'
+export * from './network'
 export * from './path-utils'
 export * from './request'
-export * from './server'

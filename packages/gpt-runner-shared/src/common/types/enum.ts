@@ -21,3 +21,8 @@ export enum GptFileTreeItemType {
   File = 'file',
   Chat = 'chat',
 }
+
+export enum ServerStorageName {
+  FrontendState = 'frontend-state',
+  WebPreset = 'web-preset',
+}

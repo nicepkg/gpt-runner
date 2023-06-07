@@ -56,6 +56,8 @@
     "stub": "unbuild --stub"
   },
   "peerDependencies": {
+    "@kvs/node-localstorage": "*",
+    "cachedir": "*",
     "debug": "*",
     "find-free-ports": "*",
     "ip": "*",
@@ -63,6 +65,9 @@
     "zod": "*"
   },
   "dependencies": {
+    "@kvs/storage": "^2.1.3",
+    "@kvs/node-localstorage": "^2.1.3",
+    "cachedir": "^2.3.0",
     "debug": "^4.3.4",
     "find-free-ports": "^3.1.1",
     "ip": "^1.1.8",
