@@ -30,14 +30,5 @@ export default defineBuildConfig({
   rollup: {
     emitCJS: true,
     inlineDependencies: true,
-    dts: {
-      compilerOptions: {
-        baseUrl: '.',
-        paths: {
-          // fix types error
-          '@kvs/storage': ['./node_modules/@kvs/storage/'],
-        },
-      },
-    },
   },
 })

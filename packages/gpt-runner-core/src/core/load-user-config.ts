@@ -24,7 +24,7 @@ export async function loadUserConfig<U extends IUserConfig = IUserConfig>(
       }
     }
     else {
-      configOrPath = inlineConfig.configFile || process.cwd()
+      configOrPath = inlineConfig.configFile || cwd
     }
   }
 

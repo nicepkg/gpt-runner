@@ -31,6 +31,8 @@
       "@nicepkg/gpt-runner-shared/browser": ["./packages/gpt-runner-shared/src/browser/index.ts"],
       "@nicepkg/gpt-runner-shared/common": ["./packages/gpt-runner-shared/src/common/index.ts"],
       "@nicepkg/gpt-runner-shared/node": ["./packages/gpt-runner-shared/src/node/index.ts"],
+
+      "@kvs/storage": ["./node_modules/@kvs/storage/"],
     }
   },
   "exclude": [

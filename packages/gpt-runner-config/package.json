@@ -14,7 +14,12 @@
   "bugs": {
     "url": "https://github.com/nicepkg/gpt-runner/issues"
   },
-  "keywords": [],
+  "keywords": [
+    "gpt-runner",
+    "chatgpt",
+    "prompt",
+    "ai"
+  ],
   "sideEffects": false,
   "exports": {
     ".": {

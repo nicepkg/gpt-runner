@@ -54,7 +54,7 @@ export const createSidebarTreeSlice: StateCreator<
       parentId: null,
       path: '',
       name: chatInstance?.name || DEFAULT_CHAT_NAME,
-      createAt: Date.now(),
+      createAt: chatInstance?.createAt || Date.now(),
     }
 
     return chatInfo
@@ -175,6 +175,7 @@ export const createSidebarTreeSlice: StateCreator<
       messages: [],
       singleFileConfig: gptFileTreeItem?.otherInfo?.singleFileConfig || {},
       status: ChatMessageStatus.Success,
+      createAt: Date.now(),
     })
 
     state.updateActiveChatId(chatInstance.id)

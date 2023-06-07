@@ -1,16 +1,7 @@
 import type { Response } from 'express'
 import type { z } from 'zod'
+import type { FailResponse, SuccessResponse } from '../../common'
 import { verifyZod } from '../../common'
-
-interface CustomResponse<T = any> {
-  type: 'Success' | 'Fail'
-  status?: number
-  message?: string
-  data?: T
-}
-
-export type SuccessResponse<T = any> = Omit<CustomResponse<T>, 'type'> & { type: 'Success' }
-export type FailResponse<T = any> = Omit<CustomResponse<T>, 'type'> & { type: 'Fail' }
 
 export function buildSuccessResponse<T>(options: Omit<SuccessResponse<T>, 'type'>): SuccessResponse<T> {
   return {

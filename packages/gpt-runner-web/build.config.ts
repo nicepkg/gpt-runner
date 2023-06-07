@@ -36,6 +36,7 @@ export default defineBuildConfig({
   ],
   rollup: {
     emitCJS: true,
+    resolve: {},
   },
   hooks: {
     'rollup:options': function (ctx, rollupOptions) {

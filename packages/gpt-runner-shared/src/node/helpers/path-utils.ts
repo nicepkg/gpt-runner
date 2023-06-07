@@ -1,7 +1,14 @@
 import fs from 'node:fs'
 import path from 'node:path'
+import { fileURLToPath } from 'node:url'
 
 export class PathUtils {
+  static getCurrentDirName(importMetaUrl: string) {
+    const __filename = fileURLToPath(importMetaUrl)
+    const __dirname = path.dirname(__filename)
+    return __dirname
+  }
+
   static join(...paths: string[]) {
     return path.join(...paths)
   }

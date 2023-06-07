@@ -4,9 +4,11 @@ import type { Express } from 'express'
 import express from 'express'
 import cors from 'cors'
 import history from 'connect-history-api-fallback'
-import { getPort } from '@nicepkg/gpt-runner-shared/node'
+import { PathUtils, getPort } from '@nicepkg/gpt-runner-shared/node'
 import { processControllers } from './src/controllers'
 import { errorHandlerMiddleware } from './src/middleware'
+
+const __dirname = PathUtils.getCurrentDirName(import.meta.url)
 
 const resolvePath = (...paths: string[]) => path.resolve(__dirname, ...paths)
 
@@ -15,7 +17,6 @@ export const clientDistPath = resolvePath('../dist/browser')
 export interface StartServerProps {
   port?: number
   autoFreePort?: boolean
-  autoOpen?: boolean
 }
 
 export async function startServer(props: StartServerProps): Promise<Express> {

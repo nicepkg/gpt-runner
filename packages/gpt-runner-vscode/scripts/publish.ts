@@ -1,9 +1,9 @@
 import { dirname, join } from 'path'
-import { fileURLToPath } from 'url'
 import fs from 'fs-extra'
 import { execa } from 'execa'
+import { PathUtils } from '@nicepkg/gpt-runner-shared/node'
 
-const dir = typeof __dirname === 'string' ? __dirname : dirname(fileURLToPath(import.meta.url))
+const dir = PathUtils.getCurrentDirName(import.meta.url)
 const root = dirname(dir)
 
 async function publish() {

@@ -1,7 +1,6 @@
 import type { Request, Response } from 'express'
-import type { ChatStreamReqParams } from '@nicepkg/gpt-runner-shared/common'
+import type { ChatStreamReqParams, FailResponse, SuccessResponse } from '@nicepkg/gpt-runner-shared/common'
 import { ChatStreamReqParamsSchema, EnvConfig } from '@nicepkg/gpt-runner-shared/common'
-import type { FailResponse, SuccessResponse } from '@nicepkg/gpt-runner-shared/node'
 import { PathUtils, buildFailResponse, buildSuccessResponse, sendFailResponse, sendSuccessResponse, verifyParamsByZod } from '@nicepkg/gpt-runner-shared/node'
 import { loadUserConfig } from '@nicepkg/gpt-runner-core'
 import { chatgptChain } from '../services'
