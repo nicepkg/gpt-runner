@@ -1,5 +1,6 @@
 import open from 'open'
 import fp from 'find-free-ports'
+import ip from 'ip'
 
 export interface OpenInBrowserProps {
   url: string
@@ -34,4 +35,9 @@ export async function getPort(props: GetPortProps): Promise<number> {
   const [freePort] = await fp.findFreePorts(1)
 
   return freePort
+}
+
+// return 192.168.xxx.xxx or 127.0.0.1
+export function getLocalHostname() {
+  return ip.address('public', 'ipv4')
 }

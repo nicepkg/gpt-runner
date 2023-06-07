@@ -11,7 +11,7 @@ export interface GlobalConfig {
 window.__DEFAULT_GLOBAL_CONFIG__ = {
   rootPath: getSearchParams('rootPath') || '/Users/yangxiaoming/Documents/codes/gpt-runner',
   initialRoutePath: '/',
-  serverBaseUrl: 'http://localhost:3003',
+  serverBaseUrl: '',
   showDiffCodesBtn: false,
   showInsertCodesBtn: false,
 }

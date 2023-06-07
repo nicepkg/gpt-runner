@@ -205,6 +205,9 @@ importers:
       find-free-ports:
         specifier: ^3.1.1
         version: 3.1.1
+      ip:
+        specifier: ^1.1.8
+        version: 1.1.8
       minimatch:
         specifier: ^9.0.1
         version: 9.0.1
@@ -215,6 +218,9 @@ importers:
       '@types/express':
         specifier: ^4.17.17
         version: 4.17.17
+      '@types/ip':
+        specifier: ^1.1.0
+        version: 1.1.0
       express:
         specifier: ^4.18.2
         version: 4.18.2
@@ -2543,6 +2549,12 @@ packages:
     dependencies:
       '@types/unist': 2.0.6
     dev: false
+
+  /@types/ip@1.1.0:
+    resolution: {integrity: sha512-dwNe8gOoF70VdL6WJBwVHtQmAX4RMd62M+mAB9HQFjG1/qiCLM/meRy95Pd14FYBbEDwCq7jgJs89cHpLBu4HQ==}
+    dependencies:
+      '@types/node': 18.16.9
+    dev: true
 
   /@types/js-cookie@2.2.7:
     resolution: {integrity: sha512-aLkWa0C0vO5b4Sr798E26QgOkss68Un0bLjs7u9qxzPT5CG+8DuNTffWES58YzJs3hrVAOs1wonycqEBqNJubA==}
@@ -5885,6 +5897,10 @@ packages:
       has: 1.0.3
       side-channel: 1.0.4
     dev: true
+
+  /ip@1.1.8:
+    resolution: {integrity: sha512-PuExPYUiu6qMBQb4l06ecm6T6ujzhmh+MeJcW9wa89PoAz5pvd4zPgN5WJV104mb6S2T1AwNIAaB70JNrLQWhg==}
+    dev: false
 
   /ip@2.0.0:
     resolution: {integrity: sha512-WKa+XuLG1A1R0UWhl2+1XQSi+fZWMsYKffMZTTYsiZaUD8k2yDAj5atimTUD2TZkyCkNEeYE5NhFZmupOGtjYQ==}

@@ -1,4 +1,5 @@
 import * as vscode from 'vscode'
+import { getLocalHostname } from '@nicepkg/gpt-runner-shared/node'
 import { EXT_NAME } from './constant'
 import { state } from './state'
 
@@ -41,6 +42,7 @@ export function createHash() {
   return text
 }
 
-export function getServerBaseUrl() {
-  return `http://localhost:${state.serverPort || 3003}`
+export function getServerBaseUrl(localIp = false) {
+  const hostname = localIp ? getLocalHostname() : 'localhost'
+  return `http://${hostname}:${state.serverPort || 3003}`
 }

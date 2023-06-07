@@ -58,17 +58,20 @@
   "peerDependencies": {
     "debug": "*",
     "find-free-ports": "*",
+    "ip": "*",
     "minimatch": "*",
     "zod": "*"
   },
   "dependencies": {
     "debug": "^4.3.4",
     "find-free-ports": "^3.1.1",
+    "ip": "^1.1.8",
     "minimatch": "^9.0.1",
     "zod": "^3.21.4"
   },
   "devDependencies": {
     "@types/express": "^4.17.17",
+    "@types/ip": "^1.1.0",
     "express": "^4.18.2"
   }
 }
