@@ -22,3 +22,13 @@ result.json
 .svelte-kit
 .eslintcache
 vite.config.ts.timestamp-*
+
+docs/.docusaurus
+docs/netlifyDeployPreview/*
+docs/changelog
+!docs/netlifyDeployPreview/index.html
+!docs/netlifyDeployPreview/_redirects
+
+docs/_dogfooding/_swizzle_theme_tests
+
+docs/i18n/**/*

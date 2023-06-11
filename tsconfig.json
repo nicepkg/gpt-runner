@@ -32,11 +32,12 @@
       "@nicepkg/gpt-runner-shared/common": ["./packages/gpt-runner-shared/src/common/index.ts"],
       "@nicepkg/gpt-runner-shared/node": ["./packages/gpt-runner-shared/src/node/index.ts"],
 
-      "@kvs/storage": ["./node_modules/@kvs/storage/"],
+      "@kvs/storage": ["./node_modules/@kvs/storage/"]
     }
   },
   "exclude": [
     "**/dist/**",
+    "./docs/**",
     "**/node_modules/**",
     "**/playground/**",
     "**/examples/**",

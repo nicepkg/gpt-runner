@@ -22,9 +22,9 @@ export async function startCli(cwd = process.cwd(), argv = process.argv, options
     .option('-p, --port [port number]', 'Server port', {
       default: 3003,
     })
-    .option('--no-open', 'Open in browser')
     .option('-c, --config [file]', 'Config file path')
     .option('-w, --watch', 'Watch for file changes')
+    .option('--no-open', 'Open in browser')
     .option('--debug', 'Debug mode')
     .action(async (rootPaths: Array<string>, flags) => {
       Object.assign(options, {

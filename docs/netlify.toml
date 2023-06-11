@@ -1,0 +1,28 @@
+
+# Note: this file's config overrides the Netlify UI admin config
+
+# /!\ due to using a monorepo it can be a bit messy to configure Netlify
+# See also https://github.com/netlify/build/issues/2483
+
+[build]
+  command = "pnpm --dir .. build:packages && pnpm build"
+  publish = "website/build"
+
+[build.environment]
+  NODE_VERSION = "16"
+
+[context.production]
+  command = "pnpm --dir .. build:packages && pnpm netlify:build:production"
+
+[context.branch-deploy]
+  command = "pnpm --dir .. build:packages && pnpm netlify:build:branchDeploy"
+
+[context.deploy-preview]
+  command = "pnpm --dir .. build:packages && pnpm netlify:build:deployPreview"
+
+[[plugins]]
+package = "netlify-plugin-cache"
+  [plugins.inputs]
+  paths = [
+    "node_modules/.cache/webpack",
+  ]

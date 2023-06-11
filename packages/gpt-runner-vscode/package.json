@@ -72,8 +72,8 @@
     "publish": "esno ./scripts/publish.ts"
   },
   "dependencies": {
-    "@nicepkg/gpt-runner-web": "workspace:*",
     "@nicepkg/gpt-runner-shared": "workspace:*",
+    "@nicepkg/gpt-runner-web": "workspace:*",
     "eventemitter3": "^5.0.1",
     "open": "^9.1.0",
     "uuid": "^9.0.0"

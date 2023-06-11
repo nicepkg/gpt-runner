@@ -1,0 +1,11 @@
+.tweet {
+  font-size: 15px;
+}
+
+.tweetMeta {
+  color: var(--ifm-color-emphasis-700);
+}
+
+.tweetMeta strong {
+  color: var(--ifm-font-color-base);
+}
