@@ -14,8 +14,7 @@ export function useHover<Ref extends RefObject<any>>(): [Ref, boolean] {
   }
 
   useEffect(() => {
-    const element = ref.current
-
+    const element = ref.current as HTMLElement
     if (element) {
       element.addEventListener('mouseenter', handleMouseEnter)
       element.addEventListener('mouseleave', handleMouseLeave)
@@ -27,7 +26,7 @@ export function useHover<Ref extends RefObject<any>>(): [Ref, boolean] {
         element.removeEventListener('mouseleave', handleMouseLeave)
       }
     }
-  }, [ref])
+  }, [ref.current])
 
   return [ref, isHover]
 }

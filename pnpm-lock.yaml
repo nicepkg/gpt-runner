@@ -454,6 +454,9 @@ importers:
       react-syntax-highlighter:
         specifier: ^15.5.0
         version: 15.5.0(react@18.2.0)
+      react-tiny-popover:
+        specifier: ^7.2.4
+        version: 7.2.4(react-dom@18.2.0)(react@18.2.0)
       react-use:
         specifier: ^17.4.0
         version: 17.4.0(react-dom@18.2.0)(react@18.2.0)
@@ -13532,6 +13535,16 @@ packages:
       use-latest: 1.2.1(@types/react@18.2.6)(react@17.0.2)
     transitivePeerDependencies:
       - '@types/react'
+    dev: false
+
+  /react-tiny-popover@7.2.4(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-T7ZSwXcUtPXCog3Bux9+TjoTvUeMi/+zI0Yv/TkIznZCWUg0XTt2797G0IiT5mTVeJeLivUzdOmKA1hOQdMfOQ==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
+    dependencies:
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
     dev: false
 
   /react-universal-interface@0.6.2(react@18.2.0)(tslib@2.5.0):

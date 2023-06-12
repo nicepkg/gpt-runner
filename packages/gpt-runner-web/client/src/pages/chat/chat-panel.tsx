@@ -13,6 +13,7 @@ import { useGlobalStore } from '../../store/zustand/global'
 import type { GptFileTreeItem } from '../../store/zustand/global/sidebar-tree.slice'
 import { emitter } from '../../helpers/emitter'
 import { getGlobalConfig } from '../../helpers/global-config'
+import { PopoverMenu } from '../../components/popover-menu'
 
 export interface ChatPanelProps {
   scrollDownRef: RefObject<any>
@@ -229,28 +230,38 @@ export const ChatPanel: FC<ChatPanelProps> = (props) => {
 
   const renderInputToolbar = () => {
     return <>
-      <IconButton
-        text='Pre Chat'
-        iconClassName='codicon-chevron-left'
-        onClick={handleSwitchPreChat}
-      ></IconButton>
+      <PopoverMenu
+        buildChildrenSlot={({ isHovering }) => {
+          return <IconButton
+            text='New Chat'
+            iconClassName='codicon-add'
+            hoverShowText={!isHovering}
+            onClick={handleNewChat}
+          ></IconButton>
+        }}
+        buildMenuSlot={() => {
+          return <>
+            <IconButton
+              text='Pre Chat'
+              iconClassName='codicon-chevron-left'
+              hoverShowText={false}
+              onClick={handleSwitchPreChat}
+            ></IconButton>
 
-      <IconButton
-        text='Next Chat'
-        iconClassName='codicon-chevron-right'
-        onClick={handleSwitchNextChat}
-      ></IconButton>
+            <IconButton
+              text='Next Chat'
+              iconClassName='codicon-chevron-right'
+              hoverShowText={false}
+              onClick={handleSwitchNextChat}
+            ></IconButton>
+          </>
+        }}
+      />
 
       <IconButton
         text='Clear All'
         iconClassName='codicon-trash'
         onClick={handleClearAll}
-      ></IconButton>
-
-      <IconButton
-        text='New Chat'
-        iconClassName='codicon-add'
-        onClick={handleNewChat}
       ></IconButton>
 
       {/* right icon */}

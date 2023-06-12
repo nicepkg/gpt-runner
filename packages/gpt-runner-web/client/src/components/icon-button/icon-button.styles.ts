@@ -1,10 +1,10 @@
-import { styled } from 'styled-components'
+import { css, styled } from 'styled-components'
 
 export const ButtonWrapper = styled.div<{ $hoverShowText?: boolean }>`
   display: flex;
 
   ${({ $hoverShowText }) => ($hoverShowText
-  ? `
+  ? css`
   & .icon-button-text {
     opacity: 0;
     width: 0px;
