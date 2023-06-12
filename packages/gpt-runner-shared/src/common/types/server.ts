@@ -36,22 +36,35 @@ export interface GetUserConfigResData {
   userConfig: UserConfig
 }
 
-export interface GetStorageReqParams {
+export interface StorageGetItemReqParams {
   storageName: ServerStorageName
   key: string
 }
 
 export type ServerStorageValue = Record<string, any> | null | undefined
 
-export interface GetStorageResData {
+export interface StorageGetItemResData {
   value: ServerStorageValue
   cacheDir: string
 }
 
-export interface SaveStorageReqParams {
+export interface StorageSetItemReqParams {
   storageName: ServerStorageName
   key: string
   value?: ServerStorageValue
 }
 
-export type SaveStorageResData = null
+export type StorageSetItemResData = null
+
+export interface StorageRemoveItemReqParams {
+  storageName: ServerStorageName
+  key: string
+}
+
+export type StorageRemoveItemResData = null
+
+export interface StorageClearReqParams {
+  storageName: ServerStorageName
+}
+
+export type StorageClearResData = null

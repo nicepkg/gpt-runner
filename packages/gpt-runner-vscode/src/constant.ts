@@ -4,6 +4,7 @@ export const EXT_DISPLAY_NAME = 'GPT Runner'
 export enum Commands {
   Reload = `${EXT_NAME}.reload`,
   RestartServer = `${EXT_NAME}.restartServer`,
+  OpenChat = `${EXT_NAME}.openChat`,
   OpenInBrowser = `${EXT_NAME}.openInBrowser`,
   InsertCodes = `${EXT_NAME}.insertCodes`,
   DiffCodes = `${EXT_NAME}.diffCodes`,

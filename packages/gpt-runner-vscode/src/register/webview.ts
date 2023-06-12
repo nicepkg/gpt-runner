@@ -2,8 +2,9 @@ import fs from 'fs'
 import path from 'path'
 import type { ExtensionContext } from 'vscode'
 import * as vscode from 'vscode'
+import * as uuid from 'uuid'
 import type { ContextLoader } from '../contextLoader'
-import { EXT_NAME } from '../constant'
+import { Commands, EXT_DISPLAY_NAME, EXT_NAME } from '../constant'
 import { createHash, getServerBaseUrl } from '../utils'
 import { state } from '../state'
 import { EventType, emitter } from '../emitter'
@@ -29,28 +30,50 @@ class ChatViewProvider implements vscode.WebviewViewProvider {
     _context: vscode.WebviewViewResolveContext,
     _token: vscode.CancellationToken,
   ) {
-    const { extensionUri } = this.#extContext
     this.#view = webviewView
     state.sidebarWebviewView = webviewView
 
-    webviewView.webview.onDidReceiveMessage(({ eventName, eventData }) => {
+    ChatViewProvider.updateWebview(webviewView.webview, this.#extContext, this.#projectPath)
+  }
+
+  static createWebviewPanel(extContext: ExtensionContext, projectPath: string): vscode.WebviewPanel {
+    const panel = vscode.window.createWebviewPanel(
+      uuid.v4(),
+      EXT_DISPLAY_NAME,
+      {
+        viewColumn: vscode.ViewColumn.Two,
+      },
+      { retainContextWhenHidden: true },
+    )
+
+    state.webviewPanel = panel
+
+    ChatViewProvider.updateWebview(panel.webview, extContext, projectPath)
+
+    return panel
+  }
+
+  static updateWebview(webview: vscode.Webview, extContext: ExtensionContext, projectPath: string) {
+    const { extensionUri } = extContext
+
+    webview.onDidReceiveMessage(({ eventName, eventData }) => {
       emitter.emit(eventName, eventData, EventType.ReceiveMessage)
     })
 
     const baseUri = vscode.Uri.joinPath(extensionUri, './node_modules/@nicepkg/gpt-runner-web/dist/browser')
 
-    webviewView.webview.options = {
+    webview.options = {
       // Allow scripts in the webview
       enableScripts: true,
 
       localResourceRoots: [baseUri],
     }
 
-    webviewView.webview.html = this.#getHtmlForWebview(webviewView.webview)
+    webview.html = ChatViewProvider.getHtmlForWebview(webview, extContext, projectPath)
   }
 
-  #getHtmlForWebview(webview: vscode.Webview) {
-    const { extensionUri } = this.#extContext
+  static getHtmlForWebview(webview: vscode.Webview, extContext: ExtensionContext, projectPath: string) {
+    const { extensionUri } = extContext
 
     const baseUri = vscode.Uri.joinPath(extensionUri, './node_modules/@nicepkg/gpt-runner-web/dist/browser')
 
@@ -69,7 +92,7 @@ class ChatViewProvider implements vscode.WebviewViewProvider {
       window.vscode = acquireVsCodeApi()
 
       window.__GLOBAL_CONFIG__ = {
-        rootPath: '${this.#projectPath}',
+        rootPath: '${projectPath}',
         serverBaseUrl: '${getServerBaseUrl()}',
         initialRoutePath: '/chat',
         showDiffCodesBtn: true,
@@ -106,16 +129,25 @@ export async function registerWebview(
   ext: ExtensionContext,
 ) {
   const provider = new ChatViewProvider(ext, cwd)
-  let webviewDisposer: vscode.Disposable | undefined
+  let sidebarWebviewDisposer: vscode.Disposable | undefined
+  let webviewPanelDisposer: vscode.Disposable | undefined
 
   const dispose = () => {
-    webviewDisposer?.dispose?.()
+    sidebarWebviewDisposer?.dispose?.()
+    webviewPanelDisposer?.dispose?.()
   }
 
   const registerProvider = () => {
     dispose()
-    webviewDisposer = vscode.window.registerWebviewViewProvider(ChatViewProvider.viewType, provider)
-    return webviewDisposer
+
+    sidebarWebviewDisposer = vscode.window.registerWebviewViewProvider(ChatViewProvider.viewType, provider)
+    webviewPanelDisposer = vscode.commands.registerCommand(Commands.OpenChat, () => {
+      ChatViewProvider.createWebviewPanel(ext, cwd)
+    })
+
+    return vscode.Disposable.from({
+      dispose,
+    })
   }
 
   ext.subscriptions.push(registerProvider())

@@ -86,7 +86,18 @@ export function tryParseJson(str: string) {
     return JSON.parse(str)
   }
   catch (e) {
+    console.error('tryParseJson error: ', e)
     return {}
+  }
+}
+
+export function tryStringifyJson(obj: any) {
+  try {
+    return JSON.stringify(obj)
+  }
+  catch (e) {
+    console.error('tryStringifyJson error: ', e)
+    return ''
   }
 }
 

@@ -20,7 +20,7 @@ async function getStateFromServerOnce(key: string) {
 }
 
 // will save each action state to server
-const debounceSaveStateToServer = debounce(async (key: string, value: ServerStorageValue) => {
+const debounceSaveStateToServerFn = debounce(async (key: string, value: ServerStorageValue) => {
   if (hasUpdateStateFromRemote !== 'finish')
     return
 
@@ -30,6 +30,13 @@ const debounceSaveStateToServer = debounce(async (key: string, value: ServerStor
     value,
   })
 }, 1000)
+
+function debounceSaveStateToServer(key: string, value: ServerStorageValue) {
+  if (hasUpdateStateFromRemote !== 'finish')
+    return
+
+  debounceSaveStateToServerFn(key, value)
+}
 
 export class CustomStorage implements StateStorage {
   #storage: Storage

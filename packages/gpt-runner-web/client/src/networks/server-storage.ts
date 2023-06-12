@@ -1,10 +1,10 @@
-import type { BaseResponse, GetStorageReqParams, GetStorageResData, SaveStorageReqParams, SaveStorageResData } from '@nicepkg/gpt-runner-shared/common'
+import type { BaseResponse, StorageGetItemReqParams, StorageGetItemResData, StorageSetItemReqParams, StorageSetItemResData } from '@nicepkg/gpt-runner-shared/common'
 import { getGlobalConfig } from '../helpers/global-config'
 
-export interface GetServerStorageParams extends GetStorageReqParams {
+export interface GetServerStorageParams extends StorageGetItemReqParams {
 }
 
-export type GetServerStorageRes = BaseResponse<GetStorageResData>
+export type GetServerStorageRes = BaseResponse<StorageGetItemResData>
 
 export async function getServerStorage(params: GetServerStorageParams): Promise<GetServerStorageRes> {
   const { storageName, key } = params
@@ -19,10 +19,10 @@ export async function getServerStorage(params: GetServerStorageParams): Promise<
   return data
 }
 
-export interface SaveServerStorageParams extends SaveStorageReqParams {
+export interface SaveServerStorageParams extends StorageSetItemReqParams {
 }
 
-export type SaveServerStorageRes = BaseResponse<SaveStorageResData>
+export type SaveServerStorageRes = BaseResponse<StorageSetItemResData>
 
 export async function saveServerStorage(params: SaveServerStorageParams): Promise<SaveServerStorageRes> {
   const { storageName, key, value } = params

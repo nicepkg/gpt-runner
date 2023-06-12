@@ -18,7 +18,6 @@ export function resetAllState() {
 
 export function createStore(devtoolsName: string) {
   const newCreate = (store: any) => {
-    const defaultState = create(store).getState()
     let result: any
 
     // https://github.com/pmndrs/zustand/issues/852#issuecomment-1059783350
@@ -30,11 +29,13 @@ export function createStore(devtoolsName: string) {
         }),
       )
     }
-
-    result = create(store)
+    else {
+      result = create(store)
+    }
 
     // reset state of this store
     result.resetState = () => {
+      const defaultState = create(store).getState()
       result.setState(cloneDeep(defaultState), true)
     }
 

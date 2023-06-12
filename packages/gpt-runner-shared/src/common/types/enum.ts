@@ -26,3 +26,11 @@ export enum ServerStorageName {
   FrontendState = 'frontend-state',
   WebPreset = 'web-preset',
 }
+
+export enum WssActionName {
+  Error = 'error',
+  StorageGetItem = 'storageGetItem',
+  StorageSetItem = 'storageSetItem',
+  StorageRemoveItem = 'storageRemoveItem',
+  StorageClear = 'storageClear',
+}

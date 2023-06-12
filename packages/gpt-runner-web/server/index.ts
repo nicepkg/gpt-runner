@@ -1,5 +1,6 @@
 import './src/proxy'
 import path from 'node:path'
+import http from 'node:http'
 import type { Express } from 'express'
 import express from 'express'
 import cors from 'cors'
@@ -49,7 +50,11 @@ export async function startServer(props: StartServerProps): Promise<Express> {
 
   app.use(errorHandlerMiddleware)
 
-  app.listen(finalPort, () => console.log(`Server is running on port ${finalPort}`))
+  const server = http.createServer(app)
+
+  // await processWsControllers(server)
+
+  server.listen(finalPort, () => console.log(`Server is running on port ${finalPort}`))
 
   return app
 }

@@ -1,9 +1,11 @@
 import type { NextFunction, Router } from 'express'
+import { WssActionName, WssUtils, buildFailResponse } from '@nicepkg/gpt-runner-shared/common'
 import type { Controller, ControllerConfig } from '../types'
 import { chatgptControllers } from './chatgpt.controller'
 import { configControllers } from './config.controller'
 import { gptFilesControllers } from './gpt-files.controller'
 import { storageControllers } from './storage.controller'
+import { allWsControllersConfig } from './ws'
 
 export function processControllers(router: Router) {
   const allControllersConfig: ControllerConfig[] = [
@@ -30,6 +32,37 @@ export function processControllers(router: Router) {
       }
 
       router[method](`${namespacePath}${url}`, withCatchHandler)
+    })
+  })
+}
+
+export async function processWsControllers(server: any) {
+  await WssUtils.instance.connect({ server })
+
+  allWsControllersConfig.forEach((controllerConfig) => {
+    const { controllers } = controllerConfig
+
+    controllers.forEach((controller) => {
+      const { actionName, handler } = controller
+
+      WssUtils.instance.on(actionName, async (params: Record<string, any>) => {
+        console.log(`[WS] ${actionName} params:`, params)
+        try {
+          return await handler(params as any)
+        }
+        catch (error: any) {
+          const errRes = buildFailResponse({ data: error, message: error?.message || String(error) })
+
+          WssUtils.instance.emit(actionName, {
+            reqParams: params as any,
+            res: errRes,
+          })
+
+          WssUtils.instance.emit(WssActionName.Error, {
+            res: errRes,
+          })
+        }
+      })
     })
   })
 }

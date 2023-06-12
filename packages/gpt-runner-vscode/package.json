@@ -50,7 +50,13 @@
       },
       {
         "command": "gpt-runner.restartServer",
-        "title": "GPT Runner Restart Server",
+        "title": "Restart GPT Runner Server",
+        "category": "GPT Runner"
+      },
+      {
+        "command": "gpt-runner.openChat",
+        "title": "Open GPT Runner Chat",
+        "icon": "res/logo.svg",
         "category": "GPT Runner"
       }
     ],
@@ -64,6 +70,15 @@
           "description": "Disable the GPT Runner extension"
         }
       }
+    },
+    "menus": {
+      "editor/title": [
+        {
+          "command": "gpt-runner.openChat",
+          "group": "navigation",
+          "icon": "res/logo.svg"
+        }
+      ]
     }
   },
   "scripts": {

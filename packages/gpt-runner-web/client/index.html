@@ -23,6 +23,22 @@
   <script>
     // before-script
   </script>
+
+  <script>
+    function createEl(tag, attrs = {}) {
+      const el = document.createElement(tag)
+      Object.keys(attrs).forEach((key) => {
+        el.setAttribute(key, attrs[key])
+      })
+      return el
+    }
+
+    const script = createEl('script', {
+      src: `${window.getGlobalConfig().serverBaseUrl || ''}/api/config/env.js`,
+    })
+
+    document.head.appendChild(script)
+  </script>
   <base href="/">
   <link href="/codicon/codicon.css" rel="stylesheet" />
 </head>

@@ -141,7 +141,9 @@ export const createSidebarTreeSlice: StateCreator<
 
       if (item.type === GptFileTreeItemType.File) {
         gptFileIds.push(item.id)
+
         const chatIds = currentGptFileIdChatIdsMap.get(item.id) || []
+
         result.children = chatIds.map((chatId) => {
           const chatInfo = state.getChatInfo(chatId)
           chatInfo.parentId = item.id

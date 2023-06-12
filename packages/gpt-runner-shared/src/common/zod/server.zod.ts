@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import type { ChatStreamReqParams, GetGptFilesReqParams, GetStorageReqParams, GetUserConfigReqParams, SaveStorageReqParams } from '../types'
+import type { ChatStreamReqParams, GetGptFilesReqParams, GetUserConfigReqParams, StorageClearReqParams, StorageGetItemReqParams, StorageRemoveItemReqParams, StorageSetItemReqParams } from '../types'
 import { SingleChatMessageSchema, SingleFileConfigSchema } from './config.zod'
 import { ServerStorageNameSchema } from './enum.zod'
 
@@ -19,13 +19,22 @@ export const GetUserConfigReqParamsSchema = z.object({
   rootPath: z.string(),
 }) satisfies z.ZodType<GetUserConfigReqParams>
 
-export const GetStorageReqParamsSchema = z.object({
+export const StorageGetItemReqParamsSchema = z.object({
   storageName: ServerStorageNameSchema,
   key: z.string(),
-}) satisfies z.ZodType<GetStorageReqParams>
+}) satisfies z.ZodType<StorageGetItemReqParams>
 
-export const SaveStorageReqParamsSchema = z.object({
+export const StorageSetItemReqParamsSchema = z.object({
   storageName: ServerStorageNameSchema,
   key: z.string(),
   value: z.record(z.any()).nullable().optional(),
-}) satisfies z.ZodType<SaveStorageReqParams>
+}) satisfies z.ZodType<StorageSetItemReqParams>
+
+export const StorageRemoveItemReqParamsSchema = z.object({
+  storageName: ServerStorageNameSchema,
+  key: z.string(),
+}) satisfies z.ZodType<StorageRemoveItemReqParams>
+
+export const StorageClearReqParamsSchema = z.object({
+  storageName: ServerStorageNameSchema,
+}) satisfies z.ZodType<StorageClearReqParams>

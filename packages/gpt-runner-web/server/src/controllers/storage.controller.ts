@@ -1,6 +1,6 @@
 import { getStorage, sendSuccessResponse, verifyParamsByZod } from '@nicepkg/gpt-runner-shared/node'
-import type { GetStorageReqParams, GetStorageResData, SaveStorageReqParams, SaveStorageResData } from '@nicepkg/gpt-runner-shared/common'
-import { GetStorageReqParamsSchema, SaveStorageReqParamsSchema } from '@nicepkg/gpt-runner-shared/common'
+import type { StorageClearReqParams, StorageClearResData, StorageGetItemReqParams, StorageGetItemResData, StorageRemoveItemReqParams, StorageRemoveItemResData, StorageSetItemReqParams, StorageSetItemResData } from '@nicepkg/gpt-runner-shared/common'
+import { StorageClearReqParamsSchema, StorageGetItemReqParamsSchema, StorageRemoveItemReqParamsSchema, StorageSetItemReqParamsSchema } from '@nicepkg/gpt-runner-shared/common'
 import type { ControllerConfig } from '../types'
 
 export const storageControllers: ControllerConfig = {
@@ -10,9 +10,9 @@ export const storageControllers: ControllerConfig = {
       url: '/',
       method: 'get',
       handler: async (req, res) => {
-        const query = req.query as GetStorageReqParams
+        const query = req.query as StorageGetItemReqParams
 
-        verifyParamsByZod(query, GetStorageReqParamsSchema)
+        verifyParamsByZod(query, StorageGetItemReqParamsSchema)
 
         const { key, storageName } = query
 
@@ -23,7 +23,7 @@ export const storageControllers: ControllerConfig = {
           data: {
             value,
             cacheDir,
-          } satisfies GetStorageResData,
+          } satisfies StorageGetItemResData,
         })
       },
     },
@@ -31,27 +31,53 @@ export const storageControllers: ControllerConfig = {
       url: '/',
       method: 'post',
       handler: async (req, res) => {
-        const body = req.body as SaveStorageReqParams
+        const body = req.body as StorageSetItemReqParams
 
-        verifyParamsByZod(body, SaveStorageReqParamsSchema)
+        verifyParamsByZod(body, StorageSetItemReqParamsSchema)
 
         const { storageName, key, value } = body
-
         const { storage } = await getStorage(storageName)
 
-        switch (value) {
-          case undefined:
-            // remove
-            await storage.delete(key)
-            break
-          default:
-            // set
-            await storage.set(key, value)
-            break
-        }
+        await storage.set(key, value)
 
         sendSuccessResponse(res, {
-          data: null satisfies SaveStorageResData,
+          data: null satisfies StorageSetItemResData,
+        })
+      },
+    },
+    {
+      url: '/',
+      method: 'delete',
+      handler: async (req, res) => {
+        const body = req.body as StorageRemoveItemReqParams
+
+        verifyParamsByZod(body, StorageRemoveItemReqParamsSchema)
+
+        const { key, storageName } = body
+        const { storage } = await getStorage(storageName)
+
+        await storage.delete(key)
+
+        sendSuccessResponse(res, {
+          data: null satisfies StorageRemoveItemResData,
+        })
+      },
+    },
+    {
+      url: '/clear',
+      method: 'post',
+      handler: async (req, res) => {
+        const body = req.body as StorageClearReqParams
+
+        verifyParamsByZod(body, StorageClearReqParamsSchema)
+
+        const { storageName } = body
+        const { storage } = await getStorage(storageName)
+
+        await storage.clear()
+
+        sendSuccessResponse(res, {
+          data: null satisfies StorageClearResData,
         })
       },
     },

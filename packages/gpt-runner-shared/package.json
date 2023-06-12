@@ -62,6 +62,8 @@
     "find-free-ports": "*",
     "ip": "*",
     "minimatch": "*",
+    "socket.io": "*",
+    "socket.io-client": "*",
     "zod": "*"
   },
   "dependencies": {
@@ -72,6 +74,8 @@
     "find-free-ports": "^3.1.1",
     "ip": "^1.1.8",
     "minimatch": "^9.0.1",
+    "socket.io": "^4.6.2",
+    "socket.io-client": "^4.6.2",
     "zod": "^3.21.4"
   },
   "devDependencies": {

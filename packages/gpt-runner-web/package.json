@@ -57,7 +57,7 @@
     "build:server": "unbuild",
     "dev": "pnpm dev:server & pnpm dev:client",
     "dev:client": "vite --config ./client/vite.config.ts",
-    "dev:server": "cross-env NODE_OPTIONS='--experimental-fetch' NODE_NO_WARNINGS='1' DEBUG='enabled' pnpm esno server/start-server.ts --auto-free-port",
+    "dev:server": "cross-env NODE_ENV=development NODE_OPTIONS='--experimental-fetch' NODE_NO_WARNINGS='1' DEBUG='enabled' pnpm esno server/start-server.ts --auto-free-port",
     "start": "cross-env NODE_OPTIONS='--experimental-fetch' NODE_NO_WARNINGS='1' DEBUG='enabled' node dist/start-server.cjs --auto-free-port",
     "stub": "unbuild --stub"
   },

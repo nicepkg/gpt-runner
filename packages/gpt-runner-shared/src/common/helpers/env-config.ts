@@ -15,7 +15,7 @@ interface EnvVarConfig {
 
   /**
    * if true, this env var will only be available on server side
-   * window.__config__ will not have this env var
+   * window.__env__ will not have this env var
    *
    * @default false
    */
@@ -26,7 +26,9 @@ const config: Record<EnvName, EnvVarConfig> = {
   NODE_ENV: {
     defaultValue: 'production',
   },
-  OPENAI_KEY: {},
+  OPENAI_KEY: {
+    serverSideOnly: true,
+  },
   GPTR_BASE_SERVER_URL: {
     defaultValue: 'http://localhost:3003',
   },
@@ -42,7 +44,7 @@ export class EnvConfig {
 
     // client side
     if (typeof window !== 'undefined' && !serverSideOnly)
-      return window?.__config__?.[key] ?? defaultValue ?? ''
+      return window?.__env__?.[key] ?? defaultValue ?? ''
 
     // server side
     return process.env[key] ?? defaultValue ?? ''
@@ -51,7 +53,7 @@ export class EnvConfig {
   /**
    * get all env vars on server or client side
    * @param type server or client, get all allowed env vars on that scope
-   * @param getWays all or process, get  env vars both on process and window.__config__ or only process.env
+   * @param getWays all or process, get  env vars both on process and window.__env__ or only process.env
    * @returns env vars key value map
    */
   static getAllEnvVarsOnScopes(
@@ -93,7 +95,7 @@ export class EnvConfig {
 
   /**
    * for /api/config
-   * @returns env vars key value map for window.__config__
+   * @returns env vars key value map for window.__env__
    */
   static getClientEnvVarsInServerSide(): Partial<Record<EnvName, string>> {
     return EnvConfig.getAllEnvVarsOnScopes('client', 'process')
@@ -106,6 +108,6 @@ declare global {
   }
 
   interface Window {
-    __config__?: Partial<Env>
+    __env__?: Partial<Env>
   }
 }
