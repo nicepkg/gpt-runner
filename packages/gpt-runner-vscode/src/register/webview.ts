@@ -42,6 +42,7 @@ class ChatViewProvider implements vscode.WebviewViewProvider {
       EXT_DISPLAY_NAME,
       {
         viewColumn: vscode.ViewColumn.Two,
+        preserveFocus: true,
       },
       { retainContextWhenHidden: true },
     )
@@ -142,6 +143,9 @@ export async function registerWebview(
 
     sidebarWebviewDisposer = vscode.window.registerWebviewViewProvider(ChatViewProvider.viewType, provider)
     webviewPanelDisposer = vscode.commands.registerCommand(Commands.OpenChat, () => {
+      if (vscode.window.activeTextEditor)
+        state.activeEditor = vscode.window.activeTextEditor
+
       ChatViewProvider.createWebviewPanel(ext, cwd)
     })
 

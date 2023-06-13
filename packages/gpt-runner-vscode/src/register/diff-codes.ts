@@ -86,7 +86,15 @@ export async function registerDiffCodes(
 
     diffCodesProviderDisposable = DiffCodesProvider.getInstance().registerTextDocumentContentProvider()
 
-    commandDisposable = vscode.commands.registerTextEditorCommand(Commands.DiffCodes, async (editor) => {
+    commandDisposable = vscode.commands.registerCommand(Commands.DiffCodes, async () => {
+      if (vscode.window.activeTextEditor)
+        state.activeEditor = vscode.window.activeTextEditor
+
+      const editor = state.activeEditor
+
+      if (!editor)
+        return
+
       const title = 'Your codes ↔ GPT Runner codes'
       const selectionText = editor.document.getText(editor.selection)
 

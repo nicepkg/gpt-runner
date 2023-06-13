@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useLayoutEffect, useRef, useState } from 'react'
 
 interface Size {
   width: number
@@ -17,13 +17,12 @@ export function useSize(props?: UseSizeProps): [ref: React.RefObject<HTMLElement
   const ref = props?.ref ?? useRef<HTMLElement>(null)
   const [size, setSize] = useState<Size>({ width, height })
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!ref.current)
       return
 
     const updateSize = () => {
       if (ref.current) {
-        console.log('updateSize', ref.current.offsetWidth, ref.current.offsetHeight)
         setSize({
           width: ref.current.offsetWidth,
           height: ref.current.offsetHeight,
@@ -35,8 +34,13 @@ export function useSize(props?: UseSizeProps): [ref: React.RefObject<HTMLElement
 
     ref.current.addEventListener('resize', updateSize)
 
+    // ResizeObserver
+    const resizeObserver = new ResizeObserver(updateSize)
+    resizeObserver.observe(ref.current)
+
     return () => {
       ref.current?.removeEventListener('resize', updateSize)
+      resizeObserver.disconnect()
     }
   }, [ref.current])
 

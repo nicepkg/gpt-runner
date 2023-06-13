@@ -18,11 +18,20 @@ export async function registerInsertCodes(
   const registerProvider = () => {
     dispose()
 
-    disposable = vscode.commands.registerTextEditorCommand(Commands.InsertCodes, (editor, edit) => {
-      editor.selections.forEach((selection) => {
-        const text = state.insertCodes
-        edit.replace(selection, text) // insert at current cursor
-      })
+    disposable = vscode.commands.registerCommand(Commands.InsertCodes, () => {
+      if (vscode.window.activeTextEditor)
+        state.activeEditor = vscode.window.activeTextEditor
+
+      const editor = state.activeEditor
+
+      if (editor) {
+        editor.selections.forEach((selection) => {
+          const text = state.insertCodes
+          editor.edit((edit) => {
+            edit.replace(selection, text) // insert at current cursor
+          })
+        })
+      }
     })
 
     return disposable
