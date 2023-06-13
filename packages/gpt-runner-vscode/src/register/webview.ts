@@ -46,8 +46,13 @@ class ChatViewProvider implements vscode.WebviewViewProvider {
       },
       { retainContextWhenHidden: true },
     )
+    panel.iconPath = vscode.Uri.joinPath(extContext.extensionUri, './res/logo.svg')
 
-    state.webviewPanel = panel
+    panel.onDidDispose (() => {
+      state.webviewPanels.delete(panel)
+    })
+
+    state.webviewPanels.add(panel)
 
     ChatViewProvider.updateWebview(panel.webview, extContext, projectPath)
 

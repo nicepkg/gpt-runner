@@ -142,3 +142,31 @@ export function runOnceByKey<T extends (...args: any[]) => any>(callback: T, key
     return result
   } as T
 }
+
+export function urlRemoveLocalhost(url: string | null | undefined): string {
+  if (typeof window === 'undefined')
+    return url || ''
+
+  if (!url)
+    return ''
+
+  try {
+    const uri = new URL(url)
+    const currentHostname = window.location.hostname
+    if (['localhost', '127.0.0.1'].includes(uri.hostname)) {
+      uri.hostname = currentHostname
+
+      const result = uri.toString()
+
+      if (!url.endsWith('/'))
+        return result.replace(/\/$/, '')
+
+      return result
+    }
+
+    return url
+  }
+  catch {
+    return url
+  }
+}

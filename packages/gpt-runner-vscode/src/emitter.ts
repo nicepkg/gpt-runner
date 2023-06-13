@@ -16,8 +16,12 @@ const oldEmit = emitter.emit
 emitter.emit = function (...args) {
   const [eventName, eventData, type] = args
 
-  if (type !== EventType.ReceiveMessage)
+  if (type !== EventType.ReceiveMessage) {
     state.sidebarWebviewView?.webview.postMessage({ eventName, eventData })
+    state.webviewPanels.forEach((webviewPanel) => {
+      webviewPanel?.webview.postMessage({ eventName, eventData })
+    })
+  }
 
   return oldEmit.apply(this, args as any)
 }

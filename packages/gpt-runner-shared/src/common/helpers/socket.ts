@@ -1,6 +1,7 @@
 import * as uuid from 'uuid'
 import type { BrowserSocket, MaybePromise, NodeServerSocket, Socket, WssActionName, WssActionNameRequestMap } from '../types'
 import { EnvConfig } from './env-config'
+import { urlRemoveLocalhost } from './common'
 
 type SocketQueueFn = (socket: Socket) => void
 export class WssUtils {
@@ -18,7 +19,7 @@ export class WssUtils {
   }
 
   constructor(wssUrl?: string) {
-    this.#wssUrl = wssUrl ?? WssUtils.defaultWssUrl
+    this.#wssUrl = urlRemoveLocalhost(wssUrl ?? WssUtils.defaultWssUrl)
   }
 
   static get isBrowser() {
