@@ -430,6 +430,9 @@ importers:
       global-agent:
         specifier: ^3.0.0
         version: 3.0.0
+      keyboardjs:
+        specifier: ^2.7.0
+        version: 2.7.0
       langchain:
         specifier: ^0.0.84
         version: 0.0.84(ignore@5.2.4)
@@ -488,6 +491,9 @@ importers:
       '@types/global-agent':
         specifier: ^2.1.1
         version: 2.1.1
+      '@types/keyboardjs':
+        specifier: ^2.5.1
+        version: 2.5.1
       '@types/lodash-es':
         specifier: ^4.17.7
         version: 4.17.7
@@ -4491,6 +4497,10 @@ packages:
   /@types/katex@0.14.0:
     resolution: {integrity: sha512-+2FW2CcT0K3P+JMR8YG846bmDwplKUTsWgT2ENwdQ1UdVfRk3GQrh6Mi4sTopy30gI8Uau5CEqHTDZ6YvWIUPA==}
     dev: false
+
+  /@types/keyboardjs@2.5.1:
+    resolution: {integrity: sha512-kCDf9oJW5Y74dqJJNnFRcpgeVNko6FUc3kQf1Vf5rIYzchRztWBfx5E2fT8ULGPEviOiMezMeuya51DTIvPy9Q==}
+    dev: true
 
   /@types/keyv@3.1.4:
     resolution: {integrity: sha512-BQ5aZNSCpj7D6K2ksrRCTmKRLEpnPvWDiLPfoGyhZ++8YtiK9d/3DBKPJgry359X/P1PfruyYwvnvwFjuEiEIg==}
@@ -10427,6 +10437,10 @@ packages:
     hasBin: true
     dependencies:
       commander: 8.3.0
+    dev: false
+
+  /keyboardjs@2.7.0:
+    resolution: {integrity: sha512-3tiQuAoLM1M5Xyo/eQVaqsq9joByTRkB0Byga+0S7BYJvY4HIlfW0SofOj4a20YSAFjv0SIFU/lw+Qjp6KYHPA==}
     dev: false
 
   /keyv@3.1.0:

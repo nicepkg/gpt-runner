@@ -1,5 +1,5 @@
 import type { CSSProperties, FC } from 'react'
-import { useCallback, useEffect } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { VSCodePanelTab, VSCodePanelView } from '@vscode/webview-ui-toolkit/react'
 import { ChatMessageStatus } from '@nicepkg/gpt-runner-shared/common'
 import { useIsMobile } from '../../hooks/use-is-mobile.hook'
@@ -13,11 +13,22 @@ import { ChatPanelWrapper, SidebarWrapper, StyledVSCodePanels } from './chat.sty
 import { ChatSidebar } from './chat-sidebar'
 import { ChatPanel } from './chat-panel'
 
+enum TabId {
+  Explore = 'explore',
+  Chat = 'chat',
+}
+
 const Chat: FC = () => {
   const isMobile = useIsMobile()
   const { activeChatId, updateActiveChatId } = useGlobalStore()
   const { chatInstance } = useChatInstance({ chatId: activeChatId })
   const [scrollDownRef, scrollDown, getScrollBottom] = useScrollDown()
+  const [tabActiveId, setTabActiveId] = useState(TabId.Explore)
+
+  // when active chat id change, change tab active id
+  useEffect(() => {
+    setTabActiveId(activeChatId ? TabId.Chat : TabId.Explore)
+  }, [activeChatId, isMobile])
 
   // any status will scroll down
   useEffect(() => {
@@ -42,7 +53,7 @@ const Chat: FC = () => {
     if (!getGlobalConfig().rootPath)
       return null
 
-    return <SidebarWrapper>
+    return <SidebarWrapper className='sidebar-wrapper'>
       <ChatSidebar rootPath={getGlobalConfig().rootPath}></ChatSidebar>
     </SidebarWrapper>
   }, [])
@@ -52,10 +63,11 @@ const Chat: FC = () => {
       <ChatPanel
         scrollDownRef={scrollDownRef}
         chatId={activeChatId}
+        chatTreeView={renderSidebar()}
         onChatIdChange={updateActiveChatId}
       ></ChatPanel>
     </ChatPanelWrapper >
-  }, [activeChatId, scrollDownRef])
+  }, [activeChatId, scrollDownRef, renderSidebar])
 
   if (!getGlobalConfig().rootPath)
     return <ErrorView text="Please provide the root path!"></ErrorView>
@@ -68,13 +80,22 @@ const Chat: FC = () => {
       overflowY: 'auto',
     }
 
-    return <StyledVSCodePanels style={viewStyle} onChange={scrollDown}>
-      <VSCodePanelTab id="explore">Explore</VSCodePanelTab>
-      <VSCodePanelTab id="chat">Chat</VSCodePanelTab>
-      <VSCodePanelView style={viewStyle} id="explore">
+    return <StyledVSCodePanels
+      // activeid={activeChatId ? TabId.Chat : TabId.Explore}
+      activeid={tabActiveId}
+      style={viewStyle}
+      onChange={(e: any) => {
+        const activeId = e.target?.activeid as TabId
+        setTabActiveId(activeId)
+        scrollDown()
+      }}
+    >
+      <VSCodePanelTab id={TabId.Explore}>Explore</VSCodePanelTab>
+      <VSCodePanelTab id={TabId.Chat}>Chat</VSCodePanelTab>
+      <VSCodePanelView style={viewStyle} id={TabId.Explore}>
         {renderSidebar()}
       </VSCodePanelView>
-      <VSCodePanelView style={viewStyle} id="chat">
+      <VSCodePanelView style={viewStyle} id={TabId.Chat}>
         {renderChatPanel()}
       </VSCodePanelView>
     </StyledVSCodePanels>

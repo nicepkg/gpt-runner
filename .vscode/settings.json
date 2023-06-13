@@ -11,6 +11,7 @@
   "typescript.inlayHints.parameterTypes.enabled": true,
   // "typescript.inlayHints.functionLikeReturnTypes.enabled": true,
   "cSpell.words": [
+    "activeid",
     "cachedir",
     "ccsp",
     "Chatgpt",
@@ -25,6 +26,7 @@
     "gptr",
     "hideable",
     "Jinming",
+    "keyboardjs",
     "langchain",
     "linebreak",
     "localstorage",

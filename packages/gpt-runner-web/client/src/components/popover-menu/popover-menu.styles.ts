@@ -1,11 +1,15 @@
 import styled from 'styled-components'
 
+export const MenuMask = styled.div`
+  overflow: hidden;
+`
+
 export const Menu = styled.div`
   display: flex;
   flex-direction: column;
   background-color: var(--list-hover-background);
   border: 1px solid var(--panel-view-border);
-  border-radius: 0.25rem;
+  border-radius: 0.5rem;
   overflow: hidden;
 
   & > .icon-button {
@@ -14,18 +18,29 @@ export const Menu = styled.div`
     padding-left: 0;
     padding-right: 0;
     border-top: 1px solid var(--panel-view-border);
+
+    vscode-button {
+      flex: 1;
+      border-radius: 0 !important;
+
+      &::part(content) {
+        width: 100%;
+      }
+    }
   }
 
   & > .icon-button:first-child {
     border-top: none;
   }
 
-  & vscode-button {
-    flex: 1;
-    border-radius: 0 !important;
+  & > .popover-menu__menu-children {
+    vscode-button {
+      flex: 1;
+      border-radius: 0 !important;
 
-    &::part(content) {
-      width: 100%;
+      &::part(content) {
+        width: 100%;
+      }
     }
   }
 `

@@ -1,7 +1,7 @@
 import type { RefObject } from 'react'
 import { useEffect, useRef, useState } from 'react'
 
-export function useHover<Ref extends RefObject<any>>(): [Ref, boolean] {
+export function useHover<Ref extends RefObject<any>>() {
   const [isHover, setIsHover] = useState(false)
   const ref = useRef(null) as Ref
 
@@ -28,5 +28,5 @@ export function useHover<Ref extends RefObject<any>>(): [Ref, boolean] {
     }
   }, [ref.current])
 
-  return [ref, isHover]
+  return [ref, isHover, setIsHover] as const
 }

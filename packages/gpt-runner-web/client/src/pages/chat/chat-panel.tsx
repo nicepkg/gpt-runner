@@ -14,19 +14,24 @@ import type { GptFileTreeItem } from '../../store/zustand/global/sidebar-tree.sl
 import { emitter } from '../../helpers/emitter'
 import { getGlobalConfig } from '../../helpers/global-config'
 import { PopoverMenu } from '../../components/popover-menu'
+import { useKeyboard } from '../../hooks/use-keyboard.hook'
+import { useIsMobile } from '../../hooks/use-is-mobile.hook'
+import { ChatPanelPopoverTreeWrapper } from './chat.styles'
 
 export interface ChatPanelProps {
   scrollDownRef: RefObject<any>
+  chatTreeView?: React.ReactNode
   chatId: string
   onChatIdChange: (chatId: string) => void
 }
 
 export const ChatPanel: FC<ChatPanelProps> = (props) => {
-  const { scrollDownRef, chatId, onChatIdChange } = props
+  const { scrollDownRef, chatTreeView, chatId, onChatIdChange } = props
   const { createChatAndActive, getGptFileTreeItemFromChatId } = useGlobalStore()
   const { chatInstance, updateCurrentChatInstance, generateCurrentChatAnswer, regenerateCurrentLastChatAnswer, stopCurrentGeneratingChatAnswer } = useChatInstance({ chatId })
   const status = chatInstance?.status ?? ChatMessageStatus.Success
   const [gptFileTreeItem, setGptFileTreeItem] = useState<GptFileTreeItem>()
+  const isMobile = useIsMobile()
 
   useEffect(() => {
     const gptFileTreeItem = getGptFileTreeItemFromChatId(chatId)
@@ -131,6 +136,10 @@ export const ChatPanel: FC<ChatPanelProps> = (props) => {
     }, false)
   }, [updateCurrentChatInstance])
 
+  // keyboard bind ctrl + enter
+  useKeyboard('ctrl + enter', handleGenerateAnswer)
+  useKeyboard('command + enter', handleGenerateAnswer)
+
   const buildCodeToolbar: MessageItemProps['buildCodeToolbar'] = ({ contents }) => {
     return <>
       <IconButton
@@ -230,6 +239,63 @@ export const ChatPanel: FC<ChatPanelProps> = (props) => {
 
   const renderInputToolbar = () => {
     return <>
+      {/* left icon */}
+      {status !== ChatMessageStatus.Pending && <IconButton
+        disabled={!chatInstance?.inputtingPrompt}
+        text='Send'
+        hoverShowText={false}
+        iconClassName='codicon-send'
+        onClick={handleGenerateAnswer}></IconButton>}
+
+      {status === ChatMessageStatus.Pending && <IconButton
+        text='Stop'
+        iconClassName='codicon-chrome-maximize'
+        hoverShowText={false}
+        onClick={handleStopGenerateAnswer}
+      ></IconButton>}
+
+      <IconButton
+        style={{
+          marginRight: 'auto',
+        }}
+        disabled={status === ChatMessageStatus.Pending}
+        text='Continue'
+        iconClassName='codicon-debug-continue-small'
+        onClick={handleContinueGenerateAnswer}
+      ></IconButton>
+
+      {/* right icon */}
+      {isMobile && <PopoverMenu
+        childrenInMenuWhenOpen={false}
+        menuStyle={{
+          marginLeft: '1rem',
+          marginRight: '1rem',
+        }}
+        buildChildrenSlot={({ isHovering }) => {
+          return <IconButton
+            text='Chat Tree'
+            iconClassName='codicon-list-tree'
+            hoverShowText={!isHovering}
+            onClick={handleClearAll}
+          ></IconButton>
+        }}
+        buildMenuSlot={() => {
+          return <ChatPanelPopoverTreeWrapper>
+            {chatTreeView}
+          </ChatPanelPopoverTreeWrapper>
+        }}
+      />}
+
+      <IconButton
+        text='Clear All'
+        iconClassName='codicon-trash'
+        onClick={handleClearAll}
+        style={{
+          paddingLeft: '0.5rem',
+          paddingRight: '0.5rem',
+        }}
+      ></IconButton>
+
       <PopoverMenu
         buildChildrenSlot={({ isHovering }) => {
           return <IconButton
@@ -257,37 +323,6 @@ export const ChatPanel: FC<ChatPanelProps> = (props) => {
           </>
         }}
       />
-
-      <IconButton
-        text='Clear All'
-        iconClassName='codicon-trash'
-        onClick={handleClearAll}
-      ></IconButton>
-
-      {/* right icon */}
-      <IconButton
-        style={{
-          marginLeft: 'auto',
-        }}
-        disabled={status === ChatMessageStatus.Pending}
-        text='Continue'
-        iconClassName='codicon-debug-continue-small'
-        onClick={handleContinueGenerateAnswer}
-      ></IconButton>
-
-      {status === ChatMessageStatus.Pending && <IconButton
-        text='Stop'
-        iconClassName='codicon-chrome-maximize'
-        hoverShowText={false}
-        onClick={handleStopGenerateAnswer}
-      ></IconButton>}
-
-      {status !== ChatMessageStatus.Pending && <IconButton
-        disabled={!chatInstance?.inputtingPrompt}
-        text='Send'
-        hoverShowText={false}
-        iconClassName='codicon-send'
-        onClick={handleGenerateAnswer}></IconButton>}
     </>
   }
 

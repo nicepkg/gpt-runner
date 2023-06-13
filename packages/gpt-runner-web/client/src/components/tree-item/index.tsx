@@ -110,7 +110,7 @@ export function TreeItem<OtherInfo extends TreeItemBaseStateOtherInfo = TreeItem
               overflow: 'hidden',
             }}
           >
-            <Children >
+            <Children className='tree-item__children'>
               {children?.map(child => (
                 <TreeItem key={child.id} {...child} />
               ))}

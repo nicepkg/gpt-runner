@@ -49,3 +49,17 @@ export const SidebarTopToolbar = styled.div`
   padding: 0.5rem 0;
   font-size: var(--type-ramp-base-font-size);
 `
+
+export const ChatPanelPopoverTreeWrapper = styled.div`
+  & .sidebar-wrapper {
+    max-width: 100%;
+    width: calc(100vw - 2rem);
+    height: 50vh;
+    background: var(--panel-view-background);
+    padding-bottom: 0.5rem;
+
+    .tree-item__children {
+      border-left: none;
+    }
+  }
+`
