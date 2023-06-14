@@ -4,6 +4,10 @@
   "version": "0.0.1",
   "private": true,
   "packageManager": "pnpm@8.4.0",
+  "engines": {
+    "node": ">=16.20.0",
+    "pnpm": ">=8"
+  },
   "scripts": {
     "build": "rimraf packages/*/dist && esno scripts/copy-files.ts && pnpm -r --filter=./packages/* run build && pnpm -r run build-post",
     "dev": "pnpm stub",
