@@ -10,15 +10,25 @@ export class PathUtils {
   }
 
   static join(...paths: string[]) {
-    return path.join(...paths)
+    return path.join(...paths).replace(/\\/g, '/')
   }
 
   static resolve(...paths: string[]) {
-    return path.resolve(...paths)
+    return path.resolve(...paths).replace(/\\/g, '/')
   }
 
   static relative(from: string, to: string) {
-    return path.relative(from, to)
+    return path.relative(from, to).replace(/\\/g, '/')
+  }
+
+  static dirname(filePath: string) {
+    return path.dirname(filePath).replace(/\\/g, '/')
+  }
+
+  static extname(filePath: string) {
+    if (!PathUtils.isFile(filePath))
+      return ''
+    return path.extname(filePath)
   }
 
   static isFile(filePath: string) {

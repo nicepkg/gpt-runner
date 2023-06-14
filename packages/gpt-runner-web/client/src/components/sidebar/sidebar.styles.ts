@@ -6,6 +6,7 @@ export const SidebarWrapper = styled.div`
   flex-direction: column;
   width: 100%;
   padding: 0 1rem;
+  overflow: hidden;
 `
 
 export const SidebarHeader = styled.div`

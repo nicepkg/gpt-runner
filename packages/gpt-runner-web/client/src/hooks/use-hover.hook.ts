@@ -3,30 +3,32 @@ import { useEffect, useRef, useState } from 'react'
 
 export function useHover<Ref extends RefObject<any>>() {
   const [isHover, setIsHover] = useState(false)
+  const isHoverRef = useRef(isHover)
   const ref = useRef(null) as Ref
 
-  const handleMouseEnter = (): void => {
+  const handleMouseEnter = () => {
+    isHoverRef.current = true
     setIsHover(true)
   }
 
-  const handleMouseLeave = (): void => {
+  const handleMouseLeave = async () => {
+    isHoverRef.current = false
     setIsHover(false)
   }
 
   useEffect(() => {
     const element = ref.current as HTMLElement
-    if (element) {
-      element.addEventListener('mouseenter', handleMouseEnter)
-      element.addEventListener('mouseleave', handleMouseLeave)
-    }
+    if (!element)
+      return
+
+    element.addEventListener('mouseenter', handleMouseEnter)
+    element.addEventListener('mouseleave', handleMouseLeave)
 
     return () => {
-      if (element) {
-        element.removeEventListener('mouseenter', handleMouseEnter)
-        element.removeEventListener('mouseleave', handleMouseLeave)
-      }
+      element.removeEventListener('mouseenter', handleMouseEnter)
+      element.removeEventListener('mouseleave', handleMouseLeave)
     }
   }, [ref.current])
 
-  return [ref, isHover, setIsHover] as const
+  return [ref, isHover, isHoverRef] as const
 }

@@ -15,23 +15,22 @@ import { emitter } from '../../helpers/emitter'
 import { getGlobalConfig } from '../../helpers/global-config'
 import { PopoverMenu } from '../../components/popover-menu'
 import { useKeyboard } from '../../hooks/use-keyboard.hook'
-import { useIsMobile } from '../../hooks/use-is-mobile.hook'
 import { ChatPanelPopoverTreeWrapper } from './chat.styles'
 
 export interface ChatPanelProps {
   scrollDownRef: RefObject<any>
   chatTreeView?: React.ReactNode
+  fileTreeView?: React.ReactNode
   chatId: string
   onChatIdChange: (chatId: string) => void
 }
 
 export const ChatPanel: FC<ChatPanelProps> = (props) => {
-  const { scrollDownRef, chatTreeView, chatId, onChatIdChange } = props
+  const { scrollDownRef, chatTreeView, fileTreeView, chatId, onChatIdChange } = props
   const { createChatAndActive, getGptFileTreeItemFromChatId } = useGlobalStore()
   const { chatInstance, updateCurrentChatInstance, generateCurrentChatAnswer, regenerateCurrentLastChatAnswer, stopCurrentGeneratingChatAnswer } = useChatInstance({ chatId })
   const status = chatInstance?.status ?? ChatMessageStatus.Success
   const [gptFileTreeItem, setGptFileTreeItem] = useState<GptFileTreeItem>()
-  const isMobile = useIsMobile()
 
   useEffect(() => {
     const gptFileTreeItem = getGptFileTreeItemFromChatId(chatId)
@@ -94,7 +93,7 @@ export const ChatPanel: FC<ChatPanelProps> = (props) => {
     onChatIdChange(nextChatId)
   }, [gptFileTreeItem, chatId, onChatIdChange])
 
-  // clear all
+  // clean
   const handleClearAll = useCallback(() => {
     updateCurrentChatInstance({
       messages: [],
@@ -265,7 +264,8 @@ export const ChatPanel: FC<ChatPanelProps> = (props) => {
       ></IconButton>
 
       {/* right icon */}
-      {isMobile && <PopoverMenu
+      {/* chat tree */}
+      {chatTreeView && <PopoverMenu
         childrenInMenuWhenOpen={false}
         menuStyle={{
           marginLeft: '1rem',
@@ -273,10 +273,13 @@ export const ChatPanel: FC<ChatPanelProps> = (props) => {
         }}
         buildChildrenSlot={({ isHovering }) => {
           return <IconButton
+            style={{
+              paddingLeft: '0.5rem',
+            }}
             text='Chat Tree'
+            showText={false}
             iconClassName='codicon-list-tree'
             hoverShowText={!isHovering}
-            onClick={handleClearAll}
           ></IconButton>
         }}
         buildMenuSlot={() => {
@@ -286,8 +289,36 @@ export const ChatPanel: FC<ChatPanelProps> = (props) => {
         }}
       />}
 
+      {/* file tree */}
+      {fileTreeView && <PopoverMenu
+        // isPopoverOpen
+        // onPopoverDisplayChange={() => { }}
+        childrenInMenuWhenOpen={false}
+        menuStyle={{
+          marginLeft: '1rem',
+          marginRight: '1rem',
+        }}
+        buildChildrenSlot={({ isHovering }) => {
+          return <IconButton
+            style={{
+              paddingLeft: '0.5rem',
+            }}
+            text='File Tree'
+            showText={false}
+            iconClassName='codicon-file'
+            hoverShowText={!isHovering}
+          ></IconButton>
+        }}
+        buildMenuSlot={() => {
+          return <ChatPanelPopoverTreeWrapper>
+            {fileTreeView}
+          </ChatPanelPopoverTreeWrapper>
+        }}
+      />}
+
       <IconButton
-        text='Clear All'
+        text='Clean'
+        showText={false}
         iconClassName='codicon-trash'
         onClick={handleClearAll}
         style={{
@@ -297,10 +328,12 @@ export const ChatPanel: FC<ChatPanelProps> = (props) => {
       ></IconButton>
 
       <PopoverMenu
-        buildChildrenSlot={({ isHovering }) => {
+        xPosition='right'
+        buildChildrenSlot={({ isHovering, isInMenu }) => {
           return <IconButton
             text='New Chat'
             iconClassName='codicon-add'
+            showText={isInMenu}
             hoverShowText={!isHovering}
             onClick={handleNewChat}
           ></IconButton>

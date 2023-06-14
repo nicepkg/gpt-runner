@@ -3,9 +3,7 @@ import { VSCodePanels } from '@vscode/webview-ui-toolkit/react'
 import { withBreakpoint } from '../../helpers/with-breakpoint'
 
 export const SidebarWrapper = styled.div`
-  max-width: 300px;
-  min-width: 200px;
-  width: 40%;
+  width: 100%;
   height: 100%;
   flex-shrink: 0;
 
@@ -19,7 +17,6 @@ export const ChatPanelWrapper = styled.div`
   display: flex;
   flex-direction: column;
   flex: 1;
-  border-left: 1px solid var(--panel-view-border);
   max-height: 100%;
   overflow-x: hidden;
   overflow-y: auto;
@@ -52,14 +49,28 @@ export const SidebarTopToolbar = styled.div`
 
 export const ChatPanelPopoverTreeWrapper = styled.div`
   & .sidebar-wrapper {
-    max-width: 100%;
     width: calc(100vw - 2rem);
     height: 50vh;
     background: var(--panel-view-background);
     padding-bottom: 0.5rem;
+    max-width: 500px;
 
     .tree-item__children {
       border-left: none;
     }
   }
+`
+
+export const LeftSideWrapper = styled.div`
+  max-width: 300px;
+  min-width: 200px;
+  border-right: 1px solid var(--panel-view-border);
+  flex: 1;
+`
+
+export const RightSideWrapper = styled.div`
+  max-width: 300px;
+  min-width: 200px;
+  border-left: 1px solid var(--panel-view-border);
+  flex: 1;
 `

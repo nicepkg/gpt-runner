@@ -7,6 +7,7 @@ import { Children, ChildrenWrapper, Menu, MenuMask } from './popover-menu.styles
 
 export interface PopoverMenuChildrenState {
   isHovering: boolean
+  isInMenu: boolean
 }
 
 type YPosition = 'top' | 'bottom'
@@ -26,7 +27,7 @@ export interface PopoverMenuProps {
 
 export const PopoverMenu: React.FC<PopoverMenuProps> = (props) => {
   const {
-    xPosition = 'right',
+    xPosition = 'left',
     yPosition = 'top',
     menuStyle,
     childrenStyle,
@@ -53,10 +54,15 @@ export const PopoverMenu: React.FC<PopoverMenuProps> = (props) => {
 
   const childrenState: PopoverMenuChildrenState = {
     isHovering: isChildrenHovering || getIsPopoverOpen(),
+    isInMenu: false,
   }
 
   const handleClose = () => {
     getOnPopoverDisplayChange()(false)
+  }
+
+  const handleOpen = () => {
+    getOnPopoverDisplayChange()(true)
   }
 
   useLayoutEffect(() => {
@@ -65,8 +71,10 @@ export const PopoverMenu: React.FC<PopoverMenuProps> = (props) => {
     if (childrenInMenuWhenOpen && !finalIsPopoverOpen)
       return
 
-    getOnPopoverDisplayChange()(finalIsPopoverOpen)
-  }, [isChildrenHovering, isMenuMaskHovering, menuMaskHoverRef.current])
+    console.log('finalIsPopoverOpen', isChildrenHovering, isMenuMaskHovering)
+
+    finalIsPopoverOpen ? handleOpen() : handleClose()
+  }, [isChildrenHovering, isMenuMaskHovering])
 
   const xPositionMenuStyleMap: Record<XPosition, {
     menuMask?: React.CSSProperties
@@ -100,9 +108,12 @@ export const PopoverMenu: React.FC<PopoverMenuProps> = (props) => {
   return (
     <Popover
       isOpen={getIsPopoverOpen()}
-      positions={[xPosition, yPosition]}
-      align='start'
+      positions={[yPosition]}
+      align={xPosition === 'left' ? 'start' : 'end'}
       onClickOutside={handleClose}
+      containerStyle={{
+        zIndex: '1',
+      }}
       content={() => (
         <div>
           <MenuMask
@@ -132,7 +143,7 @@ export const PopoverMenu: React.FC<PopoverMenuProps> = (props) => {
                   width: '100%',
                   flex: 1,
                 }}>
-                  {buildChildrenSlot(childrenState)}
+                  {buildChildrenSlot({ ...childrenState, isInMenu: true })}
                 </Children>
                 : null}
 

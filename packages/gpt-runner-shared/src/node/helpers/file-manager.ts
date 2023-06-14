@@ -25,6 +25,7 @@ export interface CleanDirParams {
   exclude?: (string | RegExp)[]
 }
 
+// current unused, just for smol-ai
 export class FileManager {
   static async readFile(params: ReadFileParams): Promise<string> {
     const { filename, directory } = params

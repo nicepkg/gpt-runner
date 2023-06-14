@@ -170,3 +170,30 @@ export function urlRemoveLocalhost(url: string | null | undefined): string {
     return url
   }
 }
+
+export function objectToQueryString(obj: Record<string, any>, prefix?: string): string {
+  const queryStringArray: string[] = []
+
+  for (const key in obj) {
+    if (hasOwn(obj, key)) {
+      const value = obj[key]
+      const encodedKey = encodeURIComponent(prefix ? `${prefix}[${key}]` : key)
+
+      if (Array.isArray(value)) {
+        for (const item of value) {
+          queryStringArray.push(
+            `${encodedKey}[]=${encodeURIComponent(item)}`,
+          )
+        }
+      }
+      else if (typeof value === 'object' && value !== null) {
+        queryStringArray.push(objectToQueryString(value, encodedKey))
+      }
+      else {
+        queryStringArray.push(`${encodedKey}=${encodeURIComponent(value)}`)
+      }
+    }
+  }
+
+  return queryStringArray.join('&')
+}

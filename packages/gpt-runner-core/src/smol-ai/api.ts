@@ -19,7 +19,7 @@ export class Api {
     userPrompt,
     openaiKey,
     histories = [],
-    model = 'gpt-3.5-turbo',
+    model = 'gpt-3.5-turbo-16k',
     maxTokens = 2000,
     temperature = 0,
   }: AskGPTParams) {

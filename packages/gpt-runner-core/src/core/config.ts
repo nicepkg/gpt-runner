@@ -39,6 +39,9 @@ export async function getGptFilesInfo(params: GetGptFilesInfoParams): Promise<Ge
     if (!respectGitignore)
       return false
 
+    if (filePath && filePath.match(/\/\.git\//))
+      return true
+
     const relativePath = PathUtils.relative(rootPath, filePath)
 
     return ig?.ignores(relativePath) ?? false

@@ -1,5 +1,5 @@
-import { dirname, resolve } from 'node:path'
 import fs from 'node:fs'
+import { PathUtils } from '@nicepkg/gpt-runner-shared/node'
 import type { LoadConfigResult, LoadConfigSource } from 'unconfig'
 import { createConfigLoader as createLoader } from 'unconfig'
 import type { UserConfig } from '@nicepkg/gpt-runner-shared/common'
@@ -28,12 +28,12 @@ export async function loadUserConfig<U extends IUserConfig = IUserConfig>(
     }
   }
 
-  const resolved = resolve(configOrPath)
+  const resolved = PathUtils.resolve(configOrPath)
 
   let isFile = false
   if (fs.existsSync(resolved) && fs.statSync(resolved).isFile()) {
     isFile = true
-    cwd = dirname(resolved)
+    cwd = PathUtils.dirname(resolved)
   }
 
   const loader = createLoader<U>({

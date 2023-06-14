@@ -11,7 +11,7 @@ export function userConfigWithDefault(userConfig?: Partial<UserConfig>): UserCon
     model: {
       type: 'openai',
       openaiKey: process.env.OPENAI_KEY!,
-      modelName: 'gpt-3.5-turbo',
+      modelName: 'gpt-3.5-turbo-16k',
       temperature: 0.9,
       maxTokens: 2000,
       ...userConfig?.model,

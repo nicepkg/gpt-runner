@@ -1,5 +1,7 @@
-import type { GptFileInfo, GptFileInfoTree, SingleChatMessage, SingleFileConfig, UserConfig } from './config'
+import type { FileInfoTree } from './common-file'
+import type { SingleChatMessage, SingleFileConfig, UserConfig } from './config'
 import type { ServerStorageName } from './enum'
+import type { GptFileInfo, GptFileInfoTree } from './gpt-file'
 
 export interface BaseResponse<T = any> {
   type: 'Success' | 'Fail'
@@ -23,7 +25,7 @@ export interface GetGptFilesReqParams {
   rootPath: string
 }
 
-export interface GptFilesTreeResData {
+export interface GetGptFilesTreeResData {
   filesInfo: GptFileInfo[]
   filesInfoTree: GptFileInfoTree
 }
@@ -68,3 +70,13 @@ export interface StorageClearReqParams {
 }
 
 export type StorageClearResData = null
+
+export interface GetCommonFilesReqParams {
+  rootPath: string
+  excludeExts?: string[]
+}
+
+export interface GetCommonFilesResData {
+  filesInfoTree: FileInfoTree
+  fileExts: string[]
+}

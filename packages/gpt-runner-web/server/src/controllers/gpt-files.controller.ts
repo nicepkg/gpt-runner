@@ -1,6 +1,6 @@
 import { getGptFilesInfo, loadUserConfig } from '@nicepkg/gpt-runner-core'
 import { PathUtils, sendFailResponse, sendSuccessResponse, verifyParamsByZod } from '@nicepkg/gpt-runner-shared/node'
-import type { GetGptFilesReqParams, GptFilesTreeResData } from '@nicepkg/gpt-runner-shared/common'
+import type { GetGptFilesReqParams, GetGptFilesTreeResData } from '@nicepkg/gpt-runner-shared/common'
 import { Debug, GetGptFilesReqParamsSchema, resetUserConfigUnsafeKey } from '@nicepkg/gpt-runner-shared/common'
 import type { ControllerConfig } from '../types'
 
@@ -41,7 +41,7 @@ export const gptFilesControllers: ControllerConfig = {
           data: {
             filesInfo,
             filesInfoTree,
-          } satisfies GptFilesTreeResData,
+          } satisfies GetGptFilesTreeResData,
         })
       },
     },

@@ -2,6 +2,7 @@ import type { CSSProperties, FC } from 'react'
 import { useCallback, useEffect, useState } from 'react'
 import { VSCodePanelTab, VSCodePanelView } from '@vscode/webview-ui-toolkit/react'
 import { ChatMessageStatus } from '@nicepkg/gpt-runner-shared/common'
+import { useWindowSize } from 'react-use'
 import { useIsMobile } from '../../hooks/use-is-mobile.hook'
 import { FlexRow } from '../../styles/global.styles'
 import { useScrollDown } from '../../hooks/use-scroll-down.hook'
@@ -9,9 +10,10 @@ import { useChatInstance } from '../../hooks/use-chat-instance.hook'
 import { useGlobalStore } from '../../store/zustand/global'
 import { getGlobalConfig } from '../../helpers/global-config'
 import { ErrorView } from '../../components/error-view'
-import { ChatPanelWrapper, SidebarWrapper, StyledVSCodePanels } from './chat.styles'
+import { ChatPanelWrapper, LeftSideWrapper, RightSideWrapper, SidebarWrapper, StyledVSCodePanels } from './chat.styles'
 import { ChatSidebar } from './chat-sidebar'
 import { ChatPanel } from './chat-panel'
+import FileTree from './file-tree'
 
 enum TabId {
   Explore = 'explore',
@@ -20,10 +22,12 @@ enum TabId {
 
 const Chat: FC = () => {
   const isMobile = useIsMobile()
+  const { width: windowWidth } = useWindowSize()
   const { activeChatId, updateActiveChatId } = useGlobalStore()
   const { chatInstance } = useChatInstance({ chatId: activeChatId })
   const [scrollDownRef, scrollDown, getScrollBottom] = useScrollDown()
   const [tabActiveId, setTabActiveId] = useState(TabId.Explore)
+  const showFileTreeOnRightSide = windowWidth >= 1000
 
   // when active chat id change, change tab active id
   useEffect(() => {
@@ -58,16 +62,34 @@ const Chat: FC = () => {
     </SidebarWrapper>
   }, [])
 
+  const renderFileTree = useCallback(() => {
+    if (!getGlobalConfig().rootPath)
+      return null
+
+    return <SidebarWrapper className='sidebar-wrapper'>
+      <FileTree rootPath={getGlobalConfig().rootPath}></FileTree>
+    </SidebarWrapper>
+  }, [])
+
   const renderChatPanel = useCallback(() => {
     return <ChatPanelWrapper>
       <ChatPanel
         scrollDownRef={scrollDownRef}
         chatId={activeChatId}
-        chatTreeView={renderSidebar()}
+        chatTreeView={isMobile ? renderSidebar() : null}
+        fileTreeView={!showFileTreeOnRightSide ? renderFileTree() : null}
         onChatIdChange={updateActiveChatId}
       ></ChatPanel>
     </ChatPanelWrapper >
-  }, [activeChatId, scrollDownRef, renderSidebar])
+  }, [
+    isMobile,
+    showFileTreeOnRightSide,
+    activeChatId,
+    scrollDownRef,
+    renderSidebar,
+    renderFileTree,
+    updateActiveChatId,
+  ])
 
   if (!getGlobalConfig().rootPath)
     return <ErrorView text="Please provide the root path!"></ErrorView>
@@ -102,8 +124,18 @@ const Chat: FC = () => {
   }
 
   return <FlexRow style={{ height: '100%' }}>
-    {renderSidebar()}
+    <LeftSideWrapper>
+      {renderSidebar()}
+    </LeftSideWrapper>
+
     {renderChatPanel()}
+
+    {showFileTreeOnRightSide
+      ? <RightSideWrapper>
+        {renderFileTree()}
+      </RightSideWrapper>
+      : null
+    }
   </FlexRow>
 }
 

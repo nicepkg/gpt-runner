@@ -1,5 +1,5 @@
-import type { FilterPattern, TreeItem } from './common'
-import type { ChatRole, GptFileTreeItemType } from './enum'
+import type { FilterPattern } from './common'
+import type { ChatRole } from './enum'
 
 export interface BaseModelConfig {
   /**
@@ -84,32 +84,6 @@ export interface UserConfig {
      */
   respectGitignore?: boolean
 }
-
-export interface GptPathBaseInfo {
-  id: string
-  parentId: string | null
-  path: string
-  name: string
-  type: GptFileTreeItemType
-}
-
-export interface GptFileInfo extends GptPathBaseInfo {
-  type: GptFileTreeItemType.File
-  content: string
-  singleFileConfig: SingleFileConfig
-}
-
-export interface GptFolderInfo extends GptPathBaseInfo {
-  type: GptFileTreeItemType.Folder
-}
-
-export interface GptChatInfo extends GptPathBaseInfo {
-  type: GptFileTreeItemType.Chat
-  createAt: number
-}
-
-export type GptFileInfoTreeItem = TreeItem<GptFolderInfo | GptFileInfo | GptChatInfo>
-export type GptFileInfoTree = GptFileInfoTreeItem[]
 
 export interface SingleChatMessage {
   name: ChatRole

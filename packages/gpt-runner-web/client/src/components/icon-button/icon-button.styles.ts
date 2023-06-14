@@ -2,19 +2,21 @@ import { css, styled } from 'styled-components'
 
 export const ButtonWrapper = styled.div<{ $hoverShowText?: boolean }>`
   display: flex;
+  flex-shrink: 0;
+  overflow: hidden;
 
   ${({ $hoverShowText }) => ($hoverShowText
   ? css`
-  & .icon-button-text {
-    opacity: 0;
-    width: 0px;
-    margin-left: 0px;
-  }
-  &:hover .icon-button-text {
-    opacity: 1;
-    width: auto;
-    margin-left: 0.5rem;
-  }
+    & .icon-button-text {
+      opacity: 0;
+      width: 0px;
+      margin-left: 0px;
+    }
+    &:hover .icon-button-text {
+      opacity: 1;
+      width: auto;
+      margin-left: 0.5rem;
+    }
   `
 : '')}
 

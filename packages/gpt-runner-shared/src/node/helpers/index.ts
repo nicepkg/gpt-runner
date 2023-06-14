@@ -1,5 +1,6 @@
 export * from './file-utils'
 export * from './get-cache-dir'
+export * from './get-common-file-tree'
 export * from './get-storage'
 export * from './network'
 export * from './path-utils'
