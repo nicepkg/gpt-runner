@@ -1,3 +1,5 @@
 export * from './config'
+export * from './count-tokens'
+export * from './get-common-file-tree'
 export * from './load-user-config'
 export * from './parser'

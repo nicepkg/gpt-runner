@@ -71,8 +71,6 @@ export const PopoverMenu: React.FC<PopoverMenuProps> = (props) => {
     if (childrenInMenuWhenOpen && !finalIsPopoverOpen)
       return
 
-    console.log('finalIsPopoverOpen', isChildrenHovering, isMenuMaskHovering)
-
     finalIsPopoverOpen ? handleOpen() : handleClose()
   }, [isChildrenHovering, isMenuMaskHovering])
 

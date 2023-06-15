@@ -41,6 +41,7 @@
     "tabpanel",
     "tagify",
     "tanstack",
+    "tiktoken",
     "unconfig",
     "uuidv",
     "zustand"

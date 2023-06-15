@@ -2,7 +2,7 @@ import type { Request, Response } from 'express'
 import type { ChatStreamReqParams, FailResponse, SuccessResponse } from '@nicepkg/gpt-runner-shared/common'
 import { ChatStreamReqParamsSchema, EnvConfig, buildFailResponse, buildSuccessResponse } from '@nicepkg/gpt-runner-shared/common'
 import { PathUtils, sendFailResponse, sendSuccessResponse, verifyParamsByZod } from '@nicepkg/gpt-runner-shared/node'
-import { loadUserConfig } from '@nicepkg/gpt-runner-core'
+import { createFileContext, loadUserConfig } from '@nicepkg/gpt-runner-core'
 import { chatgptChain } from '../services'
 import type { ControllerConfig } from './../types'
 
@@ -37,12 +37,14 @@ export const chatgptControllers: ControllerConfig = {
           prompt = '',
           systemPrompt = '',
           singleFileConfig,
+          contextFilePaths,
           rootPath,
         } = body
 
         let {
           // OpenaiBaseConfig
           openaiKey = '',
+          modelName,
           temperature = 0.7,
           maxTokens,
           topP,
@@ -74,11 +76,24 @@ export const chatgptControllers: ControllerConfig = {
           return res.write(`data: ${JSON.stringify(buildFailResponse(options))}\n\n`)
         }
 
+        let finalSystemPrompt = systemPrompt
+
+        // provide file context
+        if (contextFilePaths) {
+          const fileContext = await createFileContext({
+            rootPath: rootPath!,
+            filePaths: contextFilePaths,
+          })
+
+          finalSystemPrompt += `\n${fileContext}`
+        }
+
         try {
           const chain = await chatgptChain({
             messages,
-            systemPrompt,
+            systemPrompt: finalSystemPrompt,
             openaiKey,
+            modelName,
             temperature,
             maxTokens,
             topP,

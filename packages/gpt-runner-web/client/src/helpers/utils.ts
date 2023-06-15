@@ -45,3 +45,8 @@ export function getErrorMsg(error: any) {
   )
   return errorMessage
 }
+
+// format num to xxk
+export function formatNumWithK(num: number) {
+  return `${(num / 1000).toFixed(1)}k`
+}

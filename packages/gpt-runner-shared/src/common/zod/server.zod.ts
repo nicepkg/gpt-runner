@@ -8,6 +8,7 @@ export const ChatStreamReqParamsSchema = z.object({
   prompt: z.string(),
   systemPrompt: z.string().optional(),
   singleFileConfig: SingleFileConfigSchema.optional(),
+  contextFilePaths: z.array(z.string()).optional(),
   rootPath: z.string().optional(),
 }) satisfies z.ZodType<ChatStreamReqParams>
 

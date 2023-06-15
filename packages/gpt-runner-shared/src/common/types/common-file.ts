@@ -6,6 +6,7 @@ export interface FileBaseInfo {
   projectRelativePath: string
   fullPath: string
   name: string
+  tokenNum: number
 }
 
 export interface FileInfo extends FileBaseInfo {

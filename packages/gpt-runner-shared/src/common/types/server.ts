@@ -18,6 +18,7 @@ export interface ChatStreamReqParams {
   prompt: string
   systemPrompt?: string
   singleFileConfig?: SingleFileConfig
+  contextFilePaths?: string[]
   rootPath?: string
 }
 

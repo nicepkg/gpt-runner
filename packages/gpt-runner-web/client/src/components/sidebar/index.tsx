@@ -4,7 +4,7 @@ import { useDebounce } from 'react-use'
 import type { TreeProps } from '../tree'
 import { Tree } from '../tree'
 import type { TreeItemBaseStateOtherInfo, TreeItemProps } from '../tree-item'
-import { SidebarHeader, SidebarSearch, SidebarSearchRightWrapper, SidebarSearchWrapper, SidebarWrapper } from './sidebar.styles'
+import { SidebarHeader, SidebarSearch, SidebarSearchRightWrapper, SidebarSearchWrapper, SidebarTreeWrapper, SidebarWrapper } from './sidebar.styles'
 
 export interface SidebarProps<OtherInfo extends TreeItemBaseStateOtherInfo = TreeItemBaseStateOtherInfo> {
   defaultSearchKeyword?: string
@@ -80,9 +80,11 @@ export function Sidebar<OtherInfo extends TreeItemBaseStateOtherInfo = TreeItemB
         {buildSearchRightSlot?.()}
       </SidebarSearchRightWrapper>
     </SidebarSearchWrapper>
-    <Tree
-      {...tree}
-      items={finalItems}
-    />
+    <SidebarTreeWrapper>
+      <Tree
+        {...tree}
+        items={finalItems}
+      />
+    </SidebarTreeWrapper>
   </SidebarWrapper>
 }

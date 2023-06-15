@@ -7,6 +7,7 @@ import { fetchChatgptStream } from '../../../networks/chatgpt'
 import { fetchUserConfig } from '../../../networks/config'
 import { getGlobalConfig } from '../../../helpers/global-config'
 import type { SidebarTreeItem, SidebarTreeSlice } from './sidebar-tree.slice'
+import type { FileTreeSlice } from './file-tree.slice'
 
 export enum GenerateAnswerType {
   Generate = 'generate',
@@ -49,7 +50,7 @@ function getInitialState() {
 const chatIdAbortCtrlMap = new Map<string, AbortController>()
 
 export const createChatSlice: StateCreator<
-  ChatSlice & SidebarTreeSlice,
+  ChatSlice & SidebarTreeSlice & FileTreeSlice,
   [],
   [],
   ChatSlice
@@ -235,6 +236,7 @@ export const createChatSlice: StateCreator<
       prompt: sendInputtingPrompt,
       systemPrompt,
       singleFileConfig: sendSingleFileConfig,
+      contextFilePaths: state.checkedFilePaths,
       rootPath: getGlobalConfig().rootPath,
       onError(e) {
         console.error('fetchChatgptStream error:', e)

@@ -1,4 +1,4 @@
-import { type FC, useCallback, useEffect, useState } from 'react'
+import { type FC, useCallback, useEffect, useRef, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { type FileInfoTreeItem, travelTree, travelTreeDeepFirst } from '@nicepkg/gpt-runner-shared/common'
 import clsx from 'clsx'
@@ -10,6 +10,9 @@ import { fetchCommonFilesTree } from '../../networks/common-files'
 import type { TreeItemBaseState, TreeItemProps, TreeItemState } from '../../components/tree-item'
 import { Icon } from '../../components/icon'
 import { IconButton } from '../../components/icon-button'
+import { formatNumWithK } from '../../helpers/utils'
+import { useGlobalStore } from '../../store/zustand/global'
+import { FileTreeItemRightWrapper } from './chat.styles'
 
 export interface FileTreeProps {
   rootPath: string
@@ -23,8 +26,43 @@ type FileSidebarTreeItem = TreeItemBaseState<FileInfoSidebarTreeItem>
 
 const FileTree: FC<FileTreeProps> = (props: FileTreeProps) => {
   const { rootPath } = props
-  const [filesSidebarTree, setFilesSidebarTree] = useState<TreeItemBaseState<FileInfoSidebarTreeItem>[]>([])
-  const [checkedFileFullPaths, setCheckedFileFullPaths] = useState<string[]>([])
+  const [filesTree, _setFilesTree] = useState<FileSidebarTreeItem[]>([])
+  const fullPathFileMapRef = useRef<Record<string, FileSidebarTreeItem>>({})
+  const {
+    expendedFilePaths,
+    updateExpendedFilePaths,
+    checkedFilePaths,
+    updateCheckedFilePaths,
+  } = useGlobalStore()
+
+  const updateMap = useCallback((tree: FileSidebarTreeItem[]) => {
+    const result: Record<string, FileSidebarTreeItem> = {}
+    travelTree(tree, (item) => {
+      if (item.otherInfo)
+        result[item.otherInfo.fullPath] = item
+    })
+    fullPathFileMapRef.current = result
+  }, [])
+
+  const setFilesTree = useCallback((tree: FileSidebarTreeItem[], isUpdateFullPathFileMap = false) => {
+    if (isUpdateFullPathFileMap)
+      updateMap(tree)
+
+    _setFilesTree(tree)
+  }, [_setFilesTree, updateMap])
+
+  const updateFileItem = useCallback((fileItemOrFullPath: FileSidebarTreeItem | string, updater: (fileItem: FileSidebarTreeItem) => void) => {
+    const fullPath = typeof fileItemOrFullPath === 'string' ? fileItemOrFullPath : fileItemOrFullPath.otherInfo?.fullPath
+    if (!fullPath)
+      return
+
+    const fileItem = fullPathFileMapRef.current[fullPath]
+    if (!fileItem)
+      return
+
+    updater(fileItem)
+    setFilesTree([...filesTree])
+  }, [filesTree, setFilesTree])
 
   const { data: fetchCommonFilesTreeRes } = useQuery({
     queryKey: ['file-tree', rootPath],
@@ -34,40 +72,33 @@ const FileTree: FC<FileTreeProps> = (props: FileTreeProps) => {
     }),
   })
 
-  // const updateFileTreeItem = useCallback((fullPath: string, updater: (item: FileSidebarTreeItem) => FileSidebarTreeItem) => {
-  //   const finalTree = travelTree(filesSidebarTree, (item) => {
-  //     if (item.otherInfo?.fullPath === fullPath)
-  //       return updater(item)
-
-  //     return item
-  //   })
-
-  //   setFilesSidebarTree(finalTree)
-  // }, [filesSidebarTree, setFilesSidebarTree])
-
   // sync checked state
   useEffect(() => {
-    const finalFilesSidebarTree = travelTreeDeepFirst(filesSidebarTree, (item) => {
-      if (item.otherInfo && checkedFileFullPaths.includes(item.otherInfo.fullPath)) {
-        return {
-          ...item,
-          otherInfo: {
-            ...item.otherInfo,
-            checked: true,
-          },
-        } satisfies FileSidebarTreeItem
-      }
-      return {
-        ...item,
-        otherInfo: {
-          ...item.otherInfo!,
-          checked: item.isLeaf ? false : !!item.children?.every(child => child.otherInfo?.checked),
-        },
-      } satisfies FileSidebarTreeItem
+    if (!Object.values(fullPathFileMapRef.current).length)
+      return
+
+    // check all path in checkedFilePaths
+    checkedFilePaths.forEach((fullPath) => {
+      const file = fullPathFileMapRef.current[fullPath]
+      file.otherInfo!.checked = true
     })
 
-    setFilesSidebarTree(finalFilesSidebarTree)
-  }, [checkedFileFullPaths, setFilesSidebarTree])
+    // sync parent path checked state
+    travelTreeDeepFirst(filesTree, (item) => {
+      if (item.isLeaf)
+        return
+
+      const children = item?.children || []
+
+      if (!children.length)
+        return
+
+      const childrenAllIsChecked = children.every(child => child.otherInfo?.checked)
+      item.otherInfo!.checked = childrenAllIsChecked
+    })
+
+    setFilesTree([...filesTree])
+  }, [checkedFilePaths, fullPathFileMapRef.current, setFilesTree])
 
   useEffect(() => {
     const filesInfoTree = fetchCommonFilesTreeRes?.data?.filesInfoTree
@@ -75,15 +106,18 @@ const FileTree: FC<FileTreeProps> = (props: FileTreeProps) => {
       return
 
     const finalFilesSidebarTree = travelTree(filesInfoTree, (item) => {
+      const oldIsExpanded = expendedFilePaths.includes(item.fullPath)
+
       const result: FileSidebarTreeItem = {
         id: item.id,
         name: item.name,
         path: item.fullPath,
         isLeaf: item.isFile,
-        otherInfo: { ...item, checked: false },
-
-        // TODO: keep old state
-        isExpanded: false,
+        otherInfo: {
+          ...item,
+          checked: false,
+        },
+        isExpanded: oldIsExpanded,
       }
 
       return result
@@ -91,8 +125,8 @@ const FileTree: FC<FileTreeProps> = (props: FileTreeProps) => {
 
     console.log('finalFilesSidebarTree', finalFilesSidebarTree)
 
-    setFilesSidebarTree(finalFilesSidebarTree)
-  }, [fetchCommonFilesTreeRes, setFilesSidebarTree])
+    setFilesTree(finalFilesSidebarTree, true)
+  }, [fetchCommonFilesTreeRes, setFilesTree])
 
   const renderTreeItemLeftSlot = (props: TreeItemState<FileInfoSidebarTreeItem>) => {
     const { isLeaf, isExpanded, otherInfo } = props
@@ -102,6 +136,54 @@ const FileTree: FC<FileTreeProps> = (props: FileTreeProps) => {
         return 'codicon-file'
 
       return isExpanded ? 'codicon-folder-opened' : 'codicon-folder'
+    }
+
+    const handleCheckedChange = (checked: boolean) => {
+      updateFileItem(props, (fileItem) => {
+        fileItem.otherInfo!.checked = checked
+      })
+
+      updateCheckedFilePaths((preState) => {
+        const fullPath = props.otherInfo?.fullPath
+
+        if (!fullPath)
+          return preState
+
+        let finalPaths: string[] = []
+        const isLeaf = fullPathFileMapRef.current[fullPath].isLeaf
+        const children = fullPathFileMapRef.current[fullPath]?.children || []
+
+        if (!checked) {
+          const shouldRemovePaths: string[] = []
+
+          if (isLeaf)
+            shouldRemovePaths.push(fullPath)
+
+          if (children.every(child => child.otherInfo!.checked)) {
+            travelTree(children, (child) => {
+              child.otherInfo!.checked = false
+              child.isLeaf && shouldRemovePaths.push(child.otherInfo!.fullPath)
+            })
+          }
+
+          finalPaths = preState.filter(item => !shouldRemovePaths.includes(item))
+        }
+        else {
+          const showAddPaths: string[] = []
+
+          if (isLeaf)
+            showAddPaths.push(fullPath)
+
+          travelTree(children, (child) => {
+            child.otherInfo!.checked = true
+            child.isLeaf && showAddPaths.push(child.otherInfo!.fullPath)
+          })
+
+          finalPaths = [...new Set([...preState, ...showAddPaths])]
+        }
+
+        return finalPaths
+      })
     }
 
     return <>
@@ -115,19 +197,10 @@ const FileTree: FC<FileTreeProps> = (props: FileTreeProps) => {
         }}
         checked={otherInfo?.checked}
         onChange={(e) => {
-          if (!otherInfo)
-            return
-
           const checked = (e.target as HTMLInputElement).checked
-          otherInfo.checked = checked
-
-          setCheckedFileFullPaths((preState) => {
-            if (!otherInfo.checked)
-              return preState.filter(item => item !== otherInfo.fullPath)
-
-            return [...preState, otherInfo.fullPath]
-          })
-        }}></VSCodeCheckbox>
+          handleCheckedChange(checked)
+        }}
+      ></VSCodeCheckbox>
 
       {!isLeaf && <Icon style={{
         marginRight: '0.25rem',
@@ -140,21 +213,41 @@ const FileTree: FC<FileTreeProps> = (props: FileTreeProps) => {
     </>
   }
 
-  const handleExpandChange = useCallback((props: TreeItemState<FileInfoSidebarTreeItem>) => {
-    const { id, isExpanded } = props
-    const newFilesSidebarTree = travelTree(filesSidebarTree, (item) => {
-      if (item.id === id) {
-        return {
-          ...item,
-          isExpanded,
-        }
-      }
+  const renderTreeItemRightSlot = (props: TreeItemState<FileInfoSidebarTreeItem>) => {
+    const { otherInfo } = props
 
-      return item
+    if (!otherInfo)
+      return null
+
+    return <FileTreeItemRightWrapper>
+      {formatNumWithK(otherInfo.tokenNum)}
+      <Icon
+        style={{
+          marginLeft: '0.25rem',
+          fontSize: '1.2rem',
+        }}
+        className='codicon-symbol-string'
+      ></Icon >
+    </FileTreeItemRightWrapper>
+  }
+
+  const handleExpandChange = useCallback((props: TreeItemState<FileInfoSidebarTreeItem>) => {
+    const { isExpanded, otherInfo } = props
+    const fullPath = otherInfo?.fullPath
+
+    if (!fullPath)
+      return
+
+    const file = fullPathFileMapRef.current[fullPath]
+    file.isExpanded = isExpanded
+
+    updateExpendedFilePaths((preState) => {
+      const finalPaths = isExpanded ? [...preState, fullPath] : preState.filter(item => item !== fullPath)
+      return finalPaths
     })
 
-    setFilesSidebarTree(newFilesSidebarTree)
-  }, [filesSidebarTree])
+    setFilesTree([...filesTree])
+  }, [filesTree, setFilesTree])
 
   const buildSearchRightSlot = () => {
     return <IconButton
@@ -180,8 +273,9 @@ const FileTree: FC<FileTreeProps> = (props: FileTreeProps) => {
   const sidebar: SidebarProps<FileInfoSidebarTreeItem> = {
     placeholder: 'Search file...',
     tree: {
-      items: filesSidebarTree,
+      items: filesTree,
       renderTreeItemLeftSlot,
+      renderTreeItemRightSlot,
       onTreeItemCollapse: handleExpandChange,
       onTreeItemExpand: handleExpandChange,
     },

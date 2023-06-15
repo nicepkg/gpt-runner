@@ -1,5 +1,6 @@
-import { PathUtils, getCommonFileTree, sendFailResponse, sendSuccessResponse, verifyParamsByZod } from '@nicepkg/gpt-runner-shared/node'
+import { PathUtils, sendFailResponse, sendSuccessResponse, verifyParamsByZod } from '@nicepkg/gpt-runner-shared/node'
 import { type GetCommonFilesReqParams, GetCommonFilesReqParamsSchema, type GetCommonFilesResData } from '@nicepkg/gpt-runner-shared/common'
+import { getCommonFileTree } from '@nicepkg/gpt-runner-core'
 import type { ControllerConfig } from '../types'
 
 export const commonFilesControllers: ControllerConfig = {
@@ -74,6 +75,30 @@ export const commonFilesControllers: ControllerConfig = {
           '.swt',
           '.air',
           '.ane',
+          '.ttf',
+          '.woff',
+          '.woff2',
+          '.eot',
+          '.otf',
+          '.psd',
+          '.ai',
+          '.sketch',
+          '.fig',
+          '.xd',
+          '.blend',
+          '.fbx',
+          '.obj',
+          '.mtl',
+          '.stl',
+          '.3ds',
+          '.dae',
+          '.max',
+          '.ma',
+          '.mb',
+          '.lwo',
+          '.lws',
+          '.lxo',
+          '.c4d',
         ]
 
         const {

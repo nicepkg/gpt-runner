@@ -54,9 +54,19 @@ export const TreeItemRowRightSlot = styled.div`
 `
 
 export const Children = styled.div`
+  position: relative;
   display: flex;
   flex-direction: column;
   padding-left: var(--type-ramp-plus1-font-size);
-  border-left:  1px solid var(--panel-view-border);
   border-radius: var(--corner-radius);
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    opacity: 0.5;
+    border-left:  1px solid var(--panel-view-border);
+  }
 `

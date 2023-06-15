@@ -1,9 +1,10 @@
+import type { FileInfoTreeItem } from '@nicepkg/gpt-runner-shared/common'
+import { travelTreeDeepFirst } from '@nicepkg/gpt-runner-shared/common'
 import type { Ignore } from 'ignore'
 import ignore from 'ignore'
-import type { FileInfoTreeItem } from '../../common/types'
-import { PathUtils } from './path-utils'
-import type { TravelFilesByFilterPatternParams } from './file-utils'
-import { FileUtils } from './file-utils'
+import type { TravelFilesByFilterPatternParams } from '@nicepkg/gpt-runner-shared/node'
+import { FileUtils, PathUtils } from '@nicepkg/gpt-runner-shared/node'
+import { countFileTokens } from './count-tokens'
 
 interface CreateFileTreeParams {
   rootPath: string
@@ -34,6 +35,7 @@ function createFileTree(params: CreateFileTreeParams): CreateFileTreeReturns {
 
       if (!pathMap.get(currentPath)) {
         const ext = isFile ? part.split('.').length > 1 ? part.split('.').pop() : '' : undefined
+        const tokenNum = isFile ? countFileTokens(currentPath) : 0
         const item = {
           id: currentPath,
           parentId: currentParentId || null,
@@ -42,6 +44,7 @@ function createFileTree(params: CreateFileTreeParams): CreateFileTreeReturns {
           name: part,
           isFile,
           ext,
+          tokenNum,
           children: [],
         } as FileInfoTreeItem
 
@@ -76,17 +79,21 @@ function createFileTree(params: CreateFileTreeParams): CreateFileTreeReturns {
 
       return a.isFile ? 1 : -1
     })
-
-    treeItem.forEach((item) => {
-      if (item.children)
-        sortTree(item.children)
-    })
+    return treeItem
   }
 
-  sortTree(tree)
+  let finalTree = travelTreeDeepFirst(tree, (item) => {
+    if (!item.isFile && item.children) {
+      item.children = sortTree(item.children)
+      item.tokenNum = item.children.reduce((sum, child) => sum + child.tokenNum, 0)
+    }
+    return item
+  })
+
+  finalTree = sortTree(finalTree)
 
   return {
-    tree,
+    tree: finalTree,
     exts: Array.from(exts),
   }
 }
@@ -136,4 +143,39 @@ export async function getCommonFileTree(params: GetCommonFileTreeParams): Promis
   const { tree, exts } = createFileTree({ rootPath, filePaths })
 
   return { tree, exts }
+}
+
+export interface CreateFileContextParams {
+  rootPath: string
+  filePaths: string[]
+}
+
+export async function createFileContext(params: CreateFileContextParams) {
+  const { rootPath, filePaths } = params
+
+  const baseTips = `Please try to answer according to part of the file path and code of the user's current development project.
+The file path and code will be separated by five double quotation marks.
+Here is the file path and code of the user's current development project:
+`
+
+  let tips = baseTips
+
+  for (const filePath of filePaths) {
+    const relativePath = PathUtils.relative(rootPath, filePath)
+    const content = await FileUtils.readFile({ filePath })
+
+    const fileTips = `"""""
+filePath:
+${relativePath}
+-----
+fileContent:
+${content}
+"""""
+
+`
+
+    tips += fileTips
+  }
+
+  return tips
 }

@@ -22,6 +22,7 @@ export async function chatgptChain(params: ChatgptChainParams) {
 
     // OpenaiBaseConfig
     openaiKey,
+    modelName,
     temperature,
     maxTokens,
     topP,
@@ -33,6 +34,7 @@ export async function chatgptChain(params: ChatgptChainParams) {
     streaming: true,
     maxRetries: 1,
     openAIApiKey: openaiKey,
+    modelName,
     temperature,
     maxTokens,
     topP,

@@ -56,7 +56,9 @@ export const ChatPanelPopoverTreeWrapper = styled.div`
     max-width: 500px;
 
     .tree-item__children {
-      border-left: none;
+      &::before {
+        display: none;
+      }
     }
   }
 `
@@ -73,4 +75,11 @@ export const RightSideWrapper = styled.div`
   min-width: 200px;
   border-left: 1px solid var(--panel-view-border);
   flex: 1;
+`
+
+export const FileTreeItemRightWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  font-size: var(--type-ramp-base-font-size);
+  color: var(--panel-view-border);
 `
