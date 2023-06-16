@@ -10,7 +10,8 @@ import { useChatInstance } from '../../hooks/use-chat-instance.hook'
 import { useGlobalStore } from '../../store/zustand/global'
 import { getGlobalConfig } from '../../helpers/global-config'
 import { ErrorView } from '../../components/error-view'
-import { ChatPanelWrapper, LeftSideWrapper, RightSideWrapper, SidebarWrapper, StyledVSCodePanels } from './chat.styles'
+import { DragResizeView } from '../../components/drag-resize-view'
+import { SidebarWrapper, StyledVSCodePanels } from './chat.styles'
 import { ChatSidebar } from './chat-sidebar'
 import { ChatPanel } from './chat-panel'
 import FileTree from './file-tree'
@@ -22,7 +23,7 @@ enum TabId {
 
 const Chat: FC = () => {
   const isMobile = useIsMobile()
-  const { width: windowWidth } = useWindowSize()
+  const { width: windowWidth, height: windowHeight } = useWindowSize()
   const { activeChatId, updateActiveChatId } = useGlobalStore()
   const { chatInstance } = useChatInstance({ chatId: activeChatId })
   const [scrollDownRef, scrollDown, getScrollBottom] = useScrollDown()
@@ -72,15 +73,13 @@ const Chat: FC = () => {
   }, [])
 
   const renderChatPanel = useCallback(() => {
-    return <ChatPanelWrapper>
-      <ChatPanel
-        scrollDownRef={scrollDownRef}
-        chatId={activeChatId}
-        chatTreeView={isMobile ? renderSidebar() : null}
-        fileTreeView={!showFileTreeOnRightSide ? renderFileTree() : null}
-        onChatIdChange={updateActiveChatId}
-      ></ChatPanel>
-    </ChatPanelWrapper >
+    return <ChatPanel
+      scrollDownRef={scrollDownRef}
+      chatId={activeChatId}
+      chatTreeView={isMobile ? renderSidebar() : null}
+      fileTreeView={!showFileTreeOnRightSide ? renderFileTree() : null}
+      onChatIdChange={updateActiveChatId}
+    ></ChatPanel>
   }, [
     isMobile,
     showFileTreeOnRightSide,
@@ -124,16 +123,32 @@ const Chat: FC = () => {
   }
 
   return <FlexRow style={{ height: '100%' }}>
-    <LeftSideWrapper>
+    <DragResizeView
+      initWidth={300}
+      initHeight={windowHeight}
+      dragDirectionConfigs={[
+        {
+          direction: 'right',
+          boundary: [-100, 300],
+        },
+      ]}>
       {renderSidebar()}
-    </LeftSideWrapper>
+    </DragResizeView>
 
     {renderChatPanel()}
 
     {showFileTreeOnRightSide
-      ? <RightSideWrapper>
+      ? <DragResizeView
+        initWidth={300}
+        initHeight={windowHeight}
+        dragDirectionConfigs={[
+          {
+            direction: 'left',
+            boundary: [-300, 100],
+          },
+        ]}>
         {renderFileTree()}
-      </RightSideWrapper>
+      </DragResizeView>
       : null
     }
   </FlexRow>

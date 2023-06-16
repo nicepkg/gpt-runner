@@ -14,6 +14,7 @@ export interface BuildMessageToolbarState extends SingleChatMessage {
 export interface MessageItemProps extends SingleChatMessage, Partial<MessageCodeBlockProps> {
   status: ChatMessageStatus
   showToolbar?: 'always' | 'hover' | 'never'
+  showAvatar?: boolean
   style?: React.CSSProperties
   buildMessageToolbar?: (state: BuildMessageToolbarState) => React.ReactNode
 }
@@ -24,6 +25,7 @@ export const MessageItem: FC<MessageItemProps> = (props) => {
     text,
     status,
     style,
+    showAvatar = false,
     showToolbar = 'hover',
     buildCodeToolbar,
     buildMessageToolbar,
@@ -54,7 +56,7 @@ export const MessageItem: FC<MessageItemProps> = (props) => {
 
   return (
     <MsgWrapper style={style} $isMe={name === ChatRole.User}>
-      <MsgAvatarWrapper $isMe={name === ChatRole.User}>
+      <MsgAvatarWrapper $showAvatar={showAvatar} $isMe={name === ChatRole.User}>
         <Icon className={clsx(name === ChatRole.User ? 'codicon-account' : 'codicon-github')} />
       </MsgAvatarWrapper>
       <MsgContentWrapper ref={hoverContentRef} $isMe={name === ChatRole.User}>

@@ -4,7 +4,7 @@ import { styled } from 'styled-components'
 export const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
-  max-height: 250px;
+  height: 100%;
   width: 100%;
   flex-shrink: 0;
   padding: 0.5rem;
@@ -21,8 +21,10 @@ export const ToolbarWrapper = styled.div`
 export const StyledVSCodeTextArea = styled(VSCodeTextArea)`
   margin-top: 0.5rem;
   overflow: hidden;
+  height: 100%;
 
   &::part(control) {
     border-radius: 0.25rem;
+    height: 100%;
   }
 `

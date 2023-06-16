@@ -8,8 +8,8 @@ export const MsgWrapper = styled.div<{ $isMe: boolean }>`
   margin-bottom: 1rem;
 `
 
-export const MsgAvatarWrapper = styled.div<{ $isMe: boolean }>`
-  display: none;
+export const MsgAvatarWrapper = styled.div<{ $isMe: boolean; $showAvatar: boolean }>`
+  display: ${({ $showAvatar }) => $showAvatar ? 'flex' : 'none'};
   width: 2rem;
   height: 2rem;
   justify-content: center;
@@ -18,10 +18,6 @@ export const MsgAvatarWrapper = styled.div<{ $isMe: boolean }>`
   margin: 0 0.5rem;
   border: 1px solid var(--panel-view-border);
   align-self: flex-start;
-
-  ${withBreakpoint('lg', css`
-    display: flex;
-  `)}
 `
 
 export const MsgContentWrapper = styled.div<{ $isMe: boolean }>`

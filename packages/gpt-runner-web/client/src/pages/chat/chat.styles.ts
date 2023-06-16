@@ -64,17 +64,9 @@ export const ChatPanelPopoverTreeWrapper = styled.div`
 `
 
 export const LeftSideWrapper = styled.div`
-  max-width: 300px;
-  min-width: 200px;
-  border-right: 1px solid var(--panel-view-border);
-  flex: 1;
 `
 
 export const RightSideWrapper = styled.div`
-  max-width: 300px;
-  min-width: 200px;
-  border-left: 1px solid var(--panel-view-border);
-  flex: 1;
 `
 
 export const FileTreeItemRightWrapper = styled.div`
@@ -82,4 +74,16 @@ export const FileTreeItemRightWrapper = styled.div`
   align-items: center;
   font-size: var(--type-ramp-base-font-size);
   color: var(--panel-view-border);
+`
+
+export const FileTreeSidebarUnderSearchWrapper = styled.div`
+  font-size: var(--type-ramp-base-font-size);
+  margin: 0.5rem 0;
+`
+
+export const FileTreeSidebarHighlight = styled.span`
+  color: var(--button-primary-background);
+  padding: 0 0.25rem;
+  white-space: nowrap;
+  margin: 0 0.25rem;
 `

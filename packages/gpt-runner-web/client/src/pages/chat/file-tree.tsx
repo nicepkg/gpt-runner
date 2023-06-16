@@ -2,7 +2,7 @@ import { type FC, useCallback, useEffect, useRef, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { type FileInfoTreeItem, travelTree, travelTreeDeepFirst } from '@nicepkg/gpt-runner-shared/common'
 import clsx from 'clsx'
-import { VSCodeCheckbox } from '@vscode/webview-ui-toolkit/react'
+import { VSCodeCheckbox, VSCodeLink } from '@vscode/webview-ui-toolkit/react'
 import type { SidebarProps } from '../../components/sidebar'
 import { Sidebar } from '../../components/sidebar'
 import { ErrorView } from '../../components/error-view'
@@ -12,7 +12,7 @@ import { Icon } from '../../components/icon'
 import { IconButton } from '../../components/icon-button'
 import { formatNumWithK } from '../../helpers/utils'
 import { useGlobalStore } from '../../store/zustand/global'
-import { FileTreeItemRightWrapper } from './chat.styles'
+import { FileTreeItemRightWrapper, FileTreeSidebarHighlight, FileTreeSidebarUnderSearchWrapper } from './chat.styles'
 
 export interface FileTreeProps {
   rootPath: string
@@ -261,6 +261,41 @@ const FileTree: FC<FileTreeProps> = (props: FileTreeProps) => {
     ></IconButton>
   }
 
+  const buildUnderSearchSlot = () => {
+    if (!Object.keys(fullPathFileMapRef.current).length)
+      return null
+
+    const totalTokenNum = checkedFilePaths.reduce((pre, cur) => {
+      const file = fullPathFileMapRef.current[cur]
+      return pre + (file.otherInfo?.tokenNum ?? 0)
+    }, 0)
+
+    const resetAllChecked = () => {
+      updateCheckedFilePaths((preState) => {
+        preState.forEach((item) => {
+          const file = fullPathFileMapRef.current[item]
+          file.otherInfo!.checked = false
+          return item
+        })
+
+        return []
+      })
+    }
+
+    return <FileTreeSidebarUnderSearchWrapper>
+      <FileTreeSidebarHighlight>{checkedFilePaths.length}</FileTreeSidebarHighlight>
+      files.
+      <FileTreeSidebarHighlight>{formatNumWithK(totalTokenNum)}</FileTreeSidebarHighlight>
+      tokens.
+      <VSCodeLink style={{
+        display: 'inline-block',
+        marginLeft: '0.25rem',
+      }} onClick={resetAllChecked}>
+        clean
+      </VSCodeLink>
+    </FileTreeSidebarUnderSearchWrapper>
+  }
+
   const sortTreeItems = useCallback((items: TreeItemProps<FileInfoSidebarTreeItem>[]) => {
     return items?.sort((a, b) => {
       if (a.otherInfo?.isFile === b.otherInfo?.isFile)
@@ -280,6 +315,7 @@ const FileTree: FC<FileTreeProps> = (props: FileTreeProps) => {
       onTreeItemExpand: handleExpandChange,
     },
     buildSearchRightSlot,
+    buildUnderSearchSlot,
     sortTreeItems,
   }
 

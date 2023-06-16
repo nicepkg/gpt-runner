@@ -23,6 +23,10 @@ export const SidebarSearchWrapper = styled.div`
   height: var(--my-input-height);
 `
 
+export const SidebarUnderSearchWrapper = styled.div`
+  font-size: var(--type-ramp-base-font-size);
+`
+
 export const SidebarSearch = styled(VSCodeTextField)`
   flex: 1;
 

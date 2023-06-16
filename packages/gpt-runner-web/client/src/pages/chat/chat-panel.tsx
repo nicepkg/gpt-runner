@@ -15,7 +15,9 @@ import { emitter } from '../../helpers/emitter'
 import { getGlobalConfig } from '../../helpers/global-config'
 import { PopoverMenu } from '../../components/popover-menu'
 import { useKeyboard } from '../../hooks/use-keyboard.hook'
-import { ChatPanelPopoverTreeWrapper } from './chat.styles'
+import { DragResizeView } from '../../components/drag-resize-view'
+import { useElementSizeRealTime } from '../../hooks/use-element-size-real-time'
+import { ChatPanelPopoverTreeWrapper, ChatPanelWrapper } from './chat.styles'
 
 export interface ChatPanelProps {
   scrollDownRef: RefObject<any>
@@ -31,6 +33,7 @@ export const ChatPanel: FC<ChatPanelProps> = (props) => {
   const { chatInstance, updateCurrentChatInstance, generateCurrentChatAnswer, regenerateCurrentLastChatAnswer, stopCurrentGeneratingChatAnswer } = useChatInstance({ chatId })
   const status = chatInstance?.status ?? ChatMessageStatus.Success
   const [gptFileTreeItem, setGptFileTreeItem] = useState<GptFileTreeItem>()
+  const [chatPanelRef, { width: chatPanelWidth }] = useElementSizeRealTime<HTMLDivElement>()
 
   useEffect(() => {
     const gptFileTreeItem = getGptFileTreeItemFromChatId(chatId)
@@ -230,6 +233,7 @@ export const ChatPanel: FC<ChatPanelProps> = (props) => {
         ...message,
         status: isLast ? status : ChatMessageStatus.Success,
         showToolbar: isLastTwo ? 'always' : 'hover',
+        showAvatar: chatPanelWidth > 600,
         buildCodeToolbar: status === ChatMessageStatus.Pending ? undefined : buildCodeToolbar,
         buildMessageToolbar,
       } satisfies MessageItemProps
@@ -276,8 +280,7 @@ export const ChatPanel: FC<ChatPanelProps> = (props) => {
             style={{
               paddingLeft: '0.5rem',
             }}
-            text='Chat Tree'
-            showText={false}
+            text='Chats'
             iconClassName='codicon-list-tree'
             hoverShowText={!isHovering}
           ></IconButton>
@@ -291,8 +294,6 @@ export const ChatPanel: FC<ChatPanelProps> = (props) => {
 
       {/* file tree */}
       {fileTreeView && <PopoverMenu
-        // isPopoverOpen
-        // onPopoverDisplayChange={() => { }}
         childrenInMenuWhenOpen={false}
         menuStyle={{
           marginLeft: '1rem',
@@ -303,8 +304,7 @@ export const ChatPanel: FC<ChatPanelProps> = (props) => {
             style={{
               paddingLeft: '0.5rem',
             }}
-            text='File Tree'
-            showText={false}
+            text='Files'
             iconClassName='codicon-file'
             hoverShowText={!isHovering}
           ></IconButton>
@@ -318,7 +318,6 @@ export const ChatPanel: FC<ChatPanelProps> = (props) => {
 
       <IconButton
         text='Clean'
-        showText={false}
         iconClassName='codicon-trash'
         onClick={handleClearAll}
         style={{
@@ -362,14 +361,24 @@ export const ChatPanel: FC<ChatPanelProps> = (props) => {
   if (!chatId)
     return <ErrorView text="Please select a chat or new a chat!"></ErrorView>
 
-  return <>
+  return <ChatPanelWrapper ref={chatPanelRef}>
     <ChatMessagePanel ref={scrollDownRef} {...messagePanelProps}></ChatMessagePanel>
-    <ChatMessageInput
-      value={chatInstance?.inputtingPrompt || ''}
-      onChange={handleInputChange}
-      toolbarSlot={renderInputToolbar()}
-    ></ChatMessageInput>
-  </>
+    <DragResizeView
+      initWidth={chatPanelWidth}
+      initHeight={250}
+      dragDirectionConfigs={[
+        {
+          direction: 'top',
+          boundary: [-200, 50],
+        },
+      ]}>
+      <ChatMessageInput
+        value={chatInstance?.inputtingPrompt || ''}
+        onChange={handleInputChange}
+        toolbarSlot={renderInputToolbar()}
+      ></ChatMessageInput>
+    </DragResizeView>
+  </ChatPanelWrapper>
 }
 
 ChatPanel.displayName = 'ChatPanel'

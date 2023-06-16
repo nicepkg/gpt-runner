@@ -4,7 +4,7 @@ import { useDebounce } from 'react-use'
 import type { TreeProps } from '../tree'
 import { Tree } from '../tree'
 import type { TreeItemBaseStateOtherInfo, TreeItemProps } from '../tree-item'
-import { SidebarHeader, SidebarSearch, SidebarSearchRightWrapper, SidebarSearchWrapper, SidebarTreeWrapper, SidebarWrapper } from './sidebar.styles'
+import { SidebarHeader, SidebarSearch, SidebarSearchRightWrapper, SidebarSearchWrapper, SidebarTreeWrapper, SidebarUnderSearchWrapper, SidebarWrapper } from './sidebar.styles'
 
 export interface SidebarProps<OtherInfo extends TreeItemBaseStateOtherInfo = TreeItemBaseStateOtherInfo> {
   defaultSearchKeyword?: string
@@ -14,6 +14,7 @@ export interface SidebarProps<OtherInfo extends TreeItemBaseStateOtherInfo = Tre
   sortTreeItems?: (items: TreeItemProps<OtherInfo>[]) => TreeItemProps<OtherInfo>[]
   buildTopToolbarSlot?: () => React.ReactNode
   buildSearchRightSlot?: () => React.ReactNode
+  buildUnderSearchSlot?: () => React.ReactNode
 }
 
 export function Sidebar<OtherInfo extends TreeItemBaseStateOtherInfo = TreeItemBaseStateOtherInfo>(props: SidebarProps<OtherInfo>) {
@@ -25,6 +26,7 @@ export function Sidebar<OtherInfo extends TreeItemBaseStateOtherInfo = TreeItemB
     sortTreeItems,
     buildTopToolbarSlot,
     buildSearchRightSlot,
+    buildUnderSearchSlot,
   } = props
 
   const [searchKeyword, setSearchKeyword] = useState(defaultSearchKeyword)
@@ -80,6 +82,9 @@ export function Sidebar<OtherInfo extends TreeItemBaseStateOtherInfo = TreeItemB
         {buildSearchRightSlot?.()}
       </SidebarSearchRightWrapper>
     </SidebarSearchWrapper>
+    <SidebarUnderSearchWrapper>
+      {buildUnderSearchSlot?.()}
+    </SidebarUnderSearchWrapper>
     <SidebarTreeWrapper>
       <Tree
         {...tree}
