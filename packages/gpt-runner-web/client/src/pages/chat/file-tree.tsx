@@ -1,28 +1,23 @@
 import { type FC, useCallback, useEffect, useRef, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { type FileInfoTreeItem, travelTree, travelTreeDeepFirst } from '@nicepkg/gpt-runner-shared/common'
+import { travelTree, travelTreeDeepFirst } from '@nicepkg/gpt-runner-shared/common'
 import clsx from 'clsx'
 import { VSCodeCheckbox, VSCodeLink } from '@vscode/webview-ui-toolkit/react'
 import type { SidebarProps } from '../../components/sidebar'
 import { Sidebar } from '../../components/sidebar'
 import { ErrorView } from '../../components/error-view'
 import { fetchCommonFilesTree } from '../../networks/common-files'
-import type { TreeItemBaseState, TreeItemProps, TreeItemState } from '../../components/tree-item'
+import type { TreeItemProps, TreeItemState } from '../../components/tree-item'
 import { Icon } from '../../components/icon'
 import { IconButton } from '../../components/icon-button'
-import { formatNumWithK } from '../../helpers/utils'
+import { countTokenQuick, formatNumWithK } from '../../helpers/utils'
 import { useGlobalStore } from '../../store/zustand/global'
+import type { FileInfoSidebarTreeItem, FileSidebarTreeItem } from '../../store/zustand/global/file-tree.slice'
 import { FileTreeItemRightWrapper, FileTreeSidebarHighlight, FileTreeSidebarUnderSearchWrapper } from './chat.styles'
 
 export interface FileTreeProps {
   rootPath: string
 }
-
-type FileInfoSidebarTreeItem = FileInfoTreeItem & {
-  checked: boolean
-}
-
-type FileSidebarTreeItem = TreeItemBaseState<FileInfoSidebarTreeItem>
 
 const FileTree: FC<FileTreeProps> = (props: FileTreeProps) => {
   const { rootPath } = props
@@ -33,6 +28,10 @@ const FileTree: FC<FileTreeProps> = (props: FileTreeProps) => {
     updateExpendedFilePaths,
     checkedFilePaths,
     updateCheckedFilePaths,
+    provideFilePathsTreePromptToGpt,
+    updateProvideFilePathsTreePromptToGpt,
+    filePathsTreePrompt,
+    updateFilePathsTreePrompt,
   } = useGlobalStore()
 
   const updateMap = useCallback((tree: FileSidebarTreeItem[]) => {
@@ -74,7 +73,7 @@ const FileTree: FC<FileTreeProps> = (props: FileTreeProps) => {
 
   // sync checked state
   useEffect(() => {
-    if (!Object.values(fullPathFileMapRef.current).length)
+    if (!Object.values(fullPathFileMapRef.current).length || !filesTree.length)
       return
 
     // check all path in checkedFilePaths
@@ -123,9 +122,8 @@ const FileTree: FC<FileTreeProps> = (props: FileTreeProps) => {
       return result
     })
 
-    console.log('finalFilesSidebarTree', finalFilesSidebarTree)
-
     setFilesTree(finalFilesSidebarTree, true)
+    updateFilePathsTreePrompt(finalFilesSidebarTree)
   }, [fetchCommonFilesTreeRes, setFilesTree])
 
   const renderTreeItemLeftSlot = (props: TreeItemState<FileInfoSidebarTreeItem>) => {
@@ -265,10 +263,17 @@ const FileTree: FC<FileTreeProps> = (props: FileTreeProps) => {
     if (!Object.keys(fullPathFileMapRef.current).length)
       return null
 
-    const totalTokenNum = checkedFilePaths.reduce((pre, cur) => {
+    const filaPathsPromptTokenNum = countTokenQuick(filePathsTreePrompt)
+
+    const checkedFilesContentPromptTokenNum = checkedFilePaths.reduce((pre, cur) => {
       const file = fullPathFileMapRef.current[cur]
       return pre + (file.otherInfo?.tokenNum ?? 0)
     }, 0)
+
+    let totalTokenNum = checkedFilesContentPromptTokenNum
+
+    if (provideFilePathsTreePromptToGpt)
+      totalTokenNum += filaPathsPromptTokenNum
 
     const resetAllChecked = () => {
       updateCheckedFilePaths((preState) => {
@@ -280,19 +285,35 @@ const FileTree: FC<FileTreeProps> = (props: FileTreeProps) => {
 
         return []
       })
+      updateProvideFilePathsTreePromptToGpt(false)
+    }
+
+    const handleProvideFilePathsTreePromptToGptChange = (e: any) => {
+      const checked = e.target?.checked as boolean
+      updateProvideFilePathsTreePromptToGpt(checked)
     }
 
     return <FileTreeSidebarUnderSearchWrapper>
-      <FileTreeSidebarHighlight>{checkedFilePaths.length}</FileTreeSidebarHighlight>
-      files.
+      <FileTreeSidebarHighlight style={{ paddingLeft: 0 }}>{checkedFilePaths.length}</FileTreeSidebarHighlight>
+      Files.
       <FileTreeSidebarHighlight>{formatNumWithK(totalTokenNum)}</FileTreeSidebarHighlight>
-      tokens.
+      Tokens.
       <VSCodeLink style={{
         display: 'inline-block',
         marginLeft: '0.25rem',
       }} onClick={resetAllChecked}>
-        clean
+        Clear Checked
       </VSCodeLink>
+      <VSCodeCheckbox
+        style={{
+          marginTop: '0.5rem',
+        }}
+        checked={provideFilePathsTreePromptToGpt}
+        onChange={handleProvideFilePathsTreePromptToGptChange}>
+        All file path as prompt
+        <FileTreeSidebarHighlight>{formatNumWithK(filaPathsPromptTokenNum)}</FileTreeSidebarHighlight>
+        token
+      </VSCodeCheckbox>
     </FileTreeSidebarUnderSearchWrapper>
   }
 

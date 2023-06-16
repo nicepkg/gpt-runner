@@ -50,3 +50,8 @@ export function getErrorMsg(error: any) {
 export function formatNumWithK(num: number) {
   return `${(num / 1000).toFixed(1)}k`
 }
+
+export function countTokenQuick(text: string) {
+  // int
+  return Math.floor(text.length / 3.5)
+}

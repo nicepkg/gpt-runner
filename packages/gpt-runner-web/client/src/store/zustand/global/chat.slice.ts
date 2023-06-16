@@ -220,6 +220,14 @@ export const createChatSlice: StateCreator<
 
     const sendSingleFileConfig = state.resolveSingleFileConfig(singleFileConfig)
 
+    const sendSystemPrompt = (() => {
+      let result = systemPrompt
+      if (state.provideFilePathsTreePromptToGpt)
+        result += `\n${state.filePathsTreePrompt}`
+
+      return result
+    })()
+
     state.updateChatInstance(chatId, {
       status: nextStatus,
       inputtingPrompt: nextInputtingPrompt,
@@ -234,7 +242,7 @@ export const createChatSlice: StateCreator<
       signal: abortCtrl.signal,
       messages: sendMessages,
       prompt: sendInputtingPrompt,
-      systemPrompt,
+      systemPrompt: sendSystemPrompt,
       singleFileConfig: sendSingleFileConfig,
       contextFilePaths: state.checkedFilePaths,
       rootPath: getGlobalConfig().rootPath,
