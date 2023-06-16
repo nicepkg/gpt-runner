@@ -52,7 +52,8 @@
     "dist"
   ],
   "scripts": {
-    "build": "unbuild",
+    "build": "unbuild && pnpm build:json-schema",
+    "build:json-schema": "pnpm esno ./scripts/zod-to-json-schema.ts",
     "stub": "unbuild --stub"
   },
   "peerDependencies": {

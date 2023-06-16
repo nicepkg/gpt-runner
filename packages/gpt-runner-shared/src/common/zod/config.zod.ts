@@ -32,7 +32,7 @@ export const OpenaiConfigSchema = OpenaiBaseConfigSchema.extend({
 
 export const UserConfigSchema = z.object({
   model: OpenaiConfigSchema.optional(),
-  rootPath: z.string().optional().default(() => process.cwd()),
+  rootPath: z.string().optional(),
   exts: z.array(z.string()).optional().default(['.gpt.md']),
   includes: FilterPatternSchema.optional().default(null),
   excludes: FilterPatternSchema.optional().default(null),
