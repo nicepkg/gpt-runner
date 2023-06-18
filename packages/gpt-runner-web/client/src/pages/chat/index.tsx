@@ -12,13 +12,15 @@ import { getGlobalConfig } from '../../helpers/global-config'
 import { ErrorView } from '../../components/error-view'
 import { DragResizeView } from '../../components/drag-resize-view'
 import { SidebarWrapper, StyledVSCodePanels } from './chat.styles'
-import { ChatSidebar } from './chat-sidebar'
-import { ChatPanel } from './chat-panel'
-import FileTree from './file-tree'
+import { ChatSidebar } from './components/chat-sidebar'
+import { ChatPanel } from './components/chat-panel'
+import FileTree from './components/file-tree'
+import { Settings } from './components/settings'
 
 enum TabId {
   Explore = 'explore',
   Chat = 'chat',
+  Settings = 'settings',
 }
 
 const Chat: FC = () => {
@@ -72,12 +74,22 @@ const Chat: FC = () => {
     </SidebarWrapper>
   }, [])
 
+  const renderSettings = useCallback((showSingleFileConfig = false) => {
+    if (!getGlobalConfig().rootPath)
+      return null
+
+    return <SidebarWrapper className='sidebar-wrapper'>
+      <Settings showSingleFileConfig={showSingleFileConfig}></Settings>
+    </SidebarWrapper>
+  }, [])
+
   const renderChatPanel = useCallback(() => {
     return <ChatPanel
       scrollDownRef={scrollDownRef}
       chatId={activeChatId}
       chatTreeView={isMobile ? renderSidebar() : null}
       fileTreeView={!showFileTreeOnRightSide ? renderFileTree() : null}
+      settingsView={renderSettings(true)}
       onChatIdChange={updateActiveChatId}
     ></ChatPanel>
   }, [
@@ -102,22 +114,25 @@ const Chat: FC = () => {
     }
 
     return <StyledVSCodePanels
-      // activeid={activeChatId ? TabId.Chat : TabId.Explore}
       activeid={tabActiveId}
       style={viewStyle}
       onChange={(e: any) => {
         const activeId = e.target?.activeid as TabId
         setTabActiveId(activeId)
-        scrollDown()
+        activeId === TabId.Chat && scrollDown()
       }}
     >
       <VSCodePanelTab id={TabId.Explore}>Explore</VSCodePanelTab>
       <VSCodePanelTab id={TabId.Chat}>Chat</VSCodePanelTab>
+      <VSCodePanelTab id={TabId.Settings}>Settings</VSCodePanelTab>
       <VSCodePanelView style={viewStyle} id={TabId.Explore}>
         {renderSidebar()}
       </VSCodePanelView>
       <VSCodePanelView style={viewStyle} id={TabId.Chat}>
         {renderChatPanel()}
+      </VSCodePanelView>
+      <VSCodePanelView style={viewStyle} id={TabId.Settings}>
+        {renderSettings()}
       </VSCodePanelView>
     </StyledVSCodePanels>
   }

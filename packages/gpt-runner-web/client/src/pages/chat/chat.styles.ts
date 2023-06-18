@@ -13,19 +13,6 @@ export const SidebarWrapper = styled.div`
   `)}
 `
 
-export const ChatPanelWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  max-height: 100%;
-  overflow-x: hidden;
-  overflow-y: auto;
-
-  ${withBreakpoint('sm', css`
-    border-left: none;
-  `)}
-`
-
 export const StyledVSCodePanels = styled(VSCodePanels)`
   &::part(tablist) {
     padding-left: 1rem;
@@ -47,47 +34,8 @@ export const SidebarTopToolbar = styled.div`
   font-size: var(--type-ramp-base-font-size);
 `
 
-export const ChatPanelPopoverTreeWrapper = styled.div`
-  & .sidebar-wrapper {
-    width: calc(100vw - 2rem);
-    height: 50vh;
-    background: var(--panel-view-background);
-    padding-bottom: 0.5rem;
-    max-width: 500px;
-
-    .tree-item__children {
-      &::before {
-        display: none;
-      }
-    }
-  }
-`
-
 export const LeftSideWrapper = styled.div`
 `
 
 export const RightSideWrapper = styled.div`
-`
-
-export const FileTreeItemRightWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  font-size: var(--type-ramp-base-font-size);
-  color: var(--panel-view-border);
-`
-
-export const FileTreeSidebarUnderSearchWrapper = styled.div`
-  font-size: var(--type-ramp-base-font-size);
-  margin:  0.25rem 0 0.5rem 0;
-  background: linear-gradient(-135deg, var(--list-hover-background) 10%, transparent 70%);
-  color: var(--input-foreground);
-  padding: 0.5rem 0;
-  border-radius: 0.25rem;
-`
-
-export const FileTreeSidebarHighlight = styled.span`
-  color: var(--button-primary-background);
-  padding: 0 0.25rem;
-  white-space: nowrap;
-  margin: 0 0.25rem;
 `

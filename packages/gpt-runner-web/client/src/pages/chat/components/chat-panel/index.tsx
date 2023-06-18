@@ -2,33 +2,34 @@ import type { FC, RefObject } from 'react'
 import { useCallback, useEffect, useState } from 'react'
 import { ChatMessageStatus, ChatRole, ClientEventName } from '@nicepkg/gpt-runner-shared/common'
 import { copy } from '@nicepkg/gpt-runner-shared/browser'
-import type { ChatMessagePanelProps } from '../../components/chat-message-panel'
-import { ChatMessagePanel } from '../../components/chat-message-panel'
-import { ChatMessageInput } from '../../components/chat-message-input'
-import { IconButton } from '../../components/icon-button'
-import { useChatInstance } from '../../hooks/use-chat-instance.hook'
-import type { MessageItemProps } from '../../components/chat-message-item'
-import { ErrorView } from '../../components/error-view'
-import { useGlobalStore } from '../../store/zustand/global'
-import type { GptFileTreeItem } from '../../store/zustand/global/sidebar-tree.slice'
-import { emitter } from '../../helpers/emitter'
-import { getGlobalConfig } from '../../helpers/global-config'
-import { PopoverMenu } from '../../components/popover-menu'
-import { useKeyboard } from '../../hooks/use-keyboard.hook'
-import { DragResizeView } from '../../components/drag-resize-view'
-import { useElementSizeRealTime } from '../../hooks/use-element-size-real-time'
-import { ChatPanelPopoverTreeWrapper, ChatPanelWrapper } from './chat.styles'
+import type { ChatMessagePanelProps } from '../../../../components/chat-message-panel'
+import { ChatMessagePanel } from '../../../../components/chat-message-panel'
+import { ChatMessageInput } from '../../../../components/chat-message-input'
+import { IconButton } from '../../../../components/icon-button'
+import { useChatInstance } from '../../../../hooks/use-chat-instance.hook'
+import type { MessageItemProps } from '../../../../components/chat-message-item'
+import { ErrorView } from '../../../../components/error-view'
+import { useGlobalStore } from '../../../../store/zustand/global'
+import type { GptFileTreeItem } from '../../../../store/zustand/global/sidebar-tree.slice'
+import { emitter } from '../../../../helpers/emitter'
+import { getGlobalConfig } from '../../../../helpers/global-config'
+import { PopoverMenu } from '../../../../components/popover-menu'
+import { useKeyboard } from '../../../../hooks/use-keyboard.hook'
+import { DragResizeView } from '../../../../components/drag-resize-view'
+import { useElementSizeRealTime } from '../../../../hooks/use-element-size-real-time'
+import { ChatPanelPopoverTreeWrapper, ChatPanelWrapper } from './chat-panel.styles'
 
 export interface ChatPanelProps {
   scrollDownRef: RefObject<any>
   chatTreeView?: React.ReactNode
   fileTreeView?: React.ReactNode
+  settingsView?: React.ReactNode
   chatId: string
   onChatIdChange: (chatId: string) => void
 }
 
 export const ChatPanel: FC<ChatPanelProps> = (props) => {
-  const { scrollDownRef, chatTreeView, fileTreeView, chatId, onChatIdChange } = props
+  const { scrollDownRef, chatTreeView, fileTreeView, settingsView, chatId, onChatIdChange } = props
   const { createChatAndActive, getGptFileTreeItemFromChatId } = useGlobalStore()
   const { chatInstance, updateCurrentChatInstance, generateCurrentChatAnswer, regenerateCurrentLastChatAnswer, stopCurrentGeneratingChatAnswer } = useChatInstance({ chatId })
   const status = chatInstance?.status ?? ChatMessageStatus.Success
@@ -316,25 +317,40 @@ export const ChatPanel: FC<ChatPanelProps> = (props) => {
         }}
       />}
 
-      <IconButton
-        text='Clean'
-        iconClassName='codicon-trash'
-        onClick={handleClearAll}
-        style={{
-          paddingLeft: '0.5rem',
-          paddingRight: '0.5rem',
+      {/* settings panel */}
+      {settingsView && <PopoverMenu
+        childrenInMenuWhenOpen={false}
+        menuStyle={{
+          marginLeft: '1rem',
+          marginRight: '1rem',
         }}
-      ></IconButton>
+        buildChildrenSlot={({ isHovering }) => {
+          return <IconButton
+            text='Settings'
+            iconClassName='codicon-gear'
+            hoverShowText={!isHovering}
+            style={{
+              paddingLeft: '0.5rem',
+              paddingRight: '0.5rem',
+            }}
+          ></IconButton>
+        }}
+        buildMenuSlot={() => {
+          return <ChatPanelPopoverTreeWrapper>
+            {settingsView}
+          </ChatPanelPopoverTreeWrapper>
+        }}
+      />}
 
       <PopoverMenu
         xPosition='right'
         buildChildrenSlot={({ isHovering, isInMenu }) => {
           return <IconButton
-            text='New Chat'
-            iconClassName='codicon-add'
+            text='Clear History'
+            iconClassName='codicon-clear-all'
             showText={isInMenu}
             hoverShowText={!isHovering}
-            onClick={handleNewChat}
+            onClick={handleClearAll}
           ></IconButton>
         }}
         buildMenuSlot={() => {
@@ -351,6 +367,13 @@ export const ChatPanel: FC<ChatPanelProps> = (props) => {
               iconClassName='codicon-chevron-right'
               hoverShowText={false}
               onClick={handleSwitchNextChat}
+            ></IconButton>
+
+            <IconButton
+              text='New Chat'
+              iconClassName='codicon-add'
+              hoverShowText={false}
+              onClick={handleNewChat}
             ></IconButton>
           </>
         }}
