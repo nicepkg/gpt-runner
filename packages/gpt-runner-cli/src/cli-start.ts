@@ -12,7 +12,7 @@ import type { CliOptions } from './types'
 const __dirname = PathUtils.getCurrentDirName(import.meta.url)
 const startServerJsPath = PathUtils.resolve(__dirname, '../node_modules/@nicepkg/gpt-runner-web/dist/start-server.mjs')
 
-export async function startCli(cwd = process.cwd(), argv = process.argv, options: CliOptions = {}) {
+export async function startCli(cwd = PathUtils.resolve(process.cwd()), argv = process.argv, options: CliOptions = {}) {
   const cli = cac('gptr')
 
   cli
@@ -64,7 +64,7 @@ export async function startCli(cwd = process.cwd(), argv = process.argv, options
       const afterServerStartSuccess = () => {
         const getUrl = (isLocalIp = false) => {
           const localIp = getLocalHostname()
-          return `http://${isLocalIp ? localIp : 'localhost'}:${finalPort}/#/chat?rootPath=${config.rootPath}`
+          return `http://${isLocalIp ? localIp : 'localhost'}:${finalPort}/#/chat?rootPath=${config.rootPath?.replace(/\\/g, '/')}`
         }
 
         consola.success(`\n\n${green(`GPT-Runner web is at:\n\n${cyan(getUrl())}\n\n${cyan(getUrl(true))}\n`)}`)
