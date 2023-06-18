@@ -48,7 +48,7 @@ class ChatViewProvider implements vscode.WebviewViewProvider {
     )
     panel.iconPath = vscode.Uri.joinPath(extContext.extensionUri, './res/logo.svg')
 
-    panel.onDidDispose (() => {
+    panel.onDidDispose(() => {
       state.webviewPanels.delete(panel)
     })
 
@@ -98,7 +98,7 @@ class ChatViewProvider implements vscode.WebviewViewProvider {
       window.vscode = acquireVsCodeApi()
 
       window.__GLOBAL_CONFIG__ = {
-        rootPath: '${projectPath}',
+        rootPath: '${projectPath.replace(/\\/g, '/')}',
         serverBaseUrl: '${getServerBaseUrl()}',
         initialRoutePath: '/chat',
         showDiffCodesBtn: true,

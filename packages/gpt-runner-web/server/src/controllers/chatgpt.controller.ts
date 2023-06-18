@@ -52,8 +52,9 @@ export const chatgptControllers: ControllerConfig = {
           presencePenalty,
         } = singleFileConfig?.model || {}
 
+        let finalPath = ''
         if (rootPath) {
-          const finalPath = PathUtils.resolve(rootPath)
+          finalPath = PathUtils.resolve(rootPath)
 
           if (!PathUtils.isDirectory(finalPath)) {
             sendFailResponse(res, {
@@ -79,9 +80,9 @@ export const chatgptControllers: ControllerConfig = {
         let finalSystemPrompt = systemPrompt
 
         // provide file context
-        if (contextFilePaths) {
+        if (contextFilePaths && finalPath) {
           const fileContext = await createFileContext({
-            rootPath: rootPath!,
+            rootPath: finalPath,
             filePaths: contextFilePaths,
           })
 
