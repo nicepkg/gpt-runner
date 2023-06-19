@@ -1,6 +1,10 @@
 ```json
 {
-  "title": "common/"
+  "title": "common/",
+  "model": {
+    "modalName": "gpt-3.5-turbo-16k",
+    "temperature": 0
+  }
 }
 ```
 

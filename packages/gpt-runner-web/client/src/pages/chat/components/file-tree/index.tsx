@@ -304,16 +304,19 @@ const FileTree: FC<FileTreeProps> = (props: FileTreeProps) => {
       }} onClick={resetAllChecked}>
         Clear Checked
       </VSCodeLink>
-      <VSCodeCheckbox
-        style={{
-          marginTop: '0.5rem',
-        }}
-        checked={provideFilePathsTreePromptToGpt}
-        onChange={handleProvideFilePathsTreePromptToGptChange}>
-        All file path as prompt
-        <FileTreeSidebarHighlight>{formatNumWithK(filaPathsPromptTokenNum)}</FileTreeSidebarHighlight>
-        token
-      </VSCodeCheckbox>
+
+      <div>
+        <VSCodeCheckbox
+          style={{
+            marginTop: '0.5rem',
+          }}
+          checked={provideFilePathsTreePromptToGpt}
+          onChange={handleProvideFilePathsTreePromptToGptChange}>
+          All file path as prompt
+          <FileTreeSidebarHighlight>{formatNumWithK(filaPathsPromptTokenNum)}</FileTreeSidebarHighlight>
+          token
+        </VSCodeCheckbox>
+      </div>
     </FileTreeSidebarUnderSearchWrapper>
   }
 

@@ -18,5 +18,9 @@ window.__DEFAULT_GLOBAL_CONFIG__ = {
 }
 
 export function getGlobalConfig() {
-  return window.getGlobalConfig()
+  const result = window.getGlobalConfig()
+  return {
+    ...result,
+    rootPath: result.rootPath.replace(/\\/g, '/'),
+  } satisfies GlobalConfig
 }

@@ -81,7 +81,6 @@ export const PopoverMenu: React.FC<PopoverMenuProps> = (props) => {
     left: {
     },
     right: {
-
     },
   }
 

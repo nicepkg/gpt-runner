@@ -1,3 +1,4 @@
+import { VSCodeBadge } from '@vscode/webview-ui-toolkit/react'
 import { styled } from 'styled-components'
 
 export const FileTreeItemRightWrapper = styled.div`
@@ -16,9 +17,7 @@ export const FileTreeSidebarUnderSearchWrapper = styled.div`
   border-radius: 0.25rem;
 `
 
-export const FileTreeSidebarHighlight = styled.span`
-  color: var(--button-primary-background);
-  padding: 0 0.25rem;
+export const FileTreeSidebarHighlight = styled(VSCodeBadge)`
   white-space: nowrap;
   margin: 0 0.25rem;
 `
