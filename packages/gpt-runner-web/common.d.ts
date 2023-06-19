@@ -1,1 +1,1 @@
-export * from './dist/common'
+export * from './common/index'

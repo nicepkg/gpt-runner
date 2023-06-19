@@ -1,5 +1,5 @@
 import { getSearchParams } from '@nicepkg/gpt-runner-shared/browser'
-import { EnvConfig, urlRemoveLocalhost } from '@nicepkg/gpt-runner-shared/common'
+import { EnvConfig, toUnixPath, urlRemoveLocalhost } from '@nicepkg/gpt-runner-shared/common'
 
 export interface GlobalConfig {
   rootPath: string
@@ -21,6 +21,6 @@ export function getGlobalConfig() {
   const result = window.getGlobalConfig()
   return {
     ...result,
-    rootPath: result.rootPath.replace(/\\/g, '/'),
+    rootPath: toUnixPath(result.rootPath),
   } satisfies GlobalConfig
 }

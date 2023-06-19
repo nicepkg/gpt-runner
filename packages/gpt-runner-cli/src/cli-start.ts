@@ -5,12 +5,12 @@ import { consola } from 'consola'
 import { cyan, green } from 'colorette'
 import { execa } from 'execa'
 import waitPort from 'wait-port'
-import { Debug } from '@nicepkg/gpt-runner-shared/common'
+import { Debug, toUnixPath } from '@nicepkg/gpt-runner-shared/common'
 import { version } from '../package.json'
 import type { CliOptions } from './types'
 
-const __dirname = PathUtils.getCurrentDirName(import.meta.url)
-const startServerJsPath = PathUtils.resolve(__dirname, '../node_modules/@nicepkg/gpt-runner-web/dist/start-server.mjs')
+const dirname = PathUtils.getCurrentDirName(import.meta.url, () => __dirname)
+const startServerJsPath = PathUtils.resolve(dirname, '../node_modules/@nicepkg/gpt-runner-web/dist/start-server.mjs')
 
 export async function startCli(cwd = PathUtils.resolve(process.cwd()), argv = process.argv, options: CliOptions = {}) {
   const cli = cac('gptr')
@@ -64,7 +64,7 @@ export async function startCli(cwd = PathUtils.resolve(process.cwd()), argv = pr
       const afterServerStartSuccess = () => {
         const getUrl = (isLocalIp = false) => {
           const localIp = getLocalHostname()
-          return `http://${isLocalIp ? localIp : 'localhost'}:${finalPort}/#/chat?rootPath=${config.rootPath?.replace(/\\/g, '/')}`
+          return `http://${isLocalIp ? localIp : 'localhost'}:${finalPort}/#/chat?rootPath=${toUnixPath(config.rootPath)}`
         }
 
         consola.success(`\n\n${green(`GPT-Runner web is at:\n\n${cyan(getUrl())}\n\n${cyan(getUrl(true))}\n`)}`)

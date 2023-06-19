@@ -1,28 +1,39 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { toUnixPath } from '../../common/helpers'
 
 export class PathUtils {
-  static getCurrentDirName(importMetaUrl: string) {
+  static getCurrentDirName(importMetaUrl: string, getDirname: () => string) {
+    let dirname = ''
+
+    try {
+      dirname = getDirname()
+    }
+    catch {}
+
+    if (!importMetaUrl)
+      return toUnixPath(dirname)
+
     const __filename = fileURLToPath(importMetaUrl)
     const __dirname = path.dirname(__filename)
     return __dirname
   }
 
   static join(...paths: string[]) {
-    return path.join(...paths).replace(/\\/g, '/')
+    return toUnixPath(path.join(...paths))
   }
 
   static resolve(...paths: string[]) {
-    return path.resolve(...paths).replace(/\\/g, '/')
+    return toUnixPath(path.resolve(...paths))
   }
 
   static relative(from: string, to: string) {
-    return path.relative(from, to).replace(/\\/g, '/')
+    return toUnixPath(path.relative(from, to))
   }
 
   static dirname(filePath: string) {
-    return path.dirname(filePath).replace(/\\/g, '/')
+    return toUnixPath(path.dirname(filePath))
   }
 
   static extname(filePath: string) {

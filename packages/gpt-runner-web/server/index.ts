@@ -9,9 +9,9 @@ import { PathUtils, getPort } from '@nicepkg/gpt-runner-shared/node'
 import { processControllers } from './src/controllers'
 import { errorHandlerMiddleware } from './src/middleware'
 
-const __dirname = PathUtils.getCurrentDirName(import.meta.url)
+const dirname = PathUtils.getCurrentDirName(import.meta.url, () => __dirname)
 
-const resolvePath = (...paths: string[]) => path.resolve(__dirname, ...paths)
+const resolvePath = (...paths: string[]) => path.resolve(dirname, ...paths)
 
 export const clientDistPath = resolvePath('../dist/browser')
 

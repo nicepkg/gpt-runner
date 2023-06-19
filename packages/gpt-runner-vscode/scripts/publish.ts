@@ -1,13 +1,12 @@
-import { dirname, join } from 'path'
 import fs from 'fs-extra'
 import { execa } from 'execa'
 import { PathUtils } from '@nicepkg/gpt-runner-shared/node'
 
-const dir = PathUtils.getCurrentDirName(import.meta.url)
-const root = dirname(dir)
+const dirname = PathUtils.getCurrentDirName(import.meta.url, () => __dirname)
+const root = PathUtils.join(dirname, '..')
 
 async function publish() {
-  const pkgPath = join(root, 'package.json')
+  const pkgPath = PathUtils.join(root, 'package.json')
   const rawJSON = await fs.readFile(pkgPath, 'utf-8')
   const pkg = JSON.parse(rawJSON)
   pkg.name = 'gpt-runner'

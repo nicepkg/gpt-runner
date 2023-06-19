@@ -28,10 +28,6 @@
   "bin": {
     "gptr": "./bin/gpt-runner.mjs"
   },
-  "files": [
-    "bin",
-    "dist"
-  ],
   "engines": {
     "node": ">=14"
   },

@@ -197,3 +197,9 @@ export function objectToQueryString(obj: Record<string, any>, prefix?: string): 
 
   return queryStringArray.join('&')
 }
+
+export function toUnixPath(path: string | undefined | null) {
+  if (!path)
+    return ''
+  return path.replace(/\\+/g, '/')
+}

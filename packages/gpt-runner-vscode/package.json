@@ -1,5 +1,5 @@
 {
-  "publisher": "2214962083",
+  "publisher": "nicepkg",
   "name": "@nicepkg/gpt-runner-vscode",
   "displayName": "GPT Runner",
   "version": "0.0.2",
@@ -84,21 +84,18 @@
   "scripts": {
     "build": "tsup",
     "build:vsix": "pnpm esno ./scripts/build.ts",
-    "dev": "tsup --watch src",
+    "dev": "pnpm esno ./scripts/dev.ts",
     "publish": "esno ./scripts/publish.ts"
   },
-  "dependencies": {
+  "devDependencies": {
     "@nicepkg/gpt-runner-shared": "workspace:*",
     "@nicepkg/gpt-runner-web": "workspace:*",
-    "eventemitter3": "^5.0.1",
-    "open": "^9.1.0",
-    "uuid": "^9.0.0"
-  },
-  "devDependencies": {
     "@types/vscode": "^1.71.0",
     "@vscode/vsce": "^2.19.0",
     "esno": "^0.16.3",
+    "eventemitter3": "^5.0.1",
     "execa": "^7.1.1",
-    "fs-extra": "^11.1.1"
+    "fs-extra": "^11.1.1",
+    "uuid": "^9.0.0"
   }
 }

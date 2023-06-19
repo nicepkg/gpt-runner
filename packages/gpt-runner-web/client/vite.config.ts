@@ -4,9 +4,9 @@ import React from '@vitejs/plugin-react'
 import { EnvConfig } from '@nicepkg/gpt-runner-shared/common'
 import { PathUtils } from '@nicepkg/gpt-runner-shared/node'
 
-const __dirname = PathUtils.getCurrentDirName(import.meta.url)
+const dirname = PathUtils.getCurrentDirName(import.meta.url, () => __dirname)
 
-const resolvePath = (...paths: string[]) => path.resolve(__dirname, ...paths)
+const resolvePath = (...paths: string[]) => path.resolve(dirname, ...paths)
 
 // https://vitejs.dev/config/
 export default defineConfig({

@@ -3,6 +3,7 @@ import path from 'path'
 import type { ExtensionContext } from 'vscode'
 import * as vscode from 'vscode'
 import * as uuid from 'uuid'
+import { toUnixPath } from '@nicepkg/gpt-runner-shared/common'
 import type { ContextLoader } from '../contextLoader'
 import { Commands, EXT_DISPLAY_NAME, EXT_NAME } from '../constant'
 import { createHash, getServerBaseUrl } from '../utils'
@@ -60,28 +61,17 @@ class ChatViewProvider implements vscode.WebviewViewProvider {
   }
 
   static updateWebview(webview: vscode.Webview, extContext: ExtensionContext, projectPath: string) {
-    const { extensionUri } = extContext
-
     webview.onDidReceiveMessage(({ eventName, eventData }) => {
       emitter.emit(eventName, eventData, EventType.ReceiveMessage)
     })
 
-    const baseUri = vscode.Uri.joinPath(extensionUri, './node_modules/@nicepkg/gpt-runner-web/dist/browser')
-
-    webview.options = {
-      // Allow scripts in the webview
-      enableScripts: true,
-
-      localResourceRoots: [baseUri],
-    }
-
     webview.html = ChatViewProvider.getHtmlForWebview(webview, extContext, projectPath)
   }
 
-  static getHtmlForWebview(webview: vscode.Webview, extContext: ExtensionContext, projectPath: string) {
+  static getHtmlForWebview(webview: vscode.Webview, extContext: ExtensionContext, projectPath: string): string {
     const { extensionUri } = extContext
 
-    const baseUri = vscode.Uri.joinPath(extensionUri, './node_modules/@nicepkg/gpt-runner-web/dist/browser')
+    const baseUri = vscode.Uri.joinPath(extensionUri, './dist/web/browser')
 
     webview.options = {
       enableScripts: true,
@@ -98,7 +88,7 @@ class ChatViewProvider implements vscode.WebviewViewProvider {
       window.vscode = acquireVsCodeApi()
 
       window.__GLOBAL_CONFIG__ = {
-        rootPath: '${projectPath.replace(/\\/g, '/')}',
+        rootPath: '${toUnixPath(projectPath)}',
         serverBaseUrl: '${getServerBaseUrl()}',
         initialRoutePath: '/chat',
         showDiffCodesBtn: true,

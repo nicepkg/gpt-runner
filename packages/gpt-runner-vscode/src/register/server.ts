@@ -27,7 +27,7 @@ export async function registerServer(
       serverProcess?.kill?.()
 
       const { extensionUri } = ext
-      const serverUri = vscode.Uri.joinPath(extensionUri, './node_modules/@nicepkg/gpt-runner-web/dist/start-server.cjs')
+      const serverUri = vscode.Uri.joinPath(extensionUri, './dist/web/start-server.cjs')
 
       const finalPort = await getPort({
         defaultPort: 3003,

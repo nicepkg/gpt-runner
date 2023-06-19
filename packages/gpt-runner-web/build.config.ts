@@ -29,14 +29,15 @@ export default defineBuildConfig({
     },
   ],
   clean: true,
-  declaration: true,
-  externals: [
-    'unconfig',
-    'langchain',
-  ],
+  failOnWarn: false,
+  // declaration: true,
   rollup: {
     emitCJS: true,
-    resolve: {},
+    resolve: {
+      exportConditions: ['node'],
+    },
+    commonjs: {},
+    inlineDependencies: true,
   },
   hooks: {
     'rollup:options': function (ctx, rollupOptions) {
@@ -51,6 +52,16 @@ export default defineBuildConfig({
         const format = output.format || 'cjs'
         const ext = format === 'esm' ? 'mjs' : format
         output.chunkFileNames = chunk => getChunkFilename(chunk, ext)
+
+        if (format === 'esm') {
+          output.banner = `
+import $__url__$ from 'url'
+import $__path__$ from 'path'
+const __filename = $__url__$.fileURLToPath(import.meta.url);
+const __dirname = $__path__$.dirname(__filename);
+${output.banner || ''}
+          `
+        }
       })
     },
   },
