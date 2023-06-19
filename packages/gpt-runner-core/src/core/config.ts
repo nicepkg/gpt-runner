@@ -24,7 +24,7 @@ export async function getGptFilesInfo(params: GetGptFilesInfoParams): Promise<Ge
     exts = ['.gpt.md'],
     includes = null,
     excludes = null,
-    respectGitignore = true,
+    respectGitIgnore = true,
   } = resolvedUserConfig
 
   const ig: Ignore | null = await (async () => {
@@ -36,7 +36,7 @@ export async function getGptFilesInfo(params: GetGptFilesInfoParams): Promise<Ge
   })()
 
   const isGitignorePaths = (filePath: string): boolean => {
-    if (!respectGitignore)
+    if (!respectGitIgnore)
       return false
 
     if (filePath && filePath.match(/\/\.git\//))

@@ -1,4 +1,5 @@
 import type { SingleFileConfig, UserConfig } from '../types'
+import { DEFAULT_EXCLUDE_FILES } from './constants'
 
 export function singleFileConfigWithDefault(singleFileConfig?: Partial<SingleFileConfig>): SingleFileConfig {
   return {
@@ -18,9 +19,9 @@ export function userConfigWithDefault(userConfig?: Partial<UserConfig>): UserCon
     },
     rootPath: process.cwd(),
     includes: null,
-    excludes: null,
+    excludes: DEFAULT_EXCLUDE_FILES,
     exts: ['.gpt.md'],
-    respectGitignore: true,
+    respectGitIgnore: true,
     ...userConfig,
   }
 }

@@ -63,7 +63,7 @@ const FileTree: FC<FileTreeProps> = (props: FileTreeProps) => {
     setFilesTree([...filesTree])
   }, [filesTree, setFilesTree])
 
-  const { data: fetchCommonFilesTreeRes } = useQuery({
+  const { data: fetchCommonFilesTreeRes, isLoading } = useQuery({
     queryKey: ['file-tree', rootPath],
     enabled: !!rootPath,
     queryFn: () => fetchCommonFilesTree({
@@ -85,19 +85,21 @@ const FileTree: FC<FileTreeProps> = (props: FileTreeProps) => {
     // sync parent path checked state
     travelTreeDeepFirst(filesTree, (item) => {
       if (item.isLeaf)
-        return
+        return item
 
       const children = item?.children || []
 
       if (!children.length)
-        return
+        return item
 
       const childrenAllIsChecked = children.every(child => child.otherInfo?.checked)
       item.otherInfo!.checked = childrenAllIsChecked
+
+      return item
     })
 
-    setFilesTree([...filesTree])
-  }, [checkedFilePaths, fullPathFileMapRef.current, setFilesTree])
+    // setFilesTree([...filesTree])
+  }, [checkedFilePaths, fullPathFileMapRef.current, filesTree, setFilesTree])
 
   useEffect(() => {
     const filesInfoTree = fetchCommonFilesTreeRes?.data?.filesInfoTree
@@ -106,6 +108,7 @@ const FileTree: FC<FileTreeProps> = (props: FileTreeProps) => {
 
     const finalFilesSidebarTree = travelTree(filesInfoTree, (item) => {
       const oldIsExpanded = expendedFilePaths.includes(item.fullPath)
+      const oldIsChecked = checkedFilePaths.includes(item.fullPath)
 
       const result: FileSidebarTreeItem = {
         id: item.id,
@@ -114,7 +117,7 @@ const FileTree: FC<FileTreeProps> = (props: FileTreeProps) => {
         isLeaf: item.isFile,
         otherInfo: {
           ...item,
-          checked: false,
+          checked: oldIsChecked,
         },
         isExpanded: oldIsExpanded,
       }
@@ -331,6 +334,7 @@ const FileTree: FC<FileTreeProps> = (props: FileTreeProps) => {
 
   const sidebar: SidebarProps<FileInfoSidebarTreeItem> = {
     placeholder: 'Search file...',
+    loading: isLoading,
     tree: {
       items: filesTree,
       renderTreeItemLeftSlot,

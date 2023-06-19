@@ -82,7 +82,7 @@ export interface UserConfig {
   /**
      * @default true
      */
-  respectGitignore?: boolean
+  respectGitIgnore?: boolean
 }
 
 export interface SingleChatMessage {

@@ -18,7 +18,7 @@ const queryClient = new QueryClient({
   },
 })
 
-const fallbackRender: ComponentType<FallbackProps> = ({ error }) => {
+const FallbackRender: ComponentType<FallbackProps> = ({ error }) => {
   // Call resetErrorBoundary() to reset the error boundary and retry the render.
 
   return (
@@ -32,9 +32,11 @@ const fallbackRender: ComponentType<FallbackProps> = ({ error }) => {
 export const AppProviders: FC<PropsWithChildren> = ({ children }) => {
   return (
     <LoadingProvider>
-      <ErrorBoundary FallbackComponent={fallbackRender}>
+      <ErrorBoundary FallbackComponent={FallbackRender as any}>
         <QueryClientProvider client={queryClient}>
-          {children}
+          <>
+            {children}
+          </>
         </QueryClientProvider>
       </ErrorBoundary>
     </LoadingProvider>

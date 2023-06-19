@@ -79,5 +79,6 @@ export interface GetCommonFilesReqParams {
 
 export interface GetCommonFilesResData {
   filesInfoTree: FileInfoTree
-  fileExts: string[]
+  includeFileExts: string[]
+  allFileExts: string[]
 }

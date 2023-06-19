@@ -1,6 +1,6 @@
 import { PathUtils, sendFailResponse, sendSuccessResponse, verifyParamsByZod } from '@nicepkg/gpt-runner-shared/node'
-import { type GetCommonFilesReqParams, GetCommonFilesReqParamsSchema, type GetCommonFilesResData } from '@nicepkg/gpt-runner-shared/common'
-import { getCommonFileTree } from '@nicepkg/gpt-runner-core'
+import { DEFAULT_EXCLUDE_FILE_EXTS, type GetCommonFilesReqParams, GetCommonFilesReqParamsSchema, type GetCommonFilesResData } from '@nicepkg/gpt-runner-shared/common'
+import { getCommonFileTree, loadUserConfig } from '@nicepkg/gpt-runner-core'
 import type { ControllerConfig } from '../types'
 
 export const commonFilesControllers: ControllerConfig = {
@@ -14,97 +14,10 @@ export const commonFilesControllers: ControllerConfig = {
 
         verifyParamsByZod(query, GetCommonFilesReqParamsSchema)
 
-        const DEFAULT_EXCLUDE_EXTS = [
-          '.jpg',
-          '.png',
-          '.gif',
-          '.jpeg',
-          '.svg',
-          '.mp4',
-          '.mp3',
-          '.wav',
-          '.flac',
-          '.ogg',
-          '.webm',
-          '.ico',
-          '.pdf',
-          '.doc',
-          '.docx',
-          '.xls',
-          '.xlsx',
-          '.ppt',
-          '.pptx',
-          '.zip',
-          '.rar',
-          '.7z',
-          '.tar',
-          '.gz',
-          '.tgz',
-          '.bz2',
-          '.xz',
-          '.exe',
-          '.dmg',
-          '.pkg',
-          '.deb',
-          '.rpm',
-          '.msi',
-          '.apk',
-          '.ipa',
-          '.iso',
-          '.img',
-          '.bin',
-          '.dll',
-          '.so',
-          '.dylib',
-          '.a',
-          '.lib',
-          '.o',
-          '.obj',
-          '.class',
-          '.jar',
-          '.war',
-          '.ear',
-          '.swf',
-          '.fla',
-          '.as',
-          '.as3',
-          '.mxml',
-          '.swc',
-          '.swd',
-          '.swz',
-          '.swt',
-          '.air',
-          '.ane',
-          '.ttf',
-          '.woff',
-          '.woff2',
-          '.eot',
-          '.otf',
-          '.psd',
-          '.ai',
-          '.sketch',
-          '.fig',
-          '.xd',
-          '.blend',
-          '.fbx',
-          '.obj',
-          '.mtl',
-          '.stl',
-          '.3ds',
-          '.dae',
-          '.max',
-          '.ma',
-          '.mb',
-          '.lwo',
-          '.lws',
-          '.lxo',
-          '.c4d',
-        ]
-
         const {
           rootPath,
           // ignore not code file ext
-          excludeExts = DEFAULT_EXCLUDE_EXTS,
+          excludeExts = DEFAULT_EXCLUDE_FILE_EXTS,
         } = query
         const finalPath = PathUtils.resolve(rootPath)
 
@@ -116,17 +29,30 @@ export const commonFilesControllers: ControllerConfig = {
           return
         }
 
-        const { tree, exts } = await getCommonFileTree({
+        const { config: userConfig } = await loadUserConfig(finalPath)
+
+        const allFileExts: Set<string> = new Set()
+
+        const { tree, includeFileExts } = await getCommonFileTree({
           rootPath,
           isValidPath: (filePath) => {
+            if (PathUtils.isFile(filePath)) {
+              const ext = PathUtils.extname(filePath)
+              ext && allFileExts.add(ext)
+            }
+
             return !excludeExts.some(ext => filePath.endsWith(ext))
           },
+          includes: userConfig.includes,
+          excludes: userConfig.excludes,
+          respectGitIgnore: userConfig.respectGitIgnore,
         })
 
         sendSuccessResponse(res, {
           data: {
             filesInfoTree: tree,
-            fileExts: exts,
+            includeFileExts,
+            allFileExts: [...allFileExts],
           } satisfies GetCommonFilesResData,
         })
       },

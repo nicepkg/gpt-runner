@@ -1,5 +1,5 @@
 // PopoverMenu.tsx
-import React, { useLayoutEffect, useState } from 'react'
+import React, { useEffect, useLayoutEffect, useState } from 'react'
 import { Popover } from 'react-tiny-popover'
 import { useHover } from '../../hooks/use-hover.hook'
 import { useSize } from '../../hooks/use-size.hook'
@@ -41,6 +41,7 @@ export const PopoverMenu: React.FC<PopoverMenuProps> = (props) => {
   const [privateIsPopoverOpen, setPrivateIsPopoverOpen] = useState(false)
   const [childrenHoverRef, isChildrenHovering] = useHover()
   const [menuMaskHoverRef, isMenuMaskHovering] = useHover()
+  const [keepOpen, setKeepOpen] = useState(false)
   const [, { height: childrenHeight }] = useSize({ ref: childrenHoverRef })
   const isProvideOpenAndChange = isPopoverOpen !== undefined && onPopoverDisplayChange !== undefined
 
@@ -51,6 +52,13 @@ export const PopoverMenu: React.FC<PopoverMenuProps> = (props) => {
   const getOnPopoverDisplayChange = () => {
     return isProvideOpenAndChange ? onPopoverDisplayChange : setPrivateIsPopoverOpen
   }
+
+  useEffect(() => {
+    if (!getIsPopoverOpen())
+      return
+
+    setKeepOpen(true)
+  }, [getIsPopoverOpen()])
 
   const childrenState: PopoverMenuChildrenState = {
     isHovering: isChildrenHovering || getIsPopoverOpen(),
@@ -104,12 +112,13 @@ export const PopoverMenu: React.FC<PopoverMenuProps> = (props) => {
 
   return (
     <Popover
-      isOpen={getIsPopoverOpen()}
+      isOpen={keepOpen}
       positions={[yPosition]}
       align={xPosition === 'left' ? 'start' : 'end'}
       onClickOutside={handleClose}
       containerStyle={{
         zIndex: '1',
+        display: getIsPopoverOpen() ? 'block' : 'none',
       }}
       content={() => (
         <div>

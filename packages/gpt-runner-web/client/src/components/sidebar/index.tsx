@@ -4,11 +4,13 @@ import { useDebounce } from 'react-use'
 import type { TreeProps } from '../tree'
 import { Tree } from '../tree'
 import type { TreeItemBaseStateOtherInfo, TreeItemProps } from '../tree-item'
+import { LoadingView } from '../loading-view'
 import { SidebarHeader, SidebarSearch, SidebarSearchRightWrapper, SidebarSearchWrapper, SidebarTreeWrapper, SidebarUnderSearchWrapper, SidebarWrapper } from './sidebar.styles'
 
 export interface SidebarProps<OtherInfo extends TreeItemBaseStateOtherInfo = TreeItemBaseStateOtherInfo> {
   defaultSearchKeyword?: string
   placeholder?: string
+  loading?: boolean
   tree?: Omit<TreeProps<OtherInfo>, 'filter'>
   buildTreeItem?: (item: TreeItemProps<OtherInfo>) => TreeItemProps<OtherInfo>
   sortTreeItems?: (items: TreeItemProps<OtherInfo>[]) => TreeItemProps<OtherInfo>[]
@@ -21,6 +23,7 @@ export function Sidebar<OtherInfo extends TreeItemBaseStateOtherInfo = TreeItemB
   const {
     defaultSearchKeyword = '',
     placeholder,
+    loading,
     tree,
     buildTreeItem,
     sortTreeItems,
@@ -86,6 +89,7 @@ export function Sidebar<OtherInfo extends TreeItemBaseStateOtherInfo = TreeItemB
       {buildUnderSearchSlot?.()}
     </SidebarUnderSearchWrapper>
     <SidebarTreeWrapper>
+      {loading && <LoadingView absolute></LoadingView>}
       <Tree
         {...tree}
         items={finalItems}

@@ -1,5 +1,5 @@
 import type { FC } from 'react'
-import { useCallback, useEffect } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import type { GptFileInfoTreeItem } from '@nicepkg/gpt-runner-shared/common'
 import { ClientEventName, GptFileTreeItemType } from '@nicepkg/gpt-runner-shared/common'
 import clsx from 'clsx'
@@ -22,6 +22,7 @@ export type GptTreeItemOtherInfo = GptFileInfoTreeItem
 export const ChatSidebar: FC<ChatSidebarProps> = (props) => {
   const { rootPath } = props
   const { activeChatId, sidebarTree, expandChatTreeItem, createChatAndActive, updateSidebarTreeItem, updateActiveChatId, updateUserConfigFromRemote, updateSidebarTreeFromRemote } = useGlobalStore()
+  const [isLoading, setIsLoading] = useState(false)
 
   const { removeChatInstance } = useChatInstance({
     chatId: activeChatId,
@@ -32,8 +33,15 @@ export const ChatSidebar: FC<ChatSidebarProps> = (props) => {
   }, [activeChatId, expandChatTreeItem])
 
   const refreshSidebarTree = useCallback(async () => {
-    await updateUserConfigFromRemote(rootPath)
-    await updateSidebarTreeFromRemote(rootPath)
+    setIsLoading(true)
+
+    try {
+      await updateUserConfigFromRemote(rootPath)
+      await updateSidebarTreeFromRemote(rootPath)
+    }
+    finally {
+      setIsLoading(false)
+    }
   }, [rootPath, updateUserConfigFromRemote, updateSidebarTreeFromRemote])
 
   useEffect(() => {
@@ -159,6 +167,7 @@ export const ChatSidebar: FC<ChatSidebarProps> = (props) => {
 
   const sidebar: SidebarProps<GptTreeItemOtherInfo> = {
     placeholder: 'GPT RUNNER',
+    loading: isLoading,
     tree: {
       items: sidebarTree,
       renderTreeItemLeftSlot,

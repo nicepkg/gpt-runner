@@ -127,7 +127,7 @@ export class FileUtils {
         if (!createFilterByPattern(includes)(filePath))
           return false
 
-        if (!createFilterByPattern(excludes)(filePath))
+        if (createFilterByPattern(excludes)(filePath))
           return false
 
         if (!isValidPath(filePath))

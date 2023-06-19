@@ -36,7 +36,7 @@ export const UserConfigSchema = z.object({
   exts: z.array(z.string()).optional().default(['.gpt.md']),
   includes: FilterPatternSchema.optional().default(null),
   excludes: FilterPatternSchema.optional().default(null),
-  respectGitignore: z.boolean().optional().default(true),
+  respectGitIgnore: z.boolean().optional().default(true),
 }) satisfies z.ZodType<UserConfig>
 
 export const SingleChatMessageSchema = z.object({

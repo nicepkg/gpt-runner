@@ -14,7 +14,7 @@ interface CreateFileTreeParams {
 
 interface CreateFileTreeReturns {
   tree: FileInfoTreeItem[]
-  exts: string[]
+  includeFileExts: string[]
 }
 
 function createFileTree(params: CreateFileTreeParams): CreateFileTreeReturns {
@@ -34,7 +34,8 @@ function createFileTree(params: CreateFileTreeParams): CreateFileTreeReturns {
       const isFile = index === parts.length - 1
 
       if (!pathMap.get(currentPath)) {
-        const ext = isFile ? part.split('.').length > 1 ? part.split('.').pop() : '' : undefined
+        const ext = isFile ? PathUtils.extname(part) : undefined
+
         const tokenNum = isFile ? countFileTokens(currentPath) : 0
         const item = {
           id: currentPath,
@@ -94,7 +95,7 @@ function createFileTree(params: CreateFileTreeParams): CreateFileTreeReturns {
 
   return {
     tree: finalTree,
-    exts: Array.from(exts),
+    includeFileExts: Array.from(exts),
   }
 }
 
@@ -140,9 +141,9 @@ export async function getCommonFileTree(params: GetCommonFileTreeParams): Promis
     },
   })
 
-  const { tree, exts } = createFileTree({ rootPath, filePaths })
+  const { tree, includeFileExts } = createFileTree({ rootPath, filePaths })
 
-  return { tree, exts }
+  return { tree, includeFileExts }
 }
 
 export interface CreateFileContextParams {
