@@ -1,0 +1,71 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+
+      - name: Set node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 19
+          cache: pnpm
+
+      - name: Install And Build
+        run: pnpm i
+
+      - name: Lint
+        run: pnpm lint
+
+  # test:
+  #   runs-on: ${{ matrix.os }}
+
+  #   strategy:
+  #     matrix:
+  #       os: [ubuntu-latest]
+  #       node_version: [16.20.0, 19]
+  #       include:
+  #         - os: macos-latest
+  #           node_version: 19
+  #         - os: windows-latest
+  #           node_version: 19
+  #     fail-fast: false
+
+  #   steps:
+  #     - name: Set git to use LF
+  #       run: |
+  #         git config --global core.autocrlf false
+  #         git config --global core.eol lf
+
+  #     - uses: actions/checkout@v3
+
+  #     - name: Install pnpm
+  #       uses: pnpm/action-setup@v2
+
+  #     - name: Set node ${{ matrix.node_version }}
+  #       uses: actions/setup-node@v3
+  #       with:
+  #         node-version: ${{ matrix.node_version }}
+  #         cache: pnpm
+
+  #     - name: Install And Build
+  #       run: pnpm i
+
+  #     - name: Test
+  #       run: pnpm test
+
+  #     - name: Typecheck
+  #       run: pnpm typecheck
