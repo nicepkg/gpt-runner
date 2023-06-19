@@ -43,8 +43,10 @@
     "tagify",
     "tanstack",
     "tiktoken",
+    "tsup",
     "unconfig",
     "uuidv",
+    "vsix",
     "zustand"
   ],
   "workbench.colorCustomizations": {
