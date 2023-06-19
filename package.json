@@ -14,6 +14,7 @@
     "play": "npm -C playground run dev",
     "lint": "eslint --cache .",
     "lint:fix": "pnpm lint --fix",
+    "pkg:alias": "esno ./scripts/cli-pkg-alias.ts",
     "postinstall": "pnpm build",
     "release": "bumpp -r",
     "stub": "pnpm -r --filter=./packages/* --parallel run stub",
