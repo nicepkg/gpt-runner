@@ -1,1 +1,1 @@
-export * from './server/start-server'
+export * from './dist/server/start-server'

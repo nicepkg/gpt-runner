@@ -30,11 +30,16 @@
       "import": "./dist/index.mjs"
     }
   },
-  "main": "dist/index.cjs",
-  "module": "dist/index.mjs",
-  "types": "index.d.ts",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist/",
+    "LICENSE",
+    "*.md"
+  ],
   "engines": {
-    "node": ">=14"
+    "node": ">=16.18.0"
   },
   "scripts": {
     "build": "unbuild",

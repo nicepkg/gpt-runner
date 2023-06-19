@@ -28,8 +28,14 @@
   "bin": {
     "gptr": "./bin/gpt-runner.mjs"
   },
+  "files": [
+    "bin/",
+    "dist/",
+    "LICENSE",
+    "*.md"
+  ],
   "engines": {
-    "node": ">=14"
+    "node": ">=16.18.0"
   },
   "scripts": {
     "build": "unbuild",

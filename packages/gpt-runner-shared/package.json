@@ -48,6 +48,23 @@
   "main": "dist/common.cjs",
   "module": "dist/common.mjs",
   "types": "dist/common.d.ts",
+  "files": [
+    "dist/",
+    "LICENSE",
+    "*.md",
+    "browser.cjs",
+    "browser.d.ts",
+    "browser.mjs",
+    "common.cjs",
+    "common.d.ts",
+    "common.mjs",
+    "index.cjs",
+    "index.d.ts",
+    "index.mjs",
+    "node.cjs",
+    "node.d.ts",
+    "node.mjs"
+  ],
   "scripts": {
     "build": "unbuild && pnpm build:json-schema",
     "build:json-schema": "pnpm esno ./scripts/zod-to-json-schema.ts",

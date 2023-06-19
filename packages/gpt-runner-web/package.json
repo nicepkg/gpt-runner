@@ -24,40 +24,56 @@
   "sideEffects": false,
   "exports": {
     ".": {
-      "types": "./common.d.ts",
+      "types": "./dist/common/index.d.ts",
       "require": "./dist/common.cjs",
       "import": "./dist/common.mjs"
     },
     "./*": "./*",
     "./server": {
-      "types": "./server.d.ts",
+      "types": "./dist/server/index.d.ts",
       "require": "./dist/server.cjs",
       "import": "./dist/server.mjs"
     },
     "./start-server": {
-      "types": "./start-server.d.ts",
+      "types": "./dist/server/start-server.d.ts",
       "require": "./dist/start-server.cjs",
       "import": "./dist/start-server.mjs"
     },
     "./common": {
-      "types": "./common.d.ts",
+      "types": "./dist/common/index.d.ts",
       "require": "./dist/common.cjs",
       "import": "./dist/common.mjs"
     }
   },
   "main": "dist/common.cjs",
   "module": "dist/common.mjs",
-  "types": "./common.d.ts",
+  "types": "./dist/common/index.d.ts",
+  "files": [
+    "dist/",
+    "LICENSE",
+    "*.md",
+    "common.cjs",
+    "common.d.ts",
+    "common.mjs",
+    "server.cjs",
+    "server.d.ts",
+    "server.mjs",
+    "start-server.cjs",
+    "start-server.d.ts",
+    "start-server.mjs"
+  ],
   "scripts": {
     "build": "pnpm build:server & pnpm build:client",
     "build:client": "vite build --config ./client/vite.config.ts",
-    "build:server": "unbuild",
+    "build:server": "unbuild && pnpm tsc --build tsconfig.dts.json",
     "dev:client": "vite --config ./client/vite.config.ts",
     "dev:server": "cross-env NODE_ENV=development NODE_OPTIONS='--experimental-fetch' NODE_NO_WARNINGS='1' DEBUG='enabled' pnpm esno server/start-server.ts --auto-free-port",
     "start": "cross-env NODE_OPTIONS='--experimental-fetch' NODE_NO_WARNINGS='1' DEBUG='enabled' node dist/start-server.cjs --auto-free-port",
     "stub": "unbuild --stub"
   },
   "devDependencies": {
+    "@kvs/node-localstorage": "^2.1.3",
+    "@kvs/storage": "^2.1.3",
     "@microsoft/fetch-event-source": "^2.0.1",
     "@nicepkg/gpt-runner-core": "workspace:*",
     "@nicepkg/gpt-runner-shared": "workspace:*",
