@@ -24,8 +24,8 @@ jobs:
           node-version: 19
           cache: pnpm
 
-      - name: Install And Build
-        run: pnpm i
+      - name: Install
+        run: pnpm i --ignore-scripts
 
       - name: Lint
         run: pnpm lint

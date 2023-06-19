@@ -26,6 +26,12 @@
       }
     },
     {
+      "files": ["**/*.json"],
+      "rules": {
+        "eol-last": "off"
+      }
+    },
+    {
       "files": ["docs/**/*.*"],
       "rules": {
         "@typescript-eslint/no-require-imports": "off"
