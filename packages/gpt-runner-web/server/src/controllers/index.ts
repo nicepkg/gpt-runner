@@ -7,12 +7,14 @@ import { configControllers } from './config.controller'
 import { gptFilesControllers } from './gpt-files.controller'
 import { storageControllers } from './storage.controller'
 import { allWsControllersConfig } from './ws'
+import { editorControllers } from './editor.controller'
 
 export function processControllers(router: Router) {
   const allControllersConfig: ControllerConfig[] = [
     chatgptControllers,
     commonFilesControllers,
     configControllers,
+    editorControllers,
     gptFilesControllers,
     storageControllers,
   ]

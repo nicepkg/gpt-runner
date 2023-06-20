@@ -11,7 +11,7 @@ export interface PopoverMenuChildrenState {
 }
 
 type YPosition = 'top' | 'bottom'
-type XPosition = 'left' | 'right'
+type XPosition = 'left' | 'right' | 'center'
 
 export interface PopoverMenuProps {
   xPosition?: XPosition
@@ -92,6 +92,8 @@ export const PopoverMenu: React.FC<PopoverMenuProps> = (props) => {
   }> = {
     left: {
     },
+    center: {
+    },
     right: {
     },
   }
@@ -118,7 +120,7 @@ export const PopoverMenu: React.FC<PopoverMenuProps> = (props) => {
     <Popover
       isOpen={keepOpen}
       positions={[yPosition]}
-      align={xPosition === 'left' ? 'start' : 'end'}
+      align={xPosition === 'center' ? 'center' : xPosition === 'left' ? 'start' : 'end'}
       onClickOutside={() => {
         clickOutSideToClose && handleClose()
       }}

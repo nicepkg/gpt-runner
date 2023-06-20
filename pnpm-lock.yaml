@@ -335,6 +335,9 @@ importers:
       ip:
         specifier: ^1.1.8
         version: 1.1.8
+      launch-editor:
+        specifier: ^2.6.0
+        version: 2.6.0
       minimatch:
         specifier: ^9.0.1
         version: 9.0.1
@@ -525,6 +528,9 @@ importers:
       undici:
         specifier: ^5.22.1
         version: 5.22.1
+      unist-util-visit:
+        specifier: ^4.1.2
+        version: 4.1.2
       uuid:
         specifier: ^9.0.0
         version: 9.0.0

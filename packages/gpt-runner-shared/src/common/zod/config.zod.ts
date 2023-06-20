@@ -18,7 +18,7 @@ export const BaseModelConfigSchema = z.object({
 
 export const OpenaiBaseConfigSchema = BaseModelConfigSchema.extend({
   type: z.literal('openai'),
-  openaiKey: z.string(),
+  openaiKey: z.string().optional(),
   temperature: z.number().optional(),
   maxTokens: z.number().optional(),
   topP: z.number().optional(),

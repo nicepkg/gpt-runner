@@ -14,6 +14,7 @@ import { countTokenQuick, formatNumWithK } from '../../../../helpers/utils'
 import { useGlobalStore } from '../../../../store/zustand/global'
 import type { FileInfoSidebarTreeItem, FileSidebarTreeItem } from '../../../../store/zustand/global/file-tree.slice'
 import { PopoverMenu } from '../../../../components/popover-menu'
+import { useTempStore } from '../../../../store/zustand/temp'
 import { FileTreeItemRightWrapper, FileTreeSidebarHighlight, FileTreeSidebarUnderSearchWrapper, FilterWrapper } from './file-tree.styles'
 
 export interface FileTreeProps {
@@ -36,6 +37,7 @@ const FileTree: FC<FileTreeProps> = (props: FileTreeProps) => {
     filePathsTreePrompt,
     updateFilePathsTreePrompt,
   } = useGlobalStore()
+  const { updateFilesRelativePaths } = useTempStore()
 
   const updateMap = useCallback((tree: FileSidebarTreeItem[]) => {
     const result: Record<string, FileSidebarTreeItem> = {}
@@ -115,6 +117,7 @@ const FileTree: FC<FileTreeProps> = (props: FileTreeProps) => {
     if (!filesInfoTree)
       return
 
+    const filesRelativePaths: string[] = []
     const finalFilesSidebarTree = travelTree(filesInfoTree, (item) => {
       const oldIsExpanded = expendedFilePaths.includes(item.fullPath)
       const oldIsChecked = checkedFilePaths.includes(item.fullPath)
@@ -131,12 +134,15 @@ const FileTree: FC<FileTreeProps> = (props: FileTreeProps) => {
         isExpanded: oldIsExpanded,
       }
 
+      item.isFile && filesRelativePaths.push(item.projectRelativePath)
+
       return result
     })
 
     setFilesTree(finalFilesSidebarTree, true)
     updateFilePathsTreePrompt(finalFilesSidebarTree)
-  }, [fetchCommonFilesTreeRes, setFilesTree])
+    updateFilesRelativePaths(filesRelativePaths)
+  }, [fetchCommonFilesTreeRes])
 
   useEffect(() => {
     if (excludeFileExts.length)

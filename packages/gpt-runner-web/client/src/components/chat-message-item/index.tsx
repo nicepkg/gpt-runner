@@ -2,16 +2,16 @@ import type { FC } from 'react'
 import clsx from 'clsx'
 import type { SingleChatMessage } from '@nicepkg/gpt-runner-shared/common'
 import { ChatMessageStatus, ChatRole } from '@nicepkg/gpt-runner-shared/common'
+import type { MessageTextViewProps } from '../chat-message-text-view'
 import { MessageTextView } from '../chat-message-text-view'
 import { Icon } from '../icon'
 import { useHover } from '../../hooks/use-hover.hook'
-import type { MessageCodeBlockProps } from '../chat-message-code-block'
 import { MsgAvatarWrapper, MsgContent, MsgContentFooterWrapper, MsgContentWrapper, MsgWrapper } from './chat-message-item.styles'
 
 export interface BuildMessageToolbarState extends SingleChatMessage {
   status: ChatMessageStatus
 }
-export interface MessageItemProps extends SingleChatMessage, Partial<MessageCodeBlockProps> {
+export interface MessageItemProps extends SingleChatMessage, Partial<MessageTextViewProps> {
   status: ChatMessageStatus
   showToolbar?: 'always' | 'hover' | 'never'
   showAvatar?: boolean
@@ -29,6 +29,7 @@ export const MessageItem: FC<MessageItemProps> = (props) => {
     showToolbar = 'hover',
     buildCodeToolbar,
     buildMessageToolbar,
+    ...messageTextViewProps
   } = props
 
   const [hoverContentRef, isContentHover] = useHover()
@@ -42,6 +43,7 @@ export const MessageItem: FC<MessageItemProps> = (props) => {
       <MessageTextView
         contents={contents}
         buildCodeToolbar={buildCodeToolbar}
+        {...messageTextViewProps}
       />
 
       <MsgContentFooterWrapper className='msg-content-footer'>

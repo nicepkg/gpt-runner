@@ -89,3 +89,11 @@ export interface GetCommonFilesResData {
   includeFileExts: string[]
   allFileExts: string[]
 }
+
+export interface OpenEditorReqParams {
+  rootPath?: string
+  path: string
+  matchContent?: string
+}
+
+export type OpenEditorResData = null

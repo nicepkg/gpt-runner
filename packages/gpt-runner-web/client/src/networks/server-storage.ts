@@ -15,14 +15,12 @@ export async function getServerStorage(params: StorageGetItemReqParams): Promise
 }
 
 export async function saveServerStorage(params: StorageSetItemReqParams): Promise<BaseResponse<StorageSetItemResData>> {
-  const { storageName, key, value } = params
-
   const res = await fetch(`${getGlobalConfig().serverBaseUrl}/api/storage`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ storageName, key, value }),
+    body: JSON.stringify(params),
   })
   const data = await res.json()
   return data

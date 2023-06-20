@@ -1,21 +1,29 @@
 import ReactMarkdown from 'react-markdown'
 import type { FC } from 'react'
 import remarkGfm from 'remark-gfm'
+import type { PluginOptions } from 'react-markdown/lib/react-markdown'
 import type { MessageCodeBlockProps } from '../chat-message-code-block'
 import { MessageCodeBlock } from '../chat-message-code-block'
 
-export interface MessageTextViewProps extends Partial<MessageCodeBlockProps> {
+export interface MessageTextViewProps extends Partial<MessageCodeBlockProps>, PluginOptions {
   contents: string
-
 }
 
 export const MessageTextView: FC<MessageTextViewProps> = (props) => {
-  const { contents, ...messageCodeBlockProps } = props
+  const {
+    contents,
+    remarkPlugins,
+    rehypePlugins,
+    remarkRehypeOptions,
+    ...messageCodeBlockProps
+  } = props
 
   return (
     <ReactMarkdown
       className='markdown-body'
-      remarkPlugins={[remarkGfm]}
+      remarkPlugins={[remarkGfm, ...remarkPlugins || []]}
+      rehypePlugins={rehypePlugins}
+      remarkRehypeOptions={remarkRehypeOptions}
       components={{
         pre({ children, ...props }) {
           if (children.length !== 1) {

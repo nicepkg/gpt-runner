@@ -39,11 +39,13 @@ function createFileTree(params: CreateFileTreeParams): CreateFileTreeReturns {
       const isFile = index === parts.length - 1
 
       if (!pathMap.get(currentPath)) {
+        const relativePath = PathUtils.relative(rootPath, currentPath)
+
         const tokenNum = isFile ? countFileTokens(currentPath) : 0
         const item = {
           id: currentPath,
           parentId: currentParentId || null,
-          projectRelativePath: currentPath.replace(rootPath, ''),
+          projectRelativePath: relativePath,
           fullPath: currentPath,
           name: part,
           isFile,

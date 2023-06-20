@@ -1,4 +1,5 @@
 export * from './check-node-version'
+export * from './editor'
 export * from './file-utils'
 export * from './get-cache-dir'
 export * from './get-storage'

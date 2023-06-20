@@ -1,5 +1,5 @@
 import type { FC, RefObject } from 'react'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { ChatMessageStatus, ChatRole, ClientEventName } from '@nicepkg/gpt-runner-shared/common'
 import { copy } from '@nicepkg/gpt-runner-shared/browser'
 import type { ChatMessagePanelProps } from '../../../../components/chat-message-panel'
@@ -17,7 +17,9 @@ import { PopoverMenu } from '../../../../components/popover-menu'
 import { useKeyboard } from '../../../../hooks/use-keyboard.hook'
 import { DragResizeView } from '../../../../components/drag-resize-view'
 import { useElementSizeRealTime } from '../../../../hooks/use-element-size-real-time'
+import { useTempStore } from '../../../../store/zustand/temp'
 import { ChatPanelPopoverTreeWrapper, ChatPanelWrapper } from './chat-panel.styles'
+import { createRemarkOpenEditorPlugin } from './remark-plugin'
 
 export interface ChatPanelProps {
   scrollDownRef: RefObject<any>
@@ -35,6 +37,42 @@ export const ChatPanel: FC<ChatPanelProps> = (props) => {
   const status = chatInstance?.status ?? ChatMessageStatus.Success
   const [gptFileTreeItem, setGptFileTreeItem] = useState<GptFileTreeItem>()
   const [chatPanelRef, { width: chatPanelWidth }] = useElementSizeRealTime<HTMLDivElement>()
+  const { filesRelativePaths } = useTempStore()
+
+  const filesPathsAllPartsInfo = useMemo(() => {
+    // not good, but fast
+    return filesRelativePaths.map((item) => {
+      return {
+        source: item.startsWith('/') ? `.${item}` : item,
+        matchPath: item,
+      }
+    })
+
+    // good, but slow
+    // const eachLevelPathInfos: { source: string; matchPath: string }[][] = []
+
+    // filesRelativePaths.forEach((item) => {
+    //   const splitPaths = item.split('/')
+
+    //   splitPaths.forEach((_, i) => {
+    //     const levelPath = splitPaths.slice(-(i + 1)).join('/')
+    //     eachLevelPathInfos[i] = eachLevelPathInfos[i] ?? []
+    //     eachLevelPathInfos[i].push({
+    //       source: item.startsWith('/') ? `.${item}` : item,
+    //       matchPath: levelPath,
+    //     })
+    //   })
+    // })
+
+    // const finalPathInfos: { source: string; matchPath: string }[] = []
+
+    // eachLevelPathInfos.forEach((item) => {
+    //   const paths = Array.from(new Set(item))
+    //   finalPathInfos.unshift(...paths)
+    // })
+
+    // return finalPathInfos
+  }, [filesRelativePaths])
 
   useEffect(() => {
     const gptFileTreeItem = getGptFileTreeItemFromChatId(chatId)
@@ -232,6 +270,7 @@ export const ChatPanel: FC<ChatPanelProps> = (props) => {
 
       return {
         ...message,
+        remarkPlugins: [createRemarkOpenEditorPlugin(filesPathsAllPartsInfo)],
         status: isLast ? status : ChatMessageStatus.Success,
         showToolbar: isLastTwo ? 'always' : 'hover',
         showAvatar: chatPanelWidth > 600,
@@ -324,6 +363,7 @@ export const ChatPanel: FC<ChatPanelProps> = (props) => {
       {settingsView && <PopoverMenu
         // isPopoverOpen={true}
         // onPopoverDisplayChange={() => { }}
+        xPosition='center'
         childrenInMenuWhenOpen={false}
         menuStyle={{
           marginLeft: '1rem',
