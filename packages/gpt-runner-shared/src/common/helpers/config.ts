@@ -1,5 +1,6 @@
 import type { SingleFileConfig, UserConfig } from '../types'
-import { DEFAULT_EXCLUDE_FILES } from './constants'
+import { DEFAULT_EXCLUDE_FILES, SECRET_KEY_PLACEHOLDER } from './constants'
+import { EnvConfig } from './env-config'
 
 export function singleFileConfigWithDefault(singleFileConfig?: Partial<SingleFileConfig>): SingleFileConfig {
   return {
@@ -11,7 +12,6 @@ export function userConfigWithDefault(userConfig?: Partial<UserConfig>): UserCon
   return {
     model: {
       type: 'openai',
-      openaiKey: process.env.OPENAI_KEY!,
       modelName: 'gpt-3.5-turbo-16k',
       temperature: 0.9,
       maxTokens: 2000,
@@ -50,8 +50,8 @@ export function resolveSingleFileConfig(params: ResolveSingleFileCConfigParams, 
 }
 
 export function resetUserConfigUnsafeKey(userConfig: UserConfig): UserConfig {
-  if (userConfig.model?.openaiKey)
-    userConfig.model.openaiKey = ''
+  if (userConfig.model?.openaiKey || (userConfig.model?.type === 'openai' && EnvConfig.get('OPENAI_KEY')))
+    userConfig.model.openaiKey = SECRET_KEY_PLACEHOLDER
 
   return userConfig
 }

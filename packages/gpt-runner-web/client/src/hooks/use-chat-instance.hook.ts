@@ -9,7 +9,7 @@ export interface UseChatInstanceProps {
   /**
    * The chat id to use
    */
-  chatId: string
+  chatId: string | undefined
 }
 
 export function useChatInstance(props: UseChatInstanceProps) {
@@ -28,6 +28,8 @@ export function useChatInstance(props: UseChatInstanceProps) {
   } = useGlobalStore()
 
   useEffect(() => {
+    if (!chatId)
+      return
     const instance = getChatInstance(chatId)
     if (instance) {
       if (instance.status === ChatMessageStatus.Pending) {

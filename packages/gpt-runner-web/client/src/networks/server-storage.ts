@@ -1,15 +1,10 @@
-import type { BaseResponse, StorageGetItemReqParams, StorageGetItemResData, StorageSetItemReqParams, StorageSetItemResData } from '@nicepkg/gpt-runner-shared/common'
+import { type BaseResponse, type StorageGetItemReqParams, type StorageGetItemResData, type StorageSetItemReqParams, type StorageSetItemResData, objectToQueryString } from '@nicepkg/gpt-runner-shared/common'
 import { getGlobalConfig } from '../helpers/global-config'
 
-export interface GetServerStorageParams extends StorageGetItemReqParams {
-}
-
-export type GetServerStorageRes = BaseResponse<StorageGetItemResData>
-
-export async function getServerStorage(params: GetServerStorageParams): Promise<GetServerStorageRes> {
-  const { storageName, key } = params
-
-  const res = await fetch(`${getGlobalConfig().serverBaseUrl}/api/storage?storageName=${storageName}&key=${key}`, {
+export async function getServerStorage(params: StorageGetItemReqParams): Promise<BaseResponse<StorageGetItemResData>> {
+  const res = await fetch(`${getGlobalConfig().serverBaseUrl}/api/storage?${objectToQueryString({
+    ...params,
+  })}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -19,12 +14,7 @@ export async function getServerStorage(params: GetServerStorageParams): Promise<
   return data
 }
 
-export interface SaveServerStorageParams extends StorageSetItemReqParams {
-}
-
-export type SaveServerStorageRes = BaseResponse<StorageSetItemResData>
-
-export async function saveServerStorage(params: SaveServerStorageParams): Promise<SaveServerStorageRes> {
+export async function saveServerStorage(params: StorageSetItemReqParams): Promise<BaseResponse<StorageSetItemResData>> {
   const { storageName, key, value } = params
 
   const res = await fetch(`${getGlobalConfig().serverBaseUrl}/api/storage`, {

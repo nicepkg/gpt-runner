@@ -1,5 +1,5 @@
-import { PathUtils, sendFailResponse, sendSuccessResponse, verifyParamsByZod } from '@nicepkg/gpt-runner-shared/node'
-import type { GetUserConfigReqParams, GetUserConfigResData } from '@nicepkg/gpt-runner-shared/common'
+import { PathUtils, checkNodeVersion, sendFailResponse, sendSuccessResponse, verifyParamsByZod } from '@nicepkg/gpt-runner-shared/node'
+import type { GetProjectConfigResData, GetUserConfigReqParams, GetUserConfigResData } from '@nicepkg/gpt-runner-shared/common'
 import { EnvConfig, GetUserConfigReqParamsSchema, resetUserConfigUnsafeKey } from '@nicepkg/gpt-runner-shared/common'
 import { loadUserConfig } from '@nicepkg/gpt-runner-core'
 import pkg from '../../../package.json'
@@ -12,10 +12,14 @@ export const configControllers: ControllerConfig = {
       url: '/',
       method: 'get',
       handler: async (req, res) => {
+        const nodeVersionValidMessage = checkNodeVersion() || ''
+
         sendSuccessResponse(res, {
           data: {
-            version: pkg.version,
-          },
+            gptRunnerVersion: pkg.version,
+            nodeVersion: process.version,
+            nodeVersionValidMessage,
+          } satisfies GetProjectConfigResData,
         })
       },
     },

@@ -15,6 +15,7 @@ const ErrorWrapper = styled.div`
   font-weight: bold;
   background-color: var(--panel-view-background);
   color: var(--foreground);
+  user-select: text;
 `
 
 export const ErrorView: FC<ErrorViewProps> = (props) => {

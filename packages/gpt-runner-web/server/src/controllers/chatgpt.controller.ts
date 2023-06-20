@@ -1,7 +1,7 @@
 import type { Request, Response } from 'express'
 import type { ChatStreamReqParams, FailResponse, SuccessResponse } from '@nicepkg/gpt-runner-shared/common'
-import { ChatStreamReqParamsSchema, EnvConfig, buildFailResponse, buildSuccessResponse } from '@nicepkg/gpt-runner-shared/common'
-import { PathUtils, sendFailResponse, sendSuccessResponse, verifyParamsByZod } from '@nicepkg/gpt-runner-shared/node'
+import { ChatStreamReqParamsSchema, EnvConfig, SECRET_KEY_PLACEHOLDER, STREAM_DONE_FLAG, buildFailResponse, buildSuccessResponse } from '@nicepkg/gpt-runner-shared/common'
+import { PathUtils, sendFailResponse, verifyParamsByZod } from '@nicepkg/gpt-runner-shared/node'
 import { createFileContext, loadUserConfig } from '@nicepkg/gpt-runner-core'
 import { chatgptChain } from '../services'
 import type { ControllerConfig } from './../types'
@@ -9,15 +9,6 @@ import type { ControllerConfig } from './../types'
 export const chatgptControllers: ControllerConfig = {
   namespacePath: '/chatgpt',
   controllers: [
-    {
-      url: '/health',
-      method: 'get',
-      handler: async (req: Request, res: Response) => {
-        sendSuccessResponse(res, {
-          data: 'ok',
-        })
-      },
-    },
     {
       url: '/chat-stream',
       method: 'post',
@@ -53,6 +44,7 @@ export const chatgptControllers: ControllerConfig = {
         } = singleFileConfig?.model || {}
 
         let finalPath = ''
+
         if (rootPath) {
           finalPath = PathUtils.resolve(rootPath)
 
@@ -64,6 +56,9 @@ export const chatgptControllers: ControllerConfig = {
           }
 
           const { config: userConfig } = await loadUserConfig(finalPath)
+
+          if (openaiKey === SECRET_KEY_PLACEHOLDER)
+            openaiKey = ''
 
           openaiKey = openaiKey || userConfig?.model?.openaiKey || EnvConfig.get('OPENAI_KEY')
         }
@@ -118,7 +113,7 @@ export const chatgptControllers: ControllerConfig = {
         }
         finally {
           sendSuccessData({
-            data: '[DONE]',
+            data: STREAM_DONE_FLAG,
           })
           res.end()
         }

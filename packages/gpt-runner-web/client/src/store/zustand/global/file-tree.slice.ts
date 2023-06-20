@@ -15,6 +15,8 @@ export interface FileTreeSlice {
   provideFilePathsTreePromptToGpt: boolean
   expendedFilePaths: string[]
   checkedFilePaths: string[]
+  excludeFileExts: string[]
+  updateExcludeFileExts: (excludeFileExts: string[] | ((oldExcludeFileExts: string[]) => string[])) => void
   updateProvideFilePathsTreePromptToGpt: (provideFilePathsTreePromptToGpt: boolean) => void
   updateFilePathsTreePrompt: (promptOrFileTreeItem: string | FileSidebarTreeItem[]) => void
   updateExpendedFilePaths: (expendedFilePaths: string[] | ((oldExpendedFilePaths: string[]) => string[])) => void
@@ -29,6 +31,7 @@ function getInitialState() {
     provideFilePathsTreePromptToGpt: false,
     expendedFilePaths: [],
     checkedFilePaths: [],
+    excludeFileExts: [],
   } satisfies FileTreeState
 }
 
@@ -39,6 +42,13 @@ export const createFileTreeSlice: StateCreator<
   FileTreeSlice
 > = (set, get) => ({
   ...getInitialState(),
+  updateExcludeFileExts(excludeFileExts) {
+    const _excludeFileExts = typeof excludeFileExts === 'function' ? excludeFileExts(get().excludeFileExts) : excludeFileExts
+
+    set({
+      excludeFileExts: [...new Set(_excludeFileExts)],
+    })
+  },
   updateProvideFilePathsTreePromptToGpt(provideFilePathsTreePromptToGpt) {
     set({ provideFilePathsTreePromptToGpt })
   },

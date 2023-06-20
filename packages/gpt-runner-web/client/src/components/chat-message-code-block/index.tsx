@@ -17,7 +17,7 @@ export const MessageCodeBlock: FC<MessageCodeBlockProps> = (props) => {
   const { contents, language, buildCodeToolbar } = props
 
   return (
-    <CodeBlockWrapper>
+    <CodeBlockWrapper className='msg-code-block'>
       {buildCodeToolbar && <CodeBlockHeader>
         {buildCodeToolbar({ contents })}
       </CodeBlockHeader>}

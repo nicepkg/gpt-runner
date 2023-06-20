@@ -37,7 +37,9 @@ export const SidebarSearch = styled(VSCodeTextField)`
 `
 
 export const SidebarSearchRightWrapper = styled.div`
-  height: calc(100% - var(--border-width) * 1px * 2);
+  height: 100%;
+  display: flex;
+  align-items: stretch;
 `
 
 export const SidebarTreeWrapper = styled.div`

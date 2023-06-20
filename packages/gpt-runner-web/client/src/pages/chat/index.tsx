@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { VSCodePanelTab, VSCodePanelView } from '@vscode/webview-ui-toolkit/react'
 import { ChatMessageStatus } from '@nicepkg/gpt-runner-shared/common'
 import { useWindowSize } from 'react-use'
+import { useQuery } from '@tanstack/react-query'
 import { useIsMobile } from '../../hooks/use-is-mobile.hook'
 import { FlexRow } from '../../styles/global.styles'
 import { useScrollDown } from '../../hooks/use-scroll-down.hook'
@@ -11,6 +12,7 @@ import { useGlobalStore } from '../../store/zustand/global'
 import { getGlobalConfig } from '../../helpers/global-config'
 import { ErrorView } from '../../components/error-view'
 import { DragResizeView } from '../../components/drag-resize-view'
+import { fetchProjectInfo } from '../../networks/config'
 import { SidebarWrapper, StyledVSCodePanels } from './chat.styles'
 import { ChatSidebar } from './components/chat-sidebar'
 import { ChatPanel } from './components/chat-panel'
@@ -31,6 +33,10 @@ const Chat: FC = () => {
   const [scrollDownRef, scrollDown, getScrollBottom] = useScrollDown()
   const [tabActiveId, setTabActiveId] = useState(TabId.Explore)
   const showFileTreeOnRightSide = windowWidth >= 1000
+  const { data: fetchProjectInfoRes } = useQuery({
+    queryKey: ['fetchProjectInfo'],
+    queryFn: () => fetchProjectInfo(),
+  })
 
   // when active chat id change, change tab active id
   useEffect(() => {
@@ -79,9 +85,9 @@ const Chat: FC = () => {
       return null
 
     return <SidebarWrapper className='sidebar-wrapper'>
-      <Settings showSingleFileConfig={showSingleFileConfig}></Settings>
+      <Settings chatId={activeChatId} showSingleFileConfig={showSingleFileConfig}></Settings>
     </SidebarWrapper>
-  }, [])
+  }, [activeChatId])
 
   const renderChatPanel = useCallback(() => {
     return <ChatPanel
@@ -104,6 +110,9 @@ const Chat: FC = () => {
 
   if (!getGlobalConfig().rootPath)
     return <ErrorView text="Please provide the root path!"></ErrorView>
+
+  if (fetchProjectInfoRes?.data?.nodeVersionValidMessage)
+    return <ErrorView text={fetchProjectInfoRes?.data?.nodeVersionValidMessage}></ErrorView>
 
   if (isMobile) {
     const viewStyle: CSSProperties = {

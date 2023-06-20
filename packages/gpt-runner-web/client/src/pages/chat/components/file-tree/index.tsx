@@ -13,7 +13,8 @@ import { IconButton } from '../../../../components/icon-button'
 import { countTokenQuick, formatNumWithK } from '../../../../helpers/utils'
 import { useGlobalStore } from '../../../../store/zustand/global'
 import type { FileInfoSidebarTreeItem, FileSidebarTreeItem } from '../../../../store/zustand/global/file-tree.slice'
-import { FileTreeItemRightWrapper, FileTreeSidebarHighlight, FileTreeSidebarUnderSearchWrapper } from './file-tree.styles'
+import { PopoverMenu } from '../../../../components/popover-menu'
+import { FileTreeItemRightWrapper, FileTreeSidebarHighlight, FileTreeSidebarUnderSearchWrapper, FilterWrapper } from './file-tree.styles'
 
 export interface FileTreeProps {
   rootPath: string
@@ -24,6 +25,8 @@ const FileTree: FC<FileTreeProps> = (props: FileTreeProps) => {
   const [filesTree, _setFilesTree] = useState<FileSidebarTreeItem[]>([])
   const fullPathFileMapRef = useRef<Record<string, FileSidebarTreeItem>>({})
   const {
+    excludeFileExts,
+    updateExcludeFileExts,
     expendedFilePaths,
     updateExpendedFilePaths,
     checkedFilePaths,
@@ -64,10 +67,12 @@ const FileTree: FC<FileTreeProps> = (props: FileTreeProps) => {
   }, [filesTree, setFilesTree])
 
   const { data: fetchCommonFilesTreeRes, isLoading } = useQuery({
-    queryKey: ['file-tree', rootPath],
+    queryKey: ['file-tree', rootPath, excludeFileExts.join(',')],
     enabled: !!rootPath,
+    keepPreviousData: true,
     queryFn: () => fetchCommonFilesTree({
       rootPath,
+      excludeExts: excludeFileExts,
     }),
   })
 
@@ -79,6 +84,10 @@ const FileTree: FC<FileTreeProps> = (props: FileTreeProps) => {
     // check all path in checkedFilePaths
     checkedFilePaths.forEach((fullPath) => {
       const file = fullPathFileMapRef.current[fullPath]
+
+      if (!file?.otherInfo)
+        return
+
       file.otherInfo!.checked = true
     })
 
@@ -128,6 +137,16 @@ const FileTree: FC<FileTreeProps> = (props: FileTreeProps) => {
     setFilesTree(finalFilesSidebarTree, true)
     updateFilePathsTreePrompt(finalFilesSidebarTree)
   }, [fetchCommonFilesTreeRes, setFilesTree])
+
+  useEffect(() => {
+    if (excludeFileExts.length)
+      return
+
+    const { includeFileExts = [], allFileExts = [] } = fetchCommonFilesTreeRes?.data || {}
+    const _excludeFileExts = allFileExts.filter(ext => !includeFileExts.includes(ext))
+
+    updateExcludeFileExts(_excludeFileExts)
+  }, [fetchCommonFilesTreeRes])
 
   const renderTreeItemLeftSlot = (props: TreeItemState<FileInfoSidebarTreeItem>) => {
     const { isLeaf, isExpanded, otherInfo } = props
@@ -251,15 +270,56 @@ const FileTree: FC<FileTreeProps> = (props: FileTreeProps) => {
   }, [filesTree, setFilesTree])
 
   const buildSearchRightSlot = () => {
-    return <IconButton
-      style={{
-        marginLeft: '0.5rem',
+    const { allFileExts = [] } = fetchCommonFilesTreeRes?.data || {}
+
+    const handleExtCheckedChange = (ext: string, checked: boolean) => {
+      updateExcludeFileExts((preState) => {
+        if (checked)
+          return preState.filter(item => item !== ext)
+
+        return [...preState, ext]
+      })
+    }
+
+    return <PopoverMenu
+      // isPopoverOpen={true}
+      // onPopoverDisplayChange={() => { }}
+      yPosition='bottom'
+      childrenInMenuWhenOpen={false}
+      clickOutSideToClose={false}
+      menuStyle={{
+        marginLeft: '1rem',
+        marginRight: '1rem',
+      }}
+      childrenStyle={{
         height: '100%',
       }}
-      text='Refresh'
-      showText={false}
-      iconClassName='codicon-filter'
-    ></IconButton>
+      buildChildrenSlot={({ isHovering }) => {
+        return <IconButton
+          text='Filter'
+          iconClassName='codicon-filter'
+          hoverShowText={!isHovering}
+          style={{
+            paddingLeft: '0.5rem',
+            paddingRight: '0.5rem',
+            height: '100%',
+          }}
+        ></IconButton>
+      }}
+      buildMenuSlot={() => {
+        return <FilterWrapper>
+          {allFileExts.map((ext) => {
+            return <VSCodeCheckbox
+              key={ext}
+              checked={!excludeFileExts.includes(ext)}
+              onChange={(e) => {
+                const checked = (e.target as HTMLInputElement).checked
+                handleExtCheckedChange(ext, checked)
+              }}>{ext}</VSCodeCheckbox>
+          })}
+        </FilterWrapper>
+      }}
+    />
   }
 
   const buildUnderSearchSlot = () => {
@@ -270,7 +330,7 @@ const FileTree: FC<FileTreeProps> = (props: FileTreeProps) => {
 
     const checkedFilesContentPromptTokenNum = checkedFilePaths.reduce((pre, cur) => {
       const file = fullPathFileMapRef.current[cur]
-      return pre + (file.otherInfo?.tokenNum ?? 0)
+      return pre + (file?.otherInfo?.tokenNum ?? 0)
     }, 0)
 
     let totalTokenNum = checkedFilesContentPromptTokenNum

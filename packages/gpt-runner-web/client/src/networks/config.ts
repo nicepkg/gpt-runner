@@ -1,15 +1,21 @@
-import type { BaseResponse, GetUserConfigReqParams, GetUserConfigResData } from '@nicepkg/gpt-runner-shared/common'
+import { type BaseResponse, type GetProjectConfigResData, type GetUserConfigReqParams, type GetUserConfigResData, objectToQueryString } from '@nicepkg/gpt-runner-shared/common'
 import { getGlobalConfig } from '../helpers/global-config'
 
-export interface FetchUserConfigParams extends GetUserConfigReqParams {
+export async function fetchUserConfig(params: GetUserConfigReqParams): Promise<BaseResponse<GetUserConfigResData>> {
+  const res = await fetch(`${getGlobalConfig().serverBaseUrl}/api/config/user-config?${objectToQueryString({
+    ...params,
+  })}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+  const data = await res.json()
+  return data
 }
 
-export type FetchUserConfigRes = BaseResponse<GetUserConfigResData>
-
-export async function fetchUserConfig(params: FetchUserConfigParams): Promise<FetchUserConfigRes> {
-  const { rootPath } = params
-
-  const res = await fetch(`${getGlobalConfig().serverBaseUrl}/api/config/user-config?rootPath=${rootPath}`, {
+export async function fetchProjectInfo(): Promise<BaseResponse<GetProjectConfigResData>> {
+  const res = await fetch(`${getGlobalConfig().serverBaseUrl}/api/config`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',

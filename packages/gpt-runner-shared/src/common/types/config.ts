@@ -22,7 +22,7 @@ export interface OpenaiConfig extends BaseModelConfig {
   /**
    * The API key to use for OpenAI API requests.
    */
-  openaiKey: string
+  openaiKey?: string
 
   /**
    * Sampling temperature to use

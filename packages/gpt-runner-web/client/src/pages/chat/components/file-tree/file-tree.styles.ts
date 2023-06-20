@@ -19,3 +19,10 @@ export const FileTreeSidebarHighlight = styled(VSCodeBadge)`
   white-space: nowrap;
   margin: 0 0.25rem;
 `
+
+export const FilterWrapper = styled.div`
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 0.5rem;
+  padding: 0.5rem;
+`

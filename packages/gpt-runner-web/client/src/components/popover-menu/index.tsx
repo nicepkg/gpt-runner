@@ -1,7 +1,7 @@
 // PopoverMenu.tsx
 import React, { useEffect, useLayoutEffect, useState } from 'react'
 import { Popover } from 'react-tiny-popover'
-import { useHover } from '../../hooks/use-hover.hook'
+import { useHoverByMouseLocation } from '../../hooks/use-hover.hook'
 import { useSize } from '../../hooks/use-size.hook'
 import { Children, ChildrenWrapper, Menu, MenuMask } from './popover-menu.styles'
 
@@ -20,6 +20,8 @@ export interface PopoverMenuProps {
   childrenStyle?: React.CSSProperties
   isPopoverOpen?: boolean
   childrenInMenuWhenOpen?: boolean
+  zIndex?: number
+  clickOutSideToClose?: boolean
   onPopoverDisplayChange?: (isPopoverOpen: boolean) => void
   buildMenuSlot: () => React.ReactNode
   buildChildrenSlot: (state: PopoverMenuChildrenState) => React.ReactNode
@@ -33,14 +35,16 @@ export const PopoverMenu: React.FC<PopoverMenuProps> = (props) => {
     childrenStyle,
     isPopoverOpen,
     childrenInMenuWhenOpen = true,
+    zIndex = 1,
+    clickOutSideToClose = true,
     onPopoverDisplayChange,
     buildMenuSlot,
     buildChildrenSlot,
   } = props
 
   const [privateIsPopoverOpen, setPrivateIsPopoverOpen] = useState(false)
-  const [childrenHoverRef, isChildrenHovering] = useHover()
-  const [menuMaskHoverRef, isMenuMaskHovering] = useHover()
+  const [childrenHoverRef, isChildrenHovering] = useHoverByMouseLocation()
+  const [menuMaskHoverRef, isMenuMaskHovering] = useHoverByMouseLocation()
   const [keepOpen, setKeepOpen] = useState(false)
   const [, { height: childrenHeight }] = useSize({ ref: childrenHoverRef })
   const isProvideOpenAndChange = isPopoverOpen !== undefined && onPopoverDisplayChange !== undefined
@@ -115,11 +119,14 @@ export const PopoverMenu: React.FC<PopoverMenuProps> = (props) => {
       isOpen={keepOpen}
       positions={[yPosition]}
       align={xPosition === 'left' ? 'start' : 'end'}
-      onClickOutside={handleClose}
+      onClickOutside={() => {
+        clickOutSideToClose && handleClose()
+      }}
       containerStyle={{
-        zIndex: '1',
+        zIndex: String(zIndex),
         display: getIsPopoverOpen() ? 'block' : 'none',
       }}
+
       content={() => (
         <div>
           <MenuMask

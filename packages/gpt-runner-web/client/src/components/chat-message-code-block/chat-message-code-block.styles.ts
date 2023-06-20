@@ -6,6 +6,7 @@ export const CodeBlockWrapper = styled.div`
   border-radius: 0.5rem;
   background: var(--panel-view-background);
   margin: 1rem 0;
+  user-select: text;
 `
 
 export const CodeBlockHeader = styled.div`

@@ -29,13 +29,16 @@ function createFileTree(params: CreateFileTreeParams): CreateFileTreeReturns {
     let currentPath = rootPath
     let currentParentId = parentId
 
+    const ext = PathUtils.extname(filePath)
+
+    if (ext)
+      exts.add(ext)
+
     parts.forEach((part, index) => {
       currentPath += `/${part}`
       const isFile = index === parts.length - 1
 
       if (!pathMap.get(currentPath)) {
-        const ext = isFile ? PathUtils.extname(part) : undefined
-
         const tokenNum = isFile ? countFileTokens(currentPath) : 0
         const item = {
           id: currentPath,
@@ -44,13 +47,10 @@ function createFileTree(params: CreateFileTreeParams): CreateFileTreeReturns {
           fullPath: currentPath,
           name: part,
           isFile,
-          ext,
+          ext: isFile ? ext : undefined,
           tokenNum,
           children: [],
         } as FileInfoTreeItem
-
-        if (ext)
-          exts.add(ext)
 
         pathMap.set(currentPath, item)
       }
@@ -95,7 +95,7 @@ function createFileTree(params: CreateFileTreeParams): CreateFileTreeReturns {
 
   return {
     tree: finalTree,
-    includeFileExts: Array.from(exts),
+    includeFileExts: [...exts],
   }
 }
 

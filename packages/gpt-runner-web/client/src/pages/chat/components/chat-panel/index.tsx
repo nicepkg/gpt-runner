@@ -295,7 +295,10 @@ export const ChatPanel: FC<ChatPanelProps> = (props) => {
 
       {/* file tree */}
       {fileTreeView && <PopoverMenu
+        isPopoverOpen={true}
+        onPopoverDisplayChange={() => { }}
         childrenInMenuWhenOpen={false}
+        clickOutSideToClose={false}
         menuStyle={{
           marginLeft: '1rem',
           marginRight: '1rem',
@@ -319,6 +322,8 @@ export const ChatPanel: FC<ChatPanelProps> = (props) => {
 
       {/* settings panel */}
       {settingsView && <PopoverMenu
+        // isPopoverOpen={true}
+        // onPopoverDisplayChange={() => { }}
         childrenInMenuWhenOpen={false}
         menuStyle={{
           marginLeft: '1rem',

@@ -1,15 +1,10 @@
-import type { BaseResponse, GetGptFilesReqParams, GetGptFilesTreeResData } from '@nicepkg/gpt-runner-shared/common'
+import { type BaseResponse, type GetGptFilesReqParams, type GetGptFilesTreeResData, objectToQueryString } from '@nicepkg/gpt-runner-shared/common'
 import { getGlobalConfig } from '../helpers/global-config'
 
-export interface FetchGptFilesTreeParams extends GetGptFilesReqParams {
-}
-
-export type FetchGptFilesTreeRes = BaseResponse<GetGptFilesTreeResData>
-
-export async function fetchGptFilesTree(params: FetchGptFilesTreeParams): Promise<FetchGptFilesTreeRes> {
-  const { rootPath } = params
-
-  const res = await fetch(`${getGlobalConfig().serverBaseUrl}/api/gpt-files?rootPath=${rootPath}`, {
+export async function fetchGptFilesTree(params: GetGptFilesReqParams): Promise<BaseResponse<GetGptFilesTreeResData>> {
+  const res = await fetch(`${getGlobalConfig().serverBaseUrl}/api/gpt-files?${objectToQueryString({
+    ...params,
+  })}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
