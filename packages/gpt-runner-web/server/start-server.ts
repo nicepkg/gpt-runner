@@ -1,18 +1,19 @@
 import { program } from 'commander'
 import pkg from '../package.json'
-import type { StartServerProps } from './index'
 import { startServer } from './index'
 
 program.option('-p, --port <port>', 'Port number', parseInt)
 program.option('--auto-free-port', 'Automatically find a free port')
 program.option('--auto-open', 'Automatically open the browser')
+program.option('--client-dist-path <clientDistPath>', 'Client dist path')
 program.option('-v, --version', 'Version number')
 program.parse(process.argv)
 
 interface ProgramOpts {
-  port?: StartServerProps['port']
+  port?: number
   autoFreePort?: boolean
   autoOpen?: boolean
+  clientDistPath?: string
   version?: boolean
 }
 

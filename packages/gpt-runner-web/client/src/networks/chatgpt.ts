@@ -42,6 +42,7 @@ export async function fetchChatgptStream(
         contextFilePaths,
         rootPath,
       } satisfies ChatStreamReqParams),
+      openWhenHidden: true,
       onmessage: onMessage,
       onerror: onError,
     })

@@ -17,22 +17,27 @@ export function openInBrowser(props: OpenInBrowserProps) {
 }
 
 export interface GetPortProps {
-  defaultPort: number
+  defaultPort?: number
   autoFreePort?: boolean
 }
 
 export async function getPort(props: GetPortProps): Promise<number> {
   const { defaultPort, autoFreePort } = props
 
-  if (!autoFreePort)
-    return defaultPort
+  if (defaultPort) {
+    if (!autoFreePort)
+      return defaultPort
 
-  const canUseDefaultPort = await fp.isFreePort(defaultPort)
+    const canUseDefaultPort = await fp.isFreePort(defaultPort)
 
-  if (canUseDefaultPort)
-    return defaultPort
+    if (canUseDefaultPort)
+      return defaultPort
+  }
 
-  const [freePort] = await fp.findFreePorts(1)
+  const [freePort] = await fp.findFreePorts(1, {
+    startPort: 3001,
+    endPort: 9999,
+  })
 
   return freePort
 }

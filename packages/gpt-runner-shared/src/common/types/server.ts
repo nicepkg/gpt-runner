@@ -31,6 +31,13 @@ export interface GetGptFilesTreeResData {
   filesInfoTree: GptFileInfoTree
 }
 
+export interface InitGptFilesReqParams {
+  rootPath: string
+  gptFilesNames: string[]
+}
+
+export type InitGptFilesResData = null
+
 export type GetProjectConfigReqParams = null
 export interface GetProjectConfigResData {
   gptRunnerVersion: string

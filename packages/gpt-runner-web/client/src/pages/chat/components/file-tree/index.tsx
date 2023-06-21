@@ -363,7 +363,7 @@ const FileTree: FC<FileTreeProps> = (props: FileTreeProps) => {
     }
 
     return <FileTreeSidebarUnderSearchWrapper>
-      <FileTreeSidebarHighlight style={{ paddingLeft: 0 }}>{checkedFilePaths.length}</FileTreeSidebarHighlight>
+      <FileTreeSidebarHighlight style={{ marginLeft: 0 }}>{checkedFilePaths.length}</FileTreeSidebarHighlight>
       Files.
       <FileTreeSidebarHighlight>{formatNumWithK(totalTokenNum)}</FileTreeSidebarHighlight>
       Tokens.

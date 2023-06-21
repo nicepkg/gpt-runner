@@ -13,15 +13,16 @@ const dirname = PathUtils.getCurrentDirName(import.meta.url, () => __dirname)
 
 const resolvePath = (...paths: string[]) => path.resolve(dirname, ...paths)
 
-export const clientDistPath = resolvePath('../dist/browser')
+export const DEFAULT_CLIENT_DIST_PATH = resolvePath('../dist/browser')
 
 export interface StartServerProps {
   port?: number
   autoFreePort?: boolean
+  clientDistPath?: string
 }
 
 export async function startServer(props: StartServerProps): Promise<Express> {
-  const { port = 3003, autoFreePort } = props
+  const { port = 3003, autoFreePort, clientDistPath = DEFAULT_CLIENT_DIST_PATH } = props
 
   const finalPort = await getPort({
     defaultPort: port,

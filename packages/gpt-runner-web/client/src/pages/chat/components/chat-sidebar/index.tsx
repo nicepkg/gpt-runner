@@ -21,7 +21,17 @@ export type GptTreeItemOtherInfo = GptFileInfoTreeItem
 
 export const ChatSidebar: FC<ChatSidebarProps> = (props) => {
   const { rootPath } = props
-  const { activeChatId, sidebarTree, expandChatTreeItem, createChatAndActive, updateSidebarTreeItem, updateActiveChatId, updateUserConfigFromRemote, updateSidebarTreeFromRemote } = useGlobalStore()
+  const {
+    activeChatId,
+    sidebarTree,
+    expandChatTreeItem,
+    createChatAndActive,
+    updateSidebarTreeItem,
+    updateActiveChatId,
+    updateUserConfigFromRemote,
+    updateSidebarTreeFromRemote,
+  } = useGlobalStore()
+
   const [isLoading, setIsLoading] = useState(false)
 
   const { removeChatInstance } = useChatInstance({

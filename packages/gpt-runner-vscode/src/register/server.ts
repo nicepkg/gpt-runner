@@ -29,14 +29,20 @@ export async function registerServer(
       const { extensionUri } = ext
       const serverUri = vscode.Uri.joinPath(extensionUri, './dist/web/start-server.cjs')
 
+      // always get a random free port
       const finalPort = await getPort({
-        defaultPort: 3003,
         autoFreePort: true,
       })
 
       state.serverPort = finalPort
 
-      serverProcess = child_process.spawn('node', [serverUri.fsPath, '--port', String(finalPort)], {
+      serverProcess = child_process.spawn('node', [
+        serverUri.fsPath,
+        '--port',
+        String(finalPort),
+        '--client-dist-path',
+        vscode.Uri.joinPath(extensionUri, './dist/web/browser').fsPath,
+      ], {
         env: {
           ...process.env,
           NODE_OPTIONS: '--experimental-fetch',

@@ -31,9 +31,28 @@ export interface ChatPanelProps {
 }
 
 export const ChatPanel: FC<ChatPanelProps> = (props) => {
-  const { scrollDownRef, chatTreeView, fileTreeView, settingsView, chatId, onChatIdChange } = props
-  const { createChatAndActive, getGptFileTreeItemFromChatId } = useGlobalStore()
-  const { chatInstance, updateCurrentChatInstance, generateCurrentChatAnswer, regenerateCurrentLastChatAnswer, stopCurrentGeneratingChatAnswer } = useChatInstance({ chatId })
+  const {
+    scrollDownRef,
+    chatTreeView,
+    fileTreeView,
+    settingsView,
+    chatId,
+    onChatIdChange,
+  } = props
+
+  const {
+    createChatAndActive,
+    getGptFileTreeItemFromChatId,
+  } = useGlobalStore()
+
+  const {
+    chatInstance,
+    updateCurrentChatInstance,
+    generateCurrentChatAnswer,
+    regenerateCurrentLastChatAnswer,
+    stopCurrentGeneratingChatAnswer,
+  } = useChatInstance({ chatId })
+
   const status = chatInstance?.status ?? ChatMessageStatus.Success
   const [gptFileTreeItem, setGptFileTreeItem] = useState<GptFileTreeItem>()
   const [chatPanelRef, { width: chatPanelWidth }] = useElementSizeRealTime<HTMLDivElement>()
@@ -334,8 +353,8 @@ export const ChatPanel: FC<ChatPanelProps> = (props) => {
 
       {/* file tree */}
       {fileTreeView && <PopoverMenu
-        isPopoverOpen={true}
-        onPopoverDisplayChange={() => { }}
+        // isPopoverOpen={true}
+        // onPopoverDisplayChange={() => { }}
         childrenInMenuWhenOpen={false}
         clickOutSideToClose={false}
         menuStyle={{

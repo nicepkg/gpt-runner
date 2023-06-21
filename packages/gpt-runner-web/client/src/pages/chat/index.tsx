@@ -18,6 +18,7 @@ import { ChatSidebar } from './components/chat-sidebar'
 import { ChatPanel } from './components/chat-panel'
 import FileTree from './components/file-tree'
 import { Settings } from './components/settings'
+import { InitGptFiles } from './components/init-gpt-files'
 
 enum TabId {
   Explore = 'explore',
@@ -28,7 +29,7 @@ enum TabId {
 const Chat: FC = () => {
   const isMobile = useIsMobile()
   const { width: windowWidth, height: windowHeight } = useWindowSize()
-  const { activeChatId, updateActiveChatId } = useGlobalStore()
+  const { activeChatId, sidebarTree, updateActiveChatId, updateSidebarTreeFromRemote } = useGlobalStore()
   const { chatInstance } = useChatInstance({ chatId: activeChatId })
   const [scrollDownRef, scrollDown, getScrollBottom] = useScrollDown()
   const [tabActiveId, setTabActiveId] = useState(TabId.Explore)
@@ -37,6 +38,7 @@ const Chat: FC = () => {
     queryKey: ['fetchProjectInfo'],
     queryFn: () => fetchProjectInfo(),
   })
+  const rootPath = getGlobalConfig().rootPath
 
   // when active chat id change, change tab active id
   useEffect(() => {
@@ -63,25 +65,25 @@ const Chat: FC = () => {
   }, [scrollDownRef.current])
 
   const renderSidebar = useCallback(() => {
-    if (!getGlobalConfig().rootPath)
+    if (!rootPath)
       return null
 
     return <SidebarWrapper className='sidebar-wrapper'>
-      <ChatSidebar rootPath={getGlobalConfig().rootPath}></ChatSidebar>
+      <ChatSidebar rootPath={rootPath}></ChatSidebar>
     </SidebarWrapper>
   }, [])
 
   const renderFileTree = useCallback(() => {
-    if (!getGlobalConfig().rootPath)
+    if (!rootPath)
       return null
 
     return <SidebarWrapper className='sidebar-wrapper'>
-      <FileTree rootPath={getGlobalConfig().rootPath}></FileTree>
+      <FileTree rootPath={rootPath}></FileTree>
     </SidebarWrapper>
   }, [])
 
   const renderSettings = useCallback((showSingleFileConfig = false) => {
-    if (!getGlobalConfig().rootPath)
+    if (!rootPath)
       return null
 
     return <SidebarWrapper className='sidebar-wrapper'>
@@ -108,11 +110,18 @@ const Chat: FC = () => {
     updateActiveChatId,
   ])
 
-  if (!getGlobalConfig().rootPath)
+  if (!rootPath)
     return <ErrorView text="Please provide the root path!"></ErrorView>
 
   if (fetchProjectInfoRes?.data?.nodeVersionValidMessage)
     return <ErrorView text={fetchProjectInfoRes?.data?.nodeVersionValidMessage}></ErrorView>
+
+  if (!sidebarTree?.length) {
+    return <InitGptFiles
+      rootPath={rootPath}
+      onCreated={() => updateSidebarTreeFromRemote(rootPath)}
+    ></InitGptFiles>
+  }
 
   if (isMobile) {
     const viewStyle: CSSProperties = {

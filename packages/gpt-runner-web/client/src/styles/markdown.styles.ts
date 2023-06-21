@@ -291,6 +291,7 @@ export const MarkdownStyle = createGlobalStyle`
       padding: 0 0.25rem;
       white-space: nowrap;
       background: var(--button-primary-background);
+      color: var(--button-primary-foreground);
       border-radius: 0.25rem;
       margin: 0 0.25rem;
     }

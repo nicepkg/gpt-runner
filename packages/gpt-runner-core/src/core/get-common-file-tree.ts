@@ -180,5 +180,12 @@ ${content}
     tips += fileTips
   }
 
+  tips += `When you want to create/modify/delete a file or talk about a file, you should always return the full path of the file.
+
+For example, if I provide you with a file path \`src/component/button.ts\`, you should return \`src/component/button.ts\` instead of \`button.ts\ when you talk about it.
+
+Return full path is very important !!!
+`
+
   return tips
 }

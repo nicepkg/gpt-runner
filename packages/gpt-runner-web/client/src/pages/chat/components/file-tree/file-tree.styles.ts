@@ -10,9 +10,12 @@ export const FileTreeItemRightWrapper = styled.div`
 
 export const FileTreeSidebarUnderSearchWrapper = styled.div`
   font-size: var(--type-ramp-base-font-size);
-  margin-top: 0.25rem;
   color: var(--input-foreground);
-  padding: 0.5rem 0;
+  margin-bottom: 1rem;
+
+  & ::part(control) {
+    flex-shrink: 0;
+  }
 `
 
 export const FileTreeSidebarHighlight = styled(VSCodeBadge)`
