@@ -5,7 +5,7 @@ import { IconButton } from '../../../../components/icon-button'
 import { initGptFiles } from '../../../../networks/gpt-files'
 import { getGlobalConfig } from '../../../../helpers/global-config'
 import { LoadingView } from '../../../../components/loading-view'
-import { StyledVSCodeTag, Title, Wrapper } from './init-gpt-files.styles'
+import { Badge, Title, Wrapper } from './init-gpt-files.styles'
 
 export interface InitGptFilesProps {
   rootPath: string
@@ -40,18 +40,19 @@ export const InitGptFiles: FC<InitGptFilesProps> = (props) => {
   return <Wrapper>
     <Title>
       There is no
-      <StyledVSCodeTag>xxx.gpt.md</StyledVSCodeTag>
+      <Badge>xxx.gpt.md</Badge>
       file in the current directory.
     </Title>
     <Title>
       Do you need to create a
-      <StyledVSCodeTag>./{GPT_RUNNER_OFFICIAL_FOLDER}/copilot.gpt.md</StyledVSCodeTag>
+      <Badge>./{GPT_RUNNER_OFFICIAL_FOLDER}/copilot.gpt.md</Badge>
       file?
     </Title>
     <IconButton
       text='Yes, Create'
       hoverShowText={false}
       iconClassName='codicon-new-file'
+      appearance='primary'
       onClick={handleCreate}></IconButton>
     {isLoading && <LoadingView absolute></LoadingView>}
   </Wrapper>

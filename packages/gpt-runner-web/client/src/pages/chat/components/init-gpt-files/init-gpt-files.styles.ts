@@ -1,4 +1,3 @@
-import { VSCodeTag } from '@vscode/webview-ui-toolkit/react'
 import { styled } from 'styled-components'
 
 export const Wrapper = styled.div`
@@ -14,17 +13,16 @@ export const Wrapper = styled.div`
 `
 
 export const Title = styled.div`
-  display: flex;
-  align-items: center;
   font-size: 1.2rem;
   margin-bottom: 1rem;
 `
 
-export const StyledVSCodeTag = styled(VSCodeTag)`
+export const Badge = styled.span`
   margin: 0 0.5rem;
-
-  &::part(control) {
-    font-size: 1.1rem;
-    text-transform: lowercase;
-  }
+  padding: 0 0.5rem;
+  display: inline;
+  font-size: 1rem;
+  background: var(--button-primary-background);
+  color: var(--button-primary-foreground);
+  border-radius: 0.25rem;
 `

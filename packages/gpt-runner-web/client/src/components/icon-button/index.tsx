@@ -97,11 +97,11 @@ export const IconButton: FC<IconButtonProps> = (props) => {
 
   return <ButtonWrapper className={clsx('icon-button', className)} style={style} $hoverShowText={hoverShowText}>
     <VSCodeButton
-      {...otherProps}
       onClick={handleClick}
       appearance="secondary"
       ariaLabel={text}
       title={text}
+      {...otherProps}
       style={{
         ...buttonStyle,
         borderRadius: radius,

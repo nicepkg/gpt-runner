@@ -1,7 +1,7 @@
 import type { FC } from 'react'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
-import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism'
 import { CodeBlockHeader, CodeBlockWrapper } from './chat-message-code-block.styles'
+import { vscodeDarkPlus } from './code-style'
 
 export interface BuildCodeToolbarState {
   contents: string
@@ -24,7 +24,7 @@ export const MessageCodeBlock: FC<MessageCodeBlockProps> = (props) => {
       <SyntaxHighlighter
         useInlineStyles={true}
         codeTagProps={{ style: {} }}
-        style={vscDarkPlus}
+        style={vscodeDarkPlus}
         language={language}
       >
         {contents}

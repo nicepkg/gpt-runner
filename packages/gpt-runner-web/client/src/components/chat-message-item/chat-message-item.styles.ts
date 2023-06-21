@@ -1,5 +1,4 @@
-import { css, styled } from 'styled-components'
-import { withBreakpoint } from '../../helpers/with-breakpoint'
+import { styled } from 'styled-components'
 import type { MessageItemProps } from '.'
 
 export const MsgWrapper = styled.div<{ $isMe: boolean }>`
@@ -23,13 +22,8 @@ export const MsgAvatarWrapper = styled.div<{ $isMe: boolean; $showAvatar: boolea
 export const MsgContentWrapper = styled.div<{ $isMe: boolean }>`
   display: flex;
   flex-direction: ${({ $isMe }) => $isMe ? 'row-reverse' : 'row'};
-  max-width: 100%;
   width: 100%;
   position: relative;
-
-  ${withBreakpoint('lg', css`
-    max-width: calc(100% - 6rem);
-  `)}
 `
 
 export const MsgContent = styled.div<{ $showToolbar: MessageItemProps['showToolbar']; $isMe: boolean }>`

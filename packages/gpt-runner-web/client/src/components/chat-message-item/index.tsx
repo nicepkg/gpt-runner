@@ -61,7 +61,13 @@ export const MessageItem: FC<MessageItemProps> = (props) => {
       <MsgAvatarWrapper $showAvatar={showAvatar} $isMe={name === ChatRole.User}>
         <Icon className={clsx(name === ChatRole.User ? 'codicon-account' : 'codicon-github')} />
       </MsgAvatarWrapper>
-      <MsgContentWrapper ref={hoverContentRef} $isMe={name === ChatRole.User}>
+      <MsgContentWrapper
+        ref={hoverContentRef}
+        $isMe={name === ChatRole.User}
+        style={{
+          maxWidth: showAvatar ? 'calc(100% - 6rem)' : '100%',
+        }}
+      >
         {
           showToolbar === 'hover'
             ? (
