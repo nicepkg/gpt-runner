@@ -167,11 +167,13 @@ export const ChatSidebar: FC<ChatSidebarProps> = (props) => {
         return (aCreateTime > bCreateTime) ? -1 : (aCreateTime < bCreateTime) ? 1 : 0
       }
 
-      // sort by name, 0-9 a-z A-Z
-      const aName = a.name?.toLowerCase()
-      const bName = b.name?.toLowerCase()
+      // eslint-disable-next-line no-self-compare
+      if (a.otherInfo?.type === a.otherInfo?.type)
+        return a.name.localeCompare(b.name)
 
-      return (aName < bName) ? -1 : (aName > bName) ? 1 : 0
+      return a.otherInfo?.type === GptFileTreeItemType.Chat || b.otherInfo?.type === GptFileTreeItemType.Folder
+        ? 1
+        : -1
     })
   }, [])
 

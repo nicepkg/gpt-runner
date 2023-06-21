@@ -41,6 +41,19 @@ export function Sidebar<OtherInfo extends TreeItemBaseStateOtherInfo = TreeItemB
   }, 300, [searchKeyword])
 
   useEffect(() => {
+    const sortItems = (items: TreeItemProps<OtherInfo>[] = []) => {
+      const sortedChildren
+        = sortTreeItems && items
+          ? sortTreeItems(items)
+          : items?.sort((a, b) => {
+            if (a.isLeaf === b.isLeaf)
+              return a.name.localeCompare(b.name)
+
+            return a.isLeaf ? 1 : -1
+          })
+      return sortedChildren
+    }
+
     let _finalItems: TreeItemProps<OtherInfo>[] = [...(tree?.items || [])]
 
     _finalItems = travelTreeDeepFirst(tree?.items || [], (item) => {
@@ -50,23 +63,14 @@ export function Sidebar<OtherInfo extends TreeItemBaseStateOtherInfo = TreeItemB
       if (debouncedSearchKeyword && !item.name?.match(new RegExp(debouncedSearchKeyword, 'i')) && !item.children?.length)
         return null
 
-      const sortedChildren
-        = sortTreeItems && item?.children
-          ? sortTreeItems(item.children)
-          : item.children?.sort((a, b) => {
-            // 0-9 a-z A-Z
-            const aName = a.name?.toLowerCase()
-            const bName = b.name?.toLowerCase()
-
-            return (aName < bName) ? -1 : (aName > bName) ? 1 : 0
-          })
+      const sortedChildren = sortItems(item.children)
 
       const finalExpanded = debouncedSearchKeyword ? true : item.isExpanded
 
       return { ...item, isExpanded: finalExpanded, children: sortedChildren }
     })
 
-    setFinalItems(_finalItems)
+    setFinalItems(sortItems(_finalItems))
   }, [buildTreeItem, sortTreeItems, debouncedSearchKeyword, tree?.items])
 
   return <SidebarWrapper>
