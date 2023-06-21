@@ -1,5 +1,6 @@
 import type { ExtensionContext, StatusBarItem } from 'vscode'
 import { StatusBarAlignment, commands, window, workspace } from 'vscode'
+import { checkNodeVersion } from '@nicepkg/gpt-runner-shared/node'
 import { version } from '../package.json'
 import { log } from './log'
 import { ContextLoader } from './contextLoader'
@@ -35,6 +36,13 @@ async function registerRoot(ext: ExtensionContext, status: StatusBarItem, cwd: s
 
 export async function activate(ext: ExtensionContext) {
   log.appendLine(`⚪️ ${EXT_DISPLAY_NAME} for VS Code v${version}\n`)
+
+  const nodeValidMsg = checkNodeVersion()
+
+  if (nodeValidMsg) {
+    window.showErrorMessage(nodeValidMsg)
+    return
+  }
 
   const projectPath = workspace.workspaceFolders?.[0].uri.fsPath
   if (!projectPath) {

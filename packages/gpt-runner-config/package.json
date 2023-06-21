@@ -37,7 +37,7 @@
     "*.md"
   ],
   "engines": {
-    "node": ">=16.18.0"
+    "node": ">=16.15.0"
   },
   "scripts": {
     "build": "unbuild",

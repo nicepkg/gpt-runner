@@ -14,7 +14,7 @@ export const URI_SCHEME = 'gpt-runner'
 
 export const GPT_MD_COMPLETION_ITEM_SNIPPET = `\`\`\`json
 {
-  "title": "common",
+  "title": "common/",
   "model": {
     "type": "openai",
     "modelName": "gpt-3.5-turbo-16k",

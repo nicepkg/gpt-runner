@@ -99,7 +99,7 @@ export async function getGptFilesInfo(params: GetGptFilesInfoParams): Promise<Ge
           const parentPath = ''
 
           const parentFileInfo: GptFileInfoTreeItem = {
-            id: parentTitle,
+            id: parentTitle.endsWith('/') ? parentTitle : `${parentTitle}/`,
             parentId: null,
             path: parentPath,
             name: getName(parentTitle, parentPath),

@@ -1,6 +1,6 @@
 import { cac } from 'cac'
 import { loadUserConfig } from '@nicepkg/gpt-runner-core'
-import { PathUtils, getLocalHostname, getPort, openInBrowser } from '@nicepkg/gpt-runner-shared/node'
+import { PathUtils, checkNodeVersion, getLocalHostname, getPort, getRunServerEnv, openInBrowser } from '@nicepkg/gpt-runner-shared/node'
 import { consola } from 'consola'
 import { cyan, green } from 'colorette'
 import { execa } from 'execa'
@@ -39,6 +39,12 @@ export async function startCli(cwd = PathUtils.resolve(process.cwd()), argv = pr
       const debug = new Debug('gpt-runner-cli')
       debug.log('parse cli options', options)
 
+      const nodeValidMsg = checkNodeVersion()
+      if (nodeValidMsg) {
+        consola.error(nodeValidMsg)
+        process.exit(1)
+      }
+
       const { config } = await loadUserConfig(options.rootPath || options.cwd, options.config)
 
       // TODO: add support for config file and watching
@@ -52,8 +58,7 @@ export async function startCli(cwd = PathUtils.resolve(process.cwd()), argv = pr
       const startServerProcessPromise = execa('node', [startServerJsPath, '--port', String(finalPort)], {
         env: {
           ...process.env,
-          NODE_OPTIONS: '--experimental-fetch',
-          NODE_NO_WARNINGS: '1',
+          ...getRunServerEnv(),
         },
       })
 

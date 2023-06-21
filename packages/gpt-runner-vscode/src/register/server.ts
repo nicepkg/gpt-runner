@@ -1,5 +1,5 @@
 import child_process from 'child_process'
-import { getPort } from '@nicepkg/gpt-runner-shared/node'
+import { getPort, getRunServerEnv } from '@nicepkg/gpt-runner-shared/node'
 import type { Disposable, ExtensionContext } from 'vscode'
 import * as vscode from 'vscode'
 import type { ContextLoader } from '../contextLoader'
@@ -45,8 +45,7 @@ export async function registerServer(
       ], {
         env: {
           ...process.env,
-          NODE_OPTIONS: '--experimental-fetch',
-          NODE_NO_WARNINGS: '1',
+          ...getRunServerEnv(),
           DEBUG: 'enabled',
         },
       })
