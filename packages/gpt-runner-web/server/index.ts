@@ -1,5 +1,4 @@
 import './src/proxy'
-import path from 'node:path'
 import http from 'node:http'
 import type { Express } from 'express'
 import express from 'express'
@@ -11,7 +10,7 @@ import { errorHandlerMiddleware } from './src/middleware'
 
 const dirname = PathUtils.getCurrentDirName(import.meta.url, () => __dirname)
 
-const resolvePath = (...paths: string[]) => path.resolve(dirname, ...paths)
+const resolvePath = (...paths: string[]) => PathUtils.resolve(dirname, ...paths)
 
 export const DEFAULT_CLIENT_DIST_PATH = resolvePath('../dist/browser')
 

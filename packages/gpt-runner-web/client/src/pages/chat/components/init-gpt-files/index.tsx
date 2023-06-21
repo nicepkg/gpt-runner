@@ -1,6 +1,6 @@
 import { type FC, useState } from 'react'
 import { useMutation } from '@tanstack/react-query'
-import { type MaybePromise, sleep } from '@nicepkg/gpt-runner-shared/common'
+import { GPT_RUNNER_OFFICIAL_FOLDER, type MaybePromise, sleep } from '@nicepkg/gpt-runner-shared/common'
 import { IconButton } from '../../../../components/icon-button'
 import { initGptFiles } from '../../../../networks/gpt-files'
 import { getGlobalConfig } from '../../../../helpers/global-config'
@@ -45,7 +45,7 @@ export const InitGptFiles: FC<InitGptFilesProps> = (props) => {
     </Title>
     <Title>
       Do you need to create a
-      <StyledVSCodeTag>./gpt-presets/copilot.gpt.md</StyledVSCodeTag>
+      <StyledVSCodeTag>./{GPT_RUNNER_OFFICIAL_FOLDER}/copilot.gpt.md</StyledVSCodeTag>
       file?
     </Title>
     <IconButton

@@ -1,9 +1,9 @@
 import fs from 'fs'
-import path from 'path'
 import type { ExtensionContext } from 'vscode'
 import * as vscode from 'vscode'
 import * as uuid from 'uuid'
 import { toUnixPath } from '@nicepkg/gpt-runner-shared/common'
+import { PathUtils } from '@nicepkg/gpt-runner-shared/node'
 import type { ContextLoader } from '../contextLoader'
 import { Commands, EXT_DISPLAY_NAME, EXT_NAME } from '../constant'
 import { createHash, getServerBaseUrl } from '../utils'
@@ -78,7 +78,7 @@ class ChatViewProvider implements vscode.WebviewViewProvider {
       localResourceRoots: [baseUri],
     }
 
-    const indexHtml = fs.readFileSync(path.join(baseUri.fsPath, 'index.html'), 'utf8')
+    const indexHtml = fs.readFileSync(PathUtils.join(baseUri.fsPath, 'index.html'), 'utf8')
     const nonce = createHash()
 
     const indexHtmlWithBaseUri = indexHtml.replace(

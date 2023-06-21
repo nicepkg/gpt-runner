@@ -1,5 +1,5 @@
 import { FileUtils, PathUtils } from '@nicepkg/gpt-runner-shared/node'
-import { DEFAULT_INIT_FOLDER } from '@nicepkg/gpt-runner-shared/common'
+import { GPT_RUNNER_OFFICIAL_FOLDER } from '@nicepkg/gpt-runner-shared'
 import { copilotMdFile } from './copilot.gpt'
 
 export const gptFilesForInit = {
@@ -14,11 +14,11 @@ export interface InitGptFilesParams {
 }
 
 /**
- * write some .gpt.md files to the <rootPath>/gpt-presets folder
+ * write some .gpt.md files to the <rootPath>/.gpt-runner folder
  */
 export async function initGptFiles(params: InitGptFilesParams) {
   const { rootPath, gptFilesNames } = params
-  const generateTargetFolder = PathUtils.join(rootPath, DEFAULT_INIT_FOLDER)
+  const generateTargetFolder = PathUtils.join(rootPath, GPT_RUNNER_OFFICIAL_FOLDER)
 
   for (const gptFileName of gptFilesNames) {
     const filePath = PathUtils.join(generateTargetFolder, `${gptFileName}.gpt.md`)

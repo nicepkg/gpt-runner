@@ -20,6 +20,16 @@ async function dev() {
     )
   }
 
+  // make symlink from <root>/node_modules/@nicepkg/gpt-runner-shared/dist/json-schema to <root>/dist/json-schema
+  const jsonSchemaDistPath = PathUtils.join(root, 'dist/json-schema')
+  const jsonSchemaDistPathExists = await fs.pathExists(jsonSchemaDistPath)
+  if (!jsonSchemaDistPathExists) {
+    await fs.ensureSymlink(
+      PathUtils.join(root, 'node_modules/@nicepkg/gpt-runner-shared/dist/json-schema'),
+      jsonSchemaDistPath,
+    )
+  }
+
   await execa('tsup', ['--watch', 'src'], { cwd: root, stdio: 'inherit' })
 }
 

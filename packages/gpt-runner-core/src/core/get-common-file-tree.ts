@@ -1,10 +1,9 @@
 import type { FileInfoTreeItem } from '@nicepkg/gpt-runner-shared/common'
 import { travelTreeDeepFirst } from '@nicepkg/gpt-runner-shared/common'
-import type { Ignore } from 'ignore'
-import ignore from 'ignore'
 import type { TravelFilesByFilterPatternParams } from '@nicepkg/gpt-runner-shared/node'
 import { FileUtils, PathUtils } from '@nicepkg/gpt-runner-shared/node'
 import { countFileTokens } from './count-tokens'
+import { getIgnoreFunction } from './gitignore'
 
 interface CreateFileTreeParams {
   rootPath: string
@@ -111,13 +110,7 @@ export type GetCommonFileTreeReturns = CreateFileTreeReturns
 export async function getCommonFileTree(params: GetCommonFileTreeParams): Promise<GetCommonFileTreeReturns> {
   const { rootPath, respectGitIgnore = true, isValidPath, ...othersParams } = params
 
-  const ig: Ignore | null = await (async () => {
-    const gitignorePath = PathUtils.join(rootPath, '.gitignore')
-    const gitignoreContent = await FileUtils.readFile({ filePath: gitignorePath })
-    const ig = ignore().add(gitignoreContent)
-
-    return ig
-  })()
+  const isGitIgnore = await getIgnoreFunction({ rootPath })
 
   const isGitignorePaths = (filePath: string): boolean => {
     if (!respectGitIgnore)
@@ -126,8 +119,7 @@ export async function getCommonFileTree(params: GetCommonFileTreeParams): Promis
     if (filePath && filePath.match(/\/\.git\//))
       return true
 
-    const relativePath = PathUtils.relative(rootPath, filePath)
-    return ig?.ignores(relativePath) ?? false
+    return isGitIgnore(filePath)
   }
 
   const filePaths: string[] = []

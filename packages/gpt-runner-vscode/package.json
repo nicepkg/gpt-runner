@@ -82,8 +82,8 @@
     }
   },
   "scripts": {
-    "build": "tsup",
-    "build:vsix": "pnpm esno ./scripts/build.ts",
+    "build": "pnpm esno ./scripts/build.ts",
+    "build:vsix": "pnpm esno ./scripts/build.ts -- --vsix",
     "dev": "pnpm esno ./scripts/dev.ts",
     "publish": "esno ./scripts/publish.ts"
   },

@@ -10,6 +10,13 @@
   // "typescript.inlayHints.propertyDeclarationTypes.enabled": true,
   "typescript.inlayHints.parameterTypes.enabled": true,
   // "typescript.inlayHints.functionLikeReturnTypes.enabled": true,
+  "[markdown]": {
+    "editor.quickSuggestions": {
+      "other": true,
+      "comments": false,
+      "strings": true
+    },
+  },
   "cSpell.words": [
     "activeid",
     "cachedir",

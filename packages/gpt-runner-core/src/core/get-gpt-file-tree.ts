@@ -1,9 +1,8 @@
 import type { GptFileInfo, GptFileInfoTree, GptFileInfoTreeItem, UserConfig } from '@nicepkg/gpt-runner-shared/common'
 import { GptFileTreeItemType, userConfigWithDefault } from '@nicepkg/gpt-runner-shared/common'
 import { FileUtils, PathUtils } from '@nicepkg/gpt-runner-shared/node'
-import type { Ignore } from 'ignore'
-import ignore from 'ignore'
 import { parseGptFile } from './parser'
+import { getIgnoreFunction } from './gitignore'
 
 export interface GetGptFilesInfoParams {
   userConfig: UserConfig
@@ -27,13 +26,7 @@ export async function getGptFilesInfo(params: GetGptFilesInfoParams): Promise<Ge
     respectGitIgnore = true,
   } = resolvedUserConfig
 
-  const ig: Ignore | null = await (async () => {
-    const gitignorePath = PathUtils.join(rootPath, '.gitignore')
-    const gitignoreContent = await FileUtils.readFile({ filePath: gitignorePath })
-    const ig = ignore().add(gitignoreContent)
-
-    return ig
-  })()
+  const isGitIgnore = await getIgnoreFunction({ rootPath })
 
   const isGitignorePaths = (filePath: string): boolean => {
     if (!respectGitIgnore)
@@ -42,9 +35,7 @@ export async function getGptFilesInfo(params: GetGptFilesInfoParams): Promise<Ge
     if (filePath && filePath.match(/\/\.git\//))
       return true
 
-    const relativePath = PathUtils.relative(rootPath, filePath)
-
-    return ig?.ignores(relativePath) ?? false
+    return isGitIgnore(filePath)
   }
 
   const fullRootPath = PathUtils.resolve(rootPath)

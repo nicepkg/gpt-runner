@@ -1,5 +1,4 @@
 import { promises as fs } from 'node:fs'
-import * as path from 'node:path'
 import { PathUtils } from './path-utils'
 import { FileUtils } from './file-utils'
 
@@ -54,7 +53,7 @@ export class FileManager {
         if (await fs.stat(fullPath).then(stat => stat.isDirectory())) {
           const subDirContentMap = await FileManager.readDir({ directory: fullPath, exclude })
           Object.entries(subDirContentMap).forEach(([relativePath, content]) => {
-            relativePathContentMap[path.join(file, relativePath)] = content
+            relativePathContentMap[PathUtils.join(file, relativePath)] = content
           })
         }
         else {

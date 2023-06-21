@@ -32,3 +32,5 @@ docs/changelog
 docs/_dogfooding/_swizzle_theme_tests
 
 docs/i18n/**/*
+
+.gpt-runner

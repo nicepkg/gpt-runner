@@ -1,13 +1,18 @@
 ```json
 {
-  "title": "common/"
+  "title": "common",
+  "model": {
+    "type": "openai",
+    "modelName": "gpt-3.5-turbo-16k",
+    "temperature": 0.7
+  }
 }
 ```
 
 # System Prompt
 
-this is a system prompt
+input your system prompt here 
 
 # User Prompt
 
-this is a user prompt
+input your user prompt here

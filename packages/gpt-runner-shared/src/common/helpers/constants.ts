@@ -1,7 +1,7 @@
-export const DEFAULT_INIT_FOLDER = 'gpt-presets'
 export const MIN_NODE_VERSION = '16.18.0'
 export const SECRET_KEY_PLACEHOLDER = '********'
 export const STREAM_DONE_FLAG = '[DONE]'
+export const GPT_RUNNER_OFFICIAL_FOLDER = '.gpt-runner'
 
 export const DEFAULT_EXCLUDE_FILES = [
   '**/node_modules',
