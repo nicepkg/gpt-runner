@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express'
-import type { ChatStreamReqParams, FailResponse, SuccessResponse } from '@nicepkg/gpt-runner-shared/common'
+import type { ChatModelType, ChatStreamReqParams, FailResponse, SuccessResponse } from '@nicepkg/gpt-runner-shared/common'
 import { ChatStreamReqParamsSchema, STREAM_DONE_FLAG, buildFailResponse, buildSuccessResponse } from '@nicepkg/gpt-runner-shared/common'
 import { verifyParamsByZod } from '@nicepkg/gpt-runner-shared/node'
 import { createFileContext, getSecrets, loadUserConfig } from '@nicepkg/gpt-runner-core'
@@ -43,7 +43,10 @@ export const llmControllers: ControllerConfig = {
 
         const { config: userConfig } = await loadUserConfig(finalPath)
         const secretFromUserConfig = userConfig.model?.type === model?.type ? userConfig.model?.secrets : undefined
-        const secretsFromStorage = await getSecrets(model?.type || 'openai')
+        let secretsFromStorage = await getSecrets(model?.type as ChatModelType || null)
+        // if some secret value is '' or null or undefined, should remove
+        secretsFromStorage = Object.fromEntries(Object.entries(secretsFromStorage || {}).filter(([_, value]) => value != null && value !== '' && value !== undefined))
+
         const finalSecrets = {
           ...secretFromUserConfig,
           ...secretsFromStorage,

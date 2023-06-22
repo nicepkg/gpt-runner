@@ -1,5 +1,5 @@
 import { FileUtils, PathUtils } from '@nicepkg/gpt-runner-shared/node'
-import { GPT_RUNNER_OFFICIAL_FOLDER } from '@nicepkg/gpt-runner-shared'
+import { GPT_RUNNER_OFFICIAL_FOLDER } from '@nicepkg/gpt-runner-shared/common'
 import { copilotMdFile } from './copilot.gpt'
 
 export const gptFilesForInit = {

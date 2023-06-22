@@ -11,10 +11,14 @@ export const SettingsWrapper = styled.div`
 export const ConfigInfoWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  width: 100%;
-  height: 100%;
-  overflow: auto;
+  overflow-x: auto;
   user-select: text;
+  flex-shrink: 0;
+  width: 100%;
+
+  &:not(:last-child) {
+    border-bottom: 1px solid var(--panel-view-border);
+  }
 
   & .msg-code-block {
     margin: 0;
@@ -30,6 +34,9 @@ export const ConfigInfoWrapper = styled.div`
 `
 
 export const ConfigInfoTitle = styled.div`
-  margin-top: 0.5rem;
-  padding: 0 1rem;
+  margin: 1rem;
+  padding-left: 0.5rem;
+  font-size: 1.2rem;
+  font-weight: bold;
+  border-left: 0.25rem solid var(--foreground);
 `

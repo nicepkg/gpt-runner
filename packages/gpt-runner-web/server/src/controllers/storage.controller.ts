@@ -1,6 +1,6 @@
 import { getStorage, sendSuccessResponse, verifyParamsByZod } from '@nicepkg/gpt-runner-shared/node'
 import type { StorageClearReqParams, StorageClearResData, StorageGetItemReqParams, StorageGetItemResData, StorageRemoveItemReqParams, StorageRemoveItemResData, StorageSetItemReqParams, StorageSetItemResData } from '@nicepkg/gpt-runner-shared/common'
-import { StorageClearReqParamsSchema, StorageGetItemReqParamsSchema, StorageRemoveItemReqParamsSchema, StorageSetItemReqParamsSchema } from '@nicepkg/gpt-runner-shared/common'
+import { ServerStorageName, StorageClearReqParamsSchema, StorageGetItemReqParamsSchema, StorageRemoveItemReqParamsSchema, StorageSetItemReqParamsSchema } from '@nicepkg/gpt-runner-shared/common'
 import type { ControllerConfig } from '../types'
 
 export const storageControllers: ControllerConfig = {
@@ -17,7 +17,18 @@ export const storageControllers: ControllerConfig = {
         const { key, storageName } = query
 
         const { storage, cacheDir } = await getStorage(storageName)
-        const value = await storage.get(key)
+        let value = await storage.get(key)
+
+        const reqHostName = req.hostname
+        const isLocal = ['localhost', '127.0.0.1'].includes(reqHostName)
+
+        // Don't send secrets config to client when not open in localhost
+        if (storageName === ServerStorageName.SecretsConfig && !isLocal) {
+          value = typeof value === 'object'
+            ? Object.fromEntries(Object.entries(value || {})
+              .map(([k, v]) => [k, v ? '*'.repeat(v.length) : null]))
+            : undefined
+        }
 
         sendSuccessResponse(res, {
           data: {
@@ -37,6 +48,13 @@ export const storageControllers: ControllerConfig = {
 
         const { storageName, key, value } = body
         const { storage } = await getStorage(storageName)
+
+        const reqHostName = req.hostname
+        const isLocal = ['localhost', '127.0.0.1'].includes(reqHostName)
+
+        // Don't send secrets config to client when not open in localhost
+        if (storageName === ServerStorageName.SecretsConfig && !isLocal)
+          throw new Error('Cannot set secrets config when not open in localhost')
 
         await storage.set(key, value)
 

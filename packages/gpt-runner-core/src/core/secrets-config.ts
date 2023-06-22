@@ -7,12 +7,10 @@ async function getSecretsStorage() {
   return storage
 }
 
-const chatModelTypeSecretStorageKeyMap = {
-  [ChatModelType.Openai]: 'openai',
-}
+const isValidSecretsStorageKey = (key: string) => Object.values(ChatModelType).includes(key as any)
 
 export interface SetSecretsParams {
-  openai?: Partial<OpenaiSecrets>
+  [ChatModelType.Openai]?: Partial<OpenaiSecrets>
 }
 
 export async function setSecrets(params: SetSecretsParams, override = false) {
@@ -20,8 +18,7 @@ export async function setSecrets(params: SetSecretsParams, override = false) {
   const storage = await getSecretsStorage()
 
   for (const key of keys) {
-    const secretStorageKey = chatModelTypeSecretStorageKeyMap[key]
-    if (!secretStorageKey)
+    if (!isValidSecretsStorageKey(key))
       throw new Error(`Invalid secret storage key ${key}`)
 
     const value = params[key]
@@ -49,14 +46,13 @@ export async function getSecrets<T extends keyof SetSecretsParams | undefined>(k
 
   if (key === undefined) {
     const secrets = {} as SetSecretsParams
-    for (const key of Object.keys(chatModelTypeSecretStorageKeyMap) as (keyof SetSecretsParams)[])
+    for (const key of Object.keys(ChatModelType) as (keyof SetSecretsParams)[])
       secrets[key] = await storage.get(key) as any
 
     return secrets as any
   }
 
-  const secretStorageKey = chatModelTypeSecretStorageKeyMap[key as keyof SetSecretsParams]
-  if (key === null || !secretStorageKey)
+  if (key === null || !isValidSecretsStorageKey(key))
     throw new Error(`Invalid secret storage key ${key}`)
 
   return await storage.get(key) as any

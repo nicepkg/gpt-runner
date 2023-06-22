@@ -4,7 +4,7 @@ import {
 } from 'langchain/prompts'
 import { LLMChain } from 'langchain/chains'
 import { ChatOpenAI } from 'langchain/chat_models/openai'
-import type { ChatModel, SingleChatMessage } from '@nicepkg/gpt-runner-shared/common'
+import { type ChatModel, ChatModelType, type SingleChatMessage } from '@nicepkg/gpt-runner-shared/common'
 import { CallbackManager } from 'langchain/callbacks'
 import type { BaseLanguageModel } from 'langchain/dist/base_language'
 import { mapStoredMessageToChatTemplateMessages } from './helper'
@@ -26,7 +26,7 @@ export async function llmChain(params: LlmChainParams) {
 
   let llm: BaseLanguageModel | null = null
 
-  if (model.type === 'openai') {
+  if (model.type === ChatModelType.Openai) {
     const { secrets, modelName, temperature, maxTokens, topP, frequencyPenalty, presencePenalty } = model
     llm = new ChatOpenAI({
       streaming: true,

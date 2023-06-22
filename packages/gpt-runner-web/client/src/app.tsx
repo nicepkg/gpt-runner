@@ -31,16 +31,13 @@ const FallbackRender: ComponentType<FallbackProps> = ({ error }) => {
 
 export const AppProviders: FC<PropsWithChildren> = ({ children }) => {
   return (
-    <LoadingProvider>
-      <ErrorBoundary FallbackComponent={FallbackRender as any}>
-        <QueryClientProvider client={queryClient}>
-          <>
-            {children}
-          </>
-        </QueryClientProvider>
-      </ErrorBoundary>
-    </LoadingProvider>
-
+    <ErrorBoundary FallbackComponent={FallbackRender as any}>
+      <QueryClientProvider client={queryClient}>
+        <LoadingProvider>
+          {children}
+        </LoadingProvider>
+      </QueryClientProvider>
+    </ErrorBoundary>
   )
 }
 

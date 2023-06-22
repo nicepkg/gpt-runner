@@ -4,12 +4,13 @@ import { StyledVSCodePanels } from '../../chat.styles'
 import { MessageCodeBlock } from '../../../../components/chat-message-code-block'
 import { useGlobalStore } from '../../../../store/zustand/global'
 import { useChatInstance } from '../../../../hooks/use-chat-instance.hook'
+import { FlexColumn } from '../../../../styles/global.styles'
 import { ConfigInfoTitle, ConfigInfoWrapper } from './settings.styles'
+import { OpenaiSettings } from './components/openai-setting'
 
 enum SettingsTabId {
-  Global = 'global',
-  SingleFile = 'single-file',
-  Override = 'override',
+  ConfigInfo = 'configInfo',
+  Settings = 'settings',
 }
 
 export interface SettingsProps {
@@ -19,7 +20,7 @@ export interface SettingsProps {
 
 export const Settings: FC<SettingsProps> = (props) => {
   const { showSingleFileConfig, chatId } = props
-  const [tabActiveId, setTabActiveId] = useState(SettingsTabId.Override)
+  const [tabActiveId, setTabActiveId] = useState(SettingsTabId.Settings)
   const { userConfig, getGptFileTreeItemFromChatId } = useGlobalStore()
   const { chatInstance } = useChatInstance({ chatId })
 
@@ -36,19 +37,21 @@ export const Settings: FC<SettingsProps> = (props) => {
     overflowY: 'auto',
   }
 
-  const infoTitle = 'This is parse result. it\'s readonly:'
   const globalConfigInfo = JSON.stringify(userConfig, null, 4)
   const singleFileConfigInfo = JSON.stringify(chatInstance?.singleFileConfig, null, 4)
   const gptFileName = gptFileTreeItem?.path.split('/').pop()
 
   const renderOverrideSetting = () => {
-    return <div>aaa</div>
+    return <ConfigInfoWrapper>
+      <ConfigInfoTitle>Openai Config</ConfigInfoTitle>
+      <OpenaiSettings></OpenaiSettings>
+    </ConfigInfoWrapper>
   }
 
   const renderGlobalConfigInfo = () => {
     return <ConfigInfoWrapper>
       <ConfigInfoTitle>
-        {infoTitle}
+        gptr.config.json
       </ConfigInfoTitle>
       <MessageCodeBlock language='json' contents={globalConfigInfo}></MessageCodeBlock>
     </ConfigInfoWrapper>
@@ -57,7 +60,7 @@ export const Settings: FC<SettingsProps> = (props) => {
   const renderSingleFileConfigInfo = () => {
     return <ConfigInfoWrapper>
       <ConfigInfoTitle>
-        {infoTitle}
+        {gptFileName}
       </ConfigInfoTitle>
       <MessageCodeBlock language='json' contents={singleFileConfigInfo}></MessageCodeBlock>
     </ConfigInfoWrapper>
@@ -74,18 +77,17 @@ export const Settings: FC<SettingsProps> = (props) => {
       setTabActiveId(activeId)
     }}
   >
-    <VSCodePanelTab id={SettingsTabId.Override}>override setting</VSCodePanelTab>
-    <VSCodePanelTab id={SettingsTabId.SingleFile}>{gptFileName}</VSCodePanelTab>
-    <VSCodePanelTab id={SettingsTabId.Global}>gptr.config.json</VSCodePanelTab>
+    <VSCodePanelTab id={SettingsTabId.Settings}>Settings</VSCodePanelTab>
+    <VSCodePanelTab id={SettingsTabId.ConfigInfo}>Config Info</VSCodePanelTab>
 
-    <VSCodePanelView style={viewStyle} id={SettingsTabId.Override}>
+    <VSCodePanelView style={viewStyle} id={SettingsTabId.Settings}>
       {renderOverrideSetting()}
     </VSCodePanelView>
-    <VSCodePanelView style={viewStyle} id={SettingsTabId.SingleFile}>
-      {renderSingleFileConfigInfo()}
-    </VSCodePanelView>
-    <VSCodePanelView style={viewStyle} id={SettingsTabId.Global}>
-      {renderGlobalConfigInfo()}
+    <VSCodePanelView style={viewStyle} id={SettingsTabId.ConfigInfo}>
+      <FlexColumn style={{ width: '100%' }}>
+        {renderSingleFileConfigInfo()}
+        {renderGlobalConfigInfo()}
+      </FlexColumn>
     </VSCodePanelView>
   </StyledVSCodePanels>
 }

@@ -6,9 +6,10 @@ import type {
   UseControllerProps,
 } from 'react-hook-form'
 import { Controller } from 'react-hook-form'
-import { VSCodeTextField } from '@vscode/webview-ui-toolkit/react'
+import type { VSCodeTextField } from '@vscode/webview-ui-toolkit/react'
 import { ErrorText } from '../hook-form-error'
 import type { GetComponentProps } from '../../../types/common'
+import { StyledVSCodeTextField } from './hook-form-input.styles'
 
 type InputProps = GetComponentProps<InstanceType<typeof VSCodeTextField>>
 
@@ -33,14 +34,14 @@ export function HookFormInput<
     <Controller
       render={({ field }) => (
         <>
-          <VSCodeTextField
+          <StyledVSCodeTextField
             {...{
               ...otherProps,
               ...(typeof filterField === 'function'
                 ? filterField(field)
                 : field),
             }}
-          >{label}</VSCodeTextField>
+          >{label}</StyledVSCodeTextField>
           {errors?.[name] && (
             <ErrorText>
               {String(errors[name]?.message || 'This field is required')}
