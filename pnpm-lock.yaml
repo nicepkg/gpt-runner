@@ -308,9 +308,6 @@ importers:
       langchain:
         specifier: ^0.0.95
         version: 0.0.95(ignore@5.2.4)
-      tiktoken:
-        specifier: ^1.0.7
-        version: 1.0.7
       unconfig:
         specifier: ^0.3.9
         version: 0.3.9
@@ -15238,10 +15235,6 @@ packages:
 
   /thunky@1.1.0:
     resolution: {integrity: sha512-eHY7nBftgThBqOyHGVN+l8gF0BucP09fMo0oO/Lb0w1OF80dJv+lDVpXG60WMQvkcxAkNybKsrEIE3ZtKGmPrA==}
-    dev: false
-
-  /tiktoken@1.0.7:
-    resolution: {integrity: sha512-UoEWsxJssI8sKUJrUXLm0IlVdRHrng1BTHdmz6arbbmy6WY6LZZHXIpR/9c5pOYDsT2e24v04uBTFwh+AYXLiw==}
     dev: false
 
   /time-zone@1.0.0:
