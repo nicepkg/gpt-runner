@@ -2,7 +2,7 @@ import { ChatModelType, type OpenaiSecrets, ServerStorageName } from '@nicepkg/g
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { type FC, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
-import { VSCodeButton } from '@vscode/webview-ui-toolkit/react'
+import { VSCodeButton, VSCodeLink } from '@vscode/webview-ui-toolkit/react'
 import { styled } from 'styled-components'
 import { getServerStorage, saveServerStorage } from '../../../../../../networks/server-storage'
 import { useLoading } from '../../../../../../hooks/use-loading.hook'
@@ -94,6 +94,7 @@ export const OpenaiSettings: FC = () => {
         key={3}
         label="OpenAI api Base path"
         className="field-item-input"
+        placeholder="https://api.openai.com/v1"
         name="basePath"
         errors={formState.errors}
         control={control}
@@ -106,9 +107,13 @@ export const OpenaiSettings: FC = () => {
         label="OpenAI Access token"
         className="field-item-input"
         name="accessToken"
+        placeholder="if you don't have openai api key, please provide access token"
         errors={formState.errors}
         control={control}
       />
+      <div>
+        You can open here to got the access token: <VSCodeLink href="https://chat.openai.com/api/auth/session" target="_blank" rel="noreferrer">https://chat.openai.com/api/auth/session</VSCodeLink>
+      </div>
     </StyledFormItem>
 
     <VSCodeButton
