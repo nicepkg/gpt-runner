@@ -1,28 +1,65 @@
-import type { FilterPattern } from './common'
-import type { ChatRole } from './enum'
+import type { FilterPattern, ValueOf } from './common'
+import type { ChatModelType, ChatRole } from './enum'
 
 export interface BaseModelConfig {
   /**
    * mode type
    */
-  type: string
+  type: ValueOf<ChatModelType>
 
   /**
    * Model name to use
    */
   modelName?: string
+
+  /**
+   * some secrets config, that will not send to client
+   */
+  secrets?: Record<string, any>
 }
 
-export interface OpenaiConfig extends BaseModelConfig {
+export interface OpenaiSecrets {
+  /**
+     * The API key to use for OpenAI API requests.
+     */
+  apiKey?: string
+
+  /**
+   * OpenAI organization id
+   */
+  organization?: string
+
+  /**
+   * OpenAI username
+   */
+  username?: string
+
+  /**
+   * OpenAI password
+   */
+  password?: string
+
+  /**
+   * OpenAI access token
+   */
+  accessToken?: string
+
+  /**
+   * override Chatgpt base path
+   */
+  basePath?: string
+}
+
+export interface OpenaiModelConfig extends BaseModelConfig {
   /**
    * mode type
    */
   type: 'openai'
 
   /**
-   * The API key to use for OpenAI API requests.
+   * openai secret config
    */
-  openaiKey?: string
+  secrets?: OpenaiSecrets
 
   /**
    * Sampling temperature to use
@@ -51,13 +88,15 @@ export interface OpenaiConfig extends BaseModelConfig {
   presencePenalty?: number
 }
 
-export type OpenaiBaseConfig = Omit<OpenaiConfig, 'type'>
+export type GetModelBaseConfig<T extends BaseModelConfig> = Omit<T, 'type'>
+export type OpenaiBaseConfig = GetModelBaseConfig<OpenaiModelConfig>
+export type ChatModel = OpenaiModelConfig
 
 export interface UserConfig {
   /**
    * chat model
    */
-  model?: OpenaiConfig
+  model?: ChatModel
 
   /**
    * @default process.cwd()
@@ -91,7 +130,7 @@ export interface SingleChatMessage {
 }
 
 export interface SingleFileConfig {
-  model?: UserConfig['model']
+  model?: Omit<ChatModel, 'secrets'>
   title?: string
   userPrompt?: string
   systemPrompt?: string

@@ -15,14 +15,12 @@ export interface GetGptFilesInfoResult {
 
 export async function getGptFilesInfo(params: GetGptFilesInfoParams): Promise<GetGptFilesInfoResult> {
   const { userConfig } = params
-
   const resolvedUserConfig = userConfigWithDefault(userConfig)
-
   const {
-    rootPath = process.cwd(),
-    exts = ['.gpt.md'],
-    includes = null,
-    excludes = null,
+    rootPath = '',
+    exts,
+    includes,
+    excludes,
     respectGitIgnore = true,
   } = resolvedUserConfig
 
@@ -46,7 +44,7 @@ export async function getGptFilesInfo(params: GetGptFilesInfoParams): Promise<Ge
 
   await FileUtils.travelFilesByFilterPattern({
     filePath: fullRootPath,
-    exts,
+    exts: [...exts],
     includes,
     excludes,
     isValidPath: (filePath) => {
@@ -56,7 +54,7 @@ export async function getGptFilesInfo(params: GetGptFilesInfoParams): Promise<Ge
       const content = await FileUtils.readFile({ filePath })
       const singleFileConfig = await parseGptFile({
         filePath,
-        userConfig: resolvedUserConfig,
+        userConfig: resolvedUserConfig as UserConfig,
       })
 
       const { title = '' } = singleFileConfig

@@ -1,6 +1,6 @@
 import { z } from 'zod'
-import type { BaseModelConfig, FilterPattern, FormCheckboxGroupConfig, FormFieldBaseConfig, FormInputConfig, FormItemConfig, FormOption, FormRadioGroupConfig, FormSelectConfig, FormTextareaConfig, OpenaiBaseConfig, OpenaiConfig, SingleChatMessage, SingleFileConfig, UserConfig } from '../types'
-import { ChatRoleSchema } from './enum.zod'
+import type { BaseModelConfig, FilterPattern, FormCheckboxGroupConfig, FormFieldBaseConfig, FormInputConfig, FormItemConfig, FormOption, FormRadioGroupConfig, FormSelectConfig, FormTextareaConfig, OpenaiModelConfig, OpenaiSecrets, SingleChatMessage, SingleFileConfig, UserConfig } from '../types'
+import { ChatModelTypeSchema, ChatRoleSchema } from './enum.zod'
 
 export const FilterPatternSchema = z.union([
   z.array(z.union([z.string(), z.instanceof(RegExp)])),
@@ -12,26 +12,35 @@ export const FilterPatternSchema = z.union([
 ]) satisfies z.ZodType<FilterPattern>
 
 export const BaseModelConfigSchema = z.object({
-  type: z.string(),
+  type: ChatModelTypeSchema,
   modelName: z.string().optional(),
 }) satisfies z.ZodType<BaseModelConfig>
 
-export const OpenaiBaseConfigSchema = BaseModelConfigSchema.extend({
+export const OpenaiSecretsSchema = z.object({
+  apiKey: z.string(),
+  organization: z.string().optional(),
+  username: z.string().optional(),
+  password: z.string().optional(),
+  accessToken: z.string().optional(),
+  basePath: z.string().optional(),
+}) satisfies z.ZodType<OpenaiSecrets>
+
+export const OpenaiModelConfigSchema = BaseModelConfigSchema.extend({
   type: z.literal('openai'),
-  openaiKey: z.string().optional(),
+  secrets: OpenaiSecretsSchema.optional(),
   temperature: z.number().optional(),
   maxTokens: z.number().optional(),
   topP: z.number().optional(),
   frequencyPenalty: z.number().optional(),
   presencePenalty: z.number().optional(),
-}) satisfies z.ZodType<OpenaiBaseConfig>
+}) satisfies z.ZodType<OpenaiModelConfig>
 
-export const OpenaiConfigSchema = OpenaiBaseConfigSchema.extend({
-  type: z.literal('openai'),
-}) satisfies z.ZodType<OpenaiConfig>
+export const OpenaiBaseConfigSchema = OpenaiModelConfigSchema.omit({
+  type: true,
+})
 
 export const UserConfigSchema = z.object({
-  model: OpenaiConfigSchema.optional(),
+  model: OpenaiModelConfigSchema.optional(),
   rootPath: z.string().optional(),
   exts: z.array(z.string()).optional().default(['.gpt.md']),
   includes: FilterPatternSchema.optional().default(null),
@@ -91,7 +100,7 @@ export const FormItemConfigSchema = z.union([
 ]) satisfies z.ZodType<FormItemConfig>
 
 export const SingleFileConfigSchema = z.object({
-  model: OpenaiBaseConfigSchema.optional(),
+  model: UserConfigSchema.shape.model,
   title: z.string().optional(),
   userPrompt: z.string().optional(),
   systemPrompt: z.string().optional(),

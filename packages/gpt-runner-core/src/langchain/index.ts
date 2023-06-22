@@ -1,2 +1,1 @@
-export * from './chatgpt-memory.chain'
-export * from './chatgpt.chain'
+export * from './llm.chain'

@@ -1,5 +1,7 @@
 import { z } from 'zod'
-import { ChatMessageStatus, ChatRole, ClientEventName, GptFileTreeItemType, ServerStorageName } from '../types'
+import { ChatMessageStatus, ChatModelType, ChatRole, ClientEventName, GptFileTreeItemType, ServerStorageName } from '../types'
+
+export const ChatModelTypeSchema = z.nativeEnum(ChatModelType)
 
 export const ChatRoleSchema = z.nativeEnum(ChatRole)
 

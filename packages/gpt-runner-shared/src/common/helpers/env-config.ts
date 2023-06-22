@@ -1,7 +1,11 @@
+import { getProcessCwd } from './common'
+
 /* eslint-disable @typescript-eslint/no-namespace */
 export interface Env {
   NODE_ENV?: 'development' | 'production'
-  OPENAI_KEY?: string
+  OPENAI_API_KEY?: string
+  GPTR_DEFAULT_ROOT_PATH?: string
+  GPTR_ONLY_LOAD_CONFIG_PATH?: string
   GPTR_BASE_SERVER_URL?: string
 }
 
@@ -26,8 +30,13 @@ const config: Record<EnvName, EnvVarConfig> = {
   NODE_ENV: {
     defaultValue: 'production',
   },
-  OPENAI_KEY: {
+  OPENAI_API_KEY: {
     serverSideOnly: true,
+  },
+  GPTR_DEFAULT_ROOT_PATH: {
+    defaultValue: getProcessCwd(),
+  },
+  GPTR_ONLY_LOAD_CONFIG_PATH: {
   },
   GPTR_BASE_SERVER_URL: {
     defaultValue: 'http://localhost:3003',
@@ -98,7 +107,7 @@ export class EnvConfig {
    * @returns env vars key value map for window.__env__
    */
   static getClientEnvVarsInServerSide(): Partial<Record<EnvName, string>> {
-    return EnvConfig.getAllEnvVarsOnScopes('client', 'process')
+    return EnvConfig.getAllEnvVarsOnScopes('client', 'all')
   }
 }
 

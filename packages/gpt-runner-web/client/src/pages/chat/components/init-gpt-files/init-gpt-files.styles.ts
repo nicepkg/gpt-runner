@@ -1,7 +1,11 @@
 import { styled } from 'styled-components'
 
 export const Wrapper = styled.div`
-  position: relative;
+  position: fixed;
+  background: var(--panel-view-background);
+  top: 0;
+  left: 0;
+  z-index: 1000;
   display: flex;
   flex-direction: column;
   width: 100%;

@@ -116,75 +116,79 @@ const Chat: FC = () => {
   if (fetchProjectInfoRes?.data?.nodeVersionValidMessage)
     return <ErrorView text={fetchProjectInfoRes?.data?.nodeVersionValidMessage}></ErrorView>
 
-  if (!sidebarTree?.length) {
-    return <InitGptFiles
-      rootPath={rootPath}
-      onCreated={() => updateSidebarTreeFromRemote(rootPath)}
-    ></InitGptFiles>
-  }
+  const renderChat = () => {
+    if (isMobile) {
+      const viewStyle: CSSProperties = {
+        height: '100%',
+        maxHeight: '100%',
+        overflowX: 'hidden',
+        overflowY: 'auto',
+      }
 
-  if (isMobile) {
-    const viewStyle: CSSProperties = {
-      height: '100%',
-      maxHeight: '100%',
-      overflowX: 'hidden',
-      overflowY: 'auto',
+      return <StyledVSCodePanels
+        activeid={tabActiveId}
+        style={viewStyle}
+        onChange={(e: any) => {
+          const activeId = e.target?.activeid as TabId
+          setTabActiveId(activeId)
+          activeId === TabId.Chat && scrollDown()
+        }}
+      >
+        <VSCodePanelTab id={TabId.Explore}>Explore</VSCodePanelTab>
+        <VSCodePanelTab id={TabId.Chat}>Chat</VSCodePanelTab>
+        <VSCodePanelTab id={TabId.Settings}>Settings</VSCodePanelTab>
+        <VSCodePanelView style={viewStyle} id={TabId.Explore}>
+          {renderSidebar()}
+        </VSCodePanelView>
+        <VSCodePanelView style={viewStyle} id={TabId.Chat}>
+          {renderChatPanel()}
+        </VSCodePanelView>
+        <VSCodePanelView style={viewStyle} id={TabId.Settings}>
+          {renderSettings()}
+        </VSCodePanelView>
+      </StyledVSCodePanels>
     }
 
-    return <StyledVSCodePanels
-      activeid={tabActiveId}
-      style={viewStyle}
-      onChange={(e: any) => {
-        const activeId = e.target?.activeid as TabId
-        setTabActiveId(activeId)
-        activeId === TabId.Chat && scrollDown()
-      }}
-    >
-      <VSCodePanelTab id={TabId.Explore}>Explore</VSCodePanelTab>
-      <VSCodePanelTab id={TabId.Chat}>Chat</VSCodePanelTab>
-      <VSCodePanelTab id={TabId.Settings}>Settings</VSCodePanelTab>
-      <VSCodePanelView style={viewStyle} id={TabId.Explore}>
-        {renderSidebar()}
-      </VSCodePanelView>
-      <VSCodePanelView style={viewStyle} id={TabId.Chat}>
-        {renderChatPanel()}
-      </VSCodePanelView>
-      <VSCodePanelView style={viewStyle} id={TabId.Settings}>
-        {renderSettings()}
-      </VSCodePanelView>
-    </StyledVSCodePanels>
-  }
-
-  return <FlexRow style={{ height: '100%' }}>
-    <DragResizeView
-      initWidth={300}
-      initHeight={windowHeight}
-      dragDirectionConfigs={[
-        {
-          direction: 'right',
-          boundary: [-100, 300],
-        },
-      ]}>
-      {renderSidebar()}
-    </DragResizeView>
-
-    {renderChatPanel()}
-
-    {showFileTreeOnRightSide
-      ? <DragResizeView
+    return <FlexRow style={{ height: '100%' }}>
+      <DragResizeView
         initWidth={300}
         initHeight={windowHeight}
         dragDirectionConfigs={[
           {
-            direction: 'left',
-            boundary: [-300, 100],
+            direction: 'right',
+            boundary: [-100, 300],
           },
         ]}>
-        {renderFileTree()}
+        {renderSidebar()}
       </DragResizeView>
-      : null
-    }
-  </FlexRow>
+
+      {renderChatPanel()}
+
+      {showFileTreeOnRightSide
+        ? <DragResizeView
+          initWidth={300}
+          initHeight={windowHeight}
+          dragDirectionConfigs={[
+            {
+              direction: 'left',
+              boundary: [-300, 100],
+            },
+          ]}>
+          {renderFileTree()}
+        </DragResizeView>
+        : null
+      }
+    </FlexRow>
+  }
+
+  return <>
+    {!sidebarTree?.length && <InitGptFiles
+      rootPath={rootPath}
+      onCreated={() => updateSidebarTreeFromRemote(rootPath)}
+    ></InitGptFiles>}
+
+    {renderChat()}
+  </>
 }
 
 Chat.displayName = 'Chat'

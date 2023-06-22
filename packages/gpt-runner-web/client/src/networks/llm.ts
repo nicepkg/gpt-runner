@@ -10,7 +10,7 @@ export interface FetchChatStreamReqParams extends ChatStreamReqParams {
   onError?: (error: any) => void
 }
 
-export async function fetchChatgptStream(
+export async function fetchLlmStream(
   params: FetchChatStreamReqParams,
 ) {
   const {
@@ -48,7 +48,7 @@ export async function fetchChatgptStream(
     })
   }
   catch (error) {
-    console.log('fetchChatgptStream error', error)
+    console.log('fetchLlmStream error', error)
     onError(error)
   }
 }

@@ -1,7 +1,7 @@
 import type { FC } from 'react'
 
 const Home: FC = () => {
-  return <>aaa</>
+  return <></>
 }
 
 Home.displayName = 'Home'

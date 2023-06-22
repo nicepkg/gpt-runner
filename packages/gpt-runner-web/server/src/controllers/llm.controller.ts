@@ -1,12 +1,13 @@
 import type { Request, Response } from 'express'
 import type { ChatStreamReqParams, FailResponse, SuccessResponse } from '@nicepkg/gpt-runner-shared/common'
-import { ChatStreamReqParamsSchema, EnvConfig, SECRET_KEY_PLACEHOLDER, STREAM_DONE_FLAG, buildFailResponse, buildSuccessResponse } from '@nicepkg/gpt-runner-shared/common'
-import { PathUtils, sendFailResponse, verifyParamsByZod } from '@nicepkg/gpt-runner-shared/node'
-import { createFileContext, loadUserConfig } from '@nicepkg/gpt-runner-core'
-import { chatgptChain } from '../services'
-import type { ControllerConfig } from './../types'
+import { ChatStreamReqParamsSchema, STREAM_DONE_FLAG, buildFailResponse, buildSuccessResponse } from '@nicepkg/gpt-runner-shared/common'
+import { verifyParamsByZod } from '@nicepkg/gpt-runner-shared/node'
+import { createFileContext, getSecrets, loadUserConfig } from '@nicepkg/gpt-runner-core'
+import { llmChain } from '../services'
+import { getValidFinalPath } from '../services/valid-path'
+import type { ControllerConfig } from '../types'
 
-export const chatgptControllers: ControllerConfig = {
+export const llmControllers: ControllerConfig = {
   namespacePath: '/chatgpt',
   controllers: [
     {
@@ -32,35 +33,20 @@ export const chatgptControllers: ControllerConfig = {
           rootPath,
         } = body
 
-        let {
-          // OpenaiBaseConfig
-          openaiKey = '',
-          modelName,
-          temperature = 0.7,
-          maxTokens,
-          topP,
-          frequencyPenalty,
-          presencePenalty,
-        } = singleFileConfig?.model || {}
+        const model = singleFileConfig?.model
 
-        let finalPath = ''
+        const finalPath = getValidFinalPath({
+          path: rootPath,
+          assertType: 'directory',
+          fieldName: 'rootPath',
+        })
 
-        if (rootPath) {
-          finalPath = PathUtils.resolve(rootPath)
-
-          if (!PathUtils.isDirectory(finalPath)) {
-            sendFailResponse(res, {
-              message: 'rootPath is not a valid directory',
-            })
-            return
-          }
-
-          const { config: userConfig } = await loadUserConfig(finalPath)
-
-          if (openaiKey === SECRET_KEY_PLACEHOLDER)
-            openaiKey = ''
-
-          openaiKey = openaiKey || userConfig?.model?.openaiKey || EnvConfig.get('OPENAI_KEY')
+        const { config: userConfig } = await loadUserConfig(finalPath)
+        const secretFromUserConfig = userConfig.model?.type === model?.type ? userConfig.model?.secrets : undefined
+        const secretsFromStorage = await getSecrets(model?.type || 'openai')
+        const finalSecrets = {
+          ...secretFromUserConfig,
+          ...secretsFromStorage,
         }
 
         const sendSuccessData = (options: Omit<SuccessResponse, 'type'>) => {
@@ -85,16 +71,13 @@ export const chatgptControllers: ControllerConfig = {
         }
 
         try {
-          const chain = await chatgptChain({
+          const chain = await llmChain({
             messages,
             systemPrompt: finalSystemPrompt,
-            openaiKey,
-            modelName,
-            temperature,
-            maxTokens,
-            topP,
-            frequencyPenalty,
-            presencePenalty,
+            model: {
+              ...model!,
+              secrets: finalSecrets,
+            },
             onTokenStream: (token: string) => {
               sendSuccessData({ data: token })
             },

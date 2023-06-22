@@ -1,7 +1,8 @@
-import { PathUtils, sendFailResponse, sendSuccessResponse, verifyParamsByZod } from '@nicepkg/gpt-runner-shared/node'
+import { PathUtils, sendSuccessResponse, verifyParamsByZod } from '@nicepkg/gpt-runner-shared/node'
 import { DEFAULT_EXCLUDE_FILE_EXTS, type GetCommonFilesReqParams, GetCommonFilesReqParamsSchema, type GetCommonFilesResData } from '@nicepkg/gpt-runner-shared/common'
 import { getCommonFileTree, loadUserConfig } from '@nicepkg/gpt-runner-core'
 import type { ControllerConfig } from '../types'
+import { getValidFinalPath } from '../services/valid-path'
 
 export const commonFilesControllers: ControllerConfig = {
   namespacePath: '/common-files',
@@ -19,15 +20,12 @@ export const commonFilesControllers: ControllerConfig = {
           // ignore not code file ext
           excludeExts = DEFAULT_EXCLUDE_FILE_EXTS,
         } = query
-        const finalPath = PathUtils.resolve(rootPath)
 
-        if (!PathUtils.isDirectory(finalPath)) {
-          sendFailResponse(res, {
-            message: 'rootPath is not a valid directory',
-          })
-
-          return
-        }
+        const finalPath = getValidFinalPath({
+          path: rootPath,
+          assertType: 'directory',
+          fieldName: 'rootPath',
+        })
 
         const { config: userConfig } = await loadUserConfig(finalPath)
 

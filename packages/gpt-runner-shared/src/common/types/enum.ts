@@ -1,3 +1,7 @@
+export enum ChatModelType {
+  Openai = 'openai',
+}
+
 export enum ChatRole {
   User = 'user',
   ASSISTANT = 'assistant',
@@ -24,6 +28,7 @@ export enum GptFileTreeItemType {
 
 export enum ServerStorageName {
   FrontendState = 'frontend-state',
+  SecretsConfig = 'secrets-config',
   WebPreset = 'web-preset',
 }
 

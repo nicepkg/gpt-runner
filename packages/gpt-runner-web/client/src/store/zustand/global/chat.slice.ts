@@ -3,7 +3,7 @@ import type { GptFileInfo, SingleChat, SingleFileConfig, UserConfig } from '@nic
 import { ChatMessageStatus, ChatRole, resolveSingleFileConfig, travelTree } from '@nicepkg/gpt-runner-shared/common'
 import { v4 as uuidv4 } from 'uuid'
 import type { GetState } from '../types'
-import { fetchChatgptStream } from '../../../networks/chatgpt'
+import { fetchLlmStream } from '../../../networks/llm'
 import { fetchUserConfig } from '../../../networks/config'
 import { getGlobalConfig } from '../../../helpers/global-config'
 import type { SidebarTreeItem, SidebarTreeSlice } from './sidebar-tree.slice'
@@ -238,7 +238,7 @@ export const createChatSlice: StateCreator<
 
     chatIdAbortCtrlMap.set(chatId, abortCtrl)
 
-    await fetchChatgptStream({
+    await fetchLlmStream({
       signal: abortCtrl.signal,
       messages: sendMessages,
       prompt: sendInputtingPrompt,
@@ -247,7 +247,7 @@ export const createChatSlice: StateCreator<
       contextFilePaths: state.checkedFilePaths,
       rootPath: getGlobalConfig().rootPath,
       onError(e) {
-        console.error('fetchChatgptStream error:', e)
+        console.error('fetchLlmStream error:', e)
         state.updateChatInstance(chatId, {
           status: ChatMessageStatus.Error,
         }, false)

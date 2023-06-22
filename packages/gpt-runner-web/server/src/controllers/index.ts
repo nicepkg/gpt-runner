@@ -1,7 +1,7 @@
 import type { NextFunction, Router } from 'express'
 import { WssActionName, WssUtils, buildFailResponse } from '@nicepkg/gpt-runner-shared/common'
 import type { Controller, ControllerConfig } from '../types'
-import { chatgptControllers } from './chatgpt.controller'
+import { llmControllers } from './llm.controller'
 import { commonFilesControllers } from './common-files.controller'
 import { configControllers } from './config.controller'
 import { gptFilesControllers } from './gpt-files.controller'
@@ -11,7 +11,7 @@ import { editorControllers } from './editor.controller'
 
 export function processControllers(router: Router) {
   const allControllersConfig: ControllerConfig[] = [
-    chatgptControllers,
+    llmControllers,
     commonFilesControllers,
     configControllers,
     editorControllers,

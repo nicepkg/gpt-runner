@@ -1,9 +1,10 @@
 import type { GptInitFileName } from '@nicepkg/gpt-runner-core'
 import { getGptFilesInfo, initGptFiles, loadUserConfig } from '@nicepkg/gpt-runner-core'
-import { PathUtils, sendFailResponse, sendSuccessResponse, verifyParamsByZod } from '@nicepkg/gpt-runner-shared/node'
+import { sendSuccessResponse, verifyParamsByZod } from '@nicepkg/gpt-runner-shared/node'
 import type { GetGptFilesReqParams, GetGptFilesTreeResData, InitGptFilesReqParams, InitGptFilesResData } from '@nicepkg/gpt-runner-shared/common'
-import { Debug, GetGptFilesReqParamsSchema, InitGptFilesReqParamsSchema, resetUserConfigUnsafeKey } from '@nicepkg/gpt-runner-shared/common'
+import { Debug, GetGptFilesReqParamsSchema, InitGptFilesReqParamsSchema, removeUserConfigUnsafeKey } from '@nicepkg/gpt-runner-shared/common'
 import type { ControllerConfig } from '../types'
+import { getValidFinalPath } from '../services/valid-path'
 
 const debug = new Debug('gpt-files.controller')
 
@@ -19,18 +20,14 @@ export const gptFilesControllers: ControllerConfig = {
         verifyParamsByZod(query, GetGptFilesReqParamsSchema)
 
         const { rootPath } = query
-        const finalPath = PathUtils.resolve(rootPath)
-
-        if (!PathUtils.isDirectory(finalPath)) {
-          sendFailResponse(res, {
-            message: 'rootPath is not a valid directory',
-          })
-
-          return
-        }
+        const finalPath = getValidFinalPath({
+          path: rootPath,
+          assertType: 'directory',
+          fieldName: 'rootPath',
+        })
 
         let { config: userConfig } = await loadUserConfig(finalPath)
-        userConfig = resetUserConfigUnsafeKey(userConfig)
+        userConfig = removeUserConfigUnsafeKey(userConfig)
 
         debug.log('userConfig', userConfig)
 
@@ -55,15 +52,12 @@ export const gptFilesControllers: ControllerConfig = {
         verifyParamsByZod(body, InitGptFilesReqParamsSchema)
 
         const { rootPath, gptFilesNames } = body
-        const finalPath = PathUtils.resolve(rootPath)
 
-        if (!PathUtils.isDirectory(finalPath)) {
-          sendFailResponse(res, {
-            message: 'rootPath is not a valid directory',
-          })
-
-          return
-        }
+        const finalPath = getValidFinalPath({
+          path: rootPath,
+          assertType: 'directory',
+          fieldName: 'rootPath',
+        })
 
         await initGptFiles({
           rootPath: finalPath,

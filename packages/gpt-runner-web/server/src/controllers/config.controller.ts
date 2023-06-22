@@ -1,9 +1,10 @@
-import { PathUtils, checkNodeVersion, sendFailResponse, sendSuccessResponse, verifyParamsByZod } from '@nicepkg/gpt-runner-shared/node'
+import { checkNodeVersion, sendSuccessResponse, verifyParamsByZod } from '@nicepkg/gpt-runner-shared/node'
 import type { GetProjectConfigResData, GetUserConfigReqParams, GetUserConfigResData } from '@nicepkg/gpt-runner-shared/common'
-import { EnvConfig, GetUserConfigReqParamsSchema, resetUserConfigUnsafeKey } from '@nicepkg/gpt-runner-shared/common'
+import { EnvConfig, GetUserConfigReqParamsSchema, removeUserConfigUnsafeKey } from '@nicepkg/gpt-runner-shared/common'
 import { loadUserConfig } from '@nicepkg/gpt-runner-core'
 import pkg from '../../../package.json'
 import type { ControllerConfig } from '../types'
+import { getValidFinalPath } from '../services/valid-path'
 
 export const configControllers: ControllerConfig = {
   namespacePath: '/config',
@@ -43,18 +44,15 @@ export const configControllers: ControllerConfig = {
         verifyParamsByZod(query, GetUserConfigReqParamsSchema)
 
         const { rootPath } = query
-        const finalPath = PathUtils.resolve(rootPath)
 
-        if (!PathUtils.isDirectory(finalPath)) {
-          sendFailResponse(res, {
-            message: 'rootPath is not a valid directory',
-          })
-
-          return
-        }
+        const finalPath = getValidFinalPath({
+          path: rootPath,
+          assertType: 'directory',
+          fieldName: 'rootPath',
+        })
 
         let { config: userConfig } = await loadUserConfig(finalPath)
-        userConfig = resetUserConfigUnsafeKey(userConfig)
+        userConfig = removeUserConfigUnsafeKey(userConfig)
 
         sendSuccessResponse(res, {
           data: {

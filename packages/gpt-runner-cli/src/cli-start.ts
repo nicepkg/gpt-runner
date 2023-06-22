@@ -5,7 +5,7 @@ import { consola } from 'consola'
 import { cyan, green } from 'colorette'
 import { execa } from 'execa'
 import waitPort from 'wait-port'
-import { Debug, toUnixPath } from '@nicepkg/gpt-runner-shared/common'
+import { Debug } from '@nicepkg/gpt-runner-shared/common'
 import { version } from '../package.json'
 import type { CliOptions } from './types'
 
@@ -16,21 +16,21 @@ export async function startCli(cwd = PathUtils.resolve(process.cwd()), argv = pr
   const cli = cac('gptr')
 
   cli
-    .command('[...rootPaths]', 'root path', {
+    .command('[rootPath]', 'root path', {
       ignoreOptionDefaultValue: true,
     })
     .option('-p, --port [port number]', 'Server port', {
       default: 3003,
     })
-    // .option('-c, --config [file]', 'Config file path')
+    .option('-c, --config [file]', 'Config file path')
     // .option('-w, --watch', 'Watch for file changes')
     .option('--no-open', 'Open in browser')
     .option('--debug', 'Debug mode')
-    .action(async (rootPaths: Array<string>, flags) => {
+    .action(async (_, flags) => {
       Object.assign(options, {
         cwd,
         ...flags,
-        rootPath: rootPaths?.[0] || options.rootPath,
+        rootPath: options.rootPath ? PathUtils.resolve(process.cwd(), options.rootPath) : '',
       })
 
       if (options.debug)
@@ -59,6 +59,7 @@ export async function startCli(cwd = PathUtils.resolve(process.cwd()), argv = pr
         env: {
           ...process.env,
           ...getRunServerEnv(),
+          GPTR_ONLY_LOAD_CONFIG_PATH: options.config || '',
         },
       })
 
@@ -69,7 +70,7 @@ export async function startCli(cwd = PathUtils.resolve(process.cwd()), argv = pr
       const afterServerStartSuccess = () => {
         const getUrl = (isLocalIp = false) => {
           const localIp = getLocalHostname()
-          return `http://${isLocalIp ? localIp : 'localhost'}:${finalPort}/#/chat?rootPath=${toUnixPath(config.rootPath)}`
+          return `http://${isLocalIp ? localIp : 'localhost'}:${finalPort}`
         }
 
         consola.success(`\n\n${green(`GPT-Runner web is at:\n\n${cyan(getUrl())}\n\n${cyan(getUrl(true))}\n`)}`)

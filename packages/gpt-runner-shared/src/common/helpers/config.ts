@@ -1,5 +1,6 @@
-import type { SingleFileConfig, UserConfig } from '../types'
-import { DEFAULT_EXCLUDE_FILES, SECRET_KEY_PLACEHOLDER } from './constants'
+import type { ReadonlyDeep, SingleFileConfig, UserConfig } from '../types'
+import { getProcessCwd } from './common'
+import { DEFAULT_EXCLUDE_FILES } from './constants'
 import { EnvConfig } from './env-config'
 
 export function singleFileConfigWithDefault(singleFileConfig?: Partial<SingleFileConfig>): SingleFileConfig {
@@ -8,22 +9,21 @@ export function singleFileConfigWithDefault(singleFileConfig?: Partial<SingleFil
   }
 }
 
-export function userConfigWithDefault(userConfig?: Partial<UserConfig>): UserConfig {
-  return {
+export function userConfigWithDefault(userConfig?: Partial<UserConfig>) {
+  return ({
     model: {
       type: 'openai',
       modelName: 'gpt-3.5-turbo-16k',
       temperature: 0.9,
       maxTokens: 2000,
-      ...userConfig?.model,
     },
-    rootPath: process.cwd(),
+    rootPath: EnvConfig.get('GPTR_DEFAULT_ROOT_PATH') || getProcessCwd(),
     includes: null,
     excludes: DEFAULT_EXCLUDE_FILES,
     exts: ['.gpt.md'],
     respectGitIgnore: true,
     ...userConfig,
-  }
+  } as const) satisfies ReadonlyDeep<UserConfig>
 }
 
 export interface ResolveSingleFileCConfigParams {
@@ -31,34 +31,33 @@ export interface ResolveSingleFileCConfigParams {
   singleFileConfig: SingleFileConfig
 }
 
-export function resolveSingleFileConfig(params: ResolveSingleFileCConfigParams, withDefault = true, safe = false): SingleFileConfig {
-  const userConfig = withDefault ? userConfigWithDefault(params.userConfig) : params.userConfig
+export function resolveSingleFileConfig(params: ResolveSingleFileCConfigParams, withDefault = true): SingleFileConfig {
+  let userConfig = (withDefault ? userConfigWithDefault(params.userConfig) : params.userConfig) as UserConfig
   const singleFileConfig = withDefault ? singleFileConfigWithDefault(params.singleFileConfig) : params.singleFileConfig
 
-  let resolvedConfig: SingleFileConfig = {
+  userConfig = removeUserConfigUnsafeKey(userConfig)
+
+  const resolvedConfig: SingleFileConfig = {
     ...singleFileConfig,
     model: {
       ...userConfig.model,
-      ...singleFileConfig.model,
-    } as SingleFileConfig['model'],
+      ...singleFileConfig.model!,
+    },
   }
-
-  if (safe)
-    resolvedConfig = resetSingleFileConfigUnsafeKey(resolvedConfig)
 
   return resolvedConfig
 }
 
-export function resetUserConfigUnsafeKey(userConfig: UserConfig): UserConfig {
-  if (userConfig.model?.openaiKey || (userConfig.model?.type === 'openai' && EnvConfig.get('OPENAI_KEY')))
-    userConfig.model.openaiKey = SECRET_KEY_PLACEHOLDER
+export function removeUserConfigUnsafeKey(userConfig: UserConfig): UserConfig {
+  const userConfigClone: UserConfig = {
+    ...userConfig,
+    model: {
+      ...userConfig.model!,
+    },
+  }
 
-  return userConfig
-}
+  if (userConfigClone.model?.secrets)
+    delete userConfigClone.model.secrets
 
-export function resetSingleFileConfigUnsafeKey(singleFileConfig: SingleFileConfig): SingleFileConfig {
-  if (singleFileConfig.model?.openaiKey)
-    singleFileConfig.model.openaiKey = ''
-
-  return singleFileConfig
+  return userConfigClone
 }

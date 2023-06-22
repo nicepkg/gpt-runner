@@ -203,3 +203,12 @@ export function toUnixPath(path: string | undefined | null) {
     return ''
   return path.replace(/\\+/g, '/')
 }
+
+export function getProcessCwd(): string | undefined {
+  try {
+    return toUnixPath(process.cwd())
+  }
+  catch (e) {
+    return undefined
+  }
+}
