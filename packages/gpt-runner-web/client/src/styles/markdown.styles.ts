@@ -302,6 +302,7 @@ export const MarkdownStyle = createGlobalStyle`
       background: unset;
       border-radius: unset;
       margin: unset;
+      color: var(--foreground);
     }
 
     sup {

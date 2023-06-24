@@ -1,9 +1,6 @@
-// @flow
-
 import type { SyntaxHighlighterProps } from 'react-syntax-highlighter'
 
 // import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism'
-// Converted automatically using ./tools/themeFromVsCode
 export const vscodeDarkPlus: SyntaxHighlighterProps['style'] = {
   'pre[class*="language-"]': {
     color: '#d4d4d4',

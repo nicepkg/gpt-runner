@@ -15,9 +15,9 @@ import { StyledVSCodeDropdown, StyledVSCodeOption } from './hook-form-select.sty
 
 type SelectProps = GetComponentProps<InstanceType<typeof VSCodeDropdown>>
 
-export interface SelectOption {
+export interface SelectOption<T extends string = string> {
   label: string
-  value: string
+  value: T
 }
 
 export interface HookFormSelectProps<

@@ -2,6 +2,7 @@
 {
   "title": "common/前端工程师",
   "model": {
+    "modelName": "gpt-4",
     "temperature": 0
   }
 }

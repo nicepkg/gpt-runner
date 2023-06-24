@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { type ComponentType, type FC, type PropsWithChildren, useEffect, useRef } from 'react'
+import { type ComponentType, type FC, type PropsWithChildren, useEffect } from 'react'
 import type { FallbackProps } from 'react-error-boundary'
 import { ErrorBoundary } from 'react-error-boundary'
 import { AppRouter } from './router'
@@ -7,6 +7,8 @@ import { GlobalStyle } from './styles/global.styles'
 import { LoadingProvider } from './store/context/loading-context'
 import { MarkdownStyle } from './styles/markdown.styles'
 import { useGlobalStore } from './store/zustand/global'
+import { GlobalThemeStyle } from './styles/theme.styles'
+import i18n from './helpers/i18n'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -43,20 +45,27 @@ export const AppProviders: FC<PropsWithChildren> = ({ children }) => {
 }
 
 export const App: FC = () => {
-  const isRunOnce = useRef(false)
-  const { langId, updateLangId } = useGlobalStore()
+  const { langId, themeName } = useGlobalStore()
 
   useEffect(() => {
-    if (isRunOnce.current || !langId)
+    if (!langId)
       return
-    isRunOnce.current = true
-
-    updateLangId(langId)
+    i18n.changeLanguage(langId)
+    const direction = i18n.dir()
+    document.body.dir = direction
   }, [langId])
+
+  useEffect(() => {
+    if (!themeName)
+      return
+
+    document.body.dataset.theme = themeName
+  }, [themeName])
 
   return (
     <AppProviders>
       <GlobalStyle />
+      <GlobalThemeStyle />
       <MarkdownStyle />
       <AppRouter />
     </AppProviders>

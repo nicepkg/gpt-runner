@@ -2,10 +2,12 @@ import { type CSSProperties, type FC, useMemo, useState } from 'react'
 import { VSCodePanelTab, VSCodePanelView } from '@vscode/webview-ui-toolkit/react'
 import { useTranslation } from 'react-i18next'
 import { StyledVSCodePanels } from '../../chat.styles'
+import type { MessageCodeBlockTheme } from '../../../../components/chat-message-code-block'
 import { MessageCodeBlock } from '../../../../components/chat-message-code-block'
 import { useGlobalStore } from '../../../../store/zustand/global'
 import { useChatInstance } from '../../../../hooks/use-chat-instance.hook'
 import { FlexColumn } from '../../../../styles/global.styles'
+import { isDarkTheme } from '../../../../styles/themes'
 import { ConfigInfoTitle, ConfigInfoWrapper } from './settings.styles'
 import { OpenaiSettings } from './components/openai-setting'
 import { GeneralSettings } from './components/general'
@@ -25,8 +27,11 @@ export const Settings: FC<SettingsProps> = (props) => {
 
   const { t } = useTranslation()
   const [tabActiveId, setTabActiveId] = useState(SettingsTabId.Settings)
-  const { userConfig, getGptFileTreeItemFromChatId } = useGlobalStore()
+  const { userConfig, themeName, getGptFileTreeItemFromChatId } = useGlobalStore()
   const { chatInstance } = useChatInstance({ chatId })
+  const codeBlockTheme: MessageCodeBlockTheme = useMemo(() => {
+    return isDarkTheme(themeName) ? 'dark' : 'light'
+  }, [themeName])
 
   const gptFileTreeItem = useMemo(() => {
     if (!chatId)
@@ -59,7 +64,7 @@ export const Settings: FC<SettingsProps> = (props) => {
       <ConfigInfoTitle>
         gptr.config.json
       </ConfigInfoTitle>
-      <MessageCodeBlock language='json' contents={globalConfigInfo}></MessageCodeBlock>
+      <MessageCodeBlock theme={codeBlockTheme} language='json' contents={globalConfigInfo}></MessageCodeBlock>
     </ConfigInfoWrapper>
   }
 
@@ -68,7 +73,7 @@ export const Settings: FC<SettingsProps> = (props) => {
       <ConfigInfoTitle>
         {gptFileName}
       </ConfigInfoTitle>
-      <MessageCodeBlock language='json' contents={singleFileConfigInfo}></MessageCodeBlock>
+      <MessageCodeBlock theme={codeBlockTheme} language='json' contents={singleFileConfigInfo}></MessageCodeBlock>
     </ConfigInfoWrapper>
   }
 

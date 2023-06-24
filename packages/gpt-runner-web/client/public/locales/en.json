@@ -35,6 +35,7 @@
     "confirm_create_btn": "Confirm",
     "settings_general": "General",
     "settings_language": "Language",
+    "settings_theme": "Theme",
     "settings_openai_config": "OpenAI Config",
     "settings_tab_settings": "Settings",
     "settings_tab_config_info": "Config Info",

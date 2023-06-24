@@ -1,20 +1,24 @@
 import type { FC } from 'react'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { CodeBlockHeader, CodeBlockWrapper } from './chat-message-code-block.styles'
-import { vscodeDarkPlus } from './code-style'
+import { vscodeDarkPlus } from './dark-code-style'
+import { oneLight } from './light-code-style'
 
 export interface BuildCodeToolbarState {
   contents: string
 }
 
+export type MessageCodeBlockTheme = 'light' | 'dark'
+
 export interface MessageCodeBlockProps {
+  theme?: MessageCodeBlockTheme
   contents: string
   language: string
   buildCodeToolbar?: (state: BuildCodeToolbarState) => React.ReactNode
 }
 
 export const MessageCodeBlock: FC<MessageCodeBlockProps> = (props) => {
-  const { contents, language, buildCodeToolbar } = props
+  const { theme = 'dark', contents, language, buildCodeToolbar } = props
 
   return (
     <CodeBlockWrapper className='msg-code-block'>
@@ -24,7 +28,7 @@ export const MessageCodeBlock: FC<MessageCodeBlockProps> = (props) => {
       <SyntaxHighlighter
         useInlineStyles={true}
         codeTagProps={{ style: {} }}
-        style={vscodeDarkPlus}
+        style={theme === 'dark' ? vscodeDarkPlus : oneLight}
         language={language}
       >
         {contents}

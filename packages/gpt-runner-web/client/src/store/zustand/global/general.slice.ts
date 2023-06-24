@@ -1,44 +1,21 @@
 import type { StateCreator } from 'zustand'
-import type { ReadonlyDeep } from '@nicepkg/gpt-runner-shared/common'
 import type { GetState } from '../types'
-import type { SelectOption } from '../../../components/hook-form/hook-form-select'
-import i18n from '../../../helpers/i18n'
-
-export const languageOptions = ([
-  {
-    label: 'English',
-    value: 'en',
-  },
-  {
-    label: '简体中文',
-    value: 'zh_CN',
-  },
-  {
-    label: '繁體中文',
-    value: 'zh_Hant',
-  },
-  {
-    label: '日本語',
-    value: 'ja',
-  },
-  {
-    label: 'Deutsch',
-    value: 'de',
-  },
-] as const) satisfies ReadonlyDeep<SelectOption[]>
-
-export type LangId = typeof languageOptions[number]['value']
+import type { LangId } from '../../../helpers/i18n'
+import type { ThemeName } from '../../../styles/themes'
 
 export interface GeneralSlice {
-  langId: LangId | null
+  langId: LangId
+  themeName: ThemeName
   updateLangId: (langId: LangId) => void
+  updateThemeName: (themeName: ThemeName) => void
 }
 
 export type GeneralState = GetState<GeneralSlice>
 
 function getInitialState() {
   return {
-    langId: null,
+    langId: 'en',
+    themeName: 'default',
   } satisfies GeneralState
 }
 
@@ -51,9 +28,8 @@ export const createGeneralSlice: StateCreator<
   ...getInitialState(),
   updateLangId(langId) {
     set({ langId })
-
-    i18n.changeLanguage(langId)
-    const direction = i18n.dir()
-    document.body.dir = direction
+  },
+  updateThemeName(themeName) {
+    set({ themeName })
   },
 })

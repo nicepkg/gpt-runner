@@ -35,6 +35,7 @@
     "confirm_create_btn": "Bestätigen",
     "settings_general": "Allgemein",
     "settings_language": "Sprache",
+    "settings_theme": "Thema",
     "settings_openai_config": "OpenAI Konfiguration",
     "settings_tab_settings": "Einstellungen",
     "settings_tab_config_info": "Konfigurationsinformationen",

@@ -19,6 +19,8 @@ import { useKeyboard } from '../../../../hooks/use-keyboard.hook'
 import { DragResizeView } from '../../../../components/drag-resize-view'
 import { useElementSizeRealTime } from '../../../../hooks/use-element-size-real-time'
 import { useTempStore } from '../../../../store/zustand/temp'
+import type { MessageCodeBlockTheme } from '../../../../components/chat-message-code-block'
+import { isDarkTheme } from '../../../../styles/themes'
 import { ChatPanelPopoverTreeWrapper, ChatPanelWrapper } from './chat-panel.styles'
 import { createRemarkOpenEditorPlugin } from './remark-plugin'
 
@@ -43,6 +45,7 @@ export const ChatPanel: FC<ChatPanelProps> = (props) => {
 
   const { t } = useTranslation()
   const {
+    themeName,
     createChatAndActive,
     getGptFileTreeItemFromChatId,
   } = useGlobalStore()
@@ -227,6 +230,8 @@ export const ChatPanel: FC<ChatPanelProps> = (props) => {
     </>
   }
 
+  const codeBlockTheme: MessageCodeBlockTheme = isDarkTheme(themeName) ? 'dark' : 'light'
+
   const messagePanelProps: ChatMessagePanelProps = {
     messageItems: chatInstance?.messages.map((message, i) => {
       const isLast = i === chatInstance.messages.length - 1
@@ -295,6 +300,7 @@ export const ChatPanel: FC<ChatPanelProps> = (props) => {
         status: isLast ? status : ChatMessageStatus.Success,
         showToolbar: isLastTwo ? 'always' : 'hover',
         showAvatar: chatPanelWidth > 600,
+        theme: codeBlockTheme,
         buildCodeToolbar: status === ChatMessageStatus.Pending ? undefined : buildCodeToolbar,
         buildMessageToolbar,
       } satisfies MessageItemProps
