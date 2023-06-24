@@ -10,11 +10,27 @@ function buildThemeCssString(themes: typeof themeMap) {
       .join('\n')
 
     finalThemeString += `
-      body[data-theme="${themeName}"] {
+      body[data-theme="${themeName}"] > * {
         ${themeString}
       }
+
+      ${theme['--background']
+        ? `
+          body {
+            background: ${theme['--background']} !important;
+          }
+              `
+        : ''}
     `
   }
+
+  finalThemeString += `
+
+    #root {
+      background: var(--background);
+      color: var(--foreground);
+    }
+  `
 
   return finalThemeString
 }

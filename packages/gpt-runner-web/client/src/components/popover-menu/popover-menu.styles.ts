@@ -7,7 +7,7 @@ export const MenuMask = styled.div`
 export const Menu = styled.div`
   display: flex;
   flex-direction: column;
-  background-color: var(--list-hover-background);
+  background-color: var(--panel-view-background);
   border: 1px solid var(--panel-view-border);
   border-radius: 0.5rem;
   overflow: hidden;

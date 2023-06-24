@@ -1,10 +1,11 @@
 import { jetbrainsDarkTheme } from './jetbrains-dark.theme'
 import { jetbrainsLightTheme } from './jetbrains-light.theme'
+import type { Theme } from './vscode-dark.theme'
 import { vscodeDarkTheme } from './vscode-dark.theme'
 import { vscodeLightTheme } from './vscode-light.theme'
 
 export const themeMap = {
-  default: {},
+  default: {} as Theme,
   vscodeDark: vscodeDarkTheme,
   vscodeLight: vscodeLightTheme,
   jetbrainsDark: jetbrainsDarkTheme,

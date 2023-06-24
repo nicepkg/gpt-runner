@@ -4,6 +4,7 @@ import LanguageDetector from 'i18next-browser-languagedetector'
 import { initReactI18next } from 'react-i18next'
 import type { ReadonlyDeep } from '@nicepkg/gpt-runner-shared/common'
 import type { SelectOption } from '../components/hook-form/hook-form-select'
+import { BASE_URL } from './constant'
 
 export const languageOptions = ([
   {
@@ -38,7 +39,7 @@ i18n
     fallbackLng: 'en',
     debug: false,
     backend: {
-      loadPath: '/locales/{{lng}}.json',
+      loadPath: `${BASE_URL}/locales/{{lng}}.json`,
     },
     interpolation: {
       escapeValue: false,
