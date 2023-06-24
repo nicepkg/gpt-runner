@@ -1,3 +1,4 @@
+import './helpers/i18n'
 import { createRoot } from 'react-dom/client'
 import { App } from './app'
 

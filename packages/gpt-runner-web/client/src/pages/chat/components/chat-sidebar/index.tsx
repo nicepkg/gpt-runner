@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState } from 'react'
 import type { GptFileInfoTreeItem } from '@nicepkg/gpt-runner-shared/common'
 import { ClientEventName, GptFileTreeItemType } from '@nicepkg/gpt-runner-shared/common'
 import clsx from 'clsx'
+import { useTranslation } from 'react-i18next'
 import type { SidebarProps } from '../../../../components/sidebar'
 import { Sidebar } from '../../../../components/sidebar'
 import type { TreeItemProps, TreeItemState } from '../../../../components/tree-item'
@@ -21,6 +22,8 @@ export type GptTreeItemOtherInfo = GptFileInfoTreeItem
 
 export const ChatSidebar: FC<ChatSidebarProps> = (props) => {
   const { rootPath } = props
+
+  const { t } = useTranslation()
   const {
     activeChatId,
     sidebarTree,
@@ -110,7 +113,7 @@ export const ChatSidebar: FC<ChatSidebarProps> = (props) => {
     if (otherInfo?.type === GptFileTreeItemType.Chat && isLeaf) {
       return <>
         <IconButton
-          text='Delete Chat'
+          text={t('chat_page.delete_chat_btn')}
           showText={false}
           iconClassName='codicon-trash'
           onClick={() => handleDeleteChat(otherInfo.id)}
@@ -120,7 +123,7 @@ export const ChatSidebar: FC<ChatSidebarProps> = (props) => {
 
     if (otherInfo?.type === GptFileTreeItemType.File) {
       return <IconButton
-        text='New Chat'
+        text={t('chat_page.new_chat_btn')}
         showText={false}
         iconClassName='codicon-add'
         onClick={() => handleCreateChat(otherInfo.id)}
@@ -136,7 +139,7 @@ export const ChatSidebar: FC<ChatSidebarProps> = (props) => {
         marginLeft: '0.5rem',
         height: '100%',
       }}
-      text='Refresh'
+      text={t('chat_page.refresh_btn')}
       showText={false}
       iconClassName='codicon-refresh'
       animatingWhenClick
@@ -194,7 +197,7 @@ export const ChatSidebar: FC<ChatSidebarProps> = (props) => {
   }
 
   if (!rootPath)
-    return <ErrorView text="Please provide the root path!"></ErrorView>
+    return <ErrorView text={t('chat_page.root_path_not_found_tips')}></ErrorView>
 
   return <Sidebar {...sidebar}></Sidebar>
 }

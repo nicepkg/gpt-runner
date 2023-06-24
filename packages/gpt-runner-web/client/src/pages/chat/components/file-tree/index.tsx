@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query'
 import { travelTree, travelTreeDeepFirst } from '@nicepkg/gpt-runner-shared/common'
 import clsx from 'clsx'
 import { VSCodeCheckbox, VSCodeLink } from '@vscode/webview-ui-toolkit/react'
+import { Trans, useTranslation } from 'react-i18next'
 import type { SidebarProps } from '../../../../components/sidebar'
 import { Sidebar } from '../../../../components/sidebar'
 import { ErrorView } from '../../../../components/error-view'
@@ -23,6 +24,8 @@ export interface FileTreeProps {
 
 const FileTree: FC<FileTreeProps> = (props: FileTreeProps) => {
   const { rootPath } = props
+
+  const { t } = useTranslation()
   const [filesTree, _setFilesTree] = useState<FileSidebarTreeItem[]>([])
   const fullPathFileMapRef = useRef<Record<string, FileSidebarTreeItem>>({})
   const {
@@ -302,7 +305,7 @@ const FileTree: FC<FileTreeProps> = (props: FileTreeProps) => {
       }}
       buildChildrenSlot={({ isHovering }) => {
         return <IconButton
-          text='Filter'
+          text={t('chat_page.filter_btn')}
           iconClassName='codicon-filter'
           hoverShowText={!isHovering}
           style={{
@@ -363,15 +366,22 @@ const FileTree: FC<FileTreeProps> = (props: FileTreeProps) => {
     }
 
     return <FileTreeSidebarUnderSearchWrapper>
-      <FileTreeSidebarHighlight style={{ marginLeft: 0 }}>{checkedFilePaths.length}</FileTreeSidebarHighlight>
-      Files.
-      <FileTreeSidebarHighlight>{formatNumWithK(totalTokenNum)}</FileTreeSidebarHighlight>
-      Tokens.
+      <Trans
+        i18nKey={'chat_page.file_tree_top_tokens_tips'}
+        values={{
+          fileNum: checkedFilePaths.length,
+          tokenNum: formatNumWithK(totalTokenNum),
+        }}
+        components={{
+          FileNumWrapper: <FileTreeSidebarHighlight style={{ marginLeft: 0 }}></FileTreeSidebarHighlight>,
+          TokenNumWrapper: <FileTreeSidebarHighlight></FileTreeSidebarHighlight>,
+        }}
+      ></Trans>
       <VSCodeLink style={{
         display: 'inline-block',
         marginLeft: '0.25rem',
       }} onClick={resetAllChecked}>
-        Clear Checked
+        {t('chat_page.file_tree_top_clear_checked_btn')}
       </VSCodeLink>
 
       <div>
@@ -381,9 +391,9 @@ const FileTree: FC<FileTreeProps> = (props: FileTreeProps) => {
           }}
           checked={provideFilePathsTreePromptToGpt}
           onChange={handleProvideFilePathsTreePromptToGptChange}>
-          All file path as prompt
-          <FileTreeSidebarHighlight>{formatNumWithK(filaPathsPromptTokenNum)}</FileTreeSidebarHighlight>
-          token
+          {t('chat_page.file_tree_top_all_file_path_as_prompt', {
+            tokenNum: formatNumWithK(filaPathsPromptTokenNum),
+          })}
         </VSCodeCheckbox>
       </div>
     </FileTreeSidebarUnderSearchWrapper>
@@ -399,7 +409,7 @@ const FileTree: FC<FileTreeProps> = (props: FileTreeProps) => {
   }, [])
 
   const sidebar: SidebarProps<FileInfoSidebarTreeItem> = {
-    placeholder: 'Search file...',
+    placeholder: t('chat_page.search_files_placeholder'),
     loading: isLoading,
     tree: {
       items: filesTree,
@@ -414,7 +424,7 @@ const FileTree: FC<FileTreeProps> = (props: FileTreeProps) => {
   }
 
   if (!rootPath)
-    return <ErrorView text="Please provide the root path!"></ErrorView>
+    return <ErrorView text={t('chat_page.root_path_not_found_tips')}></ErrorView>
 
   return <Sidebar {...sidebar}></Sidebar>
 }

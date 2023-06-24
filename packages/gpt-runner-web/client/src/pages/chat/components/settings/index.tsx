@@ -1,5 +1,6 @@
 import { type CSSProperties, type FC, useMemo, useState } from 'react'
 import { VSCodePanelTab, VSCodePanelView } from '@vscode/webview-ui-toolkit/react'
+import { useTranslation } from 'react-i18next'
 import { StyledVSCodePanels } from '../../chat.styles'
 import { MessageCodeBlock } from '../../../../components/chat-message-code-block'
 import { useGlobalStore } from '../../../../store/zustand/global'
@@ -7,6 +8,7 @@ import { useChatInstance } from '../../../../hooks/use-chat-instance.hook'
 import { FlexColumn } from '../../../../styles/global.styles'
 import { ConfigInfoTitle, ConfigInfoWrapper } from './settings.styles'
 import { OpenaiSettings } from './components/openai-setting'
+import { GeneralSettings } from './components/general'
 
 enum SettingsTabId {
   ConfigInfo = 'configInfo',
@@ -20,6 +22,8 @@ export interface SettingsProps {
 
 export const Settings: FC<SettingsProps> = (props) => {
   const { showSingleFileConfig, chatId } = props
+
+  const { t } = useTranslation()
   const [tabActiveId, setTabActiveId] = useState(SettingsTabId.Settings)
   const { userConfig, getGptFileTreeItemFromChatId } = useGlobalStore()
   const { chatInstance } = useChatInstance({ chatId })
@@ -43,7 +47,9 @@ export const Settings: FC<SettingsProps> = (props) => {
 
   const renderOverrideSetting = () => {
     return <ConfigInfoWrapper>
-      <ConfigInfoTitle>Openai Config</ConfigInfoTitle>
+      <ConfigInfoTitle>{t('chat_page.settings_general')}</ConfigInfoTitle>
+      <GeneralSettings></GeneralSettings>
+      <ConfigInfoTitle>{t('chat_page.settings_openai_config')}</ConfigInfoTitle>
       <OpenaiSettings></OpenaiSettings>
     </ConfigInfoWrapper>
   }
@@ -67,7 +73,7 @@ export const Settings: FC<SettingsProps> = (props) => {
   }
 
   if (!showSingleFileConfig)
-    return renderGlobalConfigInfo()
+    return renderOverrideSetting()
 
   return <StyledVSCodePanels
     activeid={tabActiveId}
@@ -77,8 +83,8 @@ export const Settings: FC<SettingsProps> = (props) => {
       setTabActiveId(activeId)
     }}
   >
-    <VSCodePanelTab id={SettingsTabId.Settings}>Settings</VSCodePanelTab>
-    <VSCodePanelTab id={SettingsTabId.ConfigInfo}>Config Info</VSCodePanelTab>
+    <VSCodePanelTab id={SettingsTabId.Settings}>{t('chat_page.settings_tab_settings')}</VSCodePanelTab>
+    <VSCodePanelTab id={SettingsTabId.ConfigInfo}>{t('chat_page.settings_tab_config_info')}</VSCodePanelTab>
 
     <VSCodePanelView style={viewStyle} id={SettingsTabId.Settings}>
       {renderOverrideSetting()}

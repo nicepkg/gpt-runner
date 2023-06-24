@@ -2,6 +2,7 @@ import type { FC, RefObject } from 'react'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { ChatMessageStatus, ChatRole, ClientEventName } from '@nicepkg/gpt-runner-shared/common'
 import { copy } from '@nicepkg/gpt-runner-shared/browser'
+import { useTranslation } from 'react-i18next'
 import type { ChatMessagePanelProps } from '../../../../components/chat-message-panel'
 import { ChatMessagePanel } from '../../../../components/chat-message-panel'
 import { ChatMessageInput } from '../../../../components/chat-message-input'
@@ -40,6 +41,7 @@ export const ChatPanel: FC<ChatPanelProps> = (props) => {
     onChatIdChange,
   } = props
 
+  const { t } = useTranslation()
   const {
     createChatAndActive,
     getGptFileTreeItemFromChatId,
@@ -174,7 +176,7 @@ export const ChatPanel: FC<ChatPanelProps> = (props) => {
   // continue
   const handleContinueGenerateAnswer = useCallback(() => {
     updateCurrentChatInstance({
-      inputtingPrompt: 'Please continue',
+      inputtingPrompt: t('chat_page.continue_inputting_prompt'),
     }, false)
     generateCurrentChatAnswer()
   }, [chatInstance, updateCurrentChatInstance, generateCurrentChatAnswer])
@@ -203,21 +205,21 @@ export const ChatPanel: FC<ChatPanelProps> = (props) => {
   const buildCodeToolbar: MessageItemProps['buildCodeToolbar'] = ({ contents }) => {
     return <>
       <IconButton
-        text='Copy'
+        text={t('chat_page.copy_btn')}
         iconClassName='codicon-copy'
         onClick={() => handleCopy(contents)}
       >
       </IconButton>
 
       {getGlobalConfig().showInsertCodesBtn && <IconButton
-        text='Insert'
+        text={t('chat_page.insert_btn')}
         iconClassName='codicon-insert'
         onClick={() => handleInsertCodes(contents)}
       >
       </IconButton>}
 
       {getGlobalConfig().showDiffCodesBtn && <IconButton
-        text='Diff'
+        text={t('chat_page.diff_btn')}
         iconClassName='codicon-arrow-swap'
         onClick={() => handleDiffCodes(contents)}
       >
@@ -252,34 +254,34 @@ export const ChatPanel: FC<ChatPanelProps> = (props) => {
       const buildMessageToolbar: MessageItemProps['buildMessageToolbar'] = ({ text }) => {
         return <>
           <IconButton
-            text='Copy'
+            text={t('chat_page.copy_btn')}
             iconClassName='codicon-copy'
             onClick={() => handleCopy(text)}
           >
           </IconButton>
 
           <IconButton
-            text='Edit'
+            text={t('chat_page.edit_btn')}
             iconClassName='codicon-edit'
             onClick={() => handleEditMessage(text)}
           >
           </IconButton>
 
           {isAi && isLast && <IconButton
-            text={status === ChatMessageStatus.Error ? 'Retry' : 'Regenerate'}
+            text={status === ChatMessageStatus.Error ? t('chat_page.retry_btn') : t('chat_page.regenerate_btn')}
             iconClassName='codicon-sync'
             onClick={handleRegenerateMessage}
           ></IconButton>}
 
           {status === ChatMessageStatus.Pending && isLast
             ? <IconButton
-              text='Stop'
+              text={t('chat_page.stop_btn')}
               iconClassName='codicon-chrome-maximize'
               hoverShowText={false}
               onClick={handleStopGenerateAnswer}
             ></IconButton>
             : <IconButton
-              text='Delete'
+              text={t('chat_page.delete_btn')}
               iconClassName='codicon-trash'
               onClick={handleDeleteMessage}
             >
@@ -304,13 +306,13 @@ export const ChatPanel: FC<ChatPanelProps> = (props) => {
       {/* left icon */}
       {status !== ChatMessageStatus.Pending && <IconButton
         disabled={!chatInstance?.inputtingPrompt}
-        text='Send'
+        text={t('chat_page.send_btn')}
         hoverShowText={false}
         iconClassName='codicon-send'
         onClick={handleGenerateAnswer}></IconButton>}
 
       {status === ChatMessageStatus.Pending && <IconButton
-        text='Stop'
+        text={t('chat_page.stop_btn')}
         iconClassName='codicon-chrome-maximize'
         hoverShowText={false}
         onClick={handleStopGenerateAnswer}
@@ -321,7 +323,7 @@ export const ChatPanel: FC<ChatPanelProps> = (props) => {
           marginRight: 'auto',
         }}
         disabled={status === ChatMessageStatus.Pending}
-        text='Continue'
+        text={t('chat_page.continue_btn')}
         iconClassName='codicon-debug-continue-small'
         onClick={handleContinueGenerateAnswer}
       ></IconButton>
@@ -339,7 +341,7 @@ export const ChatPanel: FC<ChatPanelProps> = (props) => {
             style={{
               paddingLeft: '0.5rem',
             }}
-            text='Chats'
+            text={t('chat_page.chat_tree_btn')}
             iconClassName='codicon-list-tree'
             hoverShowText={!isHovering}
           ></IconButton>
@@ -366,7 +368,7 @@ export const ChatPanel: FC<ChatPanelProps> = (props) => {
             style={{
               paddingLeft: '0.5rem',
             }}
-            text='Files'
+            text={t('chat_page.file_tree_btn')}
             iconClassName='codicon-file'
             hoverShowText={!isHovering}
           ></IconButton>
@@ -390,7 +392,7 @@ export const ChatPanel: FC<ChatPanelProps> = (props) => {
         }}
         buildChildrenSlot={({ isHovering }) => {
           return <IconButton
-            text='Settings'
+            text={t('chat_page.settings_btn')}
             iconClassName='codicon-gear'
             hoverShowText={!isHovering}
             style={{
@@ -410,7 +412,7 @@ export const ChatPanel: FC<ChatPanelProps> = (props) => {
         xPosition='right'
         buildChildrenSlot={({ isHovering, isInMenu }) => {
           return <IconButton
-            text='Clear History'
+            text={t('chat_page.clear_history_btn')}
             iconClassName='codicon-clear-all'
             showText={isInMenu}
             hoverShowText={!isHovering}
@@ -420,21 +422,21 @@ export const ChatPanel: FC<ChatPanelProps> = (props) => {
         buildMenuSlot={() => {
           return <>
             <IconButton
-              text='Pre Chat'
+              text={t('chat_page.pre_chat_btn')}
               iconClassName='codicon-chevron-left'
               hoverShowText={false}
               onClick={handleSwitchPreChat}
             ></IconButton>
 
             <IconButton
-              text='Next Chat'
+              text={t('chat_page.next_chat_btn')}
               iconClassName='codicon-chevron-right'
               hoverShowText={false}
               onClick={handleSwitchNextChat}
             ></IconButton>
 
             <IconButton
-              text='New Chat'
+              text={t('chat_page.new_chat_btn')}
               iconClassName='codicon-add'
               hoverShowText={false}
               onClick={handleNewChat}
@@ -446,7 +448,7 @@ export const ChatPanel: FC<ChatPanelProps> = (props) => {
   }
 
   if (!chatId)
-    return <ErrorView text="Please select a chat or new a chat!"></ErrorView>
+    return <ErrorView text={t('chat_page.chat_id_not_found_tips')}></ErrorView>
 
   return <ChatPanelWrapper ref={chatPanelRef}>
     <ChatMessagePanel ref={scrollDownRef} {...messagePanelProps}></ChatMessagePanel>

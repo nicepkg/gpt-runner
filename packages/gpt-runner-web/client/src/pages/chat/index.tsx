@@ -4,6 +4,7 @@ import { VSCodePanelTab, VSCodePanelView } from '@vscode/webview-ui-toolkit/reac
 import { ChatMessageStatus } from '@nicepkg/gpt-runner-shared/common'
 import { useWindowSize } from 'react-use'
 import { useQuery } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
 import { useIsMobile } from '../../hooks/use-is-mobile.hook'
 import { FlexRow } from '../../styles/global.styles'
 import { useScrollDown } from '../../hooks/use-scroll-down.hook'
@@ -27,6 +28,7 @@ enum TabId {
 }
 
 const Chat: FC = () => {
+  const { t } = useTranslation()
   const isMobile = useIsMobile()
   const { width: windowWidth, height: windowHeight } = useWindowSize()
   const { activeChatId, sidebarTree, updateActiveChatId, updateSidebarTreeFromRemote } = useGlobalStore()
@@ -111,7 +113,7 @@ const Chat: FC = () => {
   ])
 
   if (!rootPath)
-    return <ErrorView text="Please provide the root path!"></ErrorView>
+    return <ErrorView text={t('chat_page.root_path_not_found_tips')}></ErrorView>
 
   if (fetchProjectInfoRes?.data?.nodeVersionValidMessage)
     return <ErrorView text={fetchProjectInfoRes?.data?.nodeVersionValidMessage}></ErrorView>
@@ -134,9 +136,9 @@ const Chat: FC = () => {
           activeId === TabId.Chat && scrollDown()
         }}
       >
-        <VSCodePanelTab id={TabId.Explore}>Explore</VSCodePanelTab>
-        <VSCodePanelTab id={TabId.Chat}>Chat</VSCodePanelTab>
-        <VSCodePanelTab id={TabId.Settings}>Settings</VSCodePanelTab>
+        <VSCodePanelTab id={TabId.Explore}>{t('chat_page.tab_explore')}</VSCodePanelTab>
+        <VSCodePanelTab id={TabId.Chat}>{t('chat_page.tab_chat')}</VSCodePanelTab>
+        <VSCodePanelTab id={TabId.Settings}>{t('chat_page.tab_settings')}</VSCodePanelTab>
         <VSCodePanelView style={viewStyle} id={TabId.Explore}>
           {renderSidebar()}
         </VSCodePanelView>

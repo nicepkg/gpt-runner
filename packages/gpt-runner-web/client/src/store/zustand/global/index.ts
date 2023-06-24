@@ -8,13 +8,16 @@ import { createSidebarTreeSlice } from './sidebar-tree.slice'
 import type { SidebarTreeSlice } from './sidebar-tree.slice'
 import type { FileTreeSlice } from './file-tree.slice'
 import { createFileTreeSlice } from './file-tree.slice'
+import type { GeneralSlice } from './general.slice'
+import { createGeneralSlice } from './general.slice'
 
-export type GlobalSlice = ChatSlice & SidebarTreeSlice & FileTreeSlice
+export type GlobalSlice = GeneralSlice & ChatSlice & SidebarTreeSlice & FileTreeSlice
 export type GlobalState = GetState<GlobalSlice>
 
 export const useGlobalStore = createStore('GlobalStore')<GlobalSlice, any>(
   persist(
     (...args) => ({
+      ...createGeneralSlice(...args),
       ...createChatSlice(...args),
       ...createSidebarTreeSlice(...args),
       ...createFileTreeSlice(...args),

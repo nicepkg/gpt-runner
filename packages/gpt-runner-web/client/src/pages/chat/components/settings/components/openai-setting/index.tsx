@@ -3,30 +3,20 @@ import { useMutation, useQuery } from '@tanstack/react-query'
 import { type FC, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { VSCodeButton, VSCodeLink } from '@vscode/webview-ui-toolkit/react'
-import { styled } from 'styled-components'
+import { useTranslation } from 'react-i18next'
 import { getServerStorage, saveServerStorage } from '../../../../../../networks/server-storage'
 import { useLoading } from '../../../../../../hooks/use-loading.hook'
 import { HookFormInput } from '../../../../../../components/hook-form/hook-form-input'
 import { HookFormTextarea } from '../../../../../../components/hook-form/hook-form-textarea'
 import { IS_LOCAL_HOST } from '../../../../../../helpers/constant'
-
-export const StyledForm = styled.form`
-  display: flex;
-  flex-direction: column;
-  margin: 1rem;
-`
-
-export const StyledFormItem = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 1rem;
-`
+import { StyledForm, StyledFormItem } from '../../settings.styles'
 
 export interface FormData extends Pick<OpenaiSecrets, 'apiKey' | 'accessToken' | 'basePath'> {
 
 }
 
 export const OpenaiSettings: FC = () => {
+  const { t } = useTranslation()
   const { setLoading } = useLoading()
   const { data: querySecretsRes } = useQuery({
     queryKey: ['secrets', ChatModelType.Openai],
@@ -49,11 +39,6 @@ export const OpenaiSettings: FC = () => {
 
   const { handleSubmit, formState, control, setValue } = useForm<FormData>({
     mode: 'onBlur',
-    // defaultValues: {
-    //   apiKey: remoteSecrets?.apiKey || '',
-    //   accessToken: remoteSecrets?.accessToken || '',
-    //   basePath: remoteSecrets?.basePath || '',
-    // },
   })
 
   useEffect(() => {
@@ -68,7 +53,6 @@ export const OpenaiSettings: FC = () => {
     setLoading(true)
 
     try {
-      console.log('data', data)
       await saveSecrets(data)
     }
     finally {
@@ -81,8 +65,8 @@ export const OpenaiSettings: FC = () => {
     <StyledFormItem>
       <HookFormInput
         key={0}
-        label="OpenAI API key"
-        className="field-item-input"
+        label={t('chat_page.openai_api_key')}
+        placeholder={t('chat_page.openai_api_key_placeholder')}
         name="apiKey"
         errors={formState.errors}
         control={control}
@@ -92,8 +76,7 @@ export const OpenaiSettings: FC = () => {
     <StyledFormItem>
       <HookFormInput
         key={3}
-        label="OpenAI api Base path"
-        className="field-item-input"
+        label={t('chat_page.openai_api_base_path')}
         placeholder="https://api.openai.com/v1"
         name="basePath"
         errors={formState.errors}
@@ -104,15 +87,14 @@ export const OpenaiSettings: FC = () => {
     <StyledFormItem>
       <HookFormTextarea
         key={1}
-        label="OpenAI Access token"
-        className="field-item-input"
+        label={t('chat_page.openai_access_token')}
         name="accessToken"
-        placeholder="if you don't have openai api key, please provide access token"
+        placeholder={t('chat_page.openai_access_token_placeholder')}
         errors={formState.errors}
         control={control}
       />
       <div>
-        You can open here to got the access token: <VSCodeLink href="https://chat.openai.com/api/auth/session" target="_blank" rel="noreferrer">https://chat.openai.com/api/auth/session</VSCodeLink>
+        {t('chat_page.openai_get_access_token_tips')} <VSCodeLink href="https://chat.openai.com/api/auth/session" target="_blank" rel="noreferrer">https://chat.openai.com/api/auth/session</VSCodeLink>
       </div>
     </StyledFormItem>
 
@@ -121,7 +103,7 @@ export const OpenaiSettings: FC = () => {
       appearance='primary'
       type='submit'
     >
-      {IS_LOCAL_HOST ? 'Save' : 'You can\'t save outside localhost'}
+      {IS_LOCAL_HOST ? t('chat_page.save_btn') : t('chat_page.disabled_save_openai_config_btn')}
     </VSCodeButton>
   </StyledForm>
 }

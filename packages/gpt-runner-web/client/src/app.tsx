@@ -1,11 +1,12 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import type { ComponentType, FC, PropsWithChildren } from 'react'
+import { type ComponentType, type FC, type PropsWithChildren, useEffect, useRef } from 'react'
 import type { FallbackProps } from 'react-error-boundary'
 import { ErrorBoundary } from 'react-error-boundary'
 import { AppRouter } from './router'
 import { GlobalStyle } from './styles/global.styles'
 import { LoadingProvider } from './store/context/loading-context'
 import { MarkdownStyle } from './styles/markdown.styles'
+import { useGlobalStore } from './store/zustand/global'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -42,6 +43,17 @@ export const AppProviders: FC<PropsWithChildren> = ({ children }) => {
 }
 
 export const App: FC = () => {
+  const isRunOnce = useRef(false)
+  const { langId, updateLangId } = useGlobalStore()
+
+  useEffect(() => {
+    if (isRunOnce.current || !langId)
+      return
+    isRunOnce.current = true
+
+    updateLangId(langId)
+  }, [langId])
+
   return (
     <AppProviders>
       <GlobalStyle />

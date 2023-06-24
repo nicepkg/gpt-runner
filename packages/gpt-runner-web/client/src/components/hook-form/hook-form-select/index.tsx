@@ -6,9 +6,12 @@ import type {
   UseControllerProps,
 } from 'react-hook-form'
 import { Controller } from 'react-hook-form'
-import { VSCodeDropdown, VSCodeOption } from '@vscode/webview-ui-toolkit/react'
+import type { VSCodeDropdown } from '@vscode/webview-ui-toolkit/react'
+import type { ReadonlyDeep } from '@nicepkg/gpt-runner-shared/common'
 import { ErrorText } from '../hook-form-error'
 import type { GetComponentProps } from '../../../types/common'
+import { Label } from '../hook-form-label'
+import { StyledVSCodeDropdown, StyledVSCodeOption } from './hook-form-select.styles'
 
 type SelectProps = GetComponentProps<InstanceType<typeof VSCodeDropdown>>
 
@@ -23,7 +26,7 @@ export interface HookFormSelectProps<
 > extends Pick<UseControllerProps<TFieldValues>, 'rules'>, Omit<SelectProps, 'control' | 'options'> {
   label: string
   name: TName
-  options: SelectOption[]
+  options: SelectOption[] | ReadonlyDeep<SelectOption[]>
   errors: FormState<TFieldValues>['errors']
   control: UseControllerProps<TFieldValues>['control']
   filterField?: (field: Partial<SelectProps>) => Partial<SelectProps>
@@ -39,8 +42,8 @@ export function HookFormSelect<
     <Controller
       render={({ field }) => (
         <>
-          <div>{label}</div>
-          <VSCodeDropdown
+          <Label>{label}</Label>
+          <StyledVSCodeDropdown
             {...{
               ...otherProps,
               ...(typeof filterField === 'function'
@@ -52,9 +55,9 @@ export function HookFormSelect<
             }}
           >
             {options.map(option => (
-              <VSCodeOption value={option.value}>{option.label}</VSCodeOption>
+              <StyledVSCodeOption key={option.label} value={option.value}>{option.label}</StyledVSCodeOption>
             ))}
-          </VSCodeDropdown>
+          </StyledVSCodeDropdown>
           {errors?.[name] && (
             <ErrorText>
               {String(errors[name]?.message || 'This field is required')}
