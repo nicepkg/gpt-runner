@@ -1,5 +1,5 @@
 import type { CSSProperties, FC } from 'react'
-import { useCallback, useEffect, useState } from 'react'
+import { memo, useCallback, useEffect, useState } from 'react'
 import { VSCodePanelTab, VSCodePanelView } from '@vscode/webview-ui-toolkit/react'
 import { ChatMessageStatus } from '@nicepkg/gpt-runner-shared/common'
 import { useWindowSize } from 'react-use'
@@ -17,7 +17,7 @@ import { fetchProjectInfo } from '../../networks/config'
 import { SidebarWrapper, StyledVSCodePanels } from './chat.styles'
 import { ChatSidebar } from './components/chat-sidebar'
 import { ChatPanel } from './components/chat-panel'
-import FileTree from './components/file-tree'
+import { FileTree } from './components/file-tree'
 import { Settings } from './components/settings'
 import { InitGptFiles } from './components/init-gpt-files'
 
@@ -27,7 +27,7 @@ enum TabId {
   Settings = 'settings',
 }
 
-const Chat: FC = () => {
+const Chat: FC = memo(() => {
   const { t } = useTranslation()
   const isMobile = useIsMobile()
   const { width: windowWidth, height: windowHeight } = useWindowSize()
@@ -191,7 +191,7 @@ const Chat: FC = () => {
 
     {renderChat()}
   </>
-}
+})
 
 Chat.displayName = 'Chat'
 

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { memo } from 'react'
 import type {
   FieldPath,
   FieldValues,
@@ -24,7 +24,7 @@ export interface HookFormTextareaProps<
   filterField?: (field: Partial<TextareaProps>) => Partial<TextareaProps>
 }
 
-export function HookFormTextarea<
+export function HookFormTextarea_<
   TFieldValues extends FieldValues = FieldValues,
 >(props: HookFormTextareaProps<TFieldValues>) {
   const { label, name, control, rules, errors, filterField, ...otherProps }
@@ -55,3 +55,7 @@ export function HookFormTextarea<
     />
   )
 }
+
+HookFormTextarea_.displayName = 'HookFormTextarea'
+
+export const HookFormTextarea = memo(HookFormTextarea_) as typeof HookFormTextarea_

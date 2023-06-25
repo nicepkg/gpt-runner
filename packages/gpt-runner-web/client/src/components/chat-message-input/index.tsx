@@ -1,4 +1,4 @@
-import type { FC } from 'react'
+import { type FC, memo } from 'react'
 import { StyledVSCodeTextArea, ToolbarWrapper, Wrapper } from './chat-message-input.styles'
 
 export interface ChatMessageInputProps {
@@ -7,7 +7,7 @@ export interface ChatMessageInputProps {
   onChange: (value: string) => void
 
 }
-export const ChatMessageInput: FC<ChatMessageInputProps> = (props) => {
+export const ChatMessageInput: FC<ChatMessageInputProps> = memo((props) => {
   const { value = '', toolbarSlot, onChange } = props
 
   return <Wrapper>
@@ -22,4 +22,6 @@ export const ChatMessageInput: FC<ChatMessageInputProps> = (props) => {
       }}
     />
   </Wrapper>
-}
+})
+
+ChatMessageInput.displayName = 'ChatMessageInput'

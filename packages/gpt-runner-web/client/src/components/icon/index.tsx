@@ -1,12 +1,12 @@
 import clsx from 'clsx'
 import type { ComponentProps, FC } from 'react'
-import React from 'react'
+import React, { memo } from 'react'
 
 export interface IconProps extends ComponentProps<'span'> {
   onClick?: (e: React.MouseEvent) => void
 }
 
-export const Icon: FC<IconProps> = (props) => {
+export const Icon: FC<IconProps> = memo((props) => {
   const { className, style, ...restProps } = props
   return (
     <span
@@ -20,4 +20,6 @@ export const Icon: FC<IconProps> = (props) => {
       )}
       {...restProps}
     />)
-}
+})
+
+Icon.displayName = 'Icon'

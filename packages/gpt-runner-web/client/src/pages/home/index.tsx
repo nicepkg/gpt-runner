@@ -1,8 +1,8 @@
-import type { FC } from 'react'
+import { type FC, memo } from 'react'
 
-const Home: FC = () => {
+const Home: FC = memo(() => {
   return <></>
-}
+})
 
 Home.displayName = 'Home'
 

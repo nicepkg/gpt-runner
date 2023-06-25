@@ -1,4 +1,4 @@
-import { type FC, useState } from 'react'
+import { type FC, memo, useState } from 'react'
 import { useMutation } from '@tanstack/react-query'
 import { GPT_RUNNER_OFFICIAL_FOLDER, type MaybePromise, sleep } from '@nicepkg/gpt-runner-shared/common'
 import { Trans, useTranslation } from 'react-i18next'
@@ -14,7 +14,7 @@ export interface InitGptFilesProps {
   onCreated?: () => MaybePromise<void>
 }
 
-export const InitGptFiles: FC<InitGptFilesProps> = (props) => {
+export const InitGptFiles: FC<InitGptFilesProps> = memo((props) => {
   const { rootPath, onCreated } = props
 
   const { t } = useTranslation()
@@ -72,6 +72,6 @@ export const InitGptFiles: FC<InitGptFilesProps> = (props) => {
       onClick={handleCreate}>{t('chat_page.confirm_create_btn')}</VSCodeButton>
     {isLoading && <LoadingView absolute></LoadingView>}
   </Wrapper>
-}
+})
 
 InitGptFiles.displayName = 'InitGptFiles'

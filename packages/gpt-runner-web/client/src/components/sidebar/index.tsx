@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { memo, useEffect, useState } from 'react'
 import { travelTreeDeepFirst } from '@nicepkg/gpt-runner-shared/common'
 import { useDebounce } from 'react-use'
 import type { TreeProps } from '../tree'
@@ -19,7 +19,7 @@ export interface SidebarProps<OtherInfo extends TreeItemBaseStateOtherInfo = Tre
   buildUnderSearchSlot?: () => React.ReactNode
 }
 
-export function Sidebar<OtherInfo extends TreeItemBaseStateOtherInfo = TreeItemBaseStateOtherInfo>(props: SidebarProps<OtherInfo>) {
+export function Sidebar_<OtherInfo extends TreeItemBaseStateOtherInfo = TreeItemBaseStateOtherInfo>(props: SidebarProps<OtherInfo>) {
   const {
     defaultSearchKeyword = '',
     placeholder,
@@ -101,3 +101,7 @@ export function Sidebar<OtherInfo extends TreeItemBaseStateOtherInfo = TreeItemB
     </SidebarTreeWrapper>
   </SidebarWrapper>
 }
+
+Sidebar_.displayName = 'Sidebar'
+
+export const Sidebar = memo(Sidebar_) as typeof Sidebar_

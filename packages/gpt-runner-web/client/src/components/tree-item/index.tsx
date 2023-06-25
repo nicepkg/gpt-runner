@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { memo, useState } from 'react'
 import type { Variants } from 'framer-motion'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Children, IconWrapper, NameWrapper, TreeItemRow, TreeItemRowLeftSlot, TreeItemRowRightSlot, TreeItemWrapper } from './tree-item.styles'
@@ -29,7 +29,7 @@ export interface TreeItemProps<OtherInfo extends TreeItemBaseStateOtherInfo = Tr
   onContextMenu?: (props: TreeItemState<OtherInfo>) => void
 }
 
-export function TreeItem<OtherInfo extends TreeItemBaseStateOtherInfo = TreeItemBaseStateOtherInfo>(props: TreeItemProps<OtherInfo>) {
+export function TreeItem_<OtherInfo extends TreeItemBaseStateOtherInfo = TreeItemBaseStateOtherInfo>(props: TreeItemProps<OtherInfo>) {
   const { renderLeftSlot, renderRightSlot, onExpand, onCollapse, onClick, onContextMenu, ...baseStateProps } = props
   const {
     name,
@@ -112,7 +112,7 @@ export function TreeItem<OtherInfo extends TreeItemBaseStateOtherInfo = TreeItem
           >
             <Children className='tree-item__children'>
               {children?.map(child => (
-                <TreeItem key={child.id} {...child} />
+                <TreeItem_ key={child.id} {...child} />
               ))}
             </Children>
 
@@ -123,3 +123,7 @@ export function TreeItem<OtherInfo extends TreeItemBaseStateOtherInfo = TreeItem
     </TreeItemWrapper>
   )
 }
+
+TreeItem_.displayName = 'TreeItem'
+
+export const TreeItem = memo(TreeItem_) as typeof TreeItem_

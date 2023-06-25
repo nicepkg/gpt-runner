@@ -1,4 +1,4 @@
-import { type FC, useEffect } from 'react'
+import { type FC, memo, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import type { LocaleLang } from '@nicepkg/gpt-runner-shared/common'
@@ -14,7 +14,7 @@ export interface FormData {
   themeName: ThemeName
 }
 
-export const GeneralSettings: FC = () => {
+export const GeneralSettings: FC = memo(() => {
   const { t } = useTranslation()
   const { langId, themeName, updateLangId, updateThemeName } = useGlobalStore()
 
@@ -80,4 +80,6 @@ export const GeneralSettings: FC = () => {
       />
     </StyledFormItem>
   </StyledForm>
-}
+})
+
+GeneralSettings.displayName = 'GeneralSettings'

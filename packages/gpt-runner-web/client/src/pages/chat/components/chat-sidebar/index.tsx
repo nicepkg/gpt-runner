@@ -1,5 +1,5 @@
 import type { FC } from 'react'
-import { useCallback, useEffect, useState } from 'react'
+import { memo, useCallback, useEffect, useState } from 'react'
 import type { GptFileInfoTreeItem } from '@nicepkg/gpt-runner-shared/common'
 import { ClientEventName, GptFileTreeItemType } from '@nicepkg/gpt-runner-shared/common'
 import clsx from 'clsx'
@@ -20,7 +20,7 @@ export interface ChatSidebarProps {
 
 export type GptTreeItemOtherInfo = GptFileInfoTreeItem
 
-export const ChatSidebar: FC<ChatSidebarProps> = (props) => {
+export const ChatSidebar: FC<ChatSidebarProps> = memo((props) => {
   const { rootPath } = props
 
   const { t } = useTranslation()
@@ -200,6 +200,6 @@ export const ChatSidebar: FC<ChatSidebarProps> = (props) => {
     return <ErrorView text={t('chat_page.root_path_not_found_tips')}></ErrorView>
 
   return <Sidebar {...sidebar}></Sidebar>
-}
+})
 
 ChatSidebar.displayName = 'ChatSidebar'

@@ -1,6 +1,6 @@
 import { ChatModelType, type OpenaiSecrets, ServerStorageName } from '@nicepkg/gpt-runner-shared/common'
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { type FC, useEffect } from 'react'
+import { type FC, memo, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { VSCodeButton, VSCodeLink } from '@vscode/webview-ui-toolkit/react'
 import { useTranslation } from 'react-i18next'
@@ -16,7 +16,7 @@ export interface FormData extends Pick<OpenaiSecrets, 'apiKey' | 'accessToken' |
 
 }
 
-export const OpenaiSettings: FC = () => {
+export const OpenaiSettings: FC = memo(() => {
   const { t } = useTranslation()
   const { setLoading } = useLoading()
   const { data: querySecretsRes } = useQuery({
@@ -109,4 +109,6 @@ export const OpenaiSettings: FC = () => {
       {IS_LOCAL_HOST ? t('chat_page.save_btn') : t('chat_page.disabled_save_openai_config_btn')}
     </VSCodeButton>
   </StyledForm>
-}
+})
+
+OpenaiSettings.displayName = 'OpenaiSettings'

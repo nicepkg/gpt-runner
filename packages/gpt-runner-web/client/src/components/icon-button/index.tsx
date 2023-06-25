@@ -1,6 +1,6 @@
 import { VSCodeButton } from '@vscode/webview-ui-toolkit/react'
 import type { FC } from 'react'
-import { useCallback, useEffect, useState } from 'react'
+import { memo, useCallback, useEffect, useState } from 'react'
 import clsx from 'clsx'
 import type { AnimationProps, Target, Tween } from 'framer-motion'
 import { motion } from 'framer-motion'
@@ -29,7 +29,7 @@ export interface IconButtonProps extends GetComponentProps<InstanceType<typeof V
   buttonStyle?: React.CSSProperties
 }
 
-export const IconButton: FC<IconButtonProps> = (props) => {
+export const IconButton: FC<IconButtonProps> = memo((props) => {
   const {
     text,
     iconClassName,
@@ -118,4 +118,6 @@ export const IconButton: FC<IconButtonProps> = (props) => {
       </FlexRowCenter>
     </VSCodeButton>
   </ButtonWrapper>
-}
+})
+
+IconButton.displayName = 'IconButton'

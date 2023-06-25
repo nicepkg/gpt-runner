@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { memo } from 'react'
 import type {
   FieldPath,
   FieldValues,
@@ -24,7 +24,7 @@ export interface HookFormInputProps<
   filterField?: (field: Partial<InputProps>) => Partial<InputProps>
 }
 
-export function HookFormInput<
+export function HookFormInput_<
   TFieldValues extends FieldValues = FieldValues,
 >(props: HookFormInputProps<TFieldValues>) {
   const { label, name, control, rules, errors, filterField, ...otherProps }
@@ -55,3 +55,7 @@ export function HookFormInput<
     />
   )
 }
+
+HookFormInput_.displayName = 'HookFormInput'
+
+export const HookFormInput = memo(HookFormInput_) as typeof HookFormInput_

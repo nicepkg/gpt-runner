@@ -1,5 +1,5 @@
 import { VSCodeProgressRing } from '@vscode/webview-ui-toolkit/react'
-import type { FC } from 'react'
+import { type FC, memo } from 'react'
 import { styled } from 'styled-components'
 
 const LoadingWrapper = styled.div`
@@ -30,7 +30,7 @@ export interface LoadingViewProps {
   mask?: boolean
 }
 
-export const LoadingView: FC<LoadingViewProps> = (props) => {
+export const LoadingView: FC<LoadingViewProps> = memo((props) => {
   const { style, className, absolute, mask = true } = props
 
   const absoluteStyle: React.CSSProperties = {
@@ -52,6 +52,6 @@ export const LoadingView: FC<LoadingViewProps> = (props) => {
       {mask && <Mask />}
     </LoadingWrapper>
   )
-}
+})
 
 LoadingView.displayName = 'LoadingView'

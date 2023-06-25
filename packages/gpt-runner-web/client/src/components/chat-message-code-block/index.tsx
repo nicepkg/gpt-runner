@@ -1,4 +1,4 @@
-import type { FC } from 'react'
+import { type FC, memo } from 'react'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { CodeBlockHeader, CodeBlockWrapper } from './chat-message-code-block.styles'
 import { vscodeDarkPlus } from './dark-code-style'
@@ -17,7 +17,7 @@ export interface MessageCodeBlockProps {
   buildCodeToolbar?: (state: BuildCodeToolbarState) => React.ReactNode
 }
 
-export const MessageCodeBlock: FC<MessageCodeBlockProps> = (props) => {
+export const MessageCodeBlock: FC<MessageCodeBlockProps> = memo((props) => {
   const { theme = 'dark', contents, language, buildCodeToolbar } = props
 
   return (
@@ -35,4 +35,6 @@ export const MessageCodeBlock: FC<MessageCodeBlockProps> = (props) => {
       </SyntaxHighlighter>
     </CodeBlockWrapper>
   )
-}
+})
+
+MessageCodeBlock.displayName = 'MessageCodeBlock'

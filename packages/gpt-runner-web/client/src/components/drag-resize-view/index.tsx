@@ -1,4 +1,5 @@
-import { useEffect, useMemo, useRef } from 'react'
+import type { FC } from 'react'
+import { memo, useEffect, useMemo, useRef } from 'react'
 import type { UserDragConfig } from '@use-gesture/react'
 import { useDrag } from '@use-gesture/react'
 import { motion, useMotionValue } from 'framer-motion'
@@ -28,7 +29,7 @@ export interface DragResizeViewProps {
   children: React.ReactNode
 }
 
-export function DragResizeView(props: DragResizeViewProps) {
+export const DragResizeView: FC<DragResizeViewProps> = memo((props) => {
   const {
     initWidth,
     initHeight,
@@ -175,4 +176,6 @@ export function DragResizeView(props: DragResizeViewProps) {
         : null
     })}
   </motion.div>
-}
+})
+
+DragResizeView.displayName = 'DragResizeView'

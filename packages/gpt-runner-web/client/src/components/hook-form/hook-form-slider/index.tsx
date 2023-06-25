@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { memo } from 'react'
 import { Controller } from 'react-hook-form'
 import styled from 'styled-components'
 
@@ -34,7 +34,7 @@ interface HookFormSliderProps {
   step?: number
 }
 
-export function HookFormSlider({
+export function HookFormSlider_({
   name,
   control,
   defaultValue = 0,
@@ -62,3 +62,7 @@ export function HookFormSlider({
     />
   )
 }
+
+HookFormSlider_.displayName = 'HookFormSlider'
+
+export const HookFormSlider = memo(HookFormSlider_) as typeof HookFormSlider_

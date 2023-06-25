@@ -1,4 +1,4 @@
-import type { FC } from 'react'
+import { type FC, memo } from 'react'
 import clsx from 'clsx'
 import type { SingleChatMessage } from '@nicepkg/gpt-runner-shared/common'
 import { ChatMessageStatus, ChatRole } from '@nicepkg/gpt-runner-shared/common'
@@ -19,7 +19,7 @@ export interface MessageItemProps extends SingleChatMessage, Partial<MessageText
   buildMessageToolbar?: (state: BuildMessageToolbarState) => React.ReactNode
 }
 
-export const MessageItem: FC<MessageItemProps> = (props) => {
+export const MessageItem: FC<MessageItemProps> = memo((props) => {
   const {
     name,
     text,
@@ -88,4 +88,6 @@ export const MessageItem: FC<MessageItemProps> = (props) => {
       </MsgContentWrapper>
     </MsgWrapper>
   )
-}
+})
+
+MessageItem.displayName = 'MessageItem'

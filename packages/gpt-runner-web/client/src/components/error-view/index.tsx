@@ -1,4 +1,4 @@
-import type { FC } from 'react'
+import { type FC, memo } from 'react'
 import { styled } from 'styled-components'
 
 export interface ErrorViewProps {
@@ -18,7 +18,7 @@ const ErrorWrapper = styled.div`
   user-select: text;
 `
 
-export const ErrorView: FC<ErrorViewProps> = (props) => {
+export const ErrorView: FC<ErrorViewProps> = memo((props) => {
   const { text } = props
 
   return (
@@ -26,4 +26,6 @@ export const ErrorView: FC<ErrorViewProps> = (props) => {
       {text}
     </ErrorWrapper>
   )
-}
+})
+
+ErrorView.displayName = 'ErrorView'

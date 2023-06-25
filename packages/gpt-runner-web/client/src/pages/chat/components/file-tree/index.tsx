@@ -1,4 +1,4 @@
-import { type FC, useCallback, useEffect, useRef, useState } from 'react'
+import { type FC, memo, useCallback, useEffect, useRef, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { travelTree, travelTreeDeepFirst } from '@nicepkg/gpt-runner-shared/common'
 import clsx from 'clsx'
@@ -22,7 +22,7 @@ export interface FileTreeProps {
   rootPath: string
 }
 
-const FileTree: FC<FileTreeProps> = (props: FileTreeProps) => {
+export const FileTree: FC<FileTreeProps> = memo((props: FileTreeProps) => {
   const { rootPath } = props
 
   const { t } = useTranslation()
@@ -427,8 +427,6 @@ const FileTree: FC<FileTreeProps> = (props: FileTreeProps) => {
     return <ErrorView text={t('chat_page.root_path_not_found_tips')}></ErrorView>
 
   return <Sidebar {...sidebar}></Sidebar>
-}
+})
 
 FileTree.displayName = 'FileTree'
-
-export default FileTree

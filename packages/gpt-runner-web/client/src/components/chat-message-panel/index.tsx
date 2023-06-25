@@ -1,4 +1,4 @@
-import { forwardRef } from 'react'
+import { forwardRef, memo } from 'react'
 import type { MessageItemProps } from '../chat-message-item'
 import { MessageItem } from '../chat-message-item'
 import { Panel } from './chat-message-panel.styles'
@@ -11,7 +11,7 @@ export interface ChatMessagePanelProps {
 export type ChatMessagePanelRef = HTMLDivElement
 
 // Use ForwardRefRenderFunction to define the component with an explicit ref parameter
-export const ChatMessagePanel = forwardRef<ChatMessagePanelRef, ChatMessagePanelProps>((props, ref) => {
+export const ChatMessagePanel = memo(forwardRef<ChatMessagePanelRef, ChatMessagePanelProps>((props, ref) => {
   const { messageItems } = props
 
   return (
@@ -21,4 +21,6 @@ export const ChatMessagePanel = forwardRef<ChatMessagePanelRef, ChatMessagePanel
       })}
     </Panel>
   )
-})
+}))
+
+ChatMessagePanel.displayName = 'ChatMessagePanel'

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { memo } from 'react'
 import type {
   FieldPath,
   FieldValues,
@@ -32,7 +32,7 @@ export interface HookFormSelectProps<
   filterField?: (field: Partial<SelectProps>) => Partial<SelectProps>
 }
 
-export function HookFormSelect<
+export function HookFormSelect_<
   TFieldValues extends FieldValues = FieldValues,
 >(props: HookFormSelectProps<TFieldValues>) {
   const { label, name, options, control, rules, errors, filterField, ...otherProps }
@@ -71,3 +71,7 @@ export function HookFormSelect<
     />
   )
 }
+
+HookFormSelect_.displayName = 'HookFormSelect'
+
+export const HookFormSelect = memo(HookFormSelect_) as typeof HookFormSelect_

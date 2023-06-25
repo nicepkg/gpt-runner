@@ -1,6 +1,7 @@
+import { memo } from 'react'
 import { Toaster } from 'react-hot-toast'
 
-export const Toast: typeof Toaster = (props) => {
+export const Toast = memo((props) => {
   const { toastOptions, ...otherProps } = props
   return <Toaster
     {...otherProps}
@@ -16,4 +17,6 @@ export const Toast: typeof Toaster = (props) => {
       },
     }}
     {...props} />
-}
+}) as typeof Toaster
+
+Toast.displayName = 'Toast'

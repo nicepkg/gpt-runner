@@ -1,5 +1,5 @@
 import type { FC, RefObject } from 'react'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { memo, useCallback, useEffect, useMemo, useState } from 'react'
 import { ChatMessageStatus, ChatRole, ClientEventName } from '@nicepkg/gpt-runner-shared/common'
 import { copy } from '@nicepkg/gpt-runner-shared/browser'
 import { useTranslation } from 'react-i18next'
@@ -33,7 +33,7 @@ export interface ChatPanelProps {
   onChatIdChange: (chatId: string) => void
 }
 
-export const ChatPanel: FC<ChatPanelProps> = (props) => {
+export const ChatPanel: FC<ChatPanelProps> = memo((props) => {
   const {
     scrollDownRef,
     chatTreeView,
@@ -474,6 +474,6 @@ export const ChatPanel: FC<ChatPanelProps> = (props) => {
       ></ChatMessageInput>
     </DragResizeView>
   </ChatPanelWrapper>
-}
+})
 
 ChatPanel.displayName = 'ChatPanel'

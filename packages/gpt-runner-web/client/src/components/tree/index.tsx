@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { memo, useEffect, useState } from 'react'
 import { travelTree } from '@nicepkg/gpt-runner-shared/common'
 import type { TreeItemBaseStateOtherInfo, TreeItemProps } from '../tree-item'
 import { TreeItem } from '../tree-item'
@@ -14,7 +14,7 @@ export interface TreeProps<OtherInfo extends TreeItemBaseStateOtherInfo = TreeIt
   renderTreeItemRightSlot?: TreeItemProps<OtherInfo>['renderRightSlot']
 }
 
-export function Tree<OtherInfo extends TreeItemBaseStateOtherInfo = TreeItemBaseStateOtherInfo>(props: TreeProps<OtherInfo>) {
+export function Tree_<OtherInfo extends TreeItemBaseStateOtherInfo = TreeItemBaseStateOtherInfo>(props: TreeProps<OtherInfo>) {
   const {
     items,
     buildTreeItem,
@@ -70,3 +70,7 @@ export function Tree<OtherInfo extends TreeItemBaseStateOtherInfo = TreeItemBase
     </div>
   )
 }
+
+Tree_.displayName = 'Tree'
+
+export const Tree = memo(Tree_) as typeof Tree_

@@ -1,5 +1,5 @@
 // PopoverMenu.tsx
-import React, { useEffect, useLayoutEffect, useState } from 'react'
+import React, { memo, useEffect, useLayoutEffect, useState } from 'react'
 import { Popover } from 'react-tiny-popover'
 import { useHoverByMouseLocation } from '../../hooks/use-hover.hook'
 import { useSize } from '../../hooks/use-size.hook'
@@ -27,7 +27,7 @@ export interface PopoverMenuProps {
   buildChildrenSlot: (state: PopoverMenuChildrenState) => React.ReactNode
 }
 
-export const PopoverMenu: React.FC<PopoverMenuProps> = (props) => {
+export const PopoverMenu: React.FC<PopoverMenuProps> = memo((props) => {
   const {
     xPosition = 'left',
     yPosition = 'top',
@@ -181,6 +181,6 @@ export const PopoverMenu: React.FC<PopoverMenuProps> = (props) => {
       </ChildrenWrapper>
     </Popover>
   )
-}
+})
 
 PopoverMenu.displayName = 'PopoverMenu'

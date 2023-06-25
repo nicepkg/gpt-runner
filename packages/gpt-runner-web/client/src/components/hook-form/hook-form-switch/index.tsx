@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { memo } from 'react'
 import type {
   FieldPath,
   FieldValues,
@@ -23,7 +23,7 @@ export interface HookFormSwitchProps<
   filterField?: (field: Partial<SwitchProps>) => Partial<SwitchProps>
 }
 
-export function HookFormSwitch<
+export function HookFormSwitch_<
   TFieldValues extends FieldValues = FieldValues,
 >(props: HookFormSwitchProps<TFieldValues>) {
   const { label, name, control, rules, errors, filterField, ...otherProps }
@@ -58,3 +58,7 @@ export function HookFormSwitch<
     />
   )
 }
+
+HookFormSwitch_.displayName = 'HookFormSwitch'
+
+export const HookFormSwitch = memo(HookFormSwitch_) as typeof HookFormSwitch_

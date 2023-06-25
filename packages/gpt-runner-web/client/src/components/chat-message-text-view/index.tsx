@@ -1,5 +1,5 @@
 import ReactMarkdown from 'react-markdown'
-import type { FC } from 'react'
+import { type FC, memo } from 'react'
 import remarkGfm from 'remark-gfm'
 import type { PluginOptions } from 'react-markdown/lib/react-markdown'
 import type { MessageCodeBlockProps } from '../chat-message-code-block'
@@ -9,7 +9,7 @@ export interface MessageTextViewProps extends Partial<MessageCodeBlockProps>, Pl
   contents: string
 }
 
-export const MessageTextView: FC<MessageTextViewProps> = (props) => {
+export const MessageTextView: FC<MessageTextViewProps> = memo((props) => {
   const {
     contents,
     remarkPlugins,
@@ -48,4 +48,6 @@ export const MessageTextView: FC<MessageTextViewProps> = (props) => {
       {contents}
     </ReactMarkdown>
   )
-}
+})
+
+MessageTextView.displayName = 'MessageTextView'

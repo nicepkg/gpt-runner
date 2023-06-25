@@ -1,4 +1,4 @@
-import { type CSSProperties, type FC, useMemo, useState } from 'react'
+import { type CSSProperties, type FC, memo, useMemo, useState } from 'react'
 import { VSCodePanelTab, VSCodePanelView } from '@vscode/webview-ui-toolkit/react'
 import { useTranslation } from 'react-i18next'
 import { StyledVSCodePanels } from '../../chat.styles'
@@ -22,7 +22,7 @@ export interface SettingsProps {
   chatId?: string
 }
 
-export const Settings: FC<SettingsProps> = (props) => {
+export const Settings: FC<SettingsProps> = memo((props) => {
   const { showSingleFileConfig, chatId } = props
 
   const { t } = useTranslation()
@@ -101,6 +101,6 @@ export const Settings: FC<SettingsProps> = (props) => {
       </FlexColumn>
     </VSCodePanelView>
   </StyledVSCodePanels>
-}
+})
 
 Settings.displayName = 'Settings'
