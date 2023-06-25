@@ -28,21 +28,15 @@ Manage ai presets. Chat with your code files. Revolutionize Your Team's Collabor
 
 ## Features
 
-- `CLI` and `IDE Extension`: `GPT-Runner` provides a robust command-line interface to launch a web interface and IDE extension that retrieves all `xxx.gpt.md` files in your project. These files serve as AI-powered robot presets, making the `GPT-Runner` accessible to virtually any IDE and ensuring an efficient AI workflow.
-
-- AI Robot Preset-based Chats: Developers can create chats based on `xxx.gpt.md` files, with Git version management support, fostering team collaboration and seamless communication.
-
-- Customizable AI Parameters: The `xxx.gpt.md` files offer flexibility to specify system prompts, user prompts, model names, temperature, and much more. Empower your team to extract maximum value from a single file with continuous maintenance and improvement.
-
-- LLM Adaptation: `GPT-Runner` supports both openai's `API key` method and `access token` method, and the future is not only openai, because it is built on `langchainjs`, so it is easy to adapt to third-party LLM !
-
-- Privacy first, all data stored locally in your PC.
-
-- Web Link Share: You can share the `GPT-Runner` web interface through the `LAN ip`, or use the `Tunnel` function provided by the `CLI` to enable temporary `Gradio link` sharing.
-
-- Web Theme: `GPT-Runner` supports light and dark themes. it support `VSCode Dark` and `VSCode Light` and `Jetbrains Dark` and `Jetbrains Light`. By the way. The theme will auto change with your VSCode current theme style when you use `VSCode Extension`. BTW, it's Responsive design !
-
-- Web I18n: English, 简体中文, 繁体中文, 日本語, Deutsch
+- **CLI & IDE Integration:** GPT-Runner offers a powerful command-line interface and IDE extension for AI robot presets through `xxx.gpt.md` files, enabling efficient AI workflows across various IDEs.
+- **Chat with Your Files:** GPT-Runner allows you to chat with your code files. you can selected some files or folders, and then chat with them.
+- AI Preset Chat: Developers can utilize `xxx.gpt.md` files for chat creation with Git version control, boosting team collaboration and communication.
+- Custom AI Parameters: Harness the full potential of `xxx.gpt.md` files with customizable options like system/user prompts, model names, and temperature.
+- LLM Compatibility: Built on LangchainJs, GPT-Runner supports OpenAI API key and access token methods, easily adapting to third-party LLMs.
+- Privacy Focused: All data securely stored on your local PC.
+- Web Sharing: Share GPT-Runner web interface via LAN IP or temporary Gradio link with the CLI Tunnel function.
+- Theme Variety: GPT-Runner offers light/dark themes, auto-syncing with your VSCode theme and providing a responsive design.
+- Web Internationalization: Supports English, 简体中文, 繁体中文, 日本語, and Deutsch.
 
 ## Documentation
 
@@ -62,21 +56,15 @@ Read the [documentation](https://gpt-runner.nicepkg.cn/) for more details.
 
 ## 主要功能
 
-- `CLI` 和 `IDE 扩展`：`GPT-Runner` 提供了强大的命令行界面，用于启动 Web 界面和 IDE 扩展，以检索项目中的所有 `xxx.gpt.md` 文件。这些文件作为 AI 支持的机器人预设，使得 `GPT-Runner` 可以适用于几乎任何 IDE，并确保高效的 AI 工作流程。
-
-- 以 AI 机器人预设为基础的聊天：开发人员可以基于 `xxx.gpt.md` 文件创建聊天，支持 Git 版本管理，促进团队协作和无缝沟通。
-
-- 自定义 AI 参数：`xxx.gpt.md` 文件可以灵活地指定系统提示、用户提示、模型名称、温度等。通过持续维护和改进，赋予团队从单个文件中提取最大价值的能力。
-
-- LLM 适配：`GPT-Runner` 支持 openai 的 `API key` 方式和 `access token` 方式，未来不仅支持 openai，因为它基于 `langchainjs` 构建，所以很容易适应第三方 LLM！
-
-- 隐私优先，所有数据存储在您的个人电脑上。
-
-- Web 链接分享：您可以通过 `局域网 ip` 分享 `GPT-Runner` Web 界面，或者使用 `CLI` 提供的 `Tunnel` 功能启用临时的 `Gradio 链接` 分享。
-
-- Web 主题：`GPT-Runner` 支持亮色和暗色主题。支持 `VSCode Dark`、`VSCode Light`、`Jetbrains Dark` 和 `Jetbrains Light`。顺便说一下，在使用 `VSCode 扩展` 时，主题会根据您当前的 VSCode 主题样式自动切换。此外, ui 是响应式设计！
-
-- Web 国际化支持：English, 简体中文, 繁体中文, 日本語, Deutsch
+- CLI与IDE集成：GPT-Runner 提供强大的命令行界面和IDE扩展，通过 `xxx.gpt.md` 文件实现AI机器人预设，支持各种IDE的高效AI工作流。
+- 与文件聊天：GPT-Runner 允许您与代码文件聊天。您可以选择一些文件或文件夹，然后与它们聊天。
+- 基于AI预设的聊天：开发人员可以利用xxx.gpt.md文件创建聊天并支持Git版本控制，提升团队协作和沟通。
+- 自定义AI参数：充分发挥 `xxx.gpt.md` 文件的潜力，可自定义系统/用户提示、模型名称、温度等选项。
+- LLM兼容性：基于 `LangchainJs` 构建，GPT-Runner 支持 OpenAI API Key 和 Access Token 方式，易于适应第三方LLM。
+- 隐私优先：所有数据安全存储在本地PC上。
+- 网络共享：通过局域网IP或CLI隧道功能的临时 Gradio 链接分享 GPT-Runner 网络界面。
+- 主题多样性：GPT-Runner 提供亮/暗主题，与 VSCode 主题自动同步，并提供响应式设计。
+- 网页国际化：支持 English, 简体中文, 繁体中文, 日本語 和 Deutsch。
 
 ## 文档
 
