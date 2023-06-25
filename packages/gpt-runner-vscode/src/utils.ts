@@ -1,5 +1,6 @@
 import * as vscode from 'vscode'
 import { getLocalHostname } from '@nicepkg/gpt-runner-shared/node'
+import { LocaleLang } from '@nicepkg/gpt-runner-shared/common'
 import { EXT_NAME } from './constant'
 import { state } from './state'
 
@@ -45,4 +46,18 @@ export function createHash() {
 export function getServerBaseUrl(localIp = false) {
   const hostname = localIp ? getLocalHostname() : 'localhost'
   return `http://${hostname}:${state.serverPort || 3003}`
+}
+
+export function getLang(): LocaleLang {
+  const vscodeLang = vscode.env.language
+  const vscodeToMyLangMap: Map<string, LocaleLang> = new Map([
+    ['en-US', LocaleLang.English],
+    ['zh-CN', LocaleLang.ChineseSimplified],
+    ['zh-TW', LocaleLang.ChineseTraditional],
+    ['zh-HK', LocaleLang.ChineseTraditional],
+    ['ja', LocaleLang.Japanese],
+    ['de', LocaleLang.German],
+  ])
+
+  return vscodeToMyLangMap.get(vscodeLang) || LocaleLang.English
 }

@@ -39,3 +39,11 @@ export enum WssActionName {
   StorageRemoveItem = 'storageRemoveItem',
   StorageClear = 'storageClear',
 }
+
+export enum LocaleLang {
+  English = 'en',
+  ChineseSimplified = 'zh_CN',
+  ChineseTraditional = 'zh_Hant',
+  Japanese = 'ja',
+  German = 'de',
+}

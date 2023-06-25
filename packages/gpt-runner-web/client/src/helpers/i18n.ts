@@ -2,49 +2,61 @@ import i18n from 'i18next'
 import Backend from 'i18next-http-backend'
 import LanguageDetector from 'i18next-browser-languagedetector'
 import { initReactI18next } from 'react-i18next'
-import type { ReadonlyDeep } from '@nicepkg/gpt-runner-shared/common'
+import { LocaleLang, type ReadonlyDeep } from '@nicepkg/gpt-runner-shared/common'
 import type { SelectOption } from '../components/hook-form/hook-form-select'
 import { BASE_URL } from './constant'
 
 export const languageOptions = ([
   {
     label: 'English',
-    value: 'en',
+    value: LocaleLang.English,
   },
   {
     label: '简体中文',
-    value: 'zh_CN',
+    value: LocaleLang.ChineseSimplified,
   },
   {
     label: '繁體中文',
-    value: 'zh_Hant',
+    value: LocaleLang.ChineseTraditional,
   },
   {
     label: '日本語',
-    value: 'ja',
+    value: LocaleLang.Japanese,
   },
   {
     label: 'Deutsch',
-    value: 'de',
+    value: LocaleLang.German,
   },
 ] as const) satisfies ReadonlyDeep<SelectOption[]>
 
-export type LangId = typeof languageOptions[number]['value']
+export function getLang(): LocaleLang {
+  const documentLangToLangMap: Map<string, LocaleLang> = new Map([
+    ['en', LocaleLang.English],
+    ['zh-CN', LocaleLang.ChineseSimplified],
+    ['zh-TW', LocaleLang.ChineseTraditional],
+    ['zh-HK', LocaleLang.ChineseTraditional],
+    ['ja', LocaleLang.Japanese],
+    ['de', LocaleLang.German],
+  ])
 
-i18n
-  .use(Backend)
-  .use(LanguageDetector)
-  .use(initReactI18next)
-  .init({
-    fallbackLng: 'en',
-    debug: false,
-    backend: {
-      loadPath: `${BASE_URL}/locales/{{lng}}.json`,
-    },
-    interpolation: {
-      escapeValue: false,
-    },
-    returnNull: false,
-  })
+  const lang = navigator.language || document.documentElement.lang
+  return documentLangToLangMap.get(lang) || LocaleLang.English
+}
 
-export default i18n
+export function initI18n() {
+  i18n
+    .use(Backend)
+    .use(LanguageDetector)
+    .use(initReactI18next)
+    .init({
+      fallbackLng: LocaleLang.English,
+      debug: false,
+      backend: {
+        loadPath: `${BASE_URL}/locales/{{lng}}.json`,
+      },
+      interpolation: {
+        escapeValue: false,
+      },
+      returnNull: false,
+    })
+}

@@ -46,6 +46,10 @@
     "openai_access_token_placeholder": "如果您沒有 OpenAI API Key，請提供 OpenAI Access Token",
     "openai_get_access_token_tips": "您可以在此處獲取 Access Token：",
     "save_btn": "保存",
-    "disabled_save_openai_config_btn": "無法在 localhost 以外保存"
+    "disabled_save_openai_config_btn": "無法在 localhost 以外保存",
+    "toast_save_success": "保存成功！",
+    "toast_save_error": "保存失敗！",
+    "toast_create_success": "创建成功！",
+    "toast_create_error": "创建失败！"
   }
 }

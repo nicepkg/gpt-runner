@@ -1,12 +1,13 @@
 import type { StateCreator } from 'zustand'
+import type { LocaleLang } from '@nicepkg/gpt-runner-shared/common'
 import type { GetState } from '../types'
-import type { LangId } from '../../../helpers/i18n'
 import type { ThemeName } from '../../../styles/themes'
+import { getGlobalConfig } from '../../../helpers/global-config'
 
 export interface GeneralSlice {
-  langId: LangId
+  langId: LocaleLang
   themeName: ThemeName
-  updateLangId: (langId: LangId) => void
+  updateLangId: (langId: LocaleLang) => void
   updateThemeName: (themeName: ThemeName) => void
 }
 
@@ -14,7 +15,7 @@ export type GeneralState = GetState<GeneralSlice>
 
 function getInitialState() {
   return {
-    langId: 'en',
+    langId: getGlobalConfig().defaultLangId,
     themeName: 'default',
   } satisfies GeneralState
 }

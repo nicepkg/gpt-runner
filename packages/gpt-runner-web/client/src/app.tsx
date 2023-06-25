@@ -2,13 +2,15 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { type ComponentType, type FC, type PropsWithChildren, useEffect } from 'react'
 import type { FallbackProps } from 'react-error-boundary'
 import { ErrorBoundary } from 'react-error-boundary'
+import { useTranslation } from 'react-i18next'
 import { AppRouter } from './router'
 import { GlobalStyle } from './styles/global.styles'
 import { LoadingProvider } from './store/context/loading-context'
 import { MarkdownStyle } from './styles/markdown.styles'
 import { useGlobalStore } from './store/zustand/global'
 import { GlobalThemeStyle } from './styles/theme.styles'
-import i18n from './helpers/i18n'
+import { initI18n } from './helpers/i18n'
+import { Toast } from './components/toast'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -20,6 +22,8 @@ const queryClient = new QueryClient({
     },
   },
 })
+
+initI18n()
 
 const FallbackRender: ComponentType<FallbackProps> = ({ error }) => {
   // Call resetErrorBoundary() to reset the error boundary and retry the render.
@@ -36,6 +40,7 @@ export const AppProviders: FC<PropsWithChildren> = ({ children }) => {
   return (
     <ErrorBoundary FallbackComponent={FallbackRender as any}>
       <QueryClientProvider client={queryClient}>
+        <Toast></Toast>
         <LoadingProvider>
           {children}
         </LoadingProvider>
@@ -46,6 +51,7 @@ export const AppProviders: FC<PropsWithChildren> = ({ children }) => {
 
 export const App: FC = () => {
   const { langId, themeName } = useGlobalStore()
+  const { i18n } = useTranslation()
 
   useEffect(() => {
     if (!langId)

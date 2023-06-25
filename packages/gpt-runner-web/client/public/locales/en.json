@@ -46,6 +46,10 @@
     "openai_access_token_placeholder": "if you don't have openai api key, please provide access token",
     "openai_get_access_token_tips": "You can open here to got the access token: ",
     "save_btn": "Save",
-    "disabled_save_openai_config_btn": "You can't save outside localhost"
+    "disabled_save_openai_config_btn": "You can't save outside localhost",
+    "toast_save_success": "Save success!",
+    "toast_save_error": "Save error!",
+    "toast_create_success": "Create success!",
+    "toast_create_error": "Create error!"
   }
 }

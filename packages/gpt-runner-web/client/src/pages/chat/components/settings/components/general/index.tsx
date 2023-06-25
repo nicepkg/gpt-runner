@@ -1,16 +1,16 @@
 import { type FC, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import type { LocaleLang } from '@nicepkg/gpt-runner-shared/common'
 import { StyledForm, StyledFormItem } from '../../settings.styles'
 import type { SelectOption } from '../../../../../../components/hook-form/hook-form-select'
 import { HookFormSelect } from '../../../../../../components/hook-form/hook-form-select'
 import { useGlobalStore } from '../../../../../../store/zustand/global'
-import type { LangId } from '../../../../../../helpers/i18n'
 import { languageOptions } from '../../../../../../helpers/i18n'
 import type { ThemeName } from '../../../../../../styles/themes'
 
 export interface FormData {
-  langId: LangId
+  langId: LocaleLang
   themeName: ThemeName
 }
 

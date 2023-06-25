@@ -4,6 +4,7 @@ import { type FC, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { VSCodeButton, VSCodeLink } from '@vscode/webview-ui-toolkit/react'
 import { useTranslation } from 'react-i18next'
+import toast from 'react-hot-toast'
 import { getServerStorage, saveServerStorage } from '../../../../../../networks/server-storage'
 import { useLoading } from '../../../../../../hooks/use-loading.hook'
 import { HookFormInput } from '../../../../../../components/hook-form/hook-form-input'
@@ -54,6 +55,10 @@ export const OpenaiSettings: FC = () => {
 
     try {
       await saveSecrets(data)
+      toast(t('chat_page.toast_save_success'))
+    }
+    catch (err) {
+      toast(`${t('chat_page.toast_save_error')}: ${err}`)
     }
     finally {
       setLoading(false)
@@ -70,6 +75,7 @@ export const OpenaiSettings: FC = () => {
         name="apiKey"
         errors={formState.errors}
         control={control}
+        type="password"
       />
     </StyledFormItem>
 

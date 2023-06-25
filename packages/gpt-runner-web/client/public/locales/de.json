@@ -46,6 +46,10 @@
     "openai_access_token_placeholder": "Wenn Sie keinen OpenAI API-Schlüssel haben, geben Sie bitte das Zugriffstoken ein",
     "openai_get_access_token_tips": "Sie können hier das Zugriffstoken erhalten: ",
     "save_btn": "Speichern",
-    "disabled_save_openai_config_btn": "Sie können außerhalb von localhost nicht speichern"
+    "disabled_save_openai_config_btn": "Sie können außerhalb von localhost nicht speichern",
+    "toast_save_success": "Speichern erfolgreich!",
+    "toast_save_error": "Speichern fehlgeschlagen!",
+    "toast_create_success": "Erstellen erfolgreich!",
+    "toast_create_error": "Erstellen fehlgeschlagen!"
   }
 }

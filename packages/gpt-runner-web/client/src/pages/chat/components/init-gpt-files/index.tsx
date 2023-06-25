@@ -3,6 +3,7 @@ import { useMutation } from '@tanstack/react-query'
 import { GPT_RUNNER_OFFICIAL_FOLDER, type MaybePromise, sleep } from '@nicepkg/gpt-runner-shared/common'
 import { Trans, useTranslation } from 'react-i18next'
 import { VSCodeButton } from '@vscode/webview-ui-toolkit/react'
+import toast from 'react-hot-toast'
 import { initGptFiles } from '../../../../networks/gpt-files'
 import { getGlobalConfig } from '../../../../helpers/global-config'
 import { LoadingView } from '../../../../components/loading-view'
@@ -33,6 +34,10 @@ export const InitGptFiles: FC<InitGptFilesProps> = (props) => {
       await runInitGptFiles()
       await sleep(1000)
       await onCreated?.()
+      toast('chat_page.toast_create_success')
+    }
+    catch (err) {
+      toast(`${t('chat_page.toast_create_error')}: ${err}`)
     }
     finally {
       setIsLoading(false)

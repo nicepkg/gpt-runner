@@ -6,7 +6,7 @@ import { toUnixPath } from '@nicepkg/gpt-runner-shared/common'
 import { PathUtils } from '@nicepkg/gpt-runner-shared/node'
 import type { ContextLoader } from '../contextLoader'
 import { Commands, EXT_DISPLAY_NAME, EXT_NAME } from '../constant'
-import { createHash, getServerBaseUrl } from '../utils'
+import { createHash, getLang, getServerBaseUrl } from '../utils'
 import { state } from '../state'
 import { EventType, emitter } from '../emitter'
 import { log } from '../log'
@@ -93,6 +93,7 @@ class ChatViewProvider implements vscode.WebviewViewProvider {
         initialRoutePath: '/chat',
         showDiffCodesBtn: true,
         showInsertCodesBtn: true,
+        defaultLangId: '${getLang()}'
       }
 
       window.addEventListener('message', event => {

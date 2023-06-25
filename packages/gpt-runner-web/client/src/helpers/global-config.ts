@@ -1,5 +1,7 @@
 import { getSearchParams } from '@nicepkg/gpt-runner-shared/browser'
+import type { LocaleLang } from '@nicepkg/gpt-runner-shared/common'
 import { EnvConfig, toUnixPath, urlRemoveLocalhost } from '@nicepkg/gpt-runner-shared/common'
+import { getLang } from './i18n'
 
 export interface GlobalConfig {
   rootPath: string
@@ -7,6 +9,7 @@ export interface GlobalConfig {
   initialRoutePath: string
   showDiffCodesBtn: boolean
   showInsertCodesBtn: boolean
+  defaultLangId: LocaleLang
 }
 
 window.__DEFAULT_GLOBAL_CONFIG__ = {
@@ -15,6 +18,7 @@ window.__DEFAULT_GLOBAL_CONFIG__ = {
   serverBaseUrl: urlRemoveLocalhost(EnvConfig.get('GPTR_BASE_SERVER_URL')),
   showDiffCodesBtn: false,
   showInsertCodesBtn: false,
+  defaultLangId: getLang(),
 }
 
 export function getGlobalConfig() {
