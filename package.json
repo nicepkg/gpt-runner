@@ -28,7 +28,6 @@
     "@antfu/eslint-config": "^0.38.6",
     "@nicepkg/gpt-runner": "workspace:*",
     "@nicepkg/gpt-runner-cli": "workspace:*",
-    "@nicepkg/gpt-runner-config": "workspace:*",
     "@nicepkg/gpt-runner-core": "workspace:*",
     "@nicepkg/gpt-runner-shared": "workspace:*",
     "@types/fs-extra": "^11.0.1",

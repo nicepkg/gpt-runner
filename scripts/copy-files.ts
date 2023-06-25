@@ -3,9 +3,9 @@ import { resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 // relative to scripts directory
-const destinations = [
-  ['../LICENSE', '../packages/gpt-runner-vscode/LICENSE'],
-  ['../README.md', '../packages/gpt-runner-web/README.md'],
+const destinations: string[][] = [
+  // ['../LICENSE', '../packages/gpt-runner-vscode/LICENSE'],
+  // ['../README.md', '../packages/gpt-runner-web/README.md'],
 ]
 
 const _filename = fileURLToPath(import.meta.url)

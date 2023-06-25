@@ -3,7 +3,7 @@
   "title": "common/",
   "model": {
     "type": "openai",
-    "modelName": "gpt-3.5-turbo-16k",
+    "modelName": "gpt-4",
     "temperature": 0.5
   }
 }

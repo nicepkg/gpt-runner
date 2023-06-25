@@ -1,47 +1,86 @@
-# GPT Runner CLI
+# GPT-Runner CLI 
 
-[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/nicepkg/gpt-runner/blob/main/packages/gpt-runner-cli/LICENSE)
-[![GitHub stars](https://img.shields.io/github/stars/nicepkg/gpt-runner.svg)](https://github.com/nicepkg/gpt-runner/stargazers)
-
-The GPT Runner CLI is a command-line interface tool that allows developers to run AI-powered chat prompts in their projects. It provides a web interface and IDE extension to retrieve and create chat prompts based on AI robot presets.
-
-## Features
-
-- Retrieve AI robot preset chat prompts from `.gpt.md` files in your project
-- Create new chat prompts based on the existing presets
-- Included in Git version management for collaboration within your team
+GPT-Runner CLI (Command Line Interface) is a powerful tool that makes it easy for developers to manage AI presets and interact with their code files. It provides a simple way to increase team collaboration and improve development efficiency.
 
 ## Installation
 
-To install the GPT Runner CLI, you need to have [Node.js](https://nodejs.org) installed on your machine. Then, you can install it globally using [npm](https://www.npmjs.com/package/@nicepkg/gpt-runner-cli) or [yarn](https://yarnpkg.com/package/@nicepkg/gpt-runner-cli):
+To install GPT-Runner CLI, make sure you have Node.js (version 16.15.0 or higher) installed on your system. You can then install the CLI globally using the following command:
 
-```shell
-# Using npm
-$ npm install -g @nicepkg/gpt-runner-cli
-
-# Using yarn
-$ yarn global add @nicepkg/gpt-runner-cli
+```sh
+npm install -g gptr
 ```
 
 ## Usage
 
-Once installed, you can use the `gptr` command to start the GPT Runner CLI:
+Once installed, you can go to your project path and run the `gptr` command to start the GPT-Runner server and open the web interface in your default browser.
 
-```shell
-$ gptr [...rootPaths] -p [port number] [--no-open] [--debug]
+```sh
+cd <your-project-path>
+gptr
 ```
 
-- `rootPaths` (optional): Specify the root path(s) where the `.gpt.md` files are located. Multiple paths can be provided.
-- `port` (optional): Specify the server port number. Default: 3003.
-- `--no-open` (optional): Do not open the web interface in the browser automatically.
-- `--debug` (optional): Enable debug mode.
+### Command Overview
+
+Here is an overview of the available commands and their descriptions:
+
+- `gptr` (default): Starts the GPT-Runner server and opens the web interface in your default browser. You can also specify additional options to customize the behavior (see [command options](#command-options) below).
+
+### Command Options
+
+You can customize the behavior of the `gptr` command using the following options:
+
+- `-p, --port [port number]`: Specify the server port (default: 3003).
+- `-c, --config [file]`: Provide a path to your custom configuration file.
+- `--share`: Share the GPT-Runner web interface temporarily using a Gradio link.
+- `--no-open`: Do not open the web interface in your browser when the server starts.
+- `--debug`: Enable debug mode for detailed logging.
+
+## Examples
+
+1. Start GPT-Runner with default settings:
+
+   ```sh
+   gptr
+   ```
+
+2. Start GPT-Runner on a specific port:
+
+   ```sh
+   gptr --port 4000
+   ```
+
+3. Start GPT-Runner with a custom configuration file:
+
+   ```sh
+   gptr --config ./scripts/gptr.config.json
+   ```
+
+4. Share the GPT-Runner web interface using a temporary Gradio link:
+
+   ```sh
+   gptr --share
+   ```
+
+5. Start GPT-Runner without opening the web interface in your browser:
+
+   ```sh
+   gptr --no-open
+   ```
+
+6. Start GPT-Runner in debug mode:
+
+   ```sh
+   gptr --debug
+   ```
+
+## Troubleshooting
+
+If you encounter any issues or need more information on GPT-Runner CLI, refer to the [FAQ](https://github.com/nicepkg/gpt-runner/blob/main/docs/faq-en.md) sections in the project documentation. If you can't find a solution there, feel free to open an [issue](https://github.com/nicepkg/gpt-runner/issues) on the project's GitHub page.
 
 ## Contributing
 
-Contributions to the GPT Runner CLI are welcome! Feel free to open issues and submit pull requests on the [GitHub repository](https://github.com/nicepkg/gpt-runner).
-
-When contributing, please make sure to follow the [code of conduct](https://github.com/nicepkg/gpt-runner/blob/main/CODE_OF_CONDUCT.md).
+Contributions to GPT-Runner CLI are welcome! Check out the [contributing guideline](https://github.com/nicepkg/gpt-runner/blob/main/CONTRIBUTING.md) to get started.
 
 ## License
 
-This project is licensed under the MIT License. See the [LICENSE](https://github.com/nicepkg/gpt-runner/blob/main/packages/gpt-runner-cli/LICENSE) file for details.
+GPT-Runner CLI is provided under the [MIT License](./LICENSE).

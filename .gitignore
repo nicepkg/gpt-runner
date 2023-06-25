@@ -16,8 +16,6 @@ dist
 examples/**/pnpm-lock.yaml
 node_modules
 playground/.vscode
-packages/gpt-runner/README.md
-packages/gpt-runner-vscode/LICENSE
 result.json
 .svelte-kit
 .eslintcache

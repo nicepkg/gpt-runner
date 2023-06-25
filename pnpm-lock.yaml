@@ -16,9 +16,6 @@ importers:
       '@nicepkg/gpt-runner-cli':
         specifier: workspace:*
         version: link:packages/gpt-runner-cli
-      '@nicepkg/gpt-runner-config':
-        specifier: workspace:*
-        version: link:packages/gpt-runner-config
       '@nicepkg/gpt-runner-core':
         specifier: workspace:*
         version: link:packages/gpt-runner-core
@@ -284,18 +281,6 @@ importers:
       wait-port:
         specifier: ^1.0.4
         version: 1.0.4
-
-  packages/gpt-runner-config:
-    dependencies:
-      '@nicepkg/gpt-runner-core':
-        specifier: workspace:*
-        version: link:../gpt-runner-core
-      '@nicepkg/gpt-runner-shared':
-        specifier: workspace:*
-        version: link:../gpt-runner-shared
-      unconfig:
-        specifier: ^0.3.9
-        version: 0.3.9
 
   packages/gpt-runner-core:
     dependencies:
