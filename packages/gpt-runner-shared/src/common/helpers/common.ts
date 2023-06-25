@@ -1,3 +1,4 @@
+import { AxiosError } from 'axios'
 import type { TreeItem } from '../types'
 
 export function sleep(ms: number) {
@@ -152,19 +153,26 @@ export function urlRemoveLocalhost(url: string | null | undefined): string {
 
   try {
     const uri = new URL(url)
+    let result = url
     const currentHostname = window.location.hostname
-    if (['localhost', '127.0.0.1'].includes(uri.hostname)) {
+    const currentPort = window.location.port
+
+    if (['localhost', '127.0.0.1'].includes(uri.hostname))
       uri.hostname = currentHostname
 
-      const result = uri.toString()
+    // if it's shared by tunnel, should keep the port same as the original url
+    if (!currentPort || [80, 443].includes(Number(currentPort)))
+      uri.port = currentPort
 
-      if (!url.endsWith('/'))
-        return result.replace(/\/$/, '')
+    // sync http or https
+    uri.protocol = window.location.protocol
 
-      return result
-    }
+    result = uri.toString()
 
-    return url
+    if (!url.endsWith('/'))
+      result = result.replace(/\/$/, '')
+
+    return result
   }
   catch {
     return url
@@ -211,4 +219,13 @@ export function getProcessCwd(): string | undefined {
   catch (e) {
     return undefined
   }
+}
+
+export function getErrorMsg(error: any) {
+  const errorMessage = String(
+    error instanceof AxiosError
+      ? error.response?.data?.message
+      : (error as Error)?.message || error || '',
+  )
+  return errorMessage
 }

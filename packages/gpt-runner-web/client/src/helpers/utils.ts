@@ -39,13 +39,6 @@ export function formatRouteQuery<T extends object>(query?: ParsedUrlQuery): Part
   return formattedQuery as Partial<T>
 }
 
-export function getErrorMsg(error: any) {
-  const errorMessage = String(
-    (error as Error)?.message || error || '',
-  )
-  return errorMessage
-}
-
 // format num to xxk
 export function formatNumWithK(num: number) {
   return `${(num / 1000).toFixed(1)}k`

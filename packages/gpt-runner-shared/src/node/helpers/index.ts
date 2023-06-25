@@ -1,3 +1,4 @@
+export * from './tunnel'
 export * from './check-node-version'
 export * from './editor'
 export * from './file-utils'

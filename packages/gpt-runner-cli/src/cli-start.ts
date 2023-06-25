@@ -1,6 +1,6 @@
 import { cac } from 'cac'
 import { loadUserConfig } from '@nicepkg/gpt-runner-core'
-import { PathUtils, checkNodeVersion, getLocalHostname, getPort, getRunServerEnv, openInBrowser } from '@nicepkg/gpt-runner-shared/node'
+import { PathUtils, Tunnel, checkNodeVersion, getLocalHostname, getPort, getRunServerEnv, openInBrowser } from '@nicepkg/gpt-runner-shared/node'
 import { consola } from 'consola'
 import { cyan, green } from 'colorette'
 import { execa } from 'execa'
@@ -24,6 +24,7 @@ export async function startCli(cwd = PathUtils.resolve(process.cwd()), argv = pr
     })
     .option('-c, --config [file]', 'Config file path')
     // .option('-w, --watch', 'Watch for file changes')
+    .option('--share', 'Share the link to temp link')
     .option('--no-open', 'Open in browser')
     .option('--debug', 'Debug mode')
     .action(async (_, flags) => {
@@ -67,13 +68,31 @@ export async function startCli(cwd = PathUtils.resolve(process.cwd()), argv = pr
         consola.error(error)
       })
 
-      const afterServerStartSuccess = () => {
+      const afterServerStartSuccess = async () => {
         const getUrl = (isLocalIp = false) => {
           const localIp = getLocalHostname()
           return `http://${isLocalIp ? localIp : 'localhost'}:${finalPort}`
         }
 
-        consola.success(`\n\n${green(`GPT-Runner web is at:\n\n${cyan(getUrl())}\n\n${cyan(getUrl(true))}\n`)}`)
+        consola.success(`\n\n${green(`GPT-Runner web local is at:\n\n${cyan(getUrl())}\n\n${cyan(getUrl(true))}\n`)}`)
+
+        try {
+          if (options.share ?? false) {
+            consola.info(`\n\n${green('Sharing GPT-Runner web...')}`)
+
+            const tunnel = new Tunnel({
+              localPort: finalPort,
+            })
+
+            const sharedUrl = await tunnel.startTunnel()
+
+            if (sharedUrl)
+              consola.success(`\n\n${green(`GPT-Runner web is shared at:\n\n${cyan(sharedUrl)}`)}`)
+          }
+        }
+        catch (error) {
+          consola.error(error)
+        }
 
         if (options.open ?? true) {
           openInBrowser({

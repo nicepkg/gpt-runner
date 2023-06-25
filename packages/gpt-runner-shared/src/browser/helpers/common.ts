@@ -1,10 +1,3 @@
-export function getErrorMsg(error: any) {
-  const errorMessage = String(
-    (error as Error)?.message || error || '',
-  )
-  return errorMessage
-}
-
 export function getSearchParams(val: string, url?: string): string {
   const defaultUrl = typeof window !== 'undefined' ? window.location.href : ''
   const finalUrl = url || defaultUrl || ''

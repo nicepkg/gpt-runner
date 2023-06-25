@@ -67,9 +67,8 @@ export const OpenaiSettings: FC = () => {
 
   return <StyledForm onSubmit={handleSubmit(onSubmit)}>
 
-    <StyledFormItem>
+    <StyledFormItem key={0}>
       <HookFormInput
-        key={0}
         label={t('chat_page.openai_api_key')}
         placeholder={t('chat_page.openai_api_key_placeholder')}
         name="apiKey"
@@ -79,9 +78,8 @@ export const OpenaiSettings: FC = () => {
       />
     </StyledFormItem>
 
-    <StyledFormItem>
+    <StyledFormItem key={1}>
       <HookFormInput
-        key={3}
         label={t('chat_page.openai_api_base_path')}
         placeholder="https://api.openai.com/v1"
         name="basePath"
@@ -90,9 +88,8 @@ export const OpenaiSettings: FC = () => {
       />
     </StyledFormItem>
 
-    <StyledFormItem>
+    <StyledFormItem key={2}>
       <HookFormTextarea
-        key={1}
         label={t('chat_page.openai_access_token')}
         name="accessToken"
         placeholder={t('chat_page.openai_access_token_placeholder')}
