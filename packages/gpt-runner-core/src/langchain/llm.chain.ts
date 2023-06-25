@@ -28,6 +28,17 @@ export async function llmChain(params: LlmChainParams) {
 
   if (model.type === ChatModelType.Openai) {
     const { secrets, modelName, temperature, maxTokens, topP, frequencyPenalty, presencePenalty } = model
+    const hasAccessToken = secrets?.accessToken
+    const axiosBaseOptions: Record<string, any> = {
+      headers: {},
+    }
+
+    if (hasAccessToken) {
+      // if user provided an access token, use it even though api key is also provided
+      // see: https://github.com/openai/openai-node/blob/dc821be3018c832650e21285bade265099f99efb/common.ts#L70
+      axiosBaseOptions.headers.Authorization = `Bearer ${secrets?.accessToken}`
+    }
+
     llm = new ChatOpenAI({
       streaming: true,
       maxRetries: 1,
@@ -40,6 +51,7 @@ export async function llmChain(params: LlmChainParams) {
       presencePenalty,
       configuration: {
         ...secrets,
+        baseOptions: axiosBaseOptions,
       },
       callbackManager: CallbackManager.fromHandlers({
         handleLLMNewToken: async (token: string) => {
