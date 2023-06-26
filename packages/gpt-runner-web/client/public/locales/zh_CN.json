@@ -50,6 +50,7 @@
     "toast_save_success": "保存成功！",
     "toast_save_error": "保存失败！",
     "toast_create_success": "创建成功！",
-    "toast_create_error": "创建失败！"
+    "toast_create_error": "创建失败！",
+    "toast_copy_success": "复制成功！"
   }
 }

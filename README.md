@@ -108,10 +108,6 @@ cd packages/gpt-runner-web && pnpm dev:client
 
 Now you can visit `http://localhost:3006` to see the result.
 
-## Donation
-
-[Buy Me a Coffee](https://www.buymeacoffee.com/jinmingyang)
-
 ## Acknowledgement
 
 GPT-Runner is made possible thanks to the inspirations from the following projects:
@@ -124,6 +120,8 @@ GPT-Runner is made possible thanks to the inspirations from the following projec
 - [VSCode-Webview-Ui-Toolkit](https://github.com/microsoft/vscode-webview-ui-toolkit)
 
 ### Sponsor
+
+[Buy Me a Coffee](https://www.buymeacoffee.com/jinmingyang)
 
 no...
 

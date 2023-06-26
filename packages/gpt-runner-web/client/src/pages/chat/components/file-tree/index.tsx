@@ -113,7 +113,7 @@ export const FileTree: FC<FileTreeProps> = memo((props: FileTreeProps) => {
     })
 
     // setFilesTree([...filesTree])
-  }, [checkedFilePaths, fullPathFileMapRef.current, filesTree, setFilesTree])
+  }, [checkedFilePaths, filesTree, setFilesTree])
 
   useEffect(() => {
     const filesInfoTree = fetchCommonFilesTreeRes?.data?.filesInfoTree
@@ -157,7 +157,7 @@ export const FileTree: FC<FileTreeProps> = memo((props: FileTreeProps) => {
     updateExcludeFileExts(_excludeFileExts)
   }, [fetchCommonFilesTreeRes])
 
-  const renderTreeItemLeftSlot = (props: TreeItemState<FileInfoSidebarTreeItem>) => {
+  const renderTreeItemLeftSlot = useCallback((props: TreeItemState<FileInfoSidebarTreeItem>) => {
     const { isLeaf, isExpanded, otherInfo } = props
 
     const getIconClassName = () => {
@@ -240,9 +240,9 @@ export const FileTree: FC<FileTreeProps> = memo((props: FileTreeProps) => {
         marginRight: '0.45rem',
       }} className={getIconClassName()}></Icon>
     </>
-  }
+  }, [updateFileItem, updateCheckedFilePaths])
 
-  const renderTreeItemRightSlot = (props: TreeItemState<FileInfoSidebarTreeItem>) => {
+  const renderTreeItemRightSlot = useCallback((props: TreeItemState<FileInfoSidebarTreeItem>) => {
     const { otherInfo } = props
 
     if (!otherInfo)
@@ -258,7 +258,7 @@ export const FileTree: FC<FileTreeProps> = memo((props: FileTreeProps) => {
         className='codicon-symbol-string'
       ></Icon >
     </FileTreeItemRightWrapper>
-  }
+  }, [])
 
   const handleExpandChange = useCallback((props: TreeItemState<FileInfoSidebarTreeItem>) => {
     const { isExpanded, otherInfo } = props
@@ -278,7 +278,7 @@ export const FileTree: FC<FileTreeProps> = memo((props: FileTreeProps) => {
     setFilesTree([...filesTree])
   }, [filesTree, setFilesTree])
 
-  const buildSearchRightSlot = () => {
+  const buildSearchRightSlot = useCallback(() => {
     const { allFileExts = [] } = fetchCommonFilesTreeRes?.data || {}
 
     const handleExtCheckedChange = (ext: string, checked: boolean) => {
@@ -329,9 +329,9 @@ export const FileTree: FC<FileTreeProps> = memo((props: FileTreeProps) => {
         </FilterWrapper>
       }}
     />
-  }
+  }, [fetchCommonFilesTreeRes, excludeFileExts, updateExcludeFileExts])
 
-  const buildUnderSearchSlot = () => {
+  const buildUnderSearchSlot = useCallback(() => {
     if (!Object.keys(fullPathFileMapRef.current).length)
       return null
 
@@ -397,7 +397,7 @@ export const FileTree: FC<FileTreeProps> = memo((props: FileTreeProps) => {
         </VSCodeCheckbox>
       </div>
     </FileTreeSidebarUnderSearchWrapper>
-  }
+  }, [filePathsTreePrompt, checkedFilePaths, provideFilePathsTreePromptToGpt])
 
   const sortTreeItems = useCallback((items: TreeItemProps<FileInfoSidebarTreeItem>[]) => {
     return items?.sort((a, b) => {

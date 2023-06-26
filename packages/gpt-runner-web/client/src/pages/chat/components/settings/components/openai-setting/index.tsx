@@ -55,10 +55,10 @@ export const OpenaiSettings: FC = memo(() => {
 
     try {
       await saveSecrets(data)
-      toast(t('chat_page.toast_save_success'))
+      toast.success(t('chat_page.toast_save_success'))
     }
     catch (err) {
-      toast(`${t('chat_page.toast_save_error')}: ${err}`)
+      toast.error(`${t('chat_page.toast_save_error')}: ${err}`)
     }
     finally {
       setLoading(false)

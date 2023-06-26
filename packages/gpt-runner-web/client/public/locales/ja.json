@@ -50,6 +50,7 @@
     "toast_save_success": "保存しました！",
     "toast_save_error": "保存できませんでした！",
     "toast_create_success": "作成しました！",
-    "toast_create_error": "作成できませんでした！"
+    "toast_create_error": "作成できませんでした！",
+    "toast_copy_success": "コピーしました！"
   }
 }

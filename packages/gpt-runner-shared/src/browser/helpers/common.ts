@@ -32,6 +32,34 @@ export function removeSearchParams(urlLike: string,
   return `${urlBase}?${urlSearchParams}`
 }
 
-export function copy(text: string) {
-  navigator.clipboard.writeText(text)
+export function unsecuredCopyToClipboard(text: string) {
+  const textArea = document.createElement('textarea')
+  textArea.value = text
+  Object.assign(textArea.style, {
+    position: 'fixed',
+    right: '0',
+    bottom: '0',
+    opacity: '0',
+    width: '0',
+    height: '0',
+    pointerEvents: 'none',
+  })
+
+  document.body.appendChild(textArea)
+  textArea.focus()
+  textArea.select()
+  try {
+    document.execCommand('copy')
+  }
+  catch (err) {
+    throw new Error(`Unable to copy to clipboard${err}`)
+  }
+  document.body.removeChild(textArea)
+}
+
+export async function copyToClipboard(content: string) {
+  if (window.isSecureContext && navigator.clipboard)
+    await navigator.clipboard.writeText(content)
+  else
+    unsecuredCopyToClipboard(content)
 }

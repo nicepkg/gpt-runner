@@ -1,8 +1,9 @@
 import type { FC, RefObject } from 'react'
 import { memo, useCallback, useEffect, useMemo, useState } from 'react'
-import { ChatMessageStatus, ChatRole, ClientEventName } from '@nicepkg/gpt-runner-shared/common'
-import { copy } from '@nicepkg/gpt-runner-shared/browser'
+import { ChatMessageStatus, ChatRole, ClientEventName, getErrorMsg } from '@nicepkg/gpt-runner-shared/common'
 import { useTranslation } from 'react-i18next'
+import { toast } from 'react-hot-toast'
+import { copyToClipboard } from '@nicepkg/gpt-runner-shared/browser'
 import type { ChatMessagePanelProps } from '../../../../components/chat-message-panel'
 import { ChatMessagePanel } from '../../../../components/chat-message-panel'
 import { ChatMessageInput } from '../../../../components/chat-message-input'
@@ -104,8 +105,14 @@ export const ChatPanel: FC<ChatPanelProps> = memo((props) => {
   }, [chatId, getGptFileTreeItemFromChatId])
 
   // copy
-  const handleCopy = useCallback((value: string) => {
-    copy(value)
+  const handleCopy = useCallback(async (value: string) => {
+    try {
+      await copyToClipboard(value)
+      toast.success(t('chat_page.toast_copy_success'))
+    }
+    catch (error) {
+      toast.error(getErrorMsg(error))
+    }
   }, [])
 
   // insert codes

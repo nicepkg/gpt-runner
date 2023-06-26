@@ -37,6 +37,7 @@ export async function llmChain(params: LlmChainParams) {
       // if user provided an access token, use it even though api key is also provided
       // see: https://github.com/openai/openai-node/blob/dc821be3018c832650e21285bade265099f99efb/common.ts#L70
       axiosBaseOptions.headers.Authorization = `Bearer ${secrets?.accessToken}`
+      secrets.apiKey = 'unknown' // tell langchain don't throw error for missing api key
     }
 
     llm = new ChatOpenAI({

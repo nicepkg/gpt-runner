@@ -50,6 +50,7 @@
     "toast_save_success": "Save success!",
     "toast_save_error": "Save error!",
     "toast_create_success": "Create success!",
-    "toast_create_error": "Create error!"
+    "toast_create_error": "Create error!",
+    "toast_copy_success": "Copied!"
   }
 }

@@ -50,6 +50,7 @@
     "toast_save_success": "Speichern erfolgreich!",
     "toast_save_error": "Speichern fehlgeschlagen!",
     "toast_create_success": "Erstellen erfolgreich!",
-    "toast_create_error": "Erstellen fehlgeschlagen!"
+    "toast_create_error": "Erstellen fehlgeschlagen!",
+    "toast_copy_success": "Kopiert!"
   }
 }
