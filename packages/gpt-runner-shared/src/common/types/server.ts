@@ -38,9 +38,19 @@ export interface GetGptFilesReqParams {
   rootPath: string
 }
 
-export interface GetGptFilesTreeResData {
+export interface GetGptFilesResData {
   filesInfo: GptFileInfo[]
   filesInfoTree: GptFileInfoTree
+}
+
+export interface GetGptFileInfoReqParams {
+  rootPath: string
+  filePath: string
+}
+
+export interface GetGptFileInfoResData {
+  userConfig: UserConfig
+  singleFileConfig: SingleFileConfig
 }
 
 export interface InitGptFilesReqParams {

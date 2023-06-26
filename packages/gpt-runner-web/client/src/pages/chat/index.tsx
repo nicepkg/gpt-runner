@@ -89,7 +89,7 @@ const Chat: FC = memo(() => {
       return null
 
     return <SidebarWrapper className='sidebar-wrapper'>
-      <Settings chatId={activeChatId} showSingleFileConfig={showSingleFileConfig}></Settings>
+      <Settings rootPath={rootPath} chatId={activeChatId} showSingleFileConfig={showSingleFileConfig}></Settings>
     </SidebarWrapper>
   }, [activeChatId])
 

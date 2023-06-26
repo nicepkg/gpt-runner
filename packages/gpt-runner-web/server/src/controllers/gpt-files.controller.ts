@@ -1,8 +1,8 @@
 import type { GptInitFileName } from '@nicepkg/gpt-runner-core'
-import { getGptFilesInfo, initGptFiles, loadUserConfig } from '@nicepkg/gpt-runner-core'
+import { getGptFilesInfo, initGptFiles, loadUserConfig, parseGptFile } from '@nicepkg/gpt-runner-core'
 import { sendSuccessResponse, verifyParamsByZod } from '@nicepkg/gpt-runner-shared/node'
-import type { GetGptFilesReqParams, GetGptFilesTreeResData, InitGptFilesReqParams, InitGptFilesResData } from '@nicepkg/gpt-runner-shared/common'
-import { Debug, GetGptFilesReqParamsSchema, InitGptFilesReqParamsSchema, removeUserConfigUnsafeKey } from '@nicepkg/gpt-runner-shared/common'
+import type { GetGptFileInfoReqParams, GetGptFileInfoResData, GetGptFilesReqParams, GetGptFilesResData, InitGptFilesReqParams, InitGptFilesResData } from '@nicepkg/gpt-runner-shared/common'
+import { Debug, GetGptFileInfoReqParamsSchema, GetGptFilesReqParamsSchema, InitGptFilesReqParamsSchema, removeUserConfigUnsafeKey } from '@nicepkg/gpt-runner-shared/common'
 import type { ControllerConfig } from '../types'
 import { getValidFinalPath } from '../services/valid-path'
 
@@ -39,7 +39,7 @@ export const gptFilesControllers: ControllerConfig = {
           data: {
             filesInfo,
             filesInfoTree,
-          } satisfies GetGptFilesTreeResData,
+          } satisfies GetGptFilesResData,
         })
       },
     },
@@ -66,6 +66,47 @@ export const gptFilesControllers: ControllerConfig = {
 
         sendSuccessResponse(res, {
           data: null satisfies InitGptFilesResData,
+        })
+      },
+    },
+    {
+      url: '/get-gpt-file-info',
+      method: 'get',
+      handler: async (req, res) => {
+        const query = req.query as GetGptFileInfoReqParams
+
+        verifyParamsByZod(query, GetGptFileInfoReqParamsSchema)
+
+        const { rootPath, filePath } = query
+
+        const finalRootPath = getValidFinalPath({
+          path: rootPath,
+          assertType: 'directory',
+          fieldName: 'rootPath',
+        })
+
+        const finalFilePath = getValidFinalPath({
+          path: filePath,
+          rootPath: finalRootPath,
+          assertType: 'file',
+          fieldName: 'filePath',
+        })
+
+        let { config: userConfig } = await loadUserConfig(finalRootPath)
+        userConfig = removeUserConfigUnsafeKey(userConfig)
+
+        debug.log('userConfig', userConfig)
+
+        const singleFileConfig = await parseGptFile({
+          filePath: finalFilePath,
+          userConfig,
+        })
+
+        sendSuccessResponse(res, {
+          data: {
+            userConfig,
+            singleFileConfig,
+          } satisfies GetGptFileInfoResData,
         })
       },
     },

@@ -176,7 +176,6 @@ export const createSidebarTreeSlice: StateCreator<
       systemPrompt: gptFileTreeItem?.otherInfo?.singleFileConfig.systemPrompt || '',
       messages: [],
       singleFilePath: gptFileTreeItem?.otherInfo?.path || '',
-      singleFileConfig: gptFileTreeItem?.otherInfo?.singleFileConfig || {},
       status: ChatMessageStatus.Success,
       createAt: Date.now(),
     })

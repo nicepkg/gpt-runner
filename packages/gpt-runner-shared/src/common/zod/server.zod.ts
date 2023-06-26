@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import type { ChatStreamReqParams, GetCommonFilesReqParams, GetGptFilesReqParams, GetUserConfigReqParams, InitGptFilesReqParams, OpenEditorReqParams, StorageClearReqParams, StorageGetItemReqParams, StorageRemoveItemReqParams, StorageSetItemReqParams } from '../types'
+import type { ChatStreamReqParams, GetCommonFilesReqParams, GetGptFileInfoReqParams, GetGptFilesReqParams, GetUserConfigReqParams, InitGptFilesReqParams, OpenEditorReqParams, StorageClearReqParams, StorageGetItemReqParams, StorageRemoveItemReqParams, StorageSetItemReqParams } from '../types'
 import { SingleChatMessageSchema, SingleFileConfigSchema } from './config.zod'
 import { ServerStorageNameSchema } from './enum.zod'
 
@@ -17,6 +17,11 @@ export const ChatStreamReqParamsSchema = z.object({
 export const GetGptFilesReqParamsSchema = z.object({
   rootPath: z.string(),
 }) satisfies z.ZodType<GetGptFilesReqParams>
+
+export const GetGptFileInfoReqParamsSchema = z.object({
+  rootPath: z.string(),
+  filePath: z.string(),
+}) satisfies z.ZodType<GetGptFileInfoReqParams>
 
 export const InitGptFilesReqParamsSchema = z.object({
   rootPath: z.string(),

@@ -31,7 +31,6 @@ export const ChatSidebar: FC<ChatSidebarProps> = memo((props) => {
     createChatAndActive,
     updateSidebarTreeItem,
     updateActiveChatId,
-    updateUserConfigFromRemote,
     updateSidebarTreeFromRemote,
   } = useGlobalStore()
 
@@ -49,13 +48,12 @@ export const ChatSidebar: FC<ChatSidebarProps> = memo((props) => {
     setIsLoading(true)
 
     try {
-      await updateUserConfigFromRemote(rootPath)
       await updateSidebarTreeFromRemote(rootPath)
     }
     finally {
       setIsLoading(false)
     }
-  }, [rootPath, updateUserConfigFromRemote, updateSidebarTreeFromRemote])
+  }, [rootPath, updateSidebarTreeFromRemote])
 
   useEffect(() => {
     refreshSidebarTree()

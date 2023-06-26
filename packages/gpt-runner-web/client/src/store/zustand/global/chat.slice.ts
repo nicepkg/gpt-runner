@@ -1,12 +1,11 @@
 import type { StateCreator } from 'zustand'
-import type { SingleChat, SingleFileConfig, UserConfig } from '@nicepkg/gpt-runner-shared/common'
-import { ChatMessageStatus, ChatRole, STREAM_DONE_FLAG, resolveSingleFileConfig, travelTree } from '@nicepkg/gpt-runner-shared/common'
+import type { SingleChat } from '@nicepkg/gpt-runner-shared/common'
+import { ChatMessageStatus, ChatRole, STREAM_DONE_FLAG, travelTree } from '@nicepkg/gpt-runner-shared/common'
 import { v4 as uuidv4 } from 'uuid'
 import type { GetState } from '../types'
 import { fetchLlmStream } from '../../../networks/llm'
-import { fetchUserConfig } from '../../../networks/config'
 import { getGlobalConfig } from '../../../helpers/global-config'
-import type { GptFileTreeItem, SidebarTreeItem, SidebarTreeSlice } from './sidebar-tree.slice'
+import type { SidebarTreeItem, SidebarTreeSlice } from './sidebar-tree.slice'
 import type { FileTreeSlice } from './file-tree.slice'
 
 export enum GenerateAnswerType {
@@ -16,12 +15,8 @@ export enum GenerateAnswerType {
 
 export interface ChatSlice {
   activeChatId: string
-  userConfig: UserConfig
   chatInstances: SingleChat[]
   updateActiveChatId: (activeChatId: string) => void
-  updateUserConfig: (userConfig: Partial<UserConfig>) => void
-  updateUserConfigFromRemote: (rootPath: string) => Promise<void>
-  resolveSingleFileConfig: (singleFileConfig: SingleFileConfig) => SingleFileConfig
   getChatInstance: (chatId: string) => SingleChat | undefined
   addChatInstance: (gptFileId: string, instance: Omit<SingleChat, 'id'>) => {
     chatSidebarTreeItem: SidebarTreeItem
@@ -42,7 +37,6 @@ export type ChatState = GetState<ChatSlice>
 function getInitialState() {
   return {
     activeChatId: '',
-    userConfig: {},
     chatInstances: [],
   } satisfies ChatState
 }
@@ -59,30 +53,6 @@ export const createChatSlice: StateCreator<
   updateActiveChatId(activeChatId) {
     set({ activeChatId })
   },
-  updateUserConfig(userConfig) {
-    set(state => ({
-      userConfig: {
-        ...state.userConfig,
-        ...userConfig,
-      },
-    }))
-  },
-  async updateUserConfigFromRemote(rootPath: string) {
-    const state = get()
-    const res = await fetchUserConfig({
-      rootPath,
-    })
-
-    state.updateUserConfig(res.data?.userConfig || {})
-  },
-  resolveSingleFileConfig(singleFileConfig) {
-    const state = get()
-    const { userConfig } = state
-    return resolveSingleFileConfig({
-      userConfig,
-      singleFileConfig,
-    }, false)
-  },
   getChatInstance(chatId) {
     return get().chatInstances.find(chatInstance => chatInstance.id === chatId)
   },
@@ -92,16 +62,10 @@ export const createChatSlice: StateCreator<
     const chatId = uuidv4()
     const gptFileIdTreeItem = state.getSidebarTreeItem(gptFileId)
 
-    const mergedSingleFileConfig = {
-      ...(gptFileIdTreeItem as GptFileTreeItem)?.otherInfo?.singleFileConfig || {},
-      ...instance.singleFileConfig,
-    }
-
     const finalInstance: SingleChat = {
       ...instance,
       id: chatId,
       singleFilePath: gptFileIdTreeItem?.otherInfo?.path || '',
-      singleFileConfig: mergedSingleFileConfig,
     }
 
     const chatInfo = state.getChatInfo(finalInstance)

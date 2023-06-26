@@ -1,13 +1,15 @@
 import { type CSSProperties, type FC, memo, useMemo, useState } from 'react'
 import { VSCodePanelTab, VSCodePanelView } from '@vscode/webview-ui-toolkit/react'
 import { useTranslation } from 'react-i18next'
+import { useQuery } from '@tanstack/react-query'
 import { StyledVSCodePanels } from '../../chat.styles'
 import type { MessageCodeBlockTheme } from '../../../../components/chat-message-code-block'
 import { MessageCodeBlock } from '../../../../components/chat-message-code-block'
 import { useGlobalStore } from '../../../../store/zustand/global'
-import { useChatInstance } from '../../../../hooks/use-chat-instance.hook'
 import { FlexColumn } from '../../../../styles/global.styles'
 import { isDarkTheme } from '../../../../styles/themes'
+import { getGptFileInfo } from '../../../../networks/gpt-files'
+import { LoadingView } from '../../../../components/loading-view'
 import { ConfigInfoTitle, ConfigInfoWrapper } from './settings.styles'
 import { OpenaiSettings } from './components/openai-setting'
 import { GeneralSettings } from './components/general'
@@ -18,17 +20,17 @@ enum SettingsTabId {
 }
 
 export interface SettingsProps {
+  rootPath: string
   showSingleFileConfig?: boolean
   chatId?: string
 }
 
 export const Settings: FC<SettingsProps> = memo((props) => {
-  const { showSingleFileConfig, chatId } = props
+  const { rootPath, showSingleFileConfig, chatId } = props
 
   const { t } = useTranslation()
   const [tabActiveId, setTabActiveId] = useState(SettingsTabId.Settings)
-  const { userConfig, themeName, getGptFileTreeItemFromChatId } = useGlobalStore()
-  const { chatInstance } = useChatInstance({ chatId })
+  const { themeName, getGptFileTreeItemFromChatId } = useGlobalStore()
   const codeBlockTheme: MessageCodeBlockTheme = useMemo(() => {
     return isDarkTheme(themeName) ? 'dark' : 'light'
   }, [themeName])
@@ -39,6 +41,17 @@ export const Settings: FC<SettingsProps> = memo((props) => {
     return getGptFileTreeItemFromChatId(chatId)
   }, [chatId, getGptFileTreeItemFromChatId])
 
+  const { data: getGptFileInfoRes, isLoading: getGptFileInfoIsLoading } = useQuery({
+    queryKey: ['settings-gpt-file-info', tabActiveId, gptFileTreeItem?.path],
+    enabled: !!gptFileTreeItem?.path && tabActiveId === SettingsTabId.ConfigInfo,
+    queryFn: () => getGptFileInfo({
+      rootPath,
+      filePath: gptFileTreeItem!.path,
+    }),
+  })
+
+  const { userConfig, singleFileConfig } = getGptFileInfoRes?.data || {}
+
   const viewStyle: CSSProperties = {
     height: '100%',
     maxHeight: '100%',
@@ -47,7 +60,7 @@ export const Settings: FC<SettingsProps> = memo((props) => {
   }
 
   const globalConfigInfo = JSON.stringify(userConfig, null, 4)
-  const singleFileConfigInfo = JSON.stringify(chatInstance?.singleFileConfig, null, 4)
+  const singleFileConfigInfo = JSON.stringify(singleFileConfig, null, 4)
   const gptFileName = gptFileTreeItem?.path.split('/').pop()
 
   const renderOverrideSetting = () => {
@@ -96,6 +109,8 @@ export const Settings: FC<SettingsProps> = memo((props) => {
     </VSCodePanelView>
     <VSCodePanelView style={viewStyle} id={SettingsTabId.ConfigInfo}>
       <FlexColumn style={{ width: '100%' }}>
+        {getGptFileInfoIsLoading && <LoadingView absolute></LoadingView>}
+
         {renderSingleFileConfigInfo()}
         {renderGlobalConfigInfo()}
       </FlexColumn>

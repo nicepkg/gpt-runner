@@ -1,4 +1,4 @@
-import type { SingleChatMessage, SingleFileConfig } from './config'
+import type { SingleChatMessage } from './config'
 import type { ChatMessageStatus } from './enum'
 
 export interface SingleChat {
@@ -8,7 +8,6 @@ export interface SingleChat {
   systemPrompt: string
   messages: SingleChatMessage[]
   singleFilePath: string
-  singleFileConfig: SingleFileConfig
   status: ChatMessageStatus
   createAt: number
 }
