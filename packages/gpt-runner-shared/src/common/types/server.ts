@@ -16,7 +16,19 @@ export type FailResponse<T = any> = Omit<BaseResponse<T>, 'type'> & { type: 'Fai
 export interface ChatStreamReqParams {
   messages: SingleChatMessage[]
   prompt: string
+
+  /**
+   * most times we don't use systemPrompt, we parse .gpt.md file
+   * and get the real time systemPrompt and then provide  systemPrompt + appendSystemPrompt to LangchainJs
+   */
   systemPrompt?: string
+  appendSystemPrompt?: string
+  singleFilePath?: string
+
+  /**
+   * most times we don't use singleFileConfig, we parse .gpt.md file
+   * and get the real time singleFileConfig and then provide singleFileConfig to LangchainJs
+   */
   singleFileConfig?: SingleFileConfig
   contextFilePaths?: string[]
   rootPath?: string

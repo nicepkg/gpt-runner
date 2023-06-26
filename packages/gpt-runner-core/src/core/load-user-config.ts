@@ -47,6 +47,8 @@ export async function loadUserConfig<U extends IUserConfig = IUserConfig>(
       : [
           {
             files: [
+              '.gpt-runner/gpt-runner.config',
+              '.gpt-runner/gptr.config',
               'gpt-runner.config',
               'gptr.config',
             ],

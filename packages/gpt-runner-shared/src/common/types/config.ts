@@ -124,6 +124,8 @@ export interface UserConfig {
   respectGitIgnore?: boolean
 }
 
+export type UserConfigForUser = Omit<UserConfig, 'rootPath'>
+
 export interface SingleChatMessage {
   name: ChatRole
   text: string

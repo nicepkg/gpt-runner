@@ -2,6 +2,15 @@ import styled from 'styled-components'
 
 export const MenuMask = styled.div`
   overflow: hidden;
+  color: var(--foreground);
+`
+
+export const PinBar = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0.5rem;
+  border-bottom: 1px solid var(--panel-view-border);
 `
 
 export const Menu = styled.div`

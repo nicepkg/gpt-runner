@@ -344,8 +344,7 @@ export const ChatPanel: FC<ChatPanelProps> = memo((props) => {
       {/* right icon */}
       {/* chat tree */}
       {chatTreeView && <PopoverMenu
-        childrenInMenuWhenOpen={false}
-        menuStyle={{
+        menuMaskStyle={{
           marginLeft: '1rem',
           marginRight: '1rem',
         }}
@@ -370,9 +369,8 @@ export const ChatPanel: FC<ChatPanelProps> = memo((props) => {
       {fileTreeView && <PopoverMenu
         // isPopoverOpen={true}
         // onPopoverDisplayChange={() => { }}
-        childrenInMenuWhenOpen={false}
         clickOutSideToClose={false}
-        menuStyle={{
+        menuMaskStyle={{
           marginLeft: '1rem',
           marginRight: '1rem',
         }}
@@ -398,8 +396,7 @@ export const ChatPanel: FC<ChatPanelProps> = memo((props) => {
         // isPopoverOpen={true}
         // onPopoverDisplayChange={() => { }}
         xPosition='center'
-        childrenInMenuWhenOpen={false}
-        menuStyle={{
+        menuMaskStyle={{
           marginLeft: '1rem',
           marginRight: '1rem',
         }}
@@ -423,11 +420,12 @@ export const ChatPanel: FC<ChatPanelProps> = memo((props) => {
 
       <PopoverMenu
         xPosition='right'
-        buildChildrenSlot={({ isHovering, isInMenu }) => {
+        allowPin={false}
+        childrenInMenuWhenOpen={true}
+        buildChildrenSlot={({ isHovering }) => {
           return <IconButton
             text={t('chat_page.clear_history_btn')}
             iconClassName='codicon-clear-all'
-            showText={isInMenu}
             hoverShowText={!isHovering}
             onClick={handleClearAll}
           ></IconButton>

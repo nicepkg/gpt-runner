@@ -38,7 +38,7 @@ export function HookFormTextarea_<
             {...{
               ...otherProps,
               ...(typeof filterField === 'function'
-                ? filterField(field)
+                ? filterField(field as any)
                 : field),
             }}
           >{label}</StyledVSCodeTextArea>

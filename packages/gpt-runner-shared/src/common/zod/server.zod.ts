@@ -7,6 +7,8 @@ export const ChatStreamReqParamsSchema = z.object({
   messages: z.array(SingleChatMessageSchema),
   prompt: z.string(),
   systemPrompt: z.string().optional(),
+  appendSystemPrompt: z.string().optional(),
+  singleFilePath: z.string().optional(),
   singleFileConfig: SingleFileConfigSchema.optional(),
   contextFilePaths: z.array(z.string()).optional(),
   rootPath: z.string().optional(),

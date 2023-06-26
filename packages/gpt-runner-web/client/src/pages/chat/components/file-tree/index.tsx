@@ -1,6 +1,6 @@
 import { type FC, memo, useCallback, useEffect, useRef, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { travelTree, travelTreeDeepFirst } from '@nicepkg/gpt-runner-shared/common'
+import { ClientEventName, travelTree, travelTreeDeepFirst } from '@nicepkg/gpt-runner-shared/common'
 import clsx from 'clsx'
 import { VSCodeCheckbox, VSCodeLink } from '@vscode/webview-ui-toolkit/react'
 import { Trans, useTranslation } from 'react-i18next'
@@ -16,6 +16,7 @@ import { useGlobalStore } from '../../../../store/zustand/global'
 import type { FileInfoSidebarTreeItem, FileSidebarTreeItem } from '../../../../store/zustand/global/file-tree.slice'
 import { PopoverMenu } from '../../../../components/popover-menu'
 import { useTempStore } from '../../../../store/zustand/temp'
+import { emitter } from '../../../../helpers/emitter'
 import { FileTreeItemRightWrapper, FileTreeSidebarHighlight, FileTreeSidebarUnderSearchWrapper, FilterWrapper } from './file-tree.styles'
 
 export interface FileTreeProps {
@@ -71,7 +72,7 @@ export const FileTree: FC<FileTreeProps> = memo((props: FileTreeProps) => {
     setFilesTree([...filesTree])
   }, [filesTree, setFilesTree])
 
-  const { data: fetchCommonFilesTreeRes, isLoading } = useQuery({
+  const { data: fetchCommonFilesTreeRes, isLoading, refetch: refreshFileTree } = useQuery({
     queryKey: ['file-tree', rootPath, excludeFileExts.join(',')],
     enabled: !!rootPath,
     keepPreviousData: true,
@@ -80,6 +81,20 @@ export const FileTree: FC<FileTreeProps> = memo((props: FileTreeProps) => {
       excludeExts: excludeFileExts,
     }),
   })
+
+  useEffect(() => {
+    const refresh = () => {
+      refreshFileTree()
+    }
+
+    emitter.on(ClientEventName.RefreshTree, refresh)
+    emitter.on(ClientEventName.RefreshFileTree, refresh)
+
+    return () => {
+      emitter.off(ClientEventName.RefreshTree, refresh)
+      emitter.off(ClientEventName.RefreshFileTree, refresh)
+    }
+  }, [rootPath])
 
   // sync checked state
   useEffect(() => {
@@ -290,45 +305,56 @@ export const FileTree: FC<FileTreeProps> = memo((props: FileTreeProps) => {
       })
     }
 
-    return <PopoverMenu
-      // isPopoverOpen={true}
-      // onPopoverDisplayChange={() => { }}
-      yPosition='bottom'
-      childrenInMenuWhenOpen={false}
-      clickOutSideToClose={false}
-      menuStyle={{
-        marginLeft: '1rem',
-        marginRight: '1rem',
-      }}
-      childrenStyle={{
-        height: '100%',
-      }}
-      buildChildrenSlot={({ isHovering }) => {
-        return <IconButton
-          text={t('chat_page.filter_btn')}
-          iconClassName='codicon-filter'
-          hoverShowText={!isHovering}
-          style={{
-            paddingLeft: '0.5rem',
-            paddingRight: '0.5rem',
-            height: '100%',
-          }}
-        ></IconButton>
-      }}
-      buildMenuSlot={() => {
-        return <FilterWrapper>
-          {allFileExts.map((ext) => {
-            return <VSCodeCheckbox
-              key={ext}
-              checked={!excludeFileExts.includes(ext)}
-              onChange={(e) => {
-                const checked = (e.target as HTMLInputElement).checked
-                handleExtCheckedChange(ext, checked)
-              }}>{ext}</VSCodeCheckbox>
-          })}
-        </FilterWrapper>
-      }}
-    />
+    return <>
+      <PopoverMenu
+        // isPopoverOpen={true}
+        // onPopoverDisplayChange={() => { }}
+        yPosition='bottom'
+        clickOutSideToClose={false}
+        menuMaskStyle={{
+          marginLeft: '1rem',
+          marginRight: '1rem',
+        }}
+        childrenStyle={{
+          height: '100%',
+        }}
+        buildChildrenSlot={({ isHovering }) => {
+          return <IconButton
+            text={t('chat_page.filter_btn')}
+            iconClassName='codicon-filter'
+            hoverShowText={!isHovering}
+            style={{
+              paddingLeft: '0.5rem',
+              height: '100%',
+            }}
+          ></IconButton>
+        }}
+        buildMenuSlot={() => {
+          return <FilterWrapper>
+            {allFileExts.map((ext) => {
+              return <VSCodeCheckbox
+                key={ext}
+                checked={!excludeFileExts.includes(ext)}
+                onChange={(e) => {
+                  const checked = (e.target as HTMLInputElement).checked
+                  handleExtCheckedChange(ext, checked)
+                }}>{ext}</VSCodeCheckbox>
+            })}
+          </FilterWrapper>
+        }}
+      />
+
+      <IconButton
+        style={{
+          height: '100%',
+        }}
+        text={t('chat_page.refresh_btn')}
+        showText={false}
+        iconClassName='codicon-refresh'
+        animatingWhenClick
+        onClick={refreshFileTree}
+      ></IconButton>
+    </>
   }, [fetchCommonFilesTreeRes, excludeFileExts, updateExcludeFileExts])
 
   const buildUnderSearchSlot = useCallback(() => {

@@ -7,6 +7,7 @@ export interface SingleChat {
   inputtingPrompt: string
   systemPrompt: string
   messages: SingleChatMessage[]
+  singleFilePath: string
   singleFileConfig: SingleFileConfig
   status: ChatMessageStatus
   createAt: number

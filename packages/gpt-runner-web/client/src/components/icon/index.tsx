@@ -12,6 +12,8 @@ export const Icon: FC<IconProps> = memo((props) => {
     <span
       style={{
         fontSize: 'inherit',
+        cursor: 'pointer',
+        color: 'inherit',
         ...style,
       }}
       className={clsx(

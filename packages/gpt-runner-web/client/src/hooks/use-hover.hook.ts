@@ -61,9 +61,17 @@ export function useHoverByMouseLocation<Ref extends RefObject<any>>() {
     const handleMouseMove = (e: MouseEvent) => {
       setMouseLocation({ x: e.clientX, y: e.clientY })
     }
+
+    // fix mouse leave not triggered when mouse leave window
+    const handleMouseLeave = () => {
+      setMouseLocation({ x: -1, y: -1 })
+    }
+
     window.addEventListener('mousemove', handleMouseMove)
+    document.addEventListener('mouseleave', handleMouseLeave)
     return () => {
       window.removeEventListener('mousemove', handleMouseMove)
+      document.removeEventListener('mouseleave', handleMouseLeave)
     }
   }, [])
 

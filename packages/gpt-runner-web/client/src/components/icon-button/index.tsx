@@ -25,7 +25,7 @@ export interface IconButtonProps extends GetComponentProps<InstanceType<typeof V
     to: Target
   }
   animatingWhenClick?: boolean
-  onClick?: () => MaybePromise<void>
+  onClick?: () => MaybePromise<any>
   buttonStyle?: React.CSSProperties
 }
 

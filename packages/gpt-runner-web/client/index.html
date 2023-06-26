@@ -20,6 +20,9 @@
         ...window.__GLOBAL_CONFIG__ || {},
       }
     }
+
+    // change locale language to navigator language
+    document.documentElement.lang = window.navigator.language
   </script>
   <script>
     // before-script

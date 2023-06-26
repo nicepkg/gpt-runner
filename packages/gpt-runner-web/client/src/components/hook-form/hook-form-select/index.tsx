@@ -47,7 +47,7 @@ export function HookFormSelect_<
             {...{
               ...otherProps,
               ...(typeof filterField === 'function'
-                ? filterField(field)
+                ? filterField(field as any)
                 : field),
               onChange: (e: any) => {
                 field.onChange(e.target.value)

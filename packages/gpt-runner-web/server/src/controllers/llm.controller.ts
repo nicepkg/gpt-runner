@@ -1,8 +1,8 @@
 import type { Request, Response } from 'express'
-import type { ChatModelType, ChatStreamReqParams, FailResponse, SuccessResponse } from '@nicepkg/gpt-runner-shared/common'
+import type { ChatModelType, ChatStreamReqParams, FailResponse, SingleFileConfig, SuccessResponse } from '@nicepkg/gpt-runner-shared/common'
 import { ChatStreamReqParamsSchema, STREAM_DONE_FLAG, buildFailResponse, buildSuccessResponse } from '@nicepkg/gpt-runner-shared/common'
-import { verifyParamsByZod } from '@nicepkg/gpt-runner-shared/node'
-import { createFileContext, getSecrets, loadUserConfig } from '@nicepkg/gpt-runner-core'
+import { PathUtils, verifyParamsByZod } from '@nicepkg/gpt-runner-shared/node'
+import { createFileContext, getSecrets, loadUserConfig, parseGptFile } from '@nicepkg/gpt-runner-core'
 import { llmChain } from '../services'
 import { getValidFinalPath } from '../services/valid-path'
 import type { ControllerConfig } from '../types'
@@ -27,13 +27,13 @@ export const llmControllers: ControllerConfig = {
         const {
           messages = [],
           prompt = '',
-          systemPrompt = '',
-          singleFileConfig,
+          systemPrompt: systemPromptFromParams = '',
+          singleFilePath,
+          singleFileConfig: singleFileConfigFromParams,
+          appendSystemPrompt = '',
           contextFilePaths,
           rootPath,
         } = body
-
-        const model = singleFileConfig?.model
 
         const finalPath = getValidFinalPath({
           path: rootPath,
@@ -42,6 +42,19 @@ export const llmControllers: ControllerConfig = {
         })
 
         const { config: userConfig } = await loadUserConfig(finalPath)
+
+        let singleFileConfig: SingleFileConfig | undefined = singleFileConfigFromParams
+
+        if (singleFilePath && PathUtils.isFile(singleFilePath)) {
+          // keep realtime config
+          singleFileConfig = await parseGptFile({
+            filePath: singleFilePath,
+            userConfig,
+          })
+        }
+
+        const model = singleFileConfig?.model
+
         const secretFromUserConfig = userConfig.model?.type === model?.type ? userConfig.model?.secrets : undefined
         let secretsFromStorage = await getSecrets(model?.type as ChatModelType || null)
         // if some secret value is '' or null or undefined, should remove
@@ -61,7 +74,7 @@ export const llmControllers: ControllerConfig = {
           return res.write(`data: ${JSON.stringify(buildFailResponse(options))}\n\n`)
         }
 
-        let finalSystemPrompt = systemPrompt
+        let finalSystemPrompt = systemPromptFromParams || singleFileConfig?.systemPrompt || ''
 
         // provide file context
         if (contextFilePaths && finalPath) {
@@ -70,8 +83,10 @@ export const llmControllers: ControllerConfig = {
             filePaths: contextFilePaths,
           })
 
-          finalSystemPrompt += `\n${fileContext}`
+          finalSystemPrompt += `\n${fileContext}\n`
         }
+
+        finalSystemPrompt += appendSystemPrompt
 
         try {
           const chain = await llmChain({

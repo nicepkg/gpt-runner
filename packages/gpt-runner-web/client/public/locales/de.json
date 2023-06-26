@@ -26,6 +26,7 @@
     "delete_chat_btn": "Chat löschen",
     "refresh_btn": "Aktualisieren",
     "filter_btn": "Filtern",
+    "pin_up_btn": "Anheften",
     "file_tree_top_tokens_tips": "<FileNumWrapper>{{fileNum}}</FileNumWrapper> Dateien <TokenNumWrapper>{{tokenNum}}</TokenNumWrapper> Tokens.",
     "file_tree_top_clear_checked_btn": "Auswahl aufheben",
     "file_tree_top_all_file_path_as_prompt": "Alle Dateipfade als Vorschlag {{tokenNum}} Tokens",

@@ -1,9 +1,11 @@
 // PopoverMenu.tsx
 import React, { memo, useEffect, useLayoutEffect, useState } from 'react'
 import { Popover } from 'react-tiny-popover'
+import { useTranslation } from 'react-i18next'
 import { useHoverByMouseLocation } from '../../hooks/use-hover.hook'
 import { useSize } from '../../hooks/use-size.hook'
-import { Children, ChildrenWrapper, Menu, MenuMask } from './popover-menu.styles'
+import { Icon } from '../icon'
+import { Children, ChildrenWrapper, Menu, MenuMask, PinBar } from './popover-menu.styles'
 
 export interface PopoverMenuChildrenState {
   isHovering: boolean
@@ -16,12 +18,14 @@ type XPosition = 'left' | 'right' | 'center'
 export interface PopoverMenuProps {
   xPosition?: XPosition
   yPosition?: YPosition
+  menuMaskStyle?: React.CSSProperties
   menuStyle?: React.CSSProperties
   childrenStyle?: React.CSSProperties
   isPopoverOpen?: boolean
   childrenInMenuWhenOpen?: boolean
   zIndex?: number
   clickOutSideToClose?: boolean
+  allowPin?: boolean
   onPopoverDisplayChange?: (isPopoverOpen: boolean) => void
   buildMenuSlot: () => React.ReactNode
   buildChildrenSlot: (state: PopoverMenuChildrenState) => React.ReactNode
@@ -31,23 +35,27 @@ export const PopoverMenu: React.FC<PopoverMenuProps> = memo((props) => {
   const {
     xPosition = 'left',
     yPosition = 'top',
+    menuMaskStyle,
     menuStyle,
     childrenStyle,
     isPopoverOpen,
-    childrenInMenuWhenOpen = true,
+    childrenInMenuWhenOpen = false,
     zIndex = 1,
     clickOutSideToClose = true,
+    allowPin,
     onPopoverDisplayChange,
     buildMenuSlot,
     buildChildrenSlot,
   } = props
 
+  const { t } = useTranslation()
   const [privateIsPopoverOpen, setPrivateIsPopoverOpen] = useState(false)
   const [childrenHoverRef, isChildrenHovering] = useHoverByMouseLocation()
   const [menuMaskHoverRef, isMenuMaskHovering] = useHoverByMouseLocation()
   const [keepOpen, setKeepOpen] = useState(false)
   const [, { height: childrenHeight }] = useSize({ ref: childrenHoverRef })
   const isProvideOpenAndChange = isPopoverOpen !== undefined && onPopoverDisplayChange !== undefined
+  const [isPin, setIsPin] = useState(false)
 
   const getIsPopoverOpen = () => {
     return isProvideOpenAndChange ? isPopoverOpen : privateIsPopoverOpen
@@ -70,11 +78,17 @@ export const PopoverMenu: React.FC<PopoverMenuProps> = memo((props) => {
   }
 
   const handleClose = () => {
+    if (isPin)
+      return
     getOnPopoverDisplayChange()(false)
   }
 
   const handleOpen = () => {
     getOnPopoverDisplayChange()(true)
+  }
+
+  const handlePinClick = () => {
+    setIsPin(!isPin)
   }
 
   useLayoutEffect(() => {
@@ -142,6 +156,7 @@ export const PopoverMenu: React.FC<PopoverMenuProps> = memo((props) => {
             style={{
               ...xPositionMenuStyleMap[xPosition].menuMask,
               ...yPositionMenuStyleMap[yPosition].menuMask,
+              ...menuMaskStyle,
             }}
           >
             <Menu
@@ -151,6 +166,10 @@ export const PopoverMenu: React.FC<PopoverMenuProps> = memo((props) => {
                 ...menuStyle,
               }}
             >
+              {(allowPin ?? !childrenInMenuWhenOpen) && <PinBar>
+                <Icon title={t('chat_page.pin_up_btn')} className={isPin ? 'codicon-pinned-dirty' : 'codicon-pinned'} onClick={handlePinClick} />
+              </PinBar>}
+
               {yPosition === 'top' && buildMenuSlot()}
 
               {childrenInMenuWhenOpen

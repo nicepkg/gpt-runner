@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import type { BaseModelConfig, FilterPattern, FormCheckboxGroupConfig, FormFieldBaseConfig, FormInputConfig, FormItemConfig, FormOption, FormRadioGroupConfig, FormSelectConfig, FormTextareaConfig, OpenaiModelConfig, OpenaiSecrets, SingleChatMessage, SingleFileConfig, UserConfig } from '../types'
+import type { BaseModelConfig, FilterPattern, FormCheckboxGroupConfig, FormFieldBaseConfig, FormInputConfig, FormItemConfig, FormOption, FormRadioGroupConfig, FormSelectConfig, FormTextareaConfig, OpenaiModelConfig, OpenaiSecrets, SingleChatMessage, SingleFileConfig, UserConfig, UserConfigForUser } from '../types'
 import { ChatModelTypeSchema, ChatRoleSchema } from './enum.zod'
 
 export const FilterPatternSchema = z.union([
@@ -47,6 +47,10 @@ export const UserConfigSchema = z.object({
   excludes: FilterPatternSchema.optional().default(null),
   respectGitIgnore: z.boolean().optional().default(true),
 }) satisfies z.ZodType<UserConfig>
+
+export const UserConfigForUserSchema = UserConfigSchema.omit({
+  rootPath: true,
+}) satisfies z.ZodType<UserConfigForUser>
 
 export const SingleChatMessageSchema = z.object({
   name: ChatRoleSchema,

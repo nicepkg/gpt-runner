@@ -37,7 +37,7 @@ export function HookFormSwitch_<
             {...{
               ...otherProps,
               ...(typeof filterField === 'function'
-                ? filterField(field)
+                ? filterField(field as any)
                 : field),
               checked: field.value,
               onChange: (e: any) => {

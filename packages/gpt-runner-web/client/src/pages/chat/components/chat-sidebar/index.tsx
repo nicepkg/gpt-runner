@@ -61,9 +61,11 @@ export const ChatSidebar: FC<ChatSidebarProps> = memo((props) => {
     refreshSidebarTree()
 
     emitter.on(ClientEventName.RefreshTree, refreshSidebarTree)
+    emitter.on(ClientEventName.RefreshChatTree, refreshSidebarTree)
 
     return () => {
       emitter.off(ClientEventName.RefreshTree, refreshSidebarTree)
+      emitter.off(ClientEventName.RefreshChatTree, refreshSidebarTree)
     }
   }, [rootPath])
 

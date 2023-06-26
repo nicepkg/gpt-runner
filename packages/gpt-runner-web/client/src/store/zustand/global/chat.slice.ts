@@ -1,12 +1,12 @@
 import type { StateCreator } from 'zustand'
-import type { GptFileInfo, SingleChat, SingleFileConfig, UserConfig } from '@nicepkg/gpt-runner-shared/common'
-import { ChatMessageStatus, ChatRole, resolveSingleFileConfig, travelTree } from '@nicepkg/gpt-runner-shared/common'
+import type { SingleChat, SingleFileConfig, UserConfig } from '@nicepkg/gpt-runner-shared/common'
+import { ChatMessageStatus, ChatRole, STREAM_DONE_FLAG, resolveSingleFileConfig, travelTree } from '@nicepkg/gpt-runner-shared/common'
 import { v4 as uuidv4 } from 'uuid'
 import type { GetState } from '../types'
 import { fetchLlmStream } from '../../../networks/llm'
 import { fetchUserConfig } from '../../../networks/config'
 import { getGlobalConfig } from '../../../helpers/global-config'
-import type { SidebarTreeItem, SidebarTreeSlice } from './sidebar-tree.slice'
+import type { GptFileTreeItem, SidebarTreeItem, SidebarTreeSlice } from './sidebar-tree.slice'
 import type { FileTreeSlice } from './file-tree.slice'
 
 export enum GenerateAnswerType {
@@ -91,14 +91,16 @@ export const createChatSlice: StateCreator<
     const state = get()
     const chatId = uuidv4()
     const gptFileIdTreeItem = state.getSidebarTreeItem(gptFileId)
+
     const mergedSingleFileConfig = {
-      ...(gptFileIdTreeItem as GptFileInfo | undefined)?.singleFileConfig || {},
+      ...(gptFileIdTreeItem as GptFileTreeItem)?.otherInfo?.singleFileConfig || {},
       ...instance.singleFileConfig,
     }
 
     const finalInstance: SingleChat = {
       ...instance,
       id: chatId,
+      singleFilePath: gptFileIdTreeItem?.otherInfo?.path || '',
       singleFileConfig: mergedSingleFileConfig,
     }
 
@@ -159,7 +161,7 @@ export const createChatSlice: StateCreator<
     if (!chatInstance)
       throw new Error(`Chat instance with id ${chatId} not found`)
 
-    const { inputtingPrompt, systemPrompt, singleFileConfig, messages, status } = chatInstance
+    const { inputtingPrompt, singleFilePath, messages, status } = chatInstance
 
     if (status === ChatMessageStatus.Pending)
       return
@@ -218,10 +220,8 @@ export const createChatSlice: StateCreator<
       return inputtingPrompt
     })()
 
-    const sendSingleFileConfig = state.resolveSingleFileConfig(singleFileConfig)
-
-    const sendSystemPrompt = (() => {
-      let result = systemPrompt
+    const appendSystemPrompt = (() => {
+      let result = ''
       if (state.provideFilePathsTreePromptToGpt)
         result += `\n${state.filePathsTreePrompt}`
 
@@ -242,8 +242,8 @@ export const createChatSlice: StateCreator<
       signal: abortCtrl.signal,
       messages: sendMessages,
       prompt: sendInputtingPrompt,
-      systemPrompt: sendSystemPrompt,
-      singleFileConfig: sendSingleFileConfig,
+      appendSystemPrompt,
+      singleFilePath,
       contextFilePaths: state.checkedFilePaths,
       rootPath: getGlobalConfig().rootPath,
       onError(e) {
@@ -254,11 +254,10 @@ export const createChatSlice: StateCreator<
         abortCtrl.abort()
       },
       onMessage(event) {
-        // const chatInstance = state.getChatInstance(id)!
         const { data } = event
         const res = JSON.parse(data)
 
-        if (res.data === '[DONE]') {
+        if (res.data === STREAM_DONE_FLAG) {
           state.updateChatInstance(chatId, {
             status: ChatMessageStatus.Success,
           }, false)

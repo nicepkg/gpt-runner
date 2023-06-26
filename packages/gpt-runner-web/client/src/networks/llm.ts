@@ -1,6 +1,7 @@
 import type { EventSourceMessage } from '@microsoft/fetch-event-source'
 import { fetchEventSource } from '@microsoft/fetch-event-source'
-import type { ChatStreamReqParams } from '@nicepkg/gpt-runner-shared/common'
+import { type BaseResponse, type ChatStreamReqParams, STREAM_DONE_FLAG, getErrorMsg } from '@nicepkg/gpt-runner-shared/common'
+import * as uuid from 'uuid'
 import { getGlobalConfig } from '../helpers/global-config'
 
 export interface FetchChatStreamReqParams extends ChatStreamReqParams {
@@ -18,6 +19,8 @@ export async function fetchLlmStream(
     signal,
     prompt,
     systemPrompt,
+    appendSystemPrompt,
+    singleFilePath,
     singleFileConfig,
     contextFilePaths,
     rootPath,
@@ -38,13 +41,37 @@ export async function fetchLlmStream(
         prompt,
         messages,
         systemPrompt,
+        appendSystemPrompt,
+        singleFilePath,
         singleFileConfig,
         contextFilePaths,
         rootPath,
       } satisfies ChatStreamReqParams),
       openWhenHidden: true,
       onmessage: onMessage,
-      onerror: onError,
+      onerror(err) {
+        onMessage({
+          id: uuid.v4(),
+          event: '',
+          data: JSON.stringify({
+            type: 'Fail',
+            message: getErrorMsg(err),
+            data: getErrorMsg(err),
+          } satisfies BaseResponse),
+        })
+
+        onMessage({
+          id: uuid.v4(),
+          event: '',
+          data: JSON.stringify({
+            type: 'Fail',
+            message: getErrorMsg(err),
+            data: STREAM_DONE_FLAG,
+          } satisfies BaseResponse),
+        })
+
+        throw err
+      },
     })
   }
   catch (error) {
