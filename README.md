@@ -1,5 +1,5 @@
 <div align="center">
-<img src="https://github.com/nicepkg/gpt-runner/tree/main/website/static/img/svg/logo-text.svg" alt="icon"/>
+<img src="./website/static/img/svg/logo-text.svg" alt="icon"/>
 
 <h1 align="center">GPT Runner</h1>
 
