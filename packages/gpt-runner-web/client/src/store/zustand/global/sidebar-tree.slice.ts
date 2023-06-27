@@ -106,27 +106,15 @@ export const createSidebarTreeSlice: StateCreator<
 
     const state = get()
 
-    // save current gptFileIdChatIdsMap for later use
-    const currentGptFileIdChatIdsMap: Map<string, string[]> = new Map()
-    travelTree(state.sidebarTree, (treeItem) => {
-      if (treeItem.otherInfo?.type === GptFileTreeItemType.File) {
-        const chatIds: string[] = []
-        treeItem.children?.forEach((child) => {
-          if (child.otherInfo?.type === GptFileTreeItemType.Chat)
-            chatIds.push(child.id)
-        })
-        const prevChatIds = currentGptFileIdChatIdsMap.get(treeItem.id) || []
-        const nextChatIds = [...new Set([...prevChatIds, ...chatIds])]
-        currentGptFileIdChatIdsMap.set(treeItem.id, nextChatIds)
-      }
-    })
+    // refresh map
+    state.updateChatInstances(state.chatInstances)
 
     const fetchGptFilesTreeRes = await fetchGptFilesTree({
       rootPath,
     })
 
     const filesInfoTree = fetchGptFilesTreeRes.data?.filesInfoTree || []
-    const gptFileIds: string[] = []
+    const gptFilePaths: string[] = []
     const treeItems = travelTree(filesInfoTree, (item) => {
       const oldIsExpanded = idTreeItemMap.get(item.id)?.isExpanded
 
@@ -140,12 +128,13 @@ export const createSidebarTreeSlice: StateCreator<
       }
 
       if (item.type === GptFileTreeItemType.File) {
-        gptFileIds.push(item.id)
+        gptFilePaths.push(item.path)
 
-        const chatIds = currentGptFileIdChatIdsMap.get(item.id) || []
+        // const chatIds = currentGptFileIdChatIdsMap.get(item.id) || []
+        const chatInstances = state.getChatInstancesBySingleFilePath(item.path)
 
-        result.children = chatIds.map((chatId) => {
-          const chatInfo = state.getChatInfo(chatId)
+        result.children = chatInstances.map((chatInstance) => {
+          const chatInfo = state.getChatInfo(chatInstance)
           chatInfo.parentId = item.id
 
           return state.chatInfo2SidebarTreeItem(chatInfo)
@@ -155,12 +144,14 @@ export const createSidebarTreeSlice: StateCreator<
       return result
     }) satisfies SidebarTreeItem[]
 
-    // remove gptFileIds that are not in the tree
-    Array.from(currentGptFileIdChatIdsMap.entries()).forEach(([gptFileId, chatIds]) => {
-      if (!gptFileIds.includes(gptFileId)) {
+    // remove gptFilePaths that are not in the tree
+    const oldGptFilePaths = state.chatInstances.map(chatInstance => chatInstance.singleFilePath)
+    oldGptFilePaths.forEach((gptFilePath) => {
+      if (!gptFilePaths.includes(gptFilePath)) {
         // remove chat instances that are not in the tree
-        chatIds.forEach((chatId) => {
-          state.removeChatInstance(chatId)
+        const chatInstances = state.getChatInstancesBySingleFilePath(gptFilePath)
+        chatInstances.forEach((chatInstance) => {
+          state.removeChatInstance(chatInstance.id)
         })
       }
     })
@@ -175,7 +166,7 @@ export const createSidebarTreeSlice: StateCreator<
       inputtingPrompt: gptFileTreeItem?.otherInfo?.singleFileConfig.userPrompt || '',
       systemPrompt: gptFileTreeItem?.otherInfo?.singleFileConfig.systemPrompt || '',
       messages: [],
-      singleFilePath: gptFileTreeItem?.otherInfo?.path || '',
+      singleFilePath: gptFileTreeItem?.path || '',
       status: ChatMessageStatus.Success,
       createAt: Date.now(),
     })

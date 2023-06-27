@@ -18,6 +18,7 @@ export interface ChatSlice {
   chatInstances: SingleChat[]
   updateActiveChatId: (activeChatId: string) => void
   getChatInstance: (chatId: string) => SingleChat | undefined
+  getChatInstancesBySingleFilePath: (singleFilePath: string) => SingleChat[]
   addChatInstance: (gptFileId: string, instance: Omit<SingleChat, 'id'>) => {
     chatSidebarTreeItem: SidebarTreeItem
     chatInstance: SingleChat
@@ -26,6 +27,7 @@ export interface ChatSlice {
     (chatId: string, chat: Partial<SingleChat>, replace: false): void
     (chatId: string, chat: SingleChat, replace: true): void
   }
+  updateChatInstances: (chatInstances: SingleChat[] | ((oldChatInstances: SingleChat[]) => SingleChat[])) => void
   removeChatInstance: (chatId: string) => void
   generateChatAnswer: (chatId: string, type?: GenerateAnswerType) => Promise<void>
   regenerateLastChatAnswer: (chatId: string) => Promise<void>
@@ -42,6 +44,8 @@ function getInitialState() {
 }
 
 const chatIdAbortCtrlMap = new Map<string, AbortController>()
+const chatIdChatInstanceMap = new Map<string, SingleChat>()
+const singleFilePathChatInstancesMap = new Map<string, SingleChat[]>()
 
 export const createChatSlice: StateCreator<
   ChatSlice & SidebarTreeSlice & FileTreeSlice,
@@ -54,9 +58,11 @@ export const createChatSlice: StateCreator<
     set({ activeChatId })
   },
   getChatInstance(chatId) {
-    return get().chatInstances.find(chatInstance => chatInstance.id === chatId)
+    return chatIdChatInstanceMap.get(chatId)
   },
-
+  getChatInstancesBySingleFilePath(singleFilePath) {
+    return singleFilePathChatInstancesMap.get(singleFilePath) || []
+  },
   addChatInstance(gptFileId, instance) {
     const state = get()
     const chatId = uuidv4()
@@ -65,7 +71,7 @@ export const createChatSlice: StateCreator<
     const finalInstance: SingleChat = {
       ...instance,
       id: chatId,
-      singleFilePath: gptFileIdTreeItem?.otherInfo?.path || '',
+      singleFilePath: gptFileIdTreeItem?.path || '',
     }
 
     const chatInfo = state.getChatInfo(finalInstance)
@@ -81,9 +87,7 @@ export const createChatSlice: StateCreator<
       return oldItem
     })
 
-    set(state => ({
-      chatInstances: [...state.chatInstances, finalInstance],
-    }))
+    state.updateChatInstances(preState => [...preState, finalInstance])
 
     return {
       chatSidebarTreeItem,
@@ -94,20 +98,52 @@ export const createChatSlice: StateCreator<
   updateChatInstance(chatId, chat, replace = false) {
     set(state => ({
       chatInstances: state.chatInstances.map((chatInstance) => {
-        if (chatInstance.id === chatId)
-          return replace ? chat as SingleChat : Object.assign(chatInstance, chat)
+        if (chatInstance.id === chatId) {
+          const oldChatInstance = chatInstance
+          const newChatInstance = replace ? chat as SingleChat : Object.assign(chatInstance, chat)
+
+          // remove old map
+          chatIdChatInstanceMap.delete(oldChatInstance.id)
+          singleFilePathChatInstancesMap.set(oldChatInstance.singleFilePath,
+            state.getChatInstancesBySingleFilePath(oldChatInstance.singleFilePath)
+              .filter(item => item.id !== oldChatInstance.id))
+
+          // add new map
+          chatIdChatInstanceMap.set(newChatInstance.id, newChatInstance)
+          singleFilePathChatInstancesMap.set(newChatInstance.singleFilePath,
+            [...state.getChatInstancesBySingleFilePath(newChatInstance.singleFilePath), newChatInstance])
+
+          return newChatInstance
+        }
 
         return chatInstance
       }),
     }))
   },
+  updateChatInstances(chatInstances) {
+    const state = get()
+    const finalChatInstances = typeof chatInstances === 'function' ? chatInstances(get().chatInstances) : chatInstances
 
+    // clear old map
+    chatIdChatInstanceMap.clear()
+    singleFilePathChatInstancesMap.clear()
+
+    finalChatInstances.forEach((chatInstance) => {
+      const { id, singleFilePath } = chatInstance
+
+      // add new map
+      singleFilePathChatInstancesMap.set(singleFilePath,
+        [...state.getChatInstancesBySingleFilePath(singleFilePath), chatInstance])
+
+      chatIdChatInstanceMap.set(id, chatInstance)
+    })
+
+    set({ chatInstances: finalChatInstances })
+  },
   removeChatInstance(chatId) {
     const state = get()
 
-    set(state => ({
-      chatInstances: state.chatInstances.filter(chatInstance => chatInstance.id !== chatId),
-    }))
+    state.updateChatInstances(chatInstances => chatInstances.filter(chatInstance => chatInstance.id !== chatId))
 
     const nextSidebarTree = travelTree(state.sidebarTree, (item) => {
       if (item.id === chatId)
