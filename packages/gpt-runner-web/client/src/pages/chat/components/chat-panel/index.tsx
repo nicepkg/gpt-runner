@@ -464,12 +464,11 @@ export const ChatPanel: FC<ChatPanelProps> = memo((props) => {
   return <ChatPanelWrapper ref={chatPanelRef}>
     <ChatMessagePanel ref={scrollDownRef} {...messagePanelProps}></ChatMessagePanel>
     <DragResizeView
-      initWidth={chatPanelWidth}
       initHeight={250}
       dragDirectionConfigs={[
         {
           direction: 'top',
-          boundary: [-200, 50],
+          boundary: [-300, 50],
         },
       ]}>
       <ChatMessageInput

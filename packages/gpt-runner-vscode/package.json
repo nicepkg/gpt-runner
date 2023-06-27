@@ -71,6 +71,15 @@
         }
       }
     },
+    "configurationDefaults": {
+      "[markdown]": {
+        "editor.quickSuggestions": {
+          "other": true,
+          "comments": false,
+          "strings": true
+        }
+      }
+    },
     "menus": {
       "editor/title": [
         {
@@ -79,7 +88,17 @@
           "icon": "res/logo.svg"
         }
       ]
-    }
+    },
+    "jsonValidation": [
+      {
+        "fileMatch": "gptr.config.json",
+        "url": "./dist/json-schema/user-config.json"
+      },
+      {
+        "fileMatch": "gpt-runner.config.json",
+        "url": "./dist/json-schema/user-config.json"
+      }
+    ]
   },
   "scripts": {
     "build": "pnpm esno ./scripts/build.ts",

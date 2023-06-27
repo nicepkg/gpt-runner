@@ -1,0 +1,8 @@
+{
+  "model": {
+    "type": "openai",
+    "modelName": "gpt-3.5",
+    "frequencyPenalty": 0,
+    "temperature": 0
+  }
+}

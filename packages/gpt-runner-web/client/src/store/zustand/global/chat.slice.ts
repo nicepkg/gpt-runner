@@ -17,6 +17,11 @@ export interface ChatSlice {
   activeChatId: string
   chatInstances: SingleChat[]
   updateActiveChatId: (activeChatId: string) => void
+
+  /**
+   * Switch to next chat in the same level file of current active chat
+   */
+  switchToNewActiveChatId: (oldActiveInstance?: SingleChat) => void
   getChatInstance: (chatId: string) => SingleChat | undefined
   getChatInstancesBySingleFilePath: (singleFilePath: string) => SingleChat[]
   addChatInstance: (gptFileId: string, instance: Omit<SingleChat, 'id'>) => {
@@ -57,10 +62,28 @@ export const createChatSlice: StateCreator<
   updateActiveChatId(activeChatId) {
     set({ activeChatId })
   },
+  switchToNewActiveChatId(_oldActiveInstance) {
+    const state = get()
+    const oldActiveInstance = _oldActiveInstance || state.getChatInstance(state.activeChatId)
+    const sameLevelChatInstances = state.getChatInstancesBySingleFilePath(oldActiveInstance?.singleFilePath ?? '')
+
+    if (!oldActiveInstance || !chatIdChatInstanceMap.has(oldActiveInstance.id) && sameLevelChatInstances.length === 0) {
+      state.updateActiveChatId('')
+      return
+    }
+
+    const nextChatInstance = sameLevelChatInstances.sort((a, b) => b.createAt - a.createAt)
+      .find(chatInstance => chatInstance.id !== state.activeChatId)
+
+    if (nextChatInstance && nextChatInstance.id !== state.activeChatId)
+      state.updateActiveChatId(nextChatInstance.id)
+  },
   getChatInstance(chatId) {
     return chatIdChatInstanceMap.get(chatId)
   },
   getChatInstancesBySingleFilePath(singleFilePath) {
+    if (!singleFilePath)
+      return []
     return singleFilePathChatInstancesMap.get(singleFilePath) || []
   },
   addChatInstance(gptFileId, instance) {
@@ -143,7 +166,22 @@ export const createChatSlice: StateCreator<
   removeChatInstance(chatId) {
     const state = get()
 
-    state.updateChatInstances(chatInstances => chatInstances.filter(chatInstance => chatInstance.id !== chatId))
+    let targetChatInstance: SingleChat | undefined
+    state.updateChatInstances((chatInstances) => {
+      const finalChatInstances = chatInstances.filter((chatInstance) => {
+        const notTargetChatInstance = chatInstance.id !== chatId
+
+        if (!notTargetChatInstance)
+          targetChatInstance = chatInstance
+
+        return notTargetChatInstance
+      })
+
+      return finalChatInstances
+    })
+
+    if (targetChatInstance && targetChatInstance.id === state.activeChatId)
+      state.switchToNewActiveChatId(targetChatInstance)
 
     const nextSidebarTree = travelTree(state.sidebarTree, (item) => {
       if (item.id === chatId)

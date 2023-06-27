@@ -1,4 +1,4 @@
-import { ChatModelType, type OpenaiSecrets, ServerStorageName } from '@nicepkg/gpt-runner-shared/common'
+import { ChatModelType, DEFAULT_OPENAI_API_BASE_PATH, type OpenaiSecrets, ServerStorageName } from '@nicepkg/gpt-runner-shared/common'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { type FC, memo, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
@@ -81,7 +81,7 @@ export const OpenaiSettings: FC = memo(() => {
     <StyledFormItem key={1}>
       <HookFormInput
         label={t('chat_page.openai_api_base_path')}
-        placeholder="https://api.openai.com/v1"
+        placeholder={DEFAULT_OPENAI_API_BASE_PATH}
         name="basePath"
         errors={formState.errors}
         control={control}

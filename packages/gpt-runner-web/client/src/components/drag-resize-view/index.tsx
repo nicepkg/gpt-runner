@@ -15,8 +15,8 @@ export interface DragDirectionConfig {
   boundary: number[]
 }
 export interface DragResizeViewProps {
-  initWidth: number
-  initHeight: number
+  initWidth?: number
+  initHeight?: number
   dragConfig?: Omit<UserDragConfig, 'axis' | 'bounds'>
   dragDirectionConfigs: DragDirectionConfig[]
   style?: React.CSSProperties
@@ -50,10 +50,15 @@ export const DragResizeView: FC<DragResizeViewProps> = memo((props) => {
   const finalHeight = useMotionValue(initHeight)
 
   useEffect(() => {
+    if (initWidth === undefined)
+      return
     finalWidth.set(initWidth)
   }, [initWidth])
 
   useEffect(() => {
+    if (initHeight === undefined)
+      return
+
     finalHeight.set(initHeight)
   }, [initHeight])
 
@@ -80,6 +85,8 @@ export const DragResizeView: FC<DragResizeViewProps> = memo((props) => {
 
   const leftDragLingBind = useDrag(
     ({ offset }) => {
+      if (initWidth === undefined)
+        return
       finalWidth.set(initWidth - offset[0])
     },
     {
@@ -95,6 +102,8 @@ export const DragResizeView: FC<DragResizeViewProps> = memo((props) => {
 
   const rightDragLingBind = useDrag(
     ({ offset }) => {
+      if (initWidth === undefined)
+        return
       finalWidth.set(initWidth + offset[0])
     },
     {
@@ -110,6 +119,8 @@ export const DragResizeView: FC<DragResizeViewProps> = memo((props) => {
 
   const topDragLingBind = useDrag(
     ({ offset }) => {
+      if (initHeight === undefined)
+        return
       finalHeight.set(initHeight - offset[1])
     },
     {
@@ -125,6 +136,8 @@ export const DragResizeView: FC<DragResizeViewProps> = memo((props) => {
 
   const bottomDragLingBind = useDrag(
     ({ offset }) => {
+      if (initHeight === undefined)
+        return
       finalHeight.set(initHeight + offset[1])
     },
     {
@@ -154,7 +167,7 @@ export const DragResizeView: FC<DragResizeViewProps> = memo((props) => {
     className={className}
     style={{
       ...style,
-      width: finalWidth,
+      width: initWidth !== undefined ? finalWidth : '',
       height: finalHeight,
       position: 'relative',
     }} ref={ref}>
