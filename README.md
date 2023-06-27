@@ -26,23 +26,74 @@ Manage ai presets. Chat with your code files. Revolutionize Your Team's Collabor
 
 </div>
 
+<details>
+<summary>Table of Contents</summary><br>
+
+- [Why GPT-Runner?](#why-gpt-runner)
+- [Features](#features)
+- [Quick Start](#quick-start)
+  - [The first way: CLI](#the-first-way-cli)
+  - [The second way:  VSCode Extension](#the-second-way--vscode-extension)
+- [Documentation](#documentation)
+- [Road map](#road-map)
+- [What's New](#whats-new)
+- [为什么选择 GPT-Runner？](#为什么选择-gpt-runner)
+- [主要功能](#主要功能)
+- [快速开始](#快速开始)
+  - [方式一：CLI](#方式一cli)
+  - [方式二：VSCode 插件](#方式二vscode-插件)
+- [文档](#文档)
+- [开发计划](#开发计划)
+- [最新动态](#最新动态)
+- [FAQ](#faq)
+- [Acknowledgement](#acknowledgement)
+  - [Sponsor](#sponsor)
+  - [Contributor](#contributor)
+- [LICENSE](#license)
+
+<br></details>
+
+## Why GPT-Runner?
+
+- With GPT-Runner, you can easily integrate AI-driven workflows into your team. 
+
+- By harnessing the capabilities provided by GPT-Runner, you can achieve interactive conversations with your code, customize AI parameters to optimize results, and share preset files and configurations among your team members. 
+
+- This will greatly enhance your team's collaboration capabilities and development efficiency.
+
+
 ## Features
 
-- **CLI & IDE Integration:** GPT-Runner offers a powerful command-line interface and IDE extension for AI robot presets through `xxx.gpt.md` files, enabling efficient AI workflows across various IDEs.
-- **Chat with Your Code Files:** GPT-Runner allows you to chat with your code files. you can selected some files or folders, and then chat with them.
-- AI Preset Chat: Developers can utilize `xxx.gpt.md` files for chat creation with Git version control, boosting team collaboration and communication.
-- Custom AI Parameters: Harness the full potential of `xxx.gpt.md` files with customizable options like system/user prompts, model names, and temperature.
-- LLM Compatibility: Built on LangchainJs, GPT-Runner supports OpenAI API key and access token methods, easily adapting to third-party LLMs.
-- Privacy Focused: All data securely stored on your local PC.
-- Web Sharing: Share GPT-Runner web interface via LAN IP or temporary Gradio link with the CLI Tunnel function.
-- Theme Variety: GPT-Runner offers light/dark themes, auto-syncing with your VSCode theme and providing a responsive design.
-- Web Internationalization: Supports English, 简体中文, 繁体中文, 日本語, and Deutsch.
+- **Chat with code files:** Select files or folders to have real-time conversations with AI.
+- **Powerful CLI and IDE integration:** Implement efficient AI workflows in various IDEs.
+- **AI Preset Chat:** Manage your AI presets, a local Storybook for AI presets.
+- **Customize AI parameters:** Flexibly control the configuration of AI models.
+- **Support for third-party LLMs:** High compatibility and adaptability.
+- **Privacy-first:** Local data storage protects your privacy.
+- **Locale support:** Support for multiple languages.
+
+## Quick Start
+
+> Requirements NodeJS >= 16.15.0
+> 
+> To check your NodeJS version, run `node -v` in your terminal. If you need to install or update NodeJS, visit [the official NodeJS website](https://nodejs.org/) for download and installation instructions.
+
+### The first way: CLI
+
+```bash
+cd <your project folder>
+npx gptr
+```
+
+### The second way:  VSCode Extension
+
+Install the [GPT-Runner VSCode Extension](https://marketplace.visualstudio.com/items?itemName=nicepkg.gpt-runner) from the VSCode Marketplace.
 
 ## Documentation
 
-Read the [documentation](https://gpt-runner.nicepkg.cn/) for more details.
+Read the [documentation](https://gpt-runner.nicepkg.cn/) for installation instructions, usage guide, and more details on GPT-Runner's features.
 
-## Roadmap
+## Road map
 
 - [ ] Jetbrains Plugin: Add Jetbrains IDE Plugin
 - [ ] Export And Import Chat History: Add dialogue import and export function
@@ -54,21 +105,44 @@ Read the [documentation](https://gpt-runner.nicepkg.cn/) for more details.
 
 - 🚀 v1.0.0: First Release
 
+## 为什么选择 GPT-Runner？
+
+- 使用GPT-Runner，您可以轻松地将AI驱动的工作流程集成到您的团队中。
+
+- 通过利用GPT-Runner提供的功能，您可以实现与代码的交互式对话、自定义AI参数以优化结果，以及在团队间共享预设文件和配置。
+
+- 这将大大提高您的团队协作能力和开发效率。
+
 ## 主要功能
 
-- CLI与IDE集成：GPT-Runner 提供强大的命令行界面和IDE扩展，通过 `xxx.gpt.md` 文件实现AI机器人预设，支持各种IDE的高效AI工作流。
-- 与代码文件聊天：GPT-Runner 允许您与代码文件聊天。您可以选择一些文件或文件夹，然后与它们聊天。
-- 基于AI预设的聊天：开发人员可以利用 `xxx.gpt.md` 文件创建聊天并支持Git版本控制，提升团队协作和沟通。
-- 自定义AI参数：充分发挥 `xxx.gpt.md` 文件的潜力，可自定义系统/用户提示、模型名称、温度等选项。
-- LLM兼容性：基于 `LangchainJs` 构建，GPT-Runner 支持 OpenAI API Key 和 Access Token 方式，易于适应第三方LLM。
-- 隐私优先：所有数据安全存储在本地PC上。
-- 网络共享：通过局域网IP或CLI隧道功能的临时 Gradio 链接分享 GPT-Runner 网络界面。
-- 主题多样性：GPT-Runner 提供亮/暗主题，与 VSCode 主题自动同步，并提供响应式设计。
-- 网页国际化：支持 English, 简体中文, 繁体中文, 日本語 和 Deutsch。
+- **与代码文件聊天：** 选择文件或文件夹与 AI 实时对话。
+- **强大的 CLI 与 IDE 集成：** 在各种 IDE 中实现高效的 AI 工作流程。
+- **AI预设聊天：** 管理你的 AI 预设，它是 AI 预设的本地 Storybook。
+- **自定义AI参数：** 灵活控制AI模型的配置。
+- **支持第三方LLM：** 具有高度兼容性和适应性。
+- **隐私优先：** 本地数据存储保护您的隐私。
+- **国际化：** 支持多种语言。
+
+## 快速开始
+
+> 要求 NodeJS >= 16.15.0
+>
+> 要检查您的 NodeJS 版本，请在终端中运行 `node -v`。如果您需要安装或更新 NodeJS，请访问 [官方 NodeJS 网站](https://nodejs.org/) 以获取下载和安装说明。
+
+### 方式一：CLI
+
+```bash
+cd <你的项目路径>
+npx gptr
+```
+
+### 方式二：VSCode 插件
+
+从 VSCode Marketplace 安装 [GPT-Runner VSCode 插件](https://marketplace.visualstudio.com/items?itemName=nicepkg.gpt-runner)。
 
 ## 文档
 
-阅读 [文档](https://gpt-runner.nicepkg.cn/) 以获取更多详细信息。
+阅读 [文档](https://gpt-runner.nicepkg.cn/) 以获取安装说明、使用指南和有关 GPT-Runner 功能的更多详细信息。
 
 ## 开发计划
 
@@ -88,10 +162,6 @@ Read the [documentation](https://gpt-runner.nicepkg.cn/) for more details.
 
 [简体中文 > 常见问题](https://github.com/nicepkg/gpt-runner/tree/main/docs/faq-cn.md)
 
-## Requirements
-
-NodeJS >= 16.15.0
-
 ## Acknowledgement
 
 GPT-Runner is made possible thanks to the inspirations from the following projects:
@@ -105,13 +175,11 @@ GPT-Runner is made possible thanks to the inspirations from the following projec
 
 ### Sponsor
 
-[Buy Me a Coffee](https://www.buymeacoffee.com/jinmingyang)
-
 no...
 
 ### Contributor
 
-**This project exists thanks to all the people who contribute:**
+This project exists thanks to all the people who contribute:
 
 <a href="https://github.com/nicepkg/gpt-runner/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=nicepkg/gpt-runner" />
