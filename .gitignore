@@ -21,14 +21,14 @@ result.json
 .eslintcache
 vite.config.ts.timestamp-*
 
-docs/.docusaurus
-docs/netlifyDeployPreview/*
-docs/changelog
-!docs/netlifyDeployPreview/index.html
-!docs/netlifyDeployPreview/_redirects
+website/.docusaurus
+website/netlifyDeployPreview/*
+website/changelog
+!website/netlifyDeployPreview/index.html
+!website/netlifyDeployPreview/_redirects
 
-docs/_dogfooding/_swizzle_theme_tests
+website/_dogfooding/_swizzle_theme_tests
 
-docs/i18n/**/*
+website/i18n/**/*
 
 .gpt-runner

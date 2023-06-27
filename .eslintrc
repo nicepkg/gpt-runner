@@ -33,7 +33,7 @@
       }
     },
     {
-      "files": ["docs/**/*.*"],
+      "files": ["website/**/*.*"],
       "rules": {
         "@typescript-eslint/no-require-imports": "off"
       }

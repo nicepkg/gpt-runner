@@ -1,5 +1,5 @@
 packages:
-  - docs
+  - website
   - playground
   - 'packages/*'
   - 'test/fixtures/*'

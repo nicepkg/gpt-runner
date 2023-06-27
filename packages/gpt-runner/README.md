@@ -50,7 +50,7 @@ GPT-Runner exposes various other functions and utilities from the shared `@nicep
 
 ## Troubleshooting
 
-If you encounter any issues or need more information on the GPT-Runner package, refer to the [FAQ](https://github.com/nicepkg/gpt-runner/blob/main/docs/faq-en.md) sections in the project documentation. If you can't find a solution there, feel free to open an [issue](https://github.com/nicepkg/gpt-runner/issues) on the project's GitHub page.
+If you encounter any issues or need more information on the GPT-Runner package, refer to the [FAQ](https://github.com/nicepkg/gpt-runner/blob/main/website/faq-en.md) sections in the project documentation. If you can't find a solution there, feel free to open an [issue](https://github.com/nicepkg/gpt-runner/issues) on the project's GitHub page.
 
 ## Contributing
 

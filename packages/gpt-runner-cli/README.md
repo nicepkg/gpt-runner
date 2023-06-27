@@ -75,7 +75,7 @@ You can customize the behavior of the `gptr` command using the following options
 
 ## Troubleshooting
 
-If you encounter any issues or need more information on GPT-Runner CLI, refer to the [FAQ](https://github.com/nicepkg/gpt-runner/blob/main/docs/faq-en.md) sections in the project documentation. If you can't find a solution there, feel free to open an [issue](https://github.com/nicepkg/gpt-runner/issues) on the project's GitHub page.
+If you encounter any issues or need more information on GPT-Runner CLI, refer to the [FAQ](https://github.com/nicepkg/gpt-runner/blob/main/website/faq-en.md) sections in the project documentation. If you can't find a solution there, feel free to open an [issue](https://github.com/nicepkg/gpt-runner/issues) on the project's GitHub page.
 
 ## Contributing
 
