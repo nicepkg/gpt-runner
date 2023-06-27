@@ -1,17 +1,20 @@
 <div align="center">
-<img src="./website/static/img/svg/logo-text.svg" alt="icon"/>
+<img src="https://github.com/nicepkg/gpt-runner/tree/main/website/static/img/svg/logo-text.svg" alt="icon"/>
 
 <h1 align="center">GPT Runner</h1>
 
 English / [简体中文](https://github.com/nicepkg/gpt-runner/tree/main/README_CN.md)
 
-Manage ai presets. Chat with your code files. Revolutionize Your Team's Collaboration and Efficiency!
+Use GPT-Runner to manage your AI presets, engage in AI-powered conversations with your code, and significantly boost the development efficiency of both you and your team!
 
-管理 ai 预设。 与您的代码文件聊天。 彻底改变您团队的协作和效率！
+用 GPT-Runner 管理您的 AI 预设，通过 AI 与您的代码文件聊天，极大提升您和团队的开发效率！
 
 [![CLI][cli-image]][cli-url]
 [![Web][web-image]][web-url]
 [![VSCode][vscode-image]][vscode-url]
+![License](https://img.shields.io/github/license/nicepkg/gpt-runner)
+![GitHub stars](https://img.shields.io/github/stars/nicepkg/gpt-runner?style=social)
+
 
 [CLI](https://github.com/nicepkg/gpt-runner/tree/main/packages/gpt-runner-cli/) / [Web Page](https://github.com/nicepkg/gpt-runner/tree/main/packages/gpt-runner-web/) / [VSCode Extension](https://github.com/nicepkg/gpt-runner/tree/main/packages/gpt-runner-vscode/) / [Issues](https://github.com/nicepkg/gpt-runner/issues) / [Buy Me a Coffee](https://bmc.link/jinmingyang)
 
@@ -41,32 +44,34 @@ Manage ai presets. Chat with your code files. Revolutionize Your Team's Collabor
 - [主要功能](#主要功能)
 - [快速开始](#快速开始)
   - [方式一：CLI](#方式一cli)
-  - [方式二：VSCode 插件](#方式二vscode-插件)
+  - [方式二：VSCode 扩展](#方式二vscode-扩展)
 - [文档](#文档)
 - [开发计划](#开发计划)
 - [最新动态](#最新动态)
 - [FAQ](#faq)
-- [Acknowledgement](#acknowledgement)
   - [Sponsor](#sponsor)
   - [Contributor](#contributor)
+- [Acknowledgement](#acknowledgement)
 - [LICENSE](#license)
 
 <br></details>
 
 ## Why GPT-Runner?
 
-- With GPT-Runner, you can easily integrate AI-driven workflows into your team. 
+1. **Conversations with Code Files:** 
+    - Before using GPT-Runner: Manual copy and paste of multiple file codes into the ChatGPT window were required to propose features or fix bugs to AI.
+    - After using GPT-Runner: Simply select your project files from the file tree. The AI will provide responses based on the most recent contents of those files.
 
-- By harnessing the capabilities provided by GPT-Runner, you can achieve interactive conversations with your code, customize AI parameters to optimize results, and share preset files and configurations among your team members. 
-
-- This will greatly enhance your team's collaboration capabilities and development efficiency.
+2. **Manage the Project's AI Presets:** 
+    - Before using GPT-Runner: Project prompts saved in memos needed to be copied and pasted to ChatGPT for inquiries, making it difficult to put them under git version control.
+    - After using GPT-Runner: Each [xxx.gpt.md](https://github.com/nicepkg/gpt-runner/tree/main/docs/example.gpt.md) file represents an AI role preset. They are easy to read, modify, and can be version-controlled. Team members can share and enhance AI presets, making the code they produce closer to 100% usability.
 
 
 ## Features
 
-- **Chat with code files:** Select files or folders to have real-time conversations with AI.
+- **Conversations with Code Files**: Select files or folders and engage in real-time conversations with AI.
 - **Powerful CLI and IDE integration:** Implement efficient AI workflows in various IDEs.
-- **AI Preset Chat:** Manage your AI presets, a local Storybook for AI presets.
+- **AI Preset Manager:** Manage your AI presets, Just like a locally Storybook for AI presets.
 - **Customize AI parameters:** Flexibly control the configuration of AI models.
 - **Support for third-party LLMs:** High compatibility and adaptability.
 - **Privacy-first:** Local data storage protects your privacy.
@@ -74,9 +79,9 @@ Manage ai presets. Chat with your code files. Revolutionize Your Team's Collabor
 
 ## Quick Start
 
-> Requirements NodeJS >= 16.15.0
-> 
-> To check your NodeJS version, run `node -v` in your terminal. If you need to install or update NodeJS, visit [the official NodeJS website](https://nodejs.org/) for download and installation instructions.
+> 1. Requirements NodeJS >= 16.15.0
+>     - To check your NodeJS version, run `node -v` in your terminal. If you need to install or update NodeJS, visit [the official NodeJS website](https://nodejs.org/) for download and installation instructions.
+> 2. Make sure you have an Open AI Key or a free ChatGPT account.
 
 ### The first way: CLI
 
@@ -84,6 +89,8 @@ Manage ai presets. Chat with your code files. Revolutionize Your Team's Collabor
 cd <your project folder>
 npx gptr
 ```
+
+You can see the web interface in your browser at [http://localhost:3003](http://localhost:3003).
 
 ### The second way:  VSCode Extension
 
@@ -107,27 +114,31 @@ Read the [documentation](https://gpt-runner.nicepkg.cn/) for installation instru
 
 ## 为什么选择 GPT-Runner？
 
-- 使用GPT-Runner，您可以轻松地将AI驱动的工作流程集成到您的团队中。
+1. **与代码文件对话：** 
+    - 使用 GPT-Runner 前：必须手动复制多个文件代码到 ChatGPT 窗口，向 AI 提出需求或修复 bug 。
+    - 使用 GPT-Runner 后：只需在文件树中勾选项目文件，AI 将根据文件的最新内容为您提供解答！
 
-- 通过利用GPT-Runner提供的功能，您可以实现与代码的交互式对话、自定义AI参数以优化结果，以及在团队间共享预设文件和配置。
-
-- 这将大大提高您的团队协作能力和开发效率。
+2. **管理项目的AI预设：** 
+    - 使用 GPT-Runner 前：保存在备忘录中的项目提示需要复制粘贴给 ChatGPT 才能提问，难以进行 git 版本管理。
+    - 使用 GPT-Runner 后：[xxx.gpt.md](https://github.com/nicepkg/gpt-runner/tree/main/docs/example-cn.gpt.md) 文件代表一个AI角色预设，它易于阅读、修改并可进行版本控制。团队成员可以分享和优化 AI 预设，使其生成的代码更接近 100% 的可用性。
 
 ## 主要功能
 
 - **与代码文件聊天：** 选择文件或文件夹与 AI 实时对话。
 - **强大的 CLI 与 IDE 集成：** 在各种 IDE 中实现高效的 AI 工作流程。
-- **AI预设聊天：** 管理你的 AI 预设，它是 AI 预设的本地 Storybook。
-- **自定义AI参数：** 灵活控制AI模型的配置。
-- **支持第三方LLM：** 具有高度兼容性和适应性。
+- **管理你的 AI 预设：** 管理你的 AI 预设，它就像 AI 预设的本地 Storybook。
+- **自定义 AI 参数：** 灵活控制 AI 模型的配置。
+- **支持第三方 LLM：** 具有高度兼容性和适应性。
 - **隐私优先：** 本地数据存储保护您的隐私。
 - **国际化：** 支持多种语言。
 
 ## 快速开始
 
-> 要求 NodeJS >= 16.15.0
+> 1. 要求 NodeJS >= 16.15.0
+>    - 要检查您的 NodeJS 版本，请在终端中运行 `node -v`。如果您需要安装或更新 NodeJS，请访问 [官方 NodeJS 网站](https://nodejs.org/) 以获取下载和安装说明。
 >
-> 要检查您的 NodeJS 版本，请在终端中运行 `node -v`。如果您需要安装或更新 NodeJS，请访问 [官方 NodeJS 网站](https://nodejs.org/) 以获取下载和安装说明。
+> 2. 确保你有一个 Open AI Key 或一个免费的 ChatGPT 账号。
+> 3. 确保你的命令终端能 ping 通 api.openai.com （如果你在中国大陆，你可能需要科学上网）。
 
 ### 方式一：CLI
 
@@ -136,9 +147,11 @@ cd <你的项目路径>
 npx gptr
 ```
 
-### 方式二：VSCode 插件
+在浏览器中打开 [http://localhost:3003](http://localhost:3003) 即可看到 GPT-Runner 的 Web 界面。
 
-从 VSCode Marketplace 安装 [GPT-Runner VSCode 插件](https://marketplace.visualstudio.com/items?itemName=nicepkg.gpt-runner)。
+### 方式二：VSCode 扩展
+
+从 VSCode Marketplace 安装 [GPT-Runner VSCode 扩展](https://marketplace.visualstudio.com/items?itemName=nicepkg.gpt-runner)。
 
 ## 文档
 
@@ -162,6 +175,18 @@ npx gptr
 
 [简体中文 > 常见问题](https://github.com/nicepkg/gpt-runner/tree/main/docs/faq-cn.md)
 
+### Sponsor
+
+Waiting for you...
+
+### Contributor
+
+This project exists thanks to all the people who contribute:
+
+<a href="https://github.com/nicepkg/gpt-runner/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=nicepkg/gpt-runner" />
+</a>
+
 ## Acknowledgement
 
 GPT-Runner is made possible thanks to the inspirations from the following projects:
@@ -172,18 +197,6 @@ GPT-Runner is made possible thanks to the inspirations from the following projec
 - [LangchainJs](https://github.com/hwchase17/langchainjs)
 - [UnoCss](https://github.com/unocss/unocss)
 - [VSCode-Webview-Ui-Toolkit](https://github.com/microsoft/vscode-webview-ui-toolkit)
-
-### Sponsor
-
-no...
-
-### Contributor
-
-This project exists thanks to all the people who contribute:
-
-<a href="https://github.com/nicepkg/gpt-runner/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=nicepkg/gpt-runner" />
-</a>
 
 ## LICENSE
 
