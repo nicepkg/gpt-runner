@@ -181,7 +181,7 @@ export const ChatSidebar: FC<ChatSidebarProps> = memo((props) => {
   }, [])
 
   const sidebar: SidebarProps<GptTreeItemOtherInfo> = {
-    placeholder: 'GPT RUNNER',
+    placeholder: t('chat_page.search_placeholder'),
     loading: isLoading,
     tree: {
       items: sidebarTree,

@@ -27,6 +27,8 @@
     "refresh_btn": "刷新",
     "filter_btn": "筛选",
     "pin_up_btn": "钉住",
+    "close_btn": "关闭",
+    "search_placeholder": "搜索...",
     "file_tree_top_tokens_tips": "<FileNumWrapper>{{fileNum}}</FileNumWrapper>个文件，共<TokenNumWrapper>{{tokenNum}}</TokenNumWrapper>个 tokens。",
     "file_tree_top_clear_checked_btn": "清除选中",
     "file_tree_top_all_file_path_as_prompt": "将所有文件路径作为提示，共 {{tokenNum}} 个 tokens",

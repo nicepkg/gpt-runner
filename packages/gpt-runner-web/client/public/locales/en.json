@@ -27,6 +27,8 @@
     "refresh_btn": "Refresh",
     "filter_btn": "Filter",
     "pin_up_btn": "Pin Up",
+    "close_btn": "Close",
+    "search_placeholder": "Search...",
     "file_tree_top_tokens_tips": "<FileNumWrapper>{{fileNum}}</FileNumWrapper> Files <TokenNumWrapper>{{tokenNum}}</TokenNumWrapper> Tokens.",
     "file_tree_top_clear_checked_btn": "Clear Checked",
     "file_tree_top_all_file_path_as_prompt": "All file path as prompt {{tokenNum}} tokens",

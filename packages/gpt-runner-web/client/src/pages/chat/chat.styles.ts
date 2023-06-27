@@ -23,7 +23,7 @@ export const StyledVSCodePanels = styled(VSCodePanels)`
     height: 100%;
     overflow: hidden;
   }
-`
+` as typeof VSCodePanels
 
 export const SidebarTopToolbar = styled.div`
   display: flex;

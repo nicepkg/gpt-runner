@@ -27,6 +27,8 @@
     "refresh_btn": "更新",
     "filter_btn": "フィルター",
     "pin_up_btn": "ピンアップ",
+    "close_btn": "閉じる",
+    "search_placeholder": "検索...",
     "file_tree_top_tokens_tips": "<FileNumWrapper>{{fileNum}}</FileNumWrapper>個のファイル、合計<TokenNumWrapper>{{tokenNum}}</TokenNumWrapper>トークン。",
     "file_tree_top_clear_checked_btn": "選択をクリア",
     "file_tree_top_all_file_path_as_prompt": "すべてのファイルパスをプロンプトとして使用、合計{{tokenNum}}トークン",

@@ -25,7 +25,7 @@ export interface PopoverMenuProps {
   childrenInMenuWhenOpen?: boolean
   zIndex?: number
   clickOutSideToClose?: boolean
-  allowPin?: boolean
+  showTopBar?: boolean
   onPopoverDisplayChange?: (isPopoverOpen: boolean) => void
   buildMenuSlot: () => React.ReactNode
   buildChildrenSlot: (state: PopoverMenuChildrenState) => React.ReactNode
@@ -42,7 +42,7 @@ export const PopoverMenu: React.FC<PopoverMenuProps> = memo((props) => {
     childrenInMenuWhenOpen = false,
     zIndex = 1,
     clickOutSideToClose = true,
-    allowPin,
+    showTopBar,
     onPopoverDisplayChange,
     buildMenuSlot,
     buildChildrenSlot,
@@ -85,6 +85,11 @@ export const PopoverMenu: React.FC<PopoverMenuProps> = memo((props) => {
 
   const handleOpen = () => {
     getOnPopoverDisplayChange()(true)
+  }
+
+  const handleCloseClick = () => {
+    setIsPin(false)
+    getOnPopoverDisplayChange()(false)
   }
 
   const handlePinClick = () => {
@@ -166,7 +171,8 @@ export const PopoverMenu: React.FC<PopoverMenuProps> = memo((props) => {
                 ...menuStyle,
               }}
             >
-              {(allowPin ?? !childrenInMenuWhenOpen) && <PinBar>
+              {(showTopBar ?? !childrenInMenuWhenOpen) && <PinBar>
+                <Icon title={t('chat_page.close_btn')} className="codicon-close" style={{ marginRight: '0.5rem' }} onClick={handleCloseClick} />
                 <Icon title={t('chat_page.pin_up_btn')} className={isPin ? 'codicon-pinned-dirty' : 'codicon-pinned'} onClick={handlePinClick} />
               </PinBar>}
 

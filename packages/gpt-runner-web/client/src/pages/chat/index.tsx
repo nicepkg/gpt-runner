@@ -1,5 +1,5 @@
 import type { CSSProperties, FC } from 'react'
-import { memo, useCallback, useEffect, useState } from 'react'
+import React, { memo, useCallback, useEffect, useState } from 'react'
 import { VSCodePanelTab, VSCodePanelView } from '@vscode/webview-ui-toolkit/react'
 import { ChatMessageStatus } from '@nicepkg/gpt-runner-shared/common'
 import { useWindowSize } from 'react-use'

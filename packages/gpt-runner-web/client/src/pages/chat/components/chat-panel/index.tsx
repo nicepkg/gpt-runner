@@ -420,7 +420,7 @@ export const ChatPanel: FC<ChatPanelProps> = memo((props) => {
 
       <PopoverMenu
         xPosition='right'
-        allowPin={false}
+        showTopBar={false}
         childrenInMenuWhenOpen={true}
         buildChildrenSlot={({ isHovering }) => {
           return <IconButton
@@ -473,6 +473,8 @@ export const ChatPanel: FC<ChatPanelProps> = memo((props) => {
         },
       ]}>
       <ChatMessageInput
+        showTopLogo={chatPanelWidth > 600}
+        showBottomLogo={chatPanelWidth <= 600}
         value={chatInstance?.inputtingPrompt || ''}
         onChange={handleInputChange}
         toolbarSlot={renderInputToolbar()}
