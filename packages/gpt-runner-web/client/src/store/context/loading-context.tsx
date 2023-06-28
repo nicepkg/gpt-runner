@@ -17,7 +17,7 @@ export function LoadingProvider({ children }: LoadingContextProviderProps) {
   const [loading, setLoading] = useState<boolean>(false)
   const loadingRefMap = useRef<Record<string, boolean>>({})
 
-  const context = {
+  const context: ILoadingContext = {
     loading,
     setLoading,
     loadingRefMap,

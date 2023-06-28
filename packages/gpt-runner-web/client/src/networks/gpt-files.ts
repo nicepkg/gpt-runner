@@ -1,9 +1,10 @@
 import { objectToQueryString } from '@nicepkg/gpt-runner-shared/common'
 import type { BaseResponse, GetGptFileInfoReqParams, GetGptFileInfoResData, GetGptFilesReqParams, GetGptFilesResData, InitGptFilesReqParams, InitGptFilesResData } from '@nicepkg/gpt-runner-shared/common'
 import { getGlobalConfig } from '../helpers/global-config'
+import { myFetch } from '../helpers/fetch'
 
 export async function fetchGptFilesTree(params: GetGptFilesReqParams): Promise<BaseResponse<GetGptFilesResData>> {
-  const res = await fetch(`${getGlobalConfig().serverBaseUrl}/api/gpt-files?${objectToQueryString({
+  return await myFetch(`${getGlobalConfig().serverBaseUrl}/api/gpt-files?${objectToQueryString({
     ...params,
   })}`, {
     method: 'GET',
@@ -11,12 +12,10 @@ export async function fetchGptFilesTree(params: GetGptFilesReqParams): Promise<B
       'Content-Type': 'application/json',
     },
   })
-  const data = await res.json()
-  return data
 }
 
 export async function initGptFiles(params: InitGptFilesReqParams): Promise<BaseResponse<InitGptFilesResData>> {
-  const res = await fetch(`${getGlobalConfig().serverBaseUrl}/api/gpt-files/init-gpt-files?${objectToQueryString({
+  return await myFetch(`${getGlobalConfig().serverBaseUrl}/api/gpt-files/init-gpt-files?${objectToQueryString({
     ...params,
   })}`, {
     method: 'POST',
@@ -25,12 +24,10 @@ export async function initGptFiles(params: InitGptFilesReqParams): Promise<BaseR
     },
     body: JSON.stringify(params),
   })
-  const data = await res.json()
-  return data
 }
 
 export async function getGptFileInfo(params: GetGptFileInfoReqParams): Promise<BaseResponse<GetGptFileInfoResData>> {
-  const res = await fetch(`${getGlobalConfig().serverBaseUrl}/api/gpt-files/get-gpt-file-info?${objectToQueryString({
+  return await myFetch(`${getGlobalConfig().serverBaseUrl}/api/gpt-files/get-gpt-file-info?${objectToQueryString({
     ...params,
   })}`, {
     method: 'GET',
@@ -38,6 +35,4 @@ export async function getGptFileInfo(params: GetGptFileInfoReqParams): Promise<B
       'Content-Type': 'application/json',
     },
   })
-  const data = await res.json()
-  return data
 }

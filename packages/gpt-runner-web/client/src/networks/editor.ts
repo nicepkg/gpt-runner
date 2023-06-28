@@ -1,8 +1,9 @@
 import type { BaseResponse, OpenEditorReqParams, OpenEditorResData } from '@nicepkg/gpt-runner-shared/common'
 import { getGlobalConfig } from '../helpers/global-config'
+import { myFetch } from '../helpers/fetch'
 
 export async function openEditor(params: OpenEditorReqParams): Promise<BaseResponse<OpenEditorResData>> {
-  const res = await fetch(`${getGlobalConfig().serverBaseUrl}/api/editor/open-editor`, {
+  return await myFetch(`${getGlobalConfig().serverBaseUrl}/api/editor/open-editor`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -12,6 +13,4 @@ export async function openEditor(params: OpenEditorReqParams): Promise<BaseRespo
       ...params,
     }),
   })
-  const data = await res.json()
-  return data
 }

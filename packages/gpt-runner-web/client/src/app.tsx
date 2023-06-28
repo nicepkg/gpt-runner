@@ -3,6 +3,8 @@ import { type ComponentType, type FC, type PropsWithChildren, Suspense, memo, us
 import type { FallbackProps } from 'react-error-boundary'
 import { ErrorBoundary } from 'react-error-boundary'
 import { useTranslation } from 'react-i18next'
+import { toast } from 'react-hot-toast'
+import { getErrorMsg } from '@nicepkg/gpt-runner-shared/common'
 import { AppRouter } from './router'
 import { GlobalStyle } from './styles/global.styles'
 import { LoadingProvider } from './store/context/loading-context'
@@ -12,6 +14,7 @@ import { GlobalThemeStyle } from './styles/theme.styles'
 import { initI18n } from './helpers/i18n'
 import { Toast } from './components/toast'
 import { LoadingView } from './components/loading-view'
+import { ConfettiProvider } from './store/context/confetti-context'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -20,6 +23,14 @@ const queryClient = new QueryClient({
       cacheTime: 0,
       refetchOnWindowFocus: false,
       networkMode: 'offlineFirst',
+      onError: (error) => {
+        toast.error(getErrorMsg(error))
+      },
+    },
+    mutations: {
+      onError: (error) => {
+        toast.error(getErrorMsg(error))
+      },
     },
   },
 })
@@ -60,9 +71,11 @@ export const AppProviders: FC<PropsWithChildren> = memo(({ children }) => {
     <ErrorBoundary FallbackComponent={FallbackRender as any}>
       <QueryClientProvider client={queryClient}>
         <Toast></Toast>
-        <LoadingProvider>
-          {children}
-        </LoadingProvider>
+        <ConfettiProvider>
+          <LoadingProvider>
+            {children}
+          </LoadingProvider>
+        </ConfettiProvider>
       </QueryClientProvider>
     </ErrorBoundary>
   )

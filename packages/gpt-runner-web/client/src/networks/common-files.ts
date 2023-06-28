@@ -1,8 +1,9 @@
 import { type BaseResponse, type GetCommonFilesReqParams, type GetCommonFilesResData, objectToQueryString } from '@nicepkg/gpt-runner-shared/common'
 import { getGlobalConfig } from '../helpers/global-config'
+import { myFetch } from '../helpers/fetch'
 
 export async function fetchCommonFilesTree(params: GetCommonFilesReqParams): Promise<BaseResponse<GetCommonFilesResData>> {
-  const res = await fetch(`${getGlobalConfig().serverBaseUrl}/api/common-files?${objectToQueryString({
+  return await myFetch(`${getGlobalConfig().serverBaseUrl}/api/common-files?${objectToQueryString({
     ...params,
   })}`, {
     method: 'GET',
@@ -10,6 +11,4 @@ export async function fetchCommonFilesTree(params: GetCommonFilesReqParams): Pro
       'Content-Type': 'application/json',
     },
   })
-  const data = await res.json()
-  return data
 }

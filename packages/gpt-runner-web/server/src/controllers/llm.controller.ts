@@ -88,8 +88,6 @@ export const llmControllers: ControllerConfig = {
 
         finalSystemPrompt += appendSystemPrompt
 
-        console.log('finalSystemPrompt', finalSystemPrompt)
-
         try {
           const chain = await llmChain({
             messages,

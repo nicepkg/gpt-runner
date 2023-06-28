@@ -1,10 +1,10 @@
 import type { CSSProperties, FC } from 'react'
 import React, { memo, useCallback, useEffect, useState } from 'react'
-import { VSCodePanelTab, VSCodePanelView } from '@vscode/webview-ui-toolkit/react'
 import { ChatMessageStatus } from '@nicepkg/gpt-runner-shared/common'
 import { useWindowSize } from 'react-use'
 import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
+import { VSCodePanelTab, VSCodePanelView } from '@vscode/webview-ui-toolkit/react'
 import { useIsMobile } from '../../hooks/use-is-mobile.hook'
 import { FlexRow } from '../../styles/global.styles'
 import { useScrollDown } from '../../hooks/use-scroll-down.hook'
@@ -14,11 +14,12 @@ import { getGlobalConfig } from '../../helpers/global-config'
 import { ErrorView } from '../../components/error-view'
 import { DragResizeView } from '../../components/drag-resize-view'
 import { fetchProjectInfo } from '../../networks/config'
+import { useConfetti } from '../../hooks/use-confetti.hook'
 import { SidebarWrapper, StyledVSCodePanels } from './chat.styles'
 import { ChatSidebar } from './components/chat-sidebar'
 import { ChatPanel } from './components/chat-panel'
 import { FileTree } from './components/file-tree'
-import { Settings } from './components/settings'
+import { Settings, SettingsTabId } from './components/settings'
 import { InitGptFiles } from './components/init-gpt-files'
 
 enum TabId {
@@ -26,6 +27,7 @@ enum TabId {
   Chat = 'chat',
   Files = 'files',
   Settings = 'settings',
+  About = 'about',
 }
 
 const Chat: FC = memo(() => {
@@ -36,6 +38,7 @@ const Chat: FC = memo(() => {
   const { chatInstance } = useChatInstance({ chatId: activeChatId })
   const [scrollDownRef, scrollDown, getScrollBottom] = useScrollDown()
   const [tabActiveId, setTabActiveId] = useState(TabId.Presets)
+  const { runConfettiAnime } = useConfetti()
   const showFileTreeOnRightSide = windowWidth >= 1000
   const { data: fetchProjectInfoRes } = useQuery({
     queryKey: ['fetchProjectInfo'],
@@ -85,12 +88,12 @@ const Chat: FC = memo(() => {
     </SidebarWrapper>
   }, [])
 
-  const renderSettings = useCallback((showSingleFileConfig = false) => {
+  const renderSettings = useCallback((onlyRenderTabId?: SettingsTabId) => {
     if (!rootPath)
       return null
 
     return <SidebarWrapper className='sidebar-wrapper'>
-      <Settings rootPath={rootPath} chatId={activeChatId} showSingleFileConfig={showSingleFileConfig}></Settings>
+      <Settings rootPath={rootPath} chatId={activeChatId} onlyRenderTabId={onlyRenderTabId}></Settings>
     </SidebarWrapper>
   }, [activeChatId])
 
@@ -100,7 +103,7 @@ const Chat: FC = memo(() => {
       chatId={activeChatId}
       chatTreeView={isMobile ? renderSidebar() : null}
       fileTreeView={!showFileTreeOnRightSide ? renderFileTree() : null}
-      settingsView={renderSettings(true)}
+      settingsView={renderSettings()}
       onChatIdChange={updateActiveChatId}
     ></ChatPanel>
   }, [
@@ -128,6 +131,29 @@ const Chat: FC = memo(() => {
         overflowY: 'auto',
       }
 
+      const tabIdViewMap: Record<TabId, { title: string; view: JSX.Element | null }> = {
+        [TabId.Presets]: {
+          title: t('chat_page.tab_presets'),
+          view: renderSidebar(),
+        },
+        [TabId.Chat]: {
+          title: t('chat_page.tab_chat'),
+          view: renderChatPanel(),
+        },
+        [TabId.Files]: {
+          title: t('chat_page.tab_files'),
+          view: renderFileTree(),
+        },
+        [TabId.Settings]: {
+          title: t('chat_page.tab_settings'),
+          view: renderSettings(SettingsTabId.Settings),
+        },
+        [TabId.About]: {
+          title: t('chat_page.tab_about'),
+          view: renderSettings(SettingsTabId.About),
+        },
+      }
+
       return <StyledVSCodePanels
         activeid={tabActiveId}
         style={viewStyle}
@@ -135,24 +161,21 @@ const Chat: FC = memo(() => {
           const activeId = e.target?.activeid as TabId
           setTabActiveId(activeId)
           activeId === TabId.Chat && scrollDown()
+          activeId === TabId.About && runConfettiAnime()
         }}
       >
-        <VSCodePanelTab id={TabId.Presets}>{t('chat_page.tab_presets')}</VSCodePanelTab>
-        <VSCodePanelTab id={TabId.Chat}>{t('chat_page.tab_chat')}</VSCodePanelTab>
-        <VSCodePanelTab id={TabId.Files}>{t('chat_page.tab_files')}</VSCodePanelTab>
-        <VSCodePanelTab id={TabId.Settings}>{t('chat_page.tab_settings')}</VSCodePanelTab>
-        <VSCodePanelView style={viewStyle} id={TabId.Presets}>
-          {renderSidebar()}
-        </VSCodePanelView>
-        <VSCodePanelView style={viewStyle} id={TabId.Chat}>
-          {renderChatPanel()}
-        </VSCodePanelView>
-        <VSCodePanelView style={viewStyle} id={TabId.Files}>
-          {renderFileTree()}
-        </VSCodePanelView>
-        <VSCodePanelView style={viewStyle} id={TabId.Settings}>
-          {renderSettings()}
-        </VSCodePanelView>
+
+        {Object.keys(tabIdViewMap).map((tabId) => {
+          const { title } = tabIdViewMap[tabId as TabId]
+          return <VSCodePanelTab key={tabId} id={tabId as TabId}>{title}</VSCodePanelTab>
+        })}
+
+        {Object.keys(tabIdViewMap).map((tabId) => {
+          const { view } = tabIdViewMap[tabId as TabId]
+          return <VSCodePanelView key={tabId} style={viewStyle} id={tabId as TabId}>
+            {view}
+          </VSCodePanelView>
+        })}
       </StyledVSCodePanels>
     }
 

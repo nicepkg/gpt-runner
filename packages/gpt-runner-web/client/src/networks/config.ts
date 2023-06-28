@@ -1,8 +1,9 @@
 import { type BaseResponse, type GetProjectConfigResData, type GetUserConfigReqParams, type GetUserConfigResData, objectToQueryString } from '@nicepkg/gpt-runner-shared/common'
 import { getGlobalConfig } from '../helpers/global-config'
+import { myFetch } from '../helpers/fetch'
 
 export async function fetchUserConfig(params: GetUserConfigReqParams): Promise<BaseResponse<GetUserConfigResData>> {
-  const res = await fetch(`${getGlobalConfig().serverBaseUrl}/api/config/user-config?${objectToQueryString({
+  return await myFetch(`${getGlobalConfig().serverBaseUrl}/api/config/user-config?${objectToQueryString({
     ...params,
   })}`, {
     method: 'GET',
@@ -10,17 +11,13 @@ export async function fetchUserConfig(params: GetUserConfigReqParams): Promise<B
       'Content-Type': 'application/json',
     },
   })
-  const data = await res.json()
-  return data
 }
 
 export async function fetchProjectInfo(): Promise<BaseResponse<GetProjectConfigResData>> {
-  const res = await fetch(`${getGlobalConfig().serverBaseUrl}/api/config`, {
+  return await myFetch(`${getGlobalConfig().serverBaseUrl}/api/config`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
     },
   })
-  const data = await res.json()
-  return data
 }

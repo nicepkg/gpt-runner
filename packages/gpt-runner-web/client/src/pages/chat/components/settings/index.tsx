@@ -10,27 +10,31 @@ import { FlexColumn } from '../../../../styles/global.styles'
 import { isDarkTheme } from '../../../../styles/themes'
 import { getGptFileInfo } from '../../../../networks/gpt-files'
 import { LoadingView } from '../../../../components/loading-view'
+import { useConfetti } from '../../../../hooks/use-confetti.hook'
 import { ConfigInfoTitle, ConfigInfoWrapper } from './settings.styles'
-import { OpenaiSettings } from './components/openai-setting'
-import { GeneralSettings } from './components/general'
+import { OpenaiSettings } from './components/openai-settings'
+import { GeneralSettings } from './components/general-settings'
+import { About } from './components/about'
 
-enum SettingsTabId {
+export enum SettingsTabId {
+  About = 'about',
   ConfigInfo = 'configInfo',
   Settings = 'settings',
 }
 
 export interface SettingsProps {
   rootPath: string
-  showSingleFileConfig?: boolean
   chatId?: string
+  onlyRenderTabId?: SettingsTabId
 }
 
 export const Settings: FC<SettingsProps> = memo((props) => {
-  const { rootPath, showSingleFileConfig, chatId } = props
+  const { rootPath, chatId, onlyRenderTabId } = props
 
   const { t } = useTranslation()
   const [tabActiveId, setTabActiveId] = useState(SettingsTabId.Settings)
   const { themeName, getGptFileTreeItemFromChatId } = useGlobalStore()
+  const { runConfettiAnime } = useConfetti()
   const codeBlockTheme: MessageCodeBlockTheme = useMemo(() => {
     return isDarkTheme(themeName) ? 'dark' : 'light'
   }, [themeName])
@@ -90,8 +94,34 @@ export const Settings: FC<SettingsProps> = memo((props) => {
     </ConfigInfoWrapper>
   }
 
-  if (!showSingleFileConfig)
-    return renderOverrideSetting()
+  const renderAbout = () => {
+    return <About></About>
+  }
+
+  const tabIdViewMap: Record<SettingsTabId, { title: string; view: JSX.Element }> = {
+    [SettingsTabId.Settings]: {
+      title: t('chat_page.settings_tab_settings'),
+      view: renderOverrideSetting(),
+    },
+    [SettingsTabId.ConfigInfo]: {
+      title: t('chat_page.settings_tab_config_info'),
+      view: <FlexColumn style={{ width: '100%' }}>
+        {getGptFileInfoIsLoading && <LoadingView absolute></LoadingView>}
+
+        {renderSingleFileConfigInfo()}
+        {renderGlobalConfigInfo()}
+      </FlexColumn>,
+    },
+    [SettingsTabId.About]: {
+      title: t('chat_page.settings_tab_about'),
+      view: renderAbout(),
+    },
+  }
+
+  const onlyRenderTabView = tabIdViewMap[onlyRenderTabId!]?.view
+
+  if (onlyRenderTabView)
+    return onlyRenderTabView
 
   return <StyledVSCodePanels
     activeid={tabActiveId}
@@ -99,22 +129,19 @@ export const Settings: FC<SettingsProps> = memo((props) => {
     onChange={(e: any) => {
       const activeId = e.target?.activeid as SettingsTabId
       setTabActiveId(activeId)
+      activeId === SettingsTabId.About && runConfettiAnime()
     }}
   >
-    <VSCodePanelTab id={SettingsTabId.Settings}>{t('chat_page.settings_tab_settings')}</VSCodePanelTab>
-    <VSCodePanelTab id={SettingsTabId.ConfigInfo}>{t('chat_page.settings_tab_config_info')}</VSCodePanelTab>
+    {Object.entries(tabIdViewMap).map(([tabId, { title }]) => {
+      return <VSCodePanelTab id={tabId} key={tabId}>{title}</VSCodePanelTab>
+    })}
 
-    <VSCodePanelView style={viewStyle} id={SettingsTabId.Settings}>
-      {renderOverrideSetting()}
-    </VSCodePanelView>
-    <VSCodePanelView style={viewStyle} id={SettingsTabId.ConfigInfo}>
-      <FlexColumn style={{ width: '100%' }}>
-        {getGptFileInfoIsLoading && <LoadingView absolute></LoadingView>}
+    {Object.entries(tabIdViewMap).map(([tabId, { view }]) => {
+      return <VSCodePanelView style={viewStyle} id={tabId} key={tabId}>
+        {view}
+      </VSCodePanelView>
+    })}
 
-        {renderSingleFileConfigInfo()}
-        {renderGlobalConfigInfo()}
-      </FlexColumn>
-    </VSCodePanelView>
   </StyledVSCodePanels>
 })
 
