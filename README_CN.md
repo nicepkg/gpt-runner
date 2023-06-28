@@ -111,6 +111,8 @@ npx gptr
 
 ## 贡献者
 
+你可以查看我们的[贡献指南](https://github.com/nicepkg/gpt-runner/tree/main/CONTRIBUTING.md)
+
 感谢所有为此项目做出贡献的人：
 
 <a href="https://github.com/nicepkg/gpt-runner/graphs/contributors">
