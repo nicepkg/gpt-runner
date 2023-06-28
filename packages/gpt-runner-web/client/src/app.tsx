@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { type ComponentType, type FC, type PropsWithChildren, memo, useEffect } from 'react'
+import { type ComponentType, type FC, type PropsWithChildren, Suspense, memo, useEffect } from 'react'
 import type { FallbackProps } from 'react-error-boundary'
 import { ErrorBoundary } from 'react-error-boundary'
 import { useTranslation } from 'react-i18next'
@@ -11,6 +11,7 @@ import { useGlobalStore } from './store/zustand/global'
 import { GlobalThemeStyle } from './styles/theme.styles'
 import { initI18n } from './helpers/i18n'
 import { Toast } from './components/toast'
+import { LoadingView } from './components/loading-view'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -37,19 +38,6 @@ const FallbackRender: ComponentType<FallbackProps> = memo(({ error }) => {
 })
 
 export const AppProviders: FC<PropsWithChildren> = memo(({ children }) => {
-  return (
-    <ErrorBoundary FallbackComponent={FallbackRender as any}>
-      <QueryClientProvider client={queryClient}>
-        <Toast></Toast>
-        <LoadingProvider>
-          {children}
-        </LoadingProvider>
-      </QueryClientProvider>
-    </ErrorBoundary>
-  )
-})
-
-export const App: FC = memo(() => {
   const { langId, themeName } = useGlobalStore()
   const { i18n } = useTranslation()
 
@@ -69,11 +57,26 @@ export const App: FC = memo(() => {
   }, [themeName])
 
   return (
-    <AppProviders>
-      <GlobalStyle />
-      <GlobalThemeStyle />
-      <MarkdownStyle />
-      <AppRouter />
-    </AppProviders>
+    <ErrorBoundary FallbackComponent={FallbackRender as any}>
+      <QueryClientProvider client={queryClient}>
+        <Toast></Toast>
+        <LoadingProvider>
+          {children}
+        </LoadingProvider>
+      </QueryClientProvider>
+    </ErrorBoundary>
+  )
+})
+
+export const App: FC = memo(() => {
+  return (
+    <Suspense fallback={<LoadingView absolute />}>
+      <AppProviders>
+        <GlobalStyle />
+        <GlobalThemeStyle />
+        <MarkdownStyle />
+        <AppRouter />
+      </AppProviders>
+    </Suspense>
   )
 })

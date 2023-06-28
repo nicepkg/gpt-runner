@@ -34,7 +34,7 @@ export const InitGptFiles: FC<InitGptFilesProps> = memo((props) => {
       await runInitGptFiles()
       await sleep(1000)
       await onCreated?.()
-      toast.success('chat_page.toast_create_success')
+      toast.success(t('chat_page.toast_create_success'))
     }
     catch (err) {
       toast.error(`${t('chat_page.toast_create_error')}: ${err}`)

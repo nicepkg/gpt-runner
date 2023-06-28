@@ -1,8 +1,9 @@
 {
   "chat_page": {
     "root_path_not_found_tips": "Please provide the root path!",
-    "tab_explore": "Explore",
+    "tab_presets": "Presets",
     "tab_chat": "Chat",
+    "tab_files": "Files",
     "tab_settings": "Settings",
     "continue_inputting_prompt": "Please continue",
     "copy_btn": "Copy",

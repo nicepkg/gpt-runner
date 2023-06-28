@@ -1,8 +1,9 @@
 {
   "chat_page": {
     "root_path_not_found_tips": "找不到專案根目錄！",
-    "tab_explore": "瀏覽",
+    "tab_presets": "預設",
     "tab_chat": "聊天",
+    "tab_files": "文件",
     "tab_settings": "設定",
     "continue_inputting_prompt": "請繼續",
     "copy_btn": "複製",

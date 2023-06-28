@@ -9,7 +9,7 @@ export interface UseChatInstanceProps {
   /**
    * The chat id to use
    */
-  chatId: string | undefined
+  chatId: string
 }
 
 export function useChatInstance(props: UseChatInstanceProps) {
@@ -28,8 +28,6 @@ export function useChatInstance(props: UseChatInstanceProps) {
   } = useGlobalStore()
 
   useEffect(() => {
-    if (!chatId)
-      return
     const instance = getChatInstance(chatId)
     if (instance) {
       if (instance.status === ChatMessageStatus.Pending) {
@@ -44,15 +42,10 @@ export function useChatInstance(props: UseChatInstanceProps) {
 
   type UpdateCurrentChatInstance = (chat: Partial<SingleChat> | SingleChat, replace?: boolean) => void
   const updateCurrentChatInstance = useCallback((chat: SingleChat | Partial<SingleChat>, replace = false) => {
-    if (!chatId)
-      return
     return updateChatInstance(chatId, chat as any, Boolean(replace) as false)
   }, [chatId]) as UpdateCurrentChatInstance
 
   const generateCurrentChatAnswer = useCallback(async (type?: GenerateAnswerType) => {
-    if (!chatId)
-      return
-
     // update tree item name when first send on single chat
     const isFirstChat = chatInstance?.messages.length === 0
 
@@ -77,14 +70,10 @@ export function useChatInstance(props: UseChatInstanceProps) {
   }, [chatId, chatInstance])
 
   const regenerateCurrentLastChatAnswer = useCallback(async () => {
-    if (!chatId)
-      return
     return await regenerateLastChatAnswer(chatId)
   }, [chatId])
 
   const stopCurrentGeneratingChatAnswer = useCallback(() => {
-    if (!chatId)
-      return
     return stopGeneratingChatAnswer(chatId)
   }, [chatId])
 

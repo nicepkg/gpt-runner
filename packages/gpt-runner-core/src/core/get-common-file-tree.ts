@@ -148,9 +148,9 @@ export interface CreateFileContextParams {
 export async function createFileContext(params: CreateFileContextParams) {
   const { rootPath, filePaths } = params
 
-  const baseTips = `Please try to answer according to part of the file path and code of the user's current development project.
-The file path and code will be separated by five double quotation marks.
-Here is the file path and code of the user's current development project:
+  const baseTips = `Please answer the user's question based on the user's file path and file content.
+  The file path and file content will be separated by five single quotes.
+  This is the file path and file content that the user is currently asking:
 `
 
   let tips = baseTips
@@ -159,22 +159,22 @@ Here is the file path and code of the user's current development project:
     const relativePath = PathUtils.relative(rootPath, filePath)
     const content = await FileUtils.readFile({ filePath })
 
-    const fileTips = `"""""
-filePath:
+    const fileTips = `'''''
+[file path]
 ${relativePath}
------
-fileContent:
+
+[file content]
 ${content}
-"""""
+'''''
 
 `
 
     tips += fileTips
   }
 
-  tips += `When you want to create/modify/delete a file or talk about a file, you should always return the full path of the file.
+  tips += `\nWhen you want to create/modify/delete a file or talk about a file, you should always return the full path of the file.
 
-For example, if I provide you with a file path \`src/component/button.ts\`, you should return \`src/component/button.ts\` instead of \`button.ts\ when you talk about it.
+For example, if user provide you with a file path \`src/component/button.ts\`, you should return \`src/component/button.ts\` instead of \`button.ts\ when you talk about it.
 
 Return full path is very important !!!
 `

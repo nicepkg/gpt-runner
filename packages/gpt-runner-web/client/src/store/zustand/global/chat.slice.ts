@@ -33,6 +33,7 @@ export interface ChatSlice {
     (chatId: string, chat: SingleChat, replace: true): void
   }
   updateChatInstances: (chatInstances: SingleChat[] | ((oldChatInstances: SingleChat[]) => SingleChat[])) => void
+  updateChatInstanceMaps: (chatInstances?: SingleChat[]) => void
   removeChatInstance: (chatId: string) => void
   generateChatAnswer: (chatId: string, type?: GenerateAnswerType) => Promise<void>
   regenerateLastChatAnswer: (chatId: string) => Promise<void>
@@ -78,7 +79,12 @@ export const createChatSlice: StateCreator<
     if (nextChatInstance && nextChatInstance.id !== state.activeChatId)
       state.updateActiveChatId(nextChatInstance.id)
   },
+
   getChatInstance(chatId) {
+    const state = get()
+
+    state.updateChatInstanceMaps()
+
     return chatIdChatInstanceMap.get(chatId)
   },
   getChatInstancesBySingleFilePath(singleFilePath) {
@@ -114,54 +120,50 @@ export const createChatSlice: StateCreator<
 
     return {
       chatSidebarTreeItem,
-      chatInstance: state.getChatInstance(chatId)!,
+      chatInstance: finalInstance,
     }
   },
 
   updateChatInstance(chatId, chat, replace = false) {
-    set(state => ({
-      chatInstances: state.chatInstances.map((chatInstance) => {
+    const state = get()
+
+    set((preState) => {
+      const finalInstances = preState.chatInstances.map((chatInstance) => {
         if (chatInstance.id === chatId) {
-          const oldChatInstance = chatInstance
           const newChatInstance = replace ? chat as SingleChat : Object.assign(chatInstance, chat)
-
-          // remove old map
-          chatIdChatInstanceMap.delete(oldChatInstance.id)
-          singleFilePathChatInstancesMap.set(oldChatInstance.singleFilePath,
-            state.getChatInstancesBySingleFilePath(oldChatInstance.singleFilePath)
-              .filter(item => item.id !== oldChatInstance.id))
-
-          // add new map
-          chatIdChatInstanceMap.set(newChatInstance.id, newChatInstance)
-          singleFilePathChatInstancesMap.set(newChatInstance.singleFilePath,
-            [...state.getChatInstancesBySingleFilePath(newChatInstance.singleFilePath), newChatInstance])
-
           return newChatInstance
         }
-
         return chatInstance
-      }),
-    }))
+      })
+
+      state.updateChatInstanceMaps(finalInstances)
+
+      return {
+        chatInstances: finalInstances,
+      }
+    })
   },
   updateChatInstances(chatInstances) {
     const state = get()
     const finalChatInstances = typeof chatInstances === 'function' ? chatInstances(get().chatInstances) : chatInstances
 
-    // clear old map
-    chatIdChatInstanceMap.clear()
-    singleFilePathChatInstancesMap.clear()
-
-    finalChatInstances.forEach((chatInstance) => {
-      const { id, singleFilePath } = chatInstance
-
-      // add new map
-      singleFilePathChatInstancesMap.set(singleFilePath,
-        [...state.getChatInstancesBySingleFilePath(singleFilePath), chatInstance])
-
-      chatIdChatInstanceMap.set(id, chatInstance)
-    })
-
+    state.updateChatInstanceMaps(finalChatInstances)
     set({ chatInstances: finalChatInstances })
+  },
+  updateChatInstanceMaps(_chatInstances) {
+    const state = get()
+    const chatInstances = _chatInstances || state.chatInstances || []
+
+    if (chatInstances.length !== chatIdChatInstanceMap.size || chatInstances.length !== singleFilePathChatInstancesMap.size) {
+      chatIdChatInstanceMap.clear()
+      singleFilePathChatInstancesMap.clear()
+      chatInstances.forEach((chatInstance) => {
+        chatIdChatInstanceMap.set(chatInstance.id, chatInstance)
+        const singleFilePathChatInstances = singleFilePathChatInstancesMap.get(chatInstance.singleFilePath) || []
+        singleFilePathChatInstances.push(chatInstance)
+        singleFilePathChatInstancesMap.set(chatInstance.singleFilePath, singleFilePathChatInstances)
+      })
+    }
   },
   removeChatInstance(chatId) {
     const state = get()
@@ -176,6 +178,8 @@ export const createChatSlice: StateCreator<
 
         return notTargetChatInstance
       })
+
+      state.updateChatInstanceMaps(finalChatInstances)
 
       return finalChatInstances
     })

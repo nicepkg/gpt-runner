@@ -9,7 +9,7 @@ import { getServerStorage, saveServerStorage } from '../../../../../../networks/
 import { useLoading } from '../../../../../../hooks/use-loading.hook'
 import { HookFormInput } from '../../../../../../components/hook-form/hook-form-input'
 import { HookFormTextarea } from '../../../../../../components/hook-form/hook-form-textarea'
-import { IS_LOCAL_HOST } from '../../../../../../helpers/constant'
+import { IS_LOCAL_HOST, MAYBE_IDE } from '../../../../../../helpers/constant'
 import { StyledForm, StyledFormItem } from '../../settings.styles'
 
 export interface FormData extends Pick<OpenaiSecrets, 'apiKey' | 'accessToken' | 'basePath'> {
@@ -37,6 +37,7 @@ export const OpenaiSettings: FC = memo(() => {
   })
 
   const remoteSecrets = querySecretsRes?.data?.value as OpenaiSecrets | undefined
+  const canSettingSecrets = IS_LOCAL_HOST || MAYBE_IDE
 
   const { handleSubmit, formState, control, setValue } = useForm<FormData>({
     mode: 'onBlur',
@@ -102,11 +103,11 @@ export const OpenaiSettings: FC = memo(() => {
     </StyledFormItem>
 
     <VSCodeButton
-      disabled={!IS_LOCAL_HOST}
+      disabled={!canSettingSecrets}
       appearance='primary'
       type='submit'
     >
-      {IS_LOCAL_HOST ? t('chat_page.save_btn') : t('chat_page.disabled_save_openai_config_btn')}
+      {canSettingSecrets ? t('chat_page.save_btn') : t('chat_page.disabled_save_openai_config_btn')}
     </VSCodeButton>
   </StyledForm>
 })

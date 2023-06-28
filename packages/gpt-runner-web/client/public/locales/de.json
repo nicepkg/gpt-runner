@@ -1,8 +1,9 @@
 {
   "chat_page": {
     "root_path_not_found_tips": "Bitte geben Sie den Stammverzeichnispfad an!",
-    "tab_explore": "Erkunden",
+    "tab_presets": "Voreinstellungen",
     "tab_chat": "Chat",
+    "tab_files": "Dateien",
     "tab_settings": "Einstellungen",
     "continue_inputting_prompt": "Bitte weitermachen",
     "copy_btn": "Kopieren",

@@ -107,7 +107,7 @@ export const createSidebarTreeSlice: StateCreator<
     const state = get()
 
     // refresh map
-    state.updateChatInstances(state.chatInstances)
+    state.updateChatInstanceMaps()
 
     const fetchGptFilesTreeRes = await fetchGptFilesTree({
       rootPath,

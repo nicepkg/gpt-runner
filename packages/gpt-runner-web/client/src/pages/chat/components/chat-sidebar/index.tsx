@@ -16,16 +16,16 @@ import { emitter } from '../../../../helpers/emitter'
 
 export interface ChatSidebarProps {
   rootPath: string
+  chatId: string
 }
 
 export type GptTreeItemOtherInfo = GptFileInfoTreeItem
 
 export const ChatSidebar: FC<ChatSidebarProps> = memo((props) => {
-  const { rootPath } = props
+  const { rootPath, chatId } = props
 
   const { t } = useTranslation()
   const {
-    activeChatId,
     sidebarTree,
     expandChatTreeItem,
     createChatAndActive,
@@ -37,12 +37,12 @@ export const ChatSidebar: FC<ChatSidebarProps> = memo((props) => {
   const [isLoading, setIsLoading] = useState(false)
 
   const { removeChatInstance } = useChatInstance({
-    chatId: activeChatId,
+    chatId,
   })
 
   useEffect(() => {
-    expandChatTreeItem(activeChatId)
-  }, [activeChatId, expandChatTreeItem])
+    expandChatTreeItem(chatId)
+  }, [chatId, expandChatTreeItem])
 
   const refreshSidebarTree = useCallback(async () => {
     setIsLoading(true)
@@ -154,11 +154,11 @@ export const ChatSidebar: FC<ChatSidebarProps> = memo((props) => {
   }, [updateSidebarTreeItem])
 
   const buildTreeItem = useCallback((item: TreeItemProps<GptTreeItemOtherInfo>) => {
-    if (item.otherInfo?.id === activeChatId)
+    if (item.otherInfo?.id === chatId)
       return { ...item, isFocused: true }
 
     return item
-  }, [activeChatId])
+  }, [chatId])
 
   const sortTreeItems = useCallback((items: TreeItemProps<GptTreeItemOtherInfo>[]) => {
     return items?.sort((a, b) => {

@@ -22,8 +22,9 @@ import { Settings } from './components/settings'
 import { InitGptFiles } from './components/init-gpt-files'
 
 enum TabId {
-  Explore = 'explore',
+  Presets = 'presets',
   Chat = 'chat',
+  Files = 'files',
   Settings = 'settings',
 }
 
@@ -34,7 +35,7 @@ const Chat: FC = memo(() => {
   const { activeChatId, sidebarTree, updateActiveChatId, updateSidebarTreeFromRemote } = useGlobalStore()
   const { chatInstance } = useChatInstance({ chatId: activeChatId })
   const [scrollDownRef, scrollDown, getScrollBottom] = useScrollDown()
-  const [tabActiveId, setTabActiveId] = useState(TabId.Explore)
+  const [tabActiveId, setTabActiveId] = useState(TabId.Presets)
   const showFileTreeOnRightSide = windowWidth >= 1000
   const { data: fetchProjectInfoRes } = useQuery({
     queryKey: ['fetchProjectInfo'],
@@ -44,7 +45,7 @@ const Chat: FC = memo(() => {
 
   // when active chat id change, change tab active id
   useEffect(() => {
-    setTabActiveId(activeChatId ? TabId.Chat : TabId.Explore)
+    setTabActiveId(activeChatId ? TabId.Chat : TabId.Presets)
   }, [activeChatId, isMobile])
 
   // any status will scroll down
@@ -71,9 +72,9 @@ const Chat: FC = memo(() => {
       return null
 
     return <SidebarWrapper className='sidebar-wrapper'>
-      <ChatSidebar rootPath={rootPath}></ChatSidebar>
+      <ChatSidebar chatId={activeChatId} rootPath={rootPath}></ChatSidebar>
     </SidebarWrapper>
-  }, [])
+  }, [activeChatId])
 
   const renderFileTree = useCallback(() => {
     if (!rootPath)
@@ -136,14 +137,18 @@ const Chat: FC = memo(() => {
           activeId === TabId.Chat && scrollDown()
         }}
       >
-        <VSCodePanelTab id={TabId.Explore}>{t('chat_page.tab_explore')}</VSCodePanelTab>
+        <VSCodePanelTab id={TabId.Presets}>{t('chat_page.tab_presets')}</VSCodePanelTab>
         <VSCodePanelTab id={TabId.Chat}>{t('chat_page.tab_chat')}</VSCodePanelTab>
+        <VSCodePanelTab id={TabId.Files}>{t('chat_page.tab_files')}</VSCodePanelTab>
         <VSCodePanelTab id={TabId.Settings}>{t('chat_page.tab_settings')}</VSCodePanelTab>
-        <VSCodePanelView style={viewStyle} id={TabId.Explore}>
+        <VSCodePanelView style={viewStyle} id={TabId.Presets}>
           {renderSidebar()}
         </VSCodePanelView>
         <VSCodePanelView style={viewStyle} id={TabId.Chat}>
           {renderChatPanel()}
+        </VSCodePanelView>
+        <VSCodePanelView style={viewStyle} id={TabId.Files}>
+          {renderFileTree()}
         </VSCodePanelView>
         <VSCodePanelView style={viewStyle} id={TabId.Settings}>
           {renderSettings()}
