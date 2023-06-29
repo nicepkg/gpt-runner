@@ -16,6 +16,7 @@ const ErrorWrapper = styled.div`
   background-color: var(--panel-view-background);
   color: var(--foreground);
   user-select: text;
+  text-align: center;
 `
 
 export const ErrorView: FC<ErrorViewProps> = memo((props) => {

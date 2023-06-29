@@ -48,7 +48,7 @@ export const AppRouter: FC = () => {
       <Suspense fallback={<VSCodeProgressRing />}>
         <Router>
           <HackRouter></HackRouter>
-          <Routes >
+          <Routes>
             <Route index element={<Home />} />
             <Route path="chat" element={<Chat />} />
             <Route path="*" element={<Error404 />} />
