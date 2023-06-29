@@ -1,6 +1,6 @@
 {
   "publisher": "nicepkg",
-  "name": "@nicepkg/gpt-runner-vscode",
+  "name": "gpt-runner",
   "displayName": "GPT Runner",
   "version": "0.2.3",
   "private": true,

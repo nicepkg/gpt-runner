@@ -3,6 +3,7 @@ import { memo, useEffect, useMemo, useRef } from 'react'
 import type { UserDragConfig } from '@use-gesture/react'
 import { useDrag } from '@use-gesture/react'
 import { motion, useMotionValue } from 'framer-motion'
+import { isDomHidden } from '../../helpers/utils'
 import { DragLine } from './drag-resize-view.styles'
 
 export type DragDirection = 'left' | 'right' | 'top' | 'bottom'
@@ -71,7 +72,7 @@ export const DragResizeView: FC<DragResizeViewProps> = memo((props) => {
 
   useEffect(() => {
     const handleWindowResize = () => {
-      if (ref.current) {
+      if (ref.current && !isDomHidden(ref.current)) {
         finalWidth.set(ref.current.offsetWidth)
         finalHeight.set(ref.current.offsetHeight)
       }

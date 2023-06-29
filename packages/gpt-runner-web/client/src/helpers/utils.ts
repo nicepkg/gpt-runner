@@ -48,3 +48,7 @@ export function countTokenQuick(text: string) {
   // int
   return Math.floor(text.length / 3.5)
 }
+
+export function isDomHidden(el: HTMLElement) {
+  return el.offsetParent === null
+}

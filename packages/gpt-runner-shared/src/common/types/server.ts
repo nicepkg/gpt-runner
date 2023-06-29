@@ -13,6 +13,10 @@ export interface BaseResponse<T = any> {
 export type SuccessResponse<T = any> = Omit<BaseResponse<T>, 'type'> & { type: 'Success' }
 export type FailResponse<T = any> = Omit<BaseResponse<T>, 'type'> & { type: 'Fail' }
 
+export interface ProxySecrets {
+  proxyUrl: string
+}
+
 export interface ChatStreamReqParams {
   messages: SingleChatMessage[]
   prompt: string

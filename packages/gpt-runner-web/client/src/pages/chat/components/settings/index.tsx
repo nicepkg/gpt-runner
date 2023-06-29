@@ -15,6 +15,7 @@ import { ConfigInfoTitle, ConfigInfoWrapper } from './settings.styles'
 import { OpenaiSettings } from './components/openai-settings'
 import { GeneralSettings } from './components/general-settings'
 import { About } from './components/about'
+import { ProxySettings } from './components/proxy-settings'
 
 export enum SettingsTabId {
   About = 'about',
@@ -71,6 +72,8 @@ export const Settings: FC<SettingsProps> = memo((props) => {
     return <ConfigInfoWrapper>
       <ConfigInfoTitle>{t('chat_page.settings_general')}</ConfigInfoTitle>
       <GeneralSettings></GeneralSettings>
+      <ConfigInfoTitle>{t('chat_page.settings_proxy')}</ConfigInfoTitle>
+      <ProxySettings></ProxySettings>
       <ConfigInfoTitle>{t('chat_page.settings_openai_config')}</ConfigInfoTitle>
       <OpenaiSettings></OpenaiSettings>
     </ConfigInfoWrapper>

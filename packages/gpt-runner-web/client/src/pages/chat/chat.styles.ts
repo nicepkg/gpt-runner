@@ -17,11 +17,17 @@ export const StyledVSCodePanels = styled(VSCodePanels)`
   &::part(tablist) {
     padding-left: 1rem;
     padding-right: 1rem;
+    width: auto;
+    column-gap: 0;
   }
 
   &::part(tabpanel) {
     height: 100%;
     overflow: hidden;
+  }
+
+  &::part(activeIndicator) {
+    width: 50%;
   }
 ` as typeof VSCodePanels
 

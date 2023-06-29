@@ -1,18 +1,20 @@
+import { getDefaultProxyUrl } from '@nicepkg/gpt-runner-shared/node'
 import { bootstrap } from 'global-agent'
 import { ProxyAgent, setGlobalDispatcher } from 'undici'
 
 // global proxy
-process.env.GLOBAL_AGENT_HTTP_PROXY = ['HTTP_PROXY', 'HTTPS_PROXY', 'ALL_PROXY'].reduce((val, key) => {
-  const upperKey = key.toUpperCase()
-  const lowerKey = key.toLowerCase()
-  const upperKeyValue = (process.env[upperKey] && process.env[upperKey] !== 'undefined') ? process.env[upperKey] || '' : ''
-  const lowerKeyValue = process.env[lowerKey] && process.env[lowerKey] !== 'undefined' ? process.env[lowerKey] || '' : ''
+async function startProxy() {
+  process.env.GLOBAL_AGENT_HTTP_PROXY = await getDefaultProxyUrl()
+  bootstrap()
+}
+startProxy()
 
-  return val || upperKeyValue || lowerKeyValue
-}, '')
-bootstrap()
+export async function setProxyUrl(url?: string) {
+  process.env.GLOBAL_AGENT_HTTP_PROXY = url || await getDefaultProxyUrl()
 
-if (process.env.GLOBAL_AGENT_HTTP_PROXY) {
+  if (!process.env.GLOBAL_AGENT_HTTP_PROXY)
+    return
+
   setGlobalDispatcher(
     new ProxyAgent({
       uri: process.env.GLOBAL_AGENT_HTTP_PROXY!,

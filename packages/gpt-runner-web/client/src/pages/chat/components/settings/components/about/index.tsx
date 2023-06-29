@@ -27,7 +27,7 @@ export const About: FC = memo(() => {
       title: <div
         style={{ userSelect: 'none', width: '100%' }}
         onClick={runConfettiAnime}>
-        <img src="https://contrib.rocks/image?repo=nicepkg/vr360" style={{
+        <img src="https://contrib.rocks/image?repo=nicepkg/gpt-runner" style={{
           maxWidth: '100%',
         }} />
       </div>,
