@@ -346,14 +346,14 @@ export const ChatPanel: FC<ChatPanelProps> = memo((props) => {
           marginLeft: '0.5rem',
           marginRight: '0.5rem',
         }}
-        buildChildrenSlot={() => {
+        buildChildrenSlot={({ isHovering }) => {
           return <IconButton
             style={{
               paddingLeft: '0.5rem',
             }}
             text={t('chat_page.chat_tree_btn')}
             iconClassName='codicon-list-tree'
-            hoverShowText
+            hoverShowText={!isHovering}
           ></IconButton>
         }}
         buildMenuSlot={() => {
@@ -370,14 +370,14 @@ export const ChatPanel: FC<ChatPanelProps> = memo((props) => {
           marginLeft: '0.5rem',
           marginRight: '0.5rem',
         }}
-        buildChildrenSlot={() => {
+        buildChildrenSlot={({ isHovering }) => {
           return <IconButton
             style={{
               paddingLeft: '0.5rem',
             }}
             text={t('chat_page.file_tree_btn')}
             iconClassName='codicon-file'
-            hoverShowText
+            hoverShowText={!isHovering}
           ></IconButton>
         }}
         buildMenuSlot={() => {

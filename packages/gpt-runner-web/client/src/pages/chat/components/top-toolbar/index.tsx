@@ -60,11 +60,11 @@ export const TopToolbar: FC<TopToolbarProps> = memo((props) => {
             width: isMobile ? '100vw' : '',
           }}
           minusHeightSpace={10}
-          buildChildrenSlot={() => {
+          buildChildrenSlot={({ isHovering }) => {
             return <IconButton
               text={text}
               iconClassName={iconClassName}
-              hoverShowText={!alwaysShowText}
+              hoverShowText={!alwaysShowText && !isHovering}
               style={{
                 paddingLeft: '0.5rem',
               }}
