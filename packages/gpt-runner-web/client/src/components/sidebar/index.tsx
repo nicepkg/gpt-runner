@@ -73,7 +73,7 @@ export function Sidebar_<OtherInfo extends TreeItemBaseStateOtherInfo = TreeItem
     setFinalItems(sortItems(_finalItems))
   }, [buildTreeItem, sortTreeItems, debouncedSearchKeyword, tree?.items])
 
-  return <SidebarWrapper>
+  return <SidebarWrapper className='sidebar-wrapper'>
     <SidebarHeader>
       {buildTopToolbarSlot?.()}
     </SidebarHeader>

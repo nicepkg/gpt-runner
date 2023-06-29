@@ -29,7 +29,6 @@ export interface ChatPanelProps {
   scrollDownRef: RefObject<any>
   chatTreeView?: React.ReactNode
   fileTreeView?: React.ReactNode
-  settingsView?: React.ReactNode
   chatId: string
   onChatIdChange: (chatId: string) => void
 }
@@ -39,7 +38,6 @@ export const ChatPanel: FC<ChatPanelProps> = memo((props) => {
     scrollDownRef,
     chatTreeView,
     fileTreeView,
-    settingsView,
     chatId,
     onChatIdChange,
   } = props
@@ -345,17 +343,17 @@ export const ChatPanel: FC<ChatPanelProps> = memo((props) => {
       {/* chat tree */}
       {chatTreeView && <PopoverMenu
         menuMaskStyle={{
-          marginLeft: '1rem',
-          marginRight: '1rem',
+          marginLeft: '0.5rem',
+          marginRight: '0.5rem',
         }}
-        buildChildrenSlot={({ isHovering }) => {
+        buildChildrenSlot={() => {
           return <IconButton
             style={{
               paddingLeft: '0.5rem',
             }}
             text={t('chat_page.chat_tree_btn')}
             iconClassName='codicon-list-tree'
-            hoverShowText={!isHovering}
+            hoverShowText
           ></IconButton>
         }}
         buildMenuSlot={() => {
@@ -367,21 +365,19 @@ export const ChatPanel: FC<ChatPanelProps> = memo((props) => {
 
       {/* file tree */}
       {fileTreeView && <PopoverMenu
-        // isPopoverOpen={true}
-        // onPopoverDisplayChange={() => { }}
         clickOutSideToClose={false}
         menuMaskStyle={{
-          marginLeft: '1rem',
-          marginRight: '1rem',
+          marginLeft: '0.5rem',
+          marginRight: '0.5rem',
         }}
-        buildChildrenSlot={({ isHovering }) => {
+        buildChildrenSlot={() => {
           return <IconButton
             style={{
               paddingLeft: '0.5rem',
             }}
             text={t('chat_page.file_tree_btn')}
             iconClassName='codicon-file'
-            hoverShowText={!isHovering}
+            hoverShowText
           ></IconButton>
         }}
         buildMenuSlot={() => {
@@ -391,36 +387,11 @@ export const ChatPanel: FC<ChatPanelProps> = memo((props) => {
         }}
       />}
 
-      {/* settings panel */}
-      {settingsView && <PopoverMenu
-        // isPopoverOpen={true}
-        // onPopoverDisplayChange={() => { }}
-        xPosition='center'
-        menuMaskStyle={{
-          marginLeft: '1rem',
-          marginRight: '1rem',
-        }}
-        buildChildrenSlot={({ isHovering }) => {
-          return <IconButton
-            text={t('chat_page.settings_btn')}
-            iconClassName='codicon-gear'
-            hoverShowText={!isHovering}
-            style={{
-              paddingLeft: '0.5rem',
-              paddingRight: '0.5rem',
-            }}
-          ></IconButton>
-        }}
-        buildMenuSlot={() => {
-          return <ChatPanelPopoverTreeWrapper>
-            {settingsView}
-          </ChatPanelPopoverTreeWrapper>
-        }}
-      />}
-
       <PopoverMenu
+        // isPopoverOpen
+        // onPopoverDisplayChange={() => { }}
         xPosition='right'
-        showTopBar={false}
+        showToolbar={false}
         childrenInMenuWhenOpen={true}
         buildChildrenSlot={({ isHovering }) => {
           return <IconButton

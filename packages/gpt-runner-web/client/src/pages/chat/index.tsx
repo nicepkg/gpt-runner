@@ -6,7 +6,7 @@ import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { VSCodePanelTab, VSCodePanelView } from '@vscode/webview-ui-toolkit/react'
 import { useIsMobile } from '../../hooks/use-is-mobile.hook'
-import { FlexRow } from '../../styles/global.styles'
+import { FlexColumn, FlexRow } from '../../styles/global.styles'
 import { useScrollDown } from '../../hooks/use-scroll-down.hook'
 import { useChatInstance } from '../../hooks/use-chat-instance.hook'
 import { useGlobalStore } from '../../store/zustand/global'
@@ -14,13 +14,13 @@ import { getGlobalConfig } from '../../helpers/global-config'
 import { ErrorView } from '../../components/error-view'
 import { DragResizeView } from '../../components/drag-resize-view'
 import { fetchProjectInfo } from '../../networks/config'
-import { useConfetti } from '../../hooks/use-confetti.hook'
-import { SidebarWrapper, StyledVSCodePanels } from './chat.styles'
+import { ContentWrapper, StyledVSCodePanels } from './chat.styles'
 import { ChatSidebar } from './components/chat-sidebar'
 import { ChatPanel } from './components/chat-panel'
 import { FileTree } from './components/file-tree'
 import { Settings, SettingsTabId } from './components/settings'
 import { InitGptFiles } from './components/init-gpt-files'
+import { TopToolbar } from './components/top-toolbar'
 
 enum TabId {
   Presets = 'presets',
@@ -38,7 +38,6 @@ const Chat: FC = memo(() => {
   const { chatInstance } = useChatInstance({ chatId: activeChatId })
   const [scrollDownRef, scrollDown, getScrollBottom] = useScrollDown()
   const [tabActiveId, setTabActiveId] = useState(TabId.Presets)
-  const { runConfettiAnime } = useConfetti()
   const showFileTreeOnRightSide = windowWidth >= 1000
   const { data: fetchProjectInfoRes } = useQuery({
     queryKey: ['fetchProjectInfo'],
@@ -70,40 +69,39 @@ const Chat: FC = memo(() => {
     }, 0)
   }, [scrollDownRef.current])
 
-  const renderSidebar = useCallback(() => {
+  const renderSidebar = useCallback((isPopover = false) => {
     if (!rootPath)
       return null
 
-    return <SidebarWrapper className='sidebar-wrapper'>
+    return <ContentWrapper $isPopoverContent={isPopover} >
       <ChatSidebar chatId={activeChatId} rootPath={rootPath}></ChatSidebar>
-    </SidebarWrapper>
+    </ContentWrapper >
   }, [activeChatId])
 
-  const renderFileTree = useCallback(() => {
+  const renderFileTree = useCallback((isPopover = false) => {
     if (!rootPath)
       return null
 
-    return <SidebarWrapper className='sidebar-wrapper'>
+    return <ContentWrapper $isPopoverContent={isPopover}>
       <FileTree rootPath={rootPath}></FileTree>
-    </SidebarWrapper>
+    </ContentWrapper>
   }, [])
 
-  const renderSettings = useCallback((onlyRenderTabId?: SettingsTabId) => {
+  const renderSettings = useCallback((isPopover = false, onlyRenderTabId?: SettingsTabId) => {
     if (!rootPath)
       return null
 
-    return <SidebarWrapper className='sidebar-wrapper'>
+    return <ContentWrapper $isPopoverContent={isPopover}>
       <Settings rootPath={rootPath} chatId={activeChatId} onlyRenderTabId={onlyRenderTabId}></Settings>
-    </SidebarWrapper>
+    </ContentWrapper>
   }, [activeChatId])
 
   const renderChatPanel = useCallback(() => {
     return <ChatPanel
       scrollDownRef={scrollDownRef}
       chatId={activeChatId}
-      chatTreeView={isMobile ? renderSidebar() : null}
-      fileTreeView={!showFileTreeOnRightSide ? renderFileTree() : null}
-      settingsView={renderSettings()}
+      chatTreeView={isMobile ? renderSidebar(true) : null}
+      fileTreeView={!showFileTreeOnRightSide ? renderFileTree(true) : null}
       onChatIdChange={updateActiveChatId}
     ></ChatPanel>
   }, [
@@ -131,7 +129,7 @@ const Chat: FC = memo(() => {
         overflowY: 'auto',
       }
 
-      const tabIdViewMap: Record<TabId, { title: string; view: JSX.Element | null }> = {
+      const tabIdViewMap: Partial<Record<TabId, { title: string; view: JSX.Element | null }>> = {
         [TabId.Presets]: {
           title: t('chat_page.tab_presets'),
           view: renderSidebar(),
@@ -144,14 +142,6 @@ const Chat: FC = memo(() => {
           title: t('chat_page.tab_files'),
           view: renderFileTree(),
         },
-        [TabId.Settings]: {
-          title: t('chat_page.tab_settings'),
-          view: renderSettings(SettingsTabId.Settings),
-        },
-        [TabId.About]: {
-          title: t('chat_page.tab_about'),
-          view: renderSettings(SettingsTabId.About),
-        },
       }
 
       return <StyledVSCodePanels
@@ -161,17 +151,16 @@ const Chat: FC = memo(() => {
           const activeId = e.target?.activeid as TabId
           setTabActiveId(activeId)
           activeId === TabId.Chat && scrollDown()
-          activeId === TabId.About && runConfettiAnime()
         }}
       >
 
         {Object.keys(tabIdViewMap).map((tabId) => {
-          const { title } = tabIdViewMap[tabId as TabId]
+          const { title } = tabIdViewMap[tabId as TabId]!
           return <VSCodePanelTab key={tabId} id={tabId as TabId}>{title}</VSCodePanelTab>
         })}
 
         {Object.keys(tabIdViewMap).map((tabId) => {
-          const { view } = tabIdViewMap[tabId as TabId]
+          const { view } = tabIdViewMap[tabId as TabId]!
           return <VSCodePanelView key={tabId} style={viewStyle} id={tabId as TabId}>
             {view}
           </VSCodePanelView>
@@ -217,7 +206,14 @@ const Chat: FC = memo(() => {
       onCreated={() => updateSidebarTreeFromRemote(rootPath)}
     ></InitGptFiles>}
 
-    {renderChat()}
+    <FlexColumn style={{ width: '100%', height: '100%' }}>
+      <TopToolbar
+        settingsView={renderSettings(true, SettingsTabId.Settings)}
+        configInfoView={renderSettings(true, SettingsTabId.ConfigInfo)}
+        aboutView={renderSettings(true, SettingsTabId.About)}
+      ></TopToolbar>
+      {renderChat()}
+    </FlexColumn>
   </>
 })
 

@@ -1,4 +1,4 @@
-import { type CSSProperties, type FC, memo, useMemo, useState } from 'react'
+import { type CSSProperties, type FC, memo, useEffect, useMemo, useState } from 'react'
 import { VSCodePanelTab, VSCodePanelView } from '@vscode/webview-ui-toolkit/react'
 import { useTranslation } from 'react-i18next'
 import { useQuery } from '@tanstack/react-query'
@@ -11,6 +11,7 @@ import { isDarkTheme } from '../../../../styles/themes'
 import { getGptFileInfo } from '../../../../networks/gpt-files'
 import { LoadingView } from '../../../../components/loading-view'
 import { useConfetti } from '../../../../hooks/use-confetti.hook'
+import { useElementVisible } from '../../../../hooks/use-element-visible.hook'
 import { ConfigInfoTitle, ConfigInfoWrapper } from './settings.styles'
 import { OpenaiSettings } from './components/openai-settings'
 import { GeneralSettings } from './components/general-settings'
@@ -36,6 +37,13 @@ export const Settings: FC<SettingsProps> = memo((props) => {
   const [tabActiveId, setTabActiveId] = useState(SettingsTabId.Settings)
   const { themeName, getGptFileTreeItemFromChatId } = useGlobalStore()
   const { runConfettiAnime } = useConfetti()
+  const [aboutRef, isAboutPageVisible] = useElementVisible<HTMLDivElement>()
+
+  useEffect(() => {
+    if (isAboutPageVisible)
+      runConfettiAnime()
+  }, [isAboutPageVisible])
+
   const codeBlockTheme: MessageCodeBlockTheme = useMemo(() => {
     return isDarkTheme(themeName) ? 'dark' : 'light'
   }, [themeName])
@@ -47,8 +55,8 @@ export const Settings: FC<SettingsProps> = memo((props) => {
   }, [chatId, getGptFileTreeItemFromChatId])
 
   const { data: getGptFileInfoRes, isLoading: getGptFileInfoIsLoading } = useQuery({
-    queryKey: ['settings-gpt-file-info', tabActiveId, gptFileTreeItem?.path],
-    enabled: !!gptFileTreeItem?.path && tabActiveId === SettingsTabId.ConfigInfo,
+    queryKey: ['settings-gpt-file-info', gptFileTreeItem?.path],
+    enabled: !!gptFileTreeItem?.path,
     queryFn: () => getGptFileInfo({
       rootPath,
       filePath: gptFileTreeItem!.path,
@@ -98,7 +106,7 @@ export const Settings: FC<SettingsProps> = memo((props) => {
   }
 
   const renderAbout = () => {
-    return <About></About>
+    return <About ref={aboutRef}></About>
   }
 
   const tabIdViewMap: Record<SettingsTabId, { title: string; view: JSX.Element }> = {
@@ -108,7 +116,7 @@ export const Settings: FC<SettingsProps> = memo((props) => {
     },
     [SettingsTabId.ConfigInfo]: {
       title: t('chat_page.settings_tab_config_info'),
-      view: <FlexColumn style={{ width: '100%' }}>
+      view: <FlexColumn style={{ position: 'relative', width: '100%' }}>
         {getGptFileInfoIsLoading && <LoadingView absolute></LoadingView>}
 
         {renderSingleFileConfigInfo()}
@@ -132,7 +140,6 @@ export const Settings: FC<SettingsProps> = memo((props) => {
     onChange={(e: any) => {
       const activeId = e.target?.activeid as SettingsTabId
       setTabActiveId(activeId)
-      activeId === SettingsTabId.About && runConfettiAnime()
     }}
   >
     {Object.entries(tabIdViewMap).map(([tabId, { title }]) => {

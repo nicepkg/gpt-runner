@@ -75,7 +75,6 @@ export const FileTree: FC<FileTreeProps> = memo((props: FileTreeProps) => {
   const { data: fetchCommonFilesTreeRes, isLoading, refetch: refreshFileTree } = useQuery({
     queryKey: ['file-tree', rootPath, excludeFileExts.join(',')],
     enabled: !!rootPath,
-    keepPreviousData: true,
     queryFn: () => fetchCommonFilesTree({
       rootPath,
       excludeExts: excludeFileExts,
@@ -311,9 +310,13 @@ export const FileTree: FC<FileTreeProps> = memo((props: FileTreeProps) => {
         // onPopoverDisplayChange={() => { }}
         yPosition='bottom'
         clickOutSideToClose={false}
+        zIndex={999}
         menuMaskStyle={{
           marginLeft: '1rem',
           marginRight: '1rem',
+        }}
+        menuStyle={{
+          height: 'auto',
         }}
         childrenStyle={{
           height: '100%',

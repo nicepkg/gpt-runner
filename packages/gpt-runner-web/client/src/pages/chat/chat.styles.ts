@@ -2,7 +2,7 @@ import { css, styled } from 'styled-components'
 import { VSCodePanels } from '@vscode/webview-ui-toolkit/react'
 import { withBreakpoint } from '../../helpers/with-breakpoint'
 
-export const SidebarWrapper = styled.div`
+export const ContentWrapper = styled.div<{ $isPopoverContent: boolean }>`
   width: 100%;
   height: 100%;
   flex-shrink: 0;
@@ -11,6 +11,24 @@ export const SidebarWrapper = styled.div`
     max-width: 100%;
     width: 100%;
   `)}
+
+  ${props => props.$isPopoverContent && css`
+    width: calc(100vw - 1rem);
+    height: 100%;
+    background: var(--panel-view-background);
+    max-width: 500px;
+
+    ${withBreakpoint('sm', css`
+      min-width: min(calc(100vw - 1rem), 500px);
+      width: min(calc(100vw - 1rem), 500px);
+    `)}
+
+    .tree-item__children {
+      &::before {
+        display: none;
+      }
+    }
+  `}
 `
 
 export const StyledVSCodePanels = styled(VSCodePanels)`

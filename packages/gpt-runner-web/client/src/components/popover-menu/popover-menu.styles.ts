@@ -5,12 +5,14 @@ export const MenuMask = styled.div`
   color: var(--foreground);
 `
 
-export const PinBar = styled.div`
+export const Toolbar = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-end;
   padding: 0.5rem;
   border-bottom: 1px solid var(--panel-view-border);
+  border-top: 1px solid var(--panel-view-border);
+  flex-shrink: 0;
 `
 
 export const Menu = styled.div`
@@ -20,6 +22,13 @@ export const Menu = styled.div`
   border: 1px solid var(--panel-view-border);
   border-radius: 0.5rem;
   overflow: hidden;
+`
+
+export const MenuChildrenWrapper = styled.div`
+  flex: 1;
+  overflow-x: hidden;
+  overflow-y: auto;
+
 
   & > .icon-button {
     margin-left: 0;
@@ -53,6 +62,7 @@ export const Menu = styled.div`
     }
   }
 `
+
 export const ChildrenWrapper = styled.div`
   overflow: hidden;
   flex-shrink: 0;
