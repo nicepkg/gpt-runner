@@ -16,8 +16,4 @@ export const ChatPanelWrapper = styled.div`
 
 export const ChatPanelPopoverTreeWrapper = styled.div`
   height: 100%;
-
-  & .sidebar-wrapper {
-    flex-direction: column-reverse;
-  }
 `

@@ -17,12 +17,13 @@ import { emitter } from '../../../../helpers/emitter'
 export interface ChatSidebarProps {
   rootPath: string
   chatId: string
+  reverseTreeUi?: boolean
 }
 
 export type GptTreeItemOtherInfo = GptFileInfoTreeItem
 
 export const ChatSidebar: FC<ChatSidebarProps> = memo((props) => {
-  const { rootPath, chatId } = props
+  const { rootPath, chatId, reverseTreeUi } = props
 
   const { t } = useTranslation()
   const {
@@ -183,6 +184,7 @@ export const ChatSidebar: FC<ChatSidebarProps> = memo((props) => {
   const sidebar: SidebarProps<GptTreeItemOtherInfo> = {
     placeholder: t('chat_page.search_placeholder'),
     loading: isLoading,
+    reverseTreeUi,
     tree: {
       items: sidebarTree,
       renderTreeItemLeftSlot,

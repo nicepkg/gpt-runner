@@ -21,10 +21,11 @@ import { FileTreeItemRightWrapper, FileTreeSidebarHighlight, FileTreeSidebarUnde
 
 export interface FileTreeProps {
   rootPath: string
+  reverseTreeUi?: boolean
 }
 
 export const FileTree: FC<FileTreeProps> = memo((props: FileTreeProps) => {
-  const { rootPath } = props
+  const { rootPath, reverseTreeUi } = props
 
   const { t } = useTranslation()
   const [filesTree, _setFilesTree] = useState<FileSidebarTreeItem[]>([])
@@ -306,9 +307,7 @@ export const FileTree: FC<FileTreeProps> = memo((props: FileTreeProps) => {
 
     return <>
       <PopoverMenu
-        // isPopoverOpen={true}
-        // onPopoverDisplayChange={() => { }}
-        yPosition='bottom'
+        yPosition={reverseTreeUi ? 'top' : 'bottom'}
         clickOutSideToClose={false}
         zIndex={999}
         menuMaskStyle={{
@@ -440,6 +439,7 @@ export const FileTree: FC<FileTreeProps> = memo((props: FileTreeProps) => {
   const sidebar: SidebarProps<FileInfoSidebarTreeItem> = {
     placeholder: t('chat_page.search_files_placeholder'),
     loading: isLoading,
+    reverseTreeUi,
     tree: {
       items: filesTree,
       renderTreeItemLeftSlot,

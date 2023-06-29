@@ -69,21 +69,21 @@ const Chat: FC = memo(() => {
     }, 0)
   }, [scrollDownRef.current])
 
-  const renderSidebar = useCallback((isPopover = false) => {
+  const renderSidebar = useCallback((isPopover = false, reverseTreeUi?: boolean) => {
     if (!rootPath)
       return null
 
     return <ContentWrapper $isPopoverContent={isPopover} >
-      <ChatSidebar chatId={activeChatId} rootPath={rootPath}></ChatSidebar>
+      <ChatSidebar chatId={activeChatId} rootPath={rootPath} reverseTreeUi={reverseTreeUi}></ChatSidebar>
     </ContentWrapper >
   }, [activeChatId])
 
-  const renderFileTree = useCallback((isPopover = false) => {
+  const renderFileTree = useCallback((isPopover = false, reverseTreeUi?: boolean) => {
     if (!rootPath)
       return null
 
     return <ContentWrapper $isPopoverContent={isPopover}>
-      <FileTree rootPath={rootPath}></FileTree>
+      <FileTree rootPath={rootPath} reverseTreeUi={reverseTreeUi}></FileTree>
     </ContentWrapper>
   }, [])
 
@@ -100,8 +100,8 @@ const Chat: FC = memo(() => {
     return <ChatPanel
       scrollDownRef={scrollDownRef}
       chatId={activeChatId}
-      chatTreeView={isMobile ? renderSidebar(true) : null}
-      fileTreeView={!showFileTreeOnRightSide ? renderFileTree(true) : null}
+      chatTreeView={isMobile ? renderSidebar(true, true) : null}
+      fileTreeView={!showFileTreeOnRightSide ? renderFileTree(true, true) : null}
       onChatIdChange={updateActiveChatId}
     ></ChatPanel>
   }, [

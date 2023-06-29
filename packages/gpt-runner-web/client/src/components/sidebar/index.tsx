@@ -12,6 +12,7 @@ export interface SidebarProps<OtherInfo extends TreeItemBaseStateOtherInfo = Tre
   placeholder?: string
   loading?: boolean
   tree?: Omit<TreeProps<OtherInfo>, 'filter'>
+  reverseTreeUi?: boolean
   buildTreeItem?: (item: TreeItemProps<OtherInfo>) => TreeItemProps<OtherInfo>
   sortTreeItems?: (items: TreeItemProps<OtherInfo>[]) => TreeItemProps<OtherInfo>[]
   buildTopToolbarSlot?: () => React.ReactNode
@@ -25,6 +26,7 @@ export function Sidebar_<OtherInfo extends TreeItemBaseStateOtherInfo = TreeItem
     placeholder,
     loading,
     tree,
+    reverseTreeUi = false,
     buildTreeItem,
     sortTreeItems,
     buildTopToolbarSlot,
@@ -73,7 +75,9 @@ export function Sidebar_<OtherInfo extends TreeItemBaseStateOtherInfo = TreeItem
     setFinalItems(sortItems(_finalItems))
   }, [buildTreeItem, sortTreeItems, debouncedSearchKeyword, tree?.items])
 
-  return <SidebarWrapper className='sidebar-wrapper'>
+  return <SidebarWrapper style={{
+    flexDirection: reverseTreeUi ? 'column-reverse' : 'column',
+  }}>
     <SidebarHeader>
       {buildTopToolbarSlot?.()}
     </SidebarHeader>
