@@ -13,6 +13,7 @@ import { useGlobalStore } from '../../store/zustand/global'
 import { getGlobalConfig } from '../../helpers/global-config'
 import { ErrorView } from '../../components/error-view'
 import { DragResizeView } from '../../components/drag-resize-view'
+import { Panel } from '../../components/panel'
 import { fetchProjectInfo } from '../../networks/config'
 import { useConfetti } from '../../hooks/use-confetti.hook'
 import { SidebarWrapper, StyledVSCodePanels } from './chat.styles'
@@ -154,29 +155,66 @@ const Chat: FC = memo(() => {
         },
       }
 
-      return <StyledVSCodePanels
-        activeid={tabActiveId}
-        style={viewStyle}
-        onChange={(e: any) => {
-          const activeId = e.target?.activeid as TabId
-          setTabActiveId(activeId)
-          activeId === TabId.Chat && scrollDown()
-          activeId === TabId.About && runConfettiAnime()
-        }}
-      >
+      return <>
+        <Panel
+          activeIdex='1'
+          items={new Array(30).fill(null).map((_, i) => {
+            const id = String(i)
+            return {
+              label: `Tab-${id}`,
+              key: id,
+              children: `Content of tab ${id}`,
+            }
+          })}
+          onChange={(key) => { console.log('key', key) }}
+        />
+        <StyledVSCodePanels
+          activeid={tabActiveId}
+          style={viewStyle}
+          onChange={(e: any) => {
+            const activeId = e.target?.activeid as TabId
+            setTabActiveId(activeId)
+            activeId === TabId.Chat && scrollDown()
+            activeId === TabId.About && runConfettiAnime()
+          }}
+        >
+          {Object.keys(tabIdViewMap).map((tabId) => {
+            const { title } = tabIdViewMap[tabId as TabId]
+            return <VSCodePanelTab key={tabId} id={tabId as TabId}>{title}</VSCodePanelTab>
+          })}
 
-        {Object.keys(tabIdViewMap).map((tabId) => {
-          const { title } = tabIdViewMap[tabId as TabId]
-          return <VSCodePanelTab key={tabId} id={tabId as TabId}>{title}</VSCodePanelTab>
-        })}
+          {Object.keys(tabIdViewMap).map((tabId) => {
+            const { view } = tabIdViewMap[tabId as TabId]
+            return <VSCodePanelView key={tabId} style={viewStyle} id={tabId as TabId}>
+              {view}
+            </VSCodePanelView>
+          })}
+        </StyledVSCodePanels>
+      </>
 
-        {Object.keys(tabIdViewMap).map((tabId) => {
-          const { view } = tabIdViewMap[tabId as TabId]
-          return <VSCodePanelView key={tabId} style={viewStyle} id={tabId as TabId}>
-            {view}
-          </VSCodePanelView>
-        })}
-      </StyledVSCodePanels>
+      // return <StyledVSCodePanels
+      //   activeid={tabActiveId}
+      //   style={viewStyle}
+      //   onChange={(e: any) => {
+      //     const activeId = e.target?.activeid as TabId
+      //     setTabActiveId(activeId)
+      //     activeId === TabId.Chat && scrollDown()
+      //     activeId === TabId.About && runConfettiAnime()
+      //   }}
+      // >
+
+      //   {Object.keys(tabIdViewMap).map((tabId) => {
+      //     const { title } = tabIdViewMap[tabId as TabId]
+      //     return <VSCodePanelTab key={tabId} id={tabId as TabId}>{title}</VSCodePanelTab>
+      //   })}
+
+      //   {Object.keys(tabIdViewMap).map((tabId) => {
+      //     const { view } = tabIdViewMap[tabId as TabId]
+      //     return <VSCodePanelView key={tabId} style={viewStyle} id={tabId as TabId}>
+      //       {view}
+      //     </VSCodePanelView>
+      //   })}
+      // </StyledVSCodePanels>
     }
 
     return <FlexRow style={{ height: '100%' }}>
