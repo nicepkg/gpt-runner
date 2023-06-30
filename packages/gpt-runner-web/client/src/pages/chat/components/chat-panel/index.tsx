@@ -13,7 +13,6 @@ import type { MessageItemProps } from '../../../../components/chat-message-item'
 import { ErrorView } from '../../../../components/error-view'
 import { useGlobalStore } from '../../../../store/zustand/global'
 import type { GptFileTreeItem } from '../../../../store/zustand/global/sidebar-tree.slice'
-import { emitter } from '../../../../helpers/emitter'
 import { getGlobalConfig } from '../../../../helpers/global-config'
 import { PopoverMenu } from '../../../../components/popover-menu'
 import { useKeyboard } from '../../../../hooks/use-keyboard.hook'
@@ -22,6 +21,7 @@ import { useElementSizeRealTime } from '../../../../hooks/use-element-size-real-
 import { useTempStore } from '../../../../store/zustand/temp'
 import type { MessageCodeBlockTheme } from '../../../../components/chat-message-code-block'
 import { isDarkTheme } from '../../../../styles/themes'
+import { useEventEmitter } from '../../../../hooks/use-event-emitter.hook'
 import { ChatPanelPopoverTreeWrapper, ChatPanelWrapper } from './chat-panel.styles'
 import { createRemarkOpenEditorPlugin } from './remark-plugin'
 
@@ -61,6 +61,7 @@ export const ChatPanel: FC<ChatPanelProps> = memo((props) => {
   const [gptFileTreeItem, setGptFileTreeItem] = useState<GptFileTreeItem>()
   const [chatPanelRef, { width: chatPanelWidth }] = useElementSizeRealTime<HTMLDivElement>()
   const { filesRelativePaths } = useTempStore()
+  const emitter = useEventEmitter()
 
   const filesPathsAllPartsInfo = useMemo(() => {
     // not good, but fast

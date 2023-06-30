@@ -16,7 +16,7 @@ import { useGlobalStore } from '../../../../store/zustand/global'
 import type { FileInfoSidebarTreeItem, FileSidebarTreeItem } from '../../../../store/zustand/global/file-tree.slice'
 import { PopoverMenu } from '../../../../components/popover-menu'
 import { useTempStore } from '../../../../store/zustand/temp'
-import { emitter } from '../../../../helpers/emitter'
+import { useEventEmitter } from '../../../../hooks/use-event-emitter.hook'
 import { FileTreeItemRightWrapper, FileTreeSidebarHighlight, FileTreeSidebarUnderSearchWrapper, FilterWrapper } from './file-tree.styles'
 
 export interface FileTreeProps {
@@ -28,6 +28,7 @@ export const FileTree: FC<FileTreeProps> = memo((props: FileTreeProps) => {
   const { rootPath, reverseTreeUi } = props
 
   const { t } = useTranslation()
+  const emitter = useEventEmitter()
   const [filesTree, _setFilesTree] = useState<FileSidebarTreeItem[]>([])
   const fullPathFileMapRef = useRef<Record<string, FileSidebarTreeItem>>({})
   const {
@@ -89,11 +90,6 @@ export const FileTree: FC<FileTreeProps> = memo((props: FileTreeProps) => {
 
     emitter.on(ClientEventName.RefreshTree, refresh)
     emitter.on(ClientEventName.RefreshFileTree, refresh)
-
-    return () => {
-      emitter.off(ClientEventName.RefreshTree, refresh)
-      emitter.off(ClientEventName.RefreshFileTree, refresh)
-    }
   }, [rootPath])
 
   // sync checked state
