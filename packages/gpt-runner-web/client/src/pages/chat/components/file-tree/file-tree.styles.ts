@@ -11,7 +11,7 @@ export const FileTreeItemRightWrapper = styled.div`
 export const FileTreeSidebarUnderSearchWrapper = styled.div`
   font-size: var(--type-ramp-base-font-size);
   color: var(--input-foreground);
-  margin-bottom: 1rem;
+  margin: 0.5rem 0;
 
   & ::part(control) {
     flex-shrink: 0;
@@ -24,6 +24,8 @@ export const FileTreeSidebarHighlight = styled(VSCodeBadge)`
 `
 
 export const FilterWrapper = styled.div`
+  height: max-content;
+  max-height: 50vh;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-gap: 0.5rem;

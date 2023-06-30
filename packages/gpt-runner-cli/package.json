@@ -1,6 +1,6 @@
 {
   "name": "@nicepkg/gpt-runner-cli",
-  "version": "0.2.3",
+  "version": "0.3.0",
   "description": "CLI for GPT Runner",
   "author": {
     "name": "Jinming Yang",
@@ -48,7 +48,7 @@
     "cac": "^6.7.14",
     "chokidar": "^3.5.3",
     "colorette": "^2.0.20",
-    "consola": "^3.1.0",
+    "consola": "^3.2.2",
     "execa": "^7.1.1",
     "wait-port": "^1.0.4"
   }

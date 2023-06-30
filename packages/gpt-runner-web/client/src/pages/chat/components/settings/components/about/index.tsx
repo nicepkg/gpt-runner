@@ -1,5 +1,4 @@
-import type { FC } from 'react'
-import { Fragment, memo } from 'react'
+import { Fragment, forwardRef, memo } from 'react'
 import { VSCodeLink } from '@vscode/webview-ui-toolkit/react'
 import { LocaleLang } from '@nicepkg/gpt-runner-shared/common'
 import { useTranslation } from 'react-i18next'
@@ -8,7 +7,7 @@ import { useGlobalStore } from '../../../../../../store/zustand/global'
 import { useConfetti } from '../../../../../../hooks/use-confetti.hook'
 import { AboutWrapper, Content, List, ListItem, StyledLogo, Title } from './about.styles'
 
-export const About: FC = memo(() => {
+export const About = memo(forwardRef<HTMLDivElement, {}>((_props, ref) => {
   const { t } = useTranslation()
   const { langId } = useGlobalStore()
   const { runConfettiAnime } = useConfetti()
@@ -27,7 +26,7 @@ export const About: FC = memo(() => {
       title: <div
         style={{ userSelect: 'none', width: '100%' }}
         onClick={runConfettiAnime}>
-        <img src="https://contrib.rocks/image?repo=nicepkg/vr360" style={{
+        <img src="https://contrib.rocks/image?repo=nicepkg/gpt-runner" style={{
           maxWidth: '100%',
         }} />
       </div>,
@@ -35,7 +34,7 @@ export const About: FC = memo(() => {
   ]
 
   return (
-    <AboutWrapper>
+    <AboutWrapper ref={ref}>
       <StyledLogo onClick={runConfettiAnime}></StyledLogo>
       <List>
         {data.map((item, index) => (
@@ -49,6 +48,6 @@ export const About: FC = memo(() => {
       </List>
     </AboutWrapper>
   )
-})
+}))
 
 About.displayName = 'About'

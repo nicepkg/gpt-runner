@@ -2,6 +2,7 @@ import { getStorage, sendSuccessResponse, verifyParamsByZod } from '@nicepkg/gpt
 import type { StorageClearReqParams, StorageClearResData, StorageGetItemReqParams, StorageGetItemResData, StorageRemoveItemReqParams, StorageRemoveItemResData, StorageSetItemReqParams, StorageSetItemResData } from '@nicepkg/gpt-runner-shared/common'
 import { ServerStorageName, StorageClearReqParamsSchema, StorageGetItemReqParamsSchema, StorageRemoveItemReqParamsSchema, StorageSetItemReqParamsSchema } from '@nicepkg/gpt-runner-shared/common'
 import type { ControllerConfig } from '../types'
+import { handleStorageKeySet } from '../services/handle-storage-key-set'
 
 export const storageControllers: ControllerConfig = {
   namespacePath: '/storage',
@@ -57,6 +58,7 @@ export const storageControllers: ControllerConfig = {
           throw new Error('Cannot set secrets config when not open in localhost')
 
         await storage.set(key, value)
+        await handleStorageKeySet({ key, value, storageName })
 
         sendSuccessResponse(res, {
           data: null satisfies StorageSetItemResData,

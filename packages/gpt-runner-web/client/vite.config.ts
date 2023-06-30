@@ -3,6 +3,7 @@ import { defineConfig } from 'vite'
 import React from '@vitejs/plugin-react'
 import { EnvConfig } from '@nicepkg/gpt-runner-shared/common'
 import { PathUtils } from '@nicepkg/gpt-runner-shared/node'
+import { alias } from './../../../alias'
 
 const dirname = PathUtils.getCurrentDirName(import.meta.url, () => __dirname)
 
@@ -20,6 +21,11 @@ export default defineConfig({
   ],
   build: {
     outDir: resolvePath('../dist/browser'),
+  },
+  resolve: {
+    alias: {
+      ...alias,
+    },
   },
   server: {
     port: 3006,

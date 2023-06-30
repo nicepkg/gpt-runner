@@ -5,6 +5,17 @@ export const ButtonWrapper = styled.div<{ $hoverShowText?: boolean }>`
   flex-shrink: 0;
   overflow: hidden;
 
+  vscode-button {
+    &:not(:hover) {
+      background: transparent;
+    }
+
+    /* &::part(control) {
+      padding-left: 0.5rem;
+      padding-right: 0.5rem;
+    } */
+  }
+
   ${({ $hoverShowText }) => ($hoverShowText
   ? css`
     & .icon-button-text {

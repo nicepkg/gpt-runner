@@ -1,11 +1,13 @@
 // PopoverMenu.tsx
+import type { CSSProperties } from 'react'
 import React, { memo, useEffect, useLayoutEffect, useState } from 'react'
 import { Popover } from 'react-tiny-popover'
 import { useTranslation } from 'react-i18next'
+import { useWindowSize } from 'react-use'
 import { useHoverByMouseLocation } from '../../hooks/use-hover.hook'
-import { useSize } from '../../hooks/use-size.hook'
 import { Icon } from '../icon'
-import { Children, ChildrenWrapper, Menu, MenuMask, PinBar } from './popover-menu.styles'
+import { useRect } from '../../hooks/use-rect.hook'
+import { Children, ChildrenWrapper, Menu, MenuChildrenWrapper, MenuMask, Toolbar } from './popover-menu.styles'
 
 export interface PopoverMenuChildrenState {
   isHovering: boolean
@@ -18,6 +20,7 @@ type XPosition = 'left' | 'right' | 'center'
 export interface PopoverMenuProps {
   xPosition?: XPosition
   yPosition?: YPosition
+  minusHeightSpace?: number
   menuMaskStyle?: React.CSSProperties
   menuStyle?: React.CSSProperties
   childrenStyle?: React.CSSProperties
@@ -25,7 +28,7 @@ export interface PopoverMenuProps {
   childrenInMenuWhenOpen?: boolean
   zIndex?: number
   clickOutSideToClose?: boolean
-  showTopBar?: boolean
+  showToolbar?: boolean
   onPopoverDisplayChange?: (isPopoverOpen: boolean) => void
   buildMenuSlot: () => React.ReactNode
   buildChildrenSlot: (state: PopoverMenuChildrenState) => React.ReactNode
@@ -35,14 +38,15 @@ export const PopoverMenu: React.FC<PopoverMenuProps> = memo((props) => {
   const {
     xPosition = 'left',
     yPosition = 'top',
+    minusHeightSpace = 24,
     menuMaskStyle,
     menuStyle,
     childrenStyle,
     isPopoverOpen,
     childrenInMenuWhenOpen = false,
-    zIndex = 1,
+    zIndex = 10,
     clickOutSideToClose = true,
-    showTopBar,
+    showToolbar,
     onPopoverDisplayChange,
     buildMenuSlot,
     buildChildrenSlot,
@@ -53,9 +57,10 @@ export const PopoverMenu: React.FC<PopoverMenuProps> = memo((props) => {
   const [childrenHoverRef, isChildrenHovering] = useHoverByMouseLocation()
   const [menuMaskHoverRef, isMenuMaskHovering] = useHoverByMouseLocation()
   const [keepOpen, setKeepOpen] = useState(false)
-  const [, { height: childrenHeight }] = useSize({ ref: childrenHoverRef })
+  const [, { width: childrenWidth, height: childrenHeight, x: childrenX, y: childrenY }] = useRect({ ref: childrenHoverRef })
   const isProvideOpenAndChange = isPopoverOpen !== undefined && onPopoverDisplayChange !== undefined
   const [isPin, setIsPin] = useState(false)
+  const { width: windowWidth, height: windowHeight } = useWindowSize()
 
   const getIsPopoverOpen = () => {
     return isProvideOpenAndChange ? isPopoverOpen : privateIsPopoverOpen
@@ -110,10 +115,22 @@ export const PopoverMenu: React.FC<PopoverMenuProps> = memo((props) => {
     menu?: React.CSSProperties
   }> = {
     left: {
-    },
-    center: {
+      menu: {
+        maxWidth: windowWidth,
+        // width: childrenInMenuWhenOpen ? 'unset' : '100vw',
+      },
     },
     right: {
+      menu: {
+        maxWidth: windowWidth,
+        // width: childrenInMenuWhenOpen ? 'unset' : '100vw',
+      },
+    },
+    center: {
+      menu: {
+        maxWidth: windowWidth,
+        // width: childrenInMenuWhenOpen ? 'unset' : '100vw',
+      },
     },
   }
 
@@ -126,13 +143,39 @@ export const PopoverMenu: React.FC<PopoverMenuProps> = memo((props) => {
         paddingBottom: childrenInMenuWhenOpen ? 0 : '1rem',
         marginBottom: childrenInMenuWhenOpen ? `${-childrenHeight}px` : '-2px',
       },
+      menu: {
+        maxHeight: Math.min(childrenY, windowHeight) - minusHeightSpace,
+        height: childrenInMenuWhenOpen ? 'unset' : '100vh',
+      },
     },
     bottom: {
       menuMask: {
         paddingTop: childrenInMenuWhenOpen ? 0 : '1rem',
         marginTop: childrenInMenuWhenOpen ? `${-childrenHeight}px` : '-2px',
       },
+      menu: {
+        maxHeight: Math.min(windowHeight - childrenY - childrenHeight, windowHeight) - minusHeightSpace,
+        height: childrenInMenuWhenOpen ? 'unset' : '100vh',
+      },
     },
+  }
+
+  const renderToolbar = () => {
+    const toolbarStyle: CSSProperties = {
+      flexDirection: xPosition === 'right' ? 'row-reverse' : 'row',
+      borderBottomWidth: yPosition === 'top' ? '0px' : '1px',
+      borderTopWidth: yPosition === 'bottom' ? '0px' : '1px',
+    }
+
+    const iconStyle: CSSProperties = {
+      marginRight: xPosition === 'right' ? '0' : '0.5rem',
+      marginLeft: xPosition === 'right' ? '0.25rem' : '0',
+    }
+
+    return (showToolbar ?? !childrenInMenuWhenOpen) && <Toolbar style={toolbarStyle}>
+      <Icon title={t('chat_page.close_btn')} className="codicon-close" style={iconStyle} onClick={handleCloseClick} />
+      <Icon title={t('chat_page.pin_up_btn')} className={isPin ? 'codicon-pinned-dirty' : 'codicon-pinned'} onClick={handlePinClick} />
+    </Toolbar>
   }
 
   return (
@@ -144,8 +187,10 @@ export const PopoverMenu: React.FC<PopoverMenuProps> = memo((props) => {
         clickOutSideToClose && handleClose()
       }}
       containerStyle={{
-        zIndex: String(zIndex),
+        zIndex: String(isPin ? zIndex + 10 : zIndex),
         display: getIsPopoverOpen() ? 'block' : 'none',
+        maxWidth: '100vw',
+        maxHeight: '100vh',
       }}
 
       content={() => (
@@ -171,23 +216,24 @@ export const PopoverMenu: React.FC<PopoverMenuProps> = memo((props) => {
                 ...menuStyle,
               }}
             >
-              {(showTopBar ?? !childrenInMenuWhenOpen) && <PinBar>
-                <Icon title={t('chat_page.close_btn')} className="codicon-close" style={{ marginRight: '0.5rem' }} onClick={handleCloseClick} />
-                <Icon title={t('chat_page.pin_up_btn')} className={isPin ? 'codicon-pinned-dirty' : 'codicon-pinned'} onClick={handlePinClick} />
-              </PinBar>}
+              {yPosition === 'bottom' && renderToolbar()}
 
-              {yPosition === 'top' && buildMenuSlot()}
+              <MenuChildrenWrapper>
+                {yPosition === 'top' && buildMenuSlot()}
 
-              {childrenInMenuWhenOpen
-                ? <Children className='popover-menu__menu-children' style={{
-                  width: '100%',
-                  flex: 1,
-                }}>
-                  {buildChildrenSlot({ ...childrenState, isInMenu: true })}
-                </Children>
-                : null}
+                {childrenInMenuWhenOpen
+                  ? <Children className='popover-menu__menu-children' style={{
+                    width: '100%',
+                    flex: 1,
+                  }}>
+                    {buildChildrenSlot({ ...childrenState, isInMenu: true })}
+                  </Children>
+                  : null}
 
-              {yPosition === 'bottom' && buildMenuSlot()}
+                {yPosition === 'bottom' && buildMenuSlot()}
+              </MenuChildrenWrapper>
+
+              {yPosition === 'top' && renderToolbar()}
             </Menu>
           </MenuMask>
         </div>

@@ -13,7 +13,6 @@ import type { MessageItemProps } from '../../../../components/chat-message-item'
 import { ErrorView } from '../../../../components/error-view'
 import { useGlobalStore } from '../../../../store/zustand/global'
 import type { GptFileTreeItem } from '../../../../store/zustand/global/sidebar-tree.slice'
-import { emitter } from '../../../../helpers/emitter'
 import { getGlobalConfig } from '../../../../helpers/global-config'
 import { PopoverMenu } from '../../../../components/popover-menu'
 import { useKeyboard } from '../../../../hooks/use-keyboard.hook'
@@ -22,6 +21,7 @@ import { useElementSizeRealTime } from '../../../../hooks/use-element-size-real-
 import { useTempStore } from '../../../../store/zustand/temp'
 import type { MessageCodeBlockTheme } from '../../../../components/chat-message-code-block'
 import { isDarkTheme } from '../../../../styles/themes'
+import { useEventEmitter } from '../../../../hooks/use-event-emitter.hook'
 import { ChatPanelPopoverTreeWrapper, ChatPanelWrapper } from './chat-panel.styles'
 import { createRemarkOpenEditorPlugin } from './remark-plugin'
 
@@ -29,7 +29,6 @@ export interface ChatPanelProps {
   scrollDownRef: RefObject<any>
   chatTreeView?: React.ReactNode
   fileTreeView?: React.ReactNode
-  settingsView?: React.ReactNode
   chatId: string
   onChatIdChange: (chatId: string) => void
 }
@@ -39,7 +38,6 @@ export const ChatPanel: FC<ChatPanelProps> = memo((props) => {
     scrollDownRef,
     chatTreeView,
     fileTreeView,
-    settingsView,
     chatId,
     onChatIdChange,
   } = props
@@ -63,6 +61,7 @@ export const ChatPanel: FC<ChatPanelProps> = memo((props) => {
   const [gptFileTreeItem, setGptFileTreeItem] = useState<GptFileTreeItem>()
   const [chatPanelRef, { width: chatPanelWidth }] = useElementSizeRealTime<HTMLDivElement>()
   const { filesRelativePaths } = useTempStore()
+  const emitter = useEventEmitter()
 
   const filesPathsAllPartsInfo = useMemo(() => {
     // not good, but fast
@@ -345,8 +344,8 @@ export const ChatPanel: FC<ChatPanelProps> = memo((props) => {
       {/* chat tree */}
       {chatTreeView && <PopoverMenu
         menuMaskStyle={{
-          marginLeft: '1rem',
-          marginRight: '1rem',
+          marginLeft: '0.5rem',
+          marginRight: '0.5rem',
         }}
         buildChildrenSlot={({ isHovering }) => {
           return <IconButton
@@ -367,12 +366,10 @@ export const ChatPanel: FC<ChatPanelProps> = memo((props) => {
 
       {/* file tree */}
       {fileTreeView && <PopoverMenu
-        // isPopoverOpen={true}
-        // onPopoverDisplayChange={() => { }}
         clickOutSideToClose={false}
         menuMaskStyle={{
-          marginLeft: '1rem',
-          marginRight: '1rem',
+          marginLeft: '0.5rem',
+          marginRight: '0.5rem',
         }}
         buildChildrenSlot={({ isHovering }) => {
           return <IconButton
@@ -391,36 +388,11 @@ export const ChatPanel: FC<ChatPanelProps> = memo((props) => {
         }}
       />}
 
-      {/* settings panel */}
-      {settingsView && <PopoverMenu
-        // isPopoverOpen={true}
-        // onPopoverDisplayChange={() => { }}
-        xPosition='center'
-        menuMaskStyle={{
-          marginLeft: '1rem',
-          marginRight: '1rem',
-        }}
-        buildChildrenSlot={({ isHovering }) => {
-          return <IconButton
-            text={t('chat_page.settings_btn')}
-            iconClassName='codicon-gear'
-            hoverShowText={!isHovering}
-            style={{
-              paddingLeft: '0.5rem',
-              paddingRight: '0.5rem',
-            }}
-          ></IconButton>
-        }}
-        buildMenuSlot={() => {
-          return <ChatPanelPopoverTreeWrapper>
-            {settingsView}
-          </ChatPanelPopoverTreeWrapper>
-        }}
-      />}
-
       <PopoverMenu
+        // isPopoverOpen
+        // onPopoverDisplayChange={() => { }}
         xPosition='right'
-        showTopBar={false}
+        showToolbar={false}
         childrenInMenuWhenOpen={true}
         buildChildrenSlot={({ isHovering }) => {
           return <IconButton

@@ -15,16 +15,5 @@ export const ChatPanelWrapper = styled.div`
 `
 
 export const ChatPanelPopoverTreeWrapper = styled.div`
-  & .sidebar-wrapper {
-    width: calc(100vw - 2rem);
-    height: 50vh;
-    background: var(--panel-view-background);
-    max-width: 500px;
-
-    .tree-item__children {
-      &::before {
-        display: none;
-      }
-    }
-  }
+  height: 100%;
 `

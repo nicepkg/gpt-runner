@@ -1,10 +1,10 @@
-import './src/proxy'
 import http from 'node:http'
 import type { Express } from 'express'
 import express from 'express'
 import cors from 'cors'
 import history from 'connect-history-api-fallback'
 import { PathUtils, getPort } from '@nicepkg/gpt-runner-shared/node'
+import { setProxyUrl } from './src/proxy'
 import { processControllers } from './src/controllers'
 import { errorHandlerMiddleware } from './src/middleware'
 
@@ -29,6 +29,8 @@ export async function startServer(props: StartServerProps): Promise<Express> {
   })
 
   process.env.GPTR_BASE_SERVER_URL = `http://localhost:${finalPort}`
+
+  await setProxyUrl()
 
   const app = express()
   const router = express.Router()

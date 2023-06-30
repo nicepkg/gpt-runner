@@ -23,6 +23,7 @@ const queryClient = new QueryClient({
       cacheTime: 0,
       refetchOnWindowFocus: false,
       networkMode: 'offlineFirst',
+      keepPreviousData: true,
       onError: (error) => {
         toast.error(getErrorMsg(error))
       },

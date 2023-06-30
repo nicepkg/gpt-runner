@@ -49,3 +49,8 @@ export enum LocaleLang {
   Japanese = 'ja',
   German = 'de',
 }
+
+export enum SecretStorageKey {
+  Openai = 'openai',
+  Proxy = 'proxy',
+}

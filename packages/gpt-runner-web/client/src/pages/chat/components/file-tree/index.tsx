@@ -16,17 +16,19 @@ import { useGlobalStore } from '../../../../store/zustand/global'
 import type { FileInfoSidebarTreeItem, FileSidebarTreeItem } from '../../../../store/zustand/global/file-tree.slice'
 import { PopoverMenu } from '../../../../components/popover-menu'
 import { useTempStore } from '../../../../store/zustand/temp'
-import { emitter } from '../../../../helpers/emitter'
+import { useEventEmitter } from '../../../../hooks/use-event-emitter.hook'
 import { FileTreeItemRightWrapper, FileTreeSidebarHighlight, FileTreeSidebarUnderSearchWrapper, FilterWrapper } from './file-tree.styles'
 
 export interface FileTreeProps {
   rootPath: string
+  reverseTreeUi?: boolean
 }
 
 export const FileTree: FC<FileTreeProps> = memo((props: FileTreeProps) => {
-  const { rootPath } = props
+  const { rootPath, reverseTreeUi } = props
 
   const { t } = useTranslation()
+  const emitter = useEventEmitter()
   const [filesTree, _setFilesTree] = useState<FileSidebarTreeItem[]>([])
   const fullPathFileMapRef = useRef<Record<string, FileSidebarTreeItem>>({})
   const {
@@ -75,7 +77,6 @@ export const FileTree: FC<FileTreeProps> = memo((props: FileTreeProps) => {
   const { data: fetchCommonFilesTreeRes, isLoading, refetch: refreshFileTree } = useQuery({
     queryKey: ['file-tree', rootPath, excludeFileExts.join(',')],
     enabled: !!rootPath,
-    keepPreviousData: true,
     queryFn: () => fetchCommonFilesTree({
       rootPath,
       excludeExts: excludeFileExts,
@@ -89,11 +90,6 @@ export const FileTree: FC<FileTreeProps> = memo((props: FileTreeProps) => {
 
     emitter.on(ClientEventName.RefreshTree, refresh)
     emitter.on(ClientEventName.RefreshFileTree, refresh)
-
-    return () => {
-      emitter.off(ClientEventName.RefreshTree, refresh)
-      emitter.off(ClientEventName.RefreshFileTree, refresh)
-    }
   }, [rootPath])
 
   // sync checked state
@@ -307,13 +303,15 @@ export const FileTree: FC<FileTreeProps> = memo((props: FileTreeProps) => {
 
     return <>
       <PopoverMenu
-        // isPopoverOpen={true}
-        // onPopoverDisplayChange={() => { }}
-        yPosition='bottom'
+        yPosition={reverseTreeUi ? 'top' : 'bottom'}
         clickOutSideToClose={false}
+        zIndex={999}
         menuMaskStyle={{
           marginLeft: '1rem',
           marginRight: '1rem',
+        }}
+        menuStyle={{
+          height: 'auto',
         }}
         childrenStyle={{
           height: '100%',
@@ -437,6 +435,7 @@ export const FileTree: FC<FileTreeProps> = memo((props: FileTreeProps) => {
   const sidebar: SidebarProps<FileInfoSidebarTreeItem> = {
     placeholder: t('chat_page.search_files_placeholder'),
     loading: isLoading,
+    reverseTreeUi,
     tree: {
       items: filesTree,
       renderTreeItemLeftSlot,

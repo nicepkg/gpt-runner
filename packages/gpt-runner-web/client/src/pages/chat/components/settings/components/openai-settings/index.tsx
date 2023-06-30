@@ -1,4 +1,4 @@
-import { ChatModelType, DEFAULT_OPENAI_API_BASE_PATH, type OpenaiSecrets, ServerStorageName } from '@nicepkg/gpt-runner-shared/common'
+import { DEFAULT_OPENAI_API_BASE_PATH, type OpenaiSecrets, SecretStorageKey, ServerStorageName } from '@nicepkg/gpt-runner-shared/common'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { type FC, memo, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
@@ -9,7 +9,7 @@ import { getServerStorage, saveServerStorage } from '../../../../../../networks/
 import { useLoading } from '../../../../../../hooks/use-loading.hook'
 import { HookFormInput } from '../../../../../../components/hook-form/hook-form-input'
 import { HookFormTextarea } from '../../../../../../components/hook-form/hook-form-textarea'
-import { IS_LOCAL_HOST, MAYBE_IDE } from '../../../../../../helpers/constant'
+import { CAN_SETTING_SECRETS } from '../../../../../../helpers/constant'
 import { StyledForm, StyledFormItem } from '../../settings.styles'
 
 export interface FormData extends Pick<OpenaiSecrets, 'apiKey' | 'accessToken' | 'basePath'> {
@@ -20,24 +20,23 @@ export const OpenaiSettings: FC = memo(() => {
   const { t } = useTranslation()
   const { setLoading } = useLoading()
   const { data: querySecretsRes } = useQuery({
-    queryKey: ['secrets', ChatModelType.Openai],
+    queryKey: ['secrets', SecretStorageKey.Openai],
     queryFn: () => getServerStorage({
       storageName: ServerStorageName.SecretsConfig,
-      key: ChatModelType.Openai,
+      key: SecretStorageKey.Openai,
     }),
   })
 
   const { mutateAsync: saveSecrets } = useMutation({
-    mutationKey: ['secrets', ChatModelType.Openai],
+    mutationKey: ['secrets', SecretStorageKey.Openai],
     mutationFn: (value: FormData) => saveServerStorage({
       storageName: ServerStorageName.SecretsConfig,
-      key: ChatModelType.Openai,
+      key: SecretStorageKey.Openai,
       value,
     }),
   })
 
   const remoteSecrets = querySecretsRes?.data?.value as OpenaiSecrets | undefined
-  const canSettingSecrets = IS_LOCAL_HOST || MAYBE_IDE
 
   const { handleSubmit, formState, control, setValue } = useForm<FormData>({
     mode: 'onBlur',
@@ -100,11 +99,11 @@ export const OpenaiSettings: FC = memo(() => {
     </StyledFormItem>
 
     <VSCodeButton
-      disabled={!canSettingSecrets}
+      disabled={!CAN_SETTING_SECRETS}
       appearance='primary'
       type='submit'
     >
-      {canSettingSecrets ? t('chat_page.save_btn') : t('chat_page.disabled_save_openai_config_btn')}
+      {CAN_SETTING_SECRETS ? t('chat_page.save_btn') : t('chat_page.disabled_save_secrets_config_btn')}
     </VSCodeButton>
   </StyledForm>
 })

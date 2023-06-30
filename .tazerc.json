@@ -1,16 +1,12 @@
 {
   "exclude": [
-    "find-up",
-    "gzip-size",
     "@types/vscode",
-    "codemirror",
-    "@vue/cli-plugin-babel",
-    "@vue/cli-service",
     "unbuild",
-    "msw"
+    "msw",
+    "open",
+    "commander"
   ],
   "packageMode": {
-    "vue": "minor",
-    "nuxt": "minor"
+    "react": "minor"
   }
 }

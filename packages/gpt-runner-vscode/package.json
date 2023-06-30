@@ -1,8 +1,8 @@
 {
   "publisher": "nicepkg",
-  "name": "@nicepkg/gpt-runner-vscode",
+  "name": "gpt-runner",
   "displayName": "GPT Runner",
-  "version": "0.2.3",
+  "version": "0.3.0",
   "private": true,
   "description": "GPT Runner for VS Code",
   "license": "MIT",
@@ -115,6 +115,7 @@
     "eventemitter3": "^5.0.1",
     "execa": "^7.1.1",
     "fs-extra": "^11.1.1",
+    "jiti": "^1.18.2",
     "uuid": "^9.0.0"
   }
 }

@@ -12,17 +12,18 @@ import { IconButton } from '../../../../components/icon-button'
 import { ErrorView } from '../../../../components/error-view'
 import { useGlobalStore } from '../../../../store/zustand/global'
 import { useChatInstance } from '../../../../hooks/use-chat-instance.hook'
-import { emitter } from '../../../../helpers/emitter'
+import { useEventEmitter } from '../../../../hooks/use-event-emitter.hook'
 
 export interface ChatSidebarProps {
   rootPath: string
   chatId: string
+  reverseTreeUi?: boolean
 }
 
 export type GptTreeItemOtherInfo = GptFileInfoTreeItem
 
 export const ChatSidebar: FC<ChatSidebarProps> = memo((props) => {
-  const { rootPath, chatId } = props
+  const { rootPath, chatId, reverseTreeUi } = props
 
   const { t } = useTranslation()
   const {
@@ -35,6 +36,7 @@ export const ChatSidebar: FC<ChatSidebarProps> = memo((props) => {
   } = useGlobalStore()
 
   const [isLoading, setIsLoading] = useState(false)
+  const emitter = useEventEmitter()
 
   const { removeChatInstance } = useChatInstance({
     chatId,
@@ -60,11 +62,6 @@ export const ChatSidebar: FC<ChatSidebarProps> = memo((props) => {
 
     emitter.on(ClientEventName.RefreshTree, refreshSidebarTree)
     emitter.on(ClientEventName.RefreshChatTree, refreshSidebarTree)
-
-    return () => {
-      emitter.off(ClientEventName.RefreshTree, refreshSidebarTree)
-      emitter.off(ClientEventName.RefreshChatTree, refreshSidebarTree)
-    }
   }, [rootPath])
 
   const handleCreateChat = useCallback((gptFileId: string) => {
@@ -183,6 +180,7 @@ export const ChatSidebar: FC<ChatSidebarProps> = memo((props) => {
   const sidebar: SidebarProps<GptTreeItemOtherInfo> = {
     placeholder: t('chat_page.search_placeholder'),
     loading: isLoading,
+    reverseTreeUi,
     tree: {
       items: sidebarTree,
       renderTreeItemLeftSlot,
