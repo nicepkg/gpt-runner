@@ -8,6 +8,8 @@ export interface State {
   activeEditor: vscode.TextEditor | null
   insertCodes: string
   diffCodes: string
+  openingFilePaths: string[]
+  activeFilePath: string
 }
 
 export const state: State = {
@@ -17,5 +19,7 @@ export const state: State = {
   webviewPanels: new Set(),
   activeEditor: null,
   insertCodes: '',
-  diffCodes: 'aaa',
+  diffCodes: '',
+  openingFilePaths: [],
+  activeFilePath: '',
 }

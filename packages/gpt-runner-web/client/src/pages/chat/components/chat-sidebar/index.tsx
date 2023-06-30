@@ -12,7 +12,7 @@ import { IconButton } from '../../../../components/icon-button'
 import { ErrorView } from '../../../../components/error-view'
 import { useGlobalStore } from '../../../../store/zustand/global'
 import { useChatInstance } from '../../../../hooks/use-chat-instance.hook'
-import { useEventEmitter } from '../../../../hooks/use-event-emitter.hook'
+import { useOn } from '../../../../hooks/use-on.hook'
 
 export interface ChatSidebarProps {
   rootPath: string
@@ -36,7 +36,6 @@ export const ChatSidebar: FC<ChatSidebarProps> = memo((props) => {
   } = useGlobalStore()
 
   const [isLoading, setIsLoading] = useState(false)
-  const emitter = useEventEmitter()
 
   const { removeChatInstance } = useChatInstance({
     chatId,
@@ -59,10 +58,13 @@ export const ChatSidebar: FC<ChatSidebarProps> = memo((props) => {
 
   useEffect(() => {
     refreshSidebarTree()
-
-    emitter.on(ClientEventName.RefreshTree, refreshSidebarTree)
-    emitter.on(ClientEventName.RefreshChatTree, refreshSidebarTree)
   }, [rootPath])
+
+  useOn({
+    eventName: [ClientEventName.RefreshTree, ClientEventName.RefreshChatTree],
+    listener: refreshSidebarTree,
+    deps: [refreshSidebarTree],
+  })
 
   const handleCreateChat = useCallback((gptFileId: string) => {
     createChatAndActive(gptFileId)

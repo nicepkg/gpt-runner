@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import type { ChatStreamReqParams, GetCommonFilesReqParams, GetGptFileInfoReqParams, GetGptFilesReqParams, GetUserConfigReqParams, InitGptFilesReqParams, OpenEditorReqParams, StorageClearReqParams, StorageGetItemReqParams, StorageRemoveItemReqParams, StorageSetItemReqParams } from '../types'
-import { SingleChatMessageSchema, SingleFileConfigSchema } from './config.zod'
+import { SingleChatMessageSchema, SingleFileConfigSchema } from './config'
 import { ServerStorageNameSchema } from './enum.zod'
 
 export const ChatStreamReqParamsSchema = z.object({

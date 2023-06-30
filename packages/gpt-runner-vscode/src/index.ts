@@ -13,6 +13,7 @@ import { registerDiffCodes } from './register/diff-codes'
 import { registerOpenInBrowser } from './register/open-in-browser'
 import { registerStatusBar } from './register/status-bar'
 import { registerCompletion } from './register/completion'
+import { registerSyncOpeningFilePaths } from './register/sync-opening-file-paths'
 
 async function registerRoot(ext: ExtensionContext, status: StatusBarItem, cwd: string) {
   const contextLoader = new ContextLoader(cwd)
@@ -30,6 +31,7 @@ async function registerRoot(ext: ExtensionContext, status: StatusBarItem, cwd: s
   await registerInsertCodes(cwd, contextLoader, ext)
   await registerDiffCodes(cwd, contextLoader, ext)
   await registerCompletion(cwd, contextLoader, ext)
+  await registerSyncOpeningFilePaths(cwd, contextLoader, ext)
 
   return contextLoader
 }

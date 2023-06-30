@@ -84,10 +84,10 @@ export function travelTreeDeepFirst<T extends TreeItem<Record<string, any>>, R e
 
 export function tryParseJson(str: string) {
   try {
-    return JSON.parse(str)
+    return JSON.parse(str?.trim() ?? '')
   }
   catch (e) {
-    console.error('tryParseJson error: ', e)
+    console.error('tryParseJson error: ', str, e)
     return {}
   }
 }

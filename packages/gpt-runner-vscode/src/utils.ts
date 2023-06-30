@@ -61,3 +61,7 @@ export function getLang(): LocaleLang {
 
   return vscodeToMyLangMap.get(vscodeLang) || LocaleLang.English
 }
+
+export function docIsFile(doc: vscode.TextDocument | null | undefined) {
+  return doc?.uri?.scheme === 'file'
+}

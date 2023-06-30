@@ -29,6 +29,7 @@ export interface PopoverMenuProps {
   zIndex?: number
   clickOutSideToClose?: boolean
   showToolbar?: boolean
+  clickMode?: boolean
   onPopoverDisplayChange?: (isPopoverOpen: boolean) => void
   buildMenuSlot: () => React.ReactNode
   buildChildrenSlot: (state: PopoverMenuChildrenState) => React.ReactNode
@@ -47,6 +48,7 @@ export const PopoverMenu: React.FC<PopoverMenuProps> = memo((props) => {
     zIndex = 10,
     clickOutSideToClose = true,
     showToolbar,
+    clickMode = false,
     onPopoverDisplayChange,
     buildMenuSlot,
     buildChildrenSlot,
@@ -102,6 +104,9 @@ export const PopoverMenu: React.FC<PopoverMenuProps> = memo((props) => {
   }
 
   useLayoutEffect(() => {
+    if (clickMode)
+      return
+
     const finalIsPopoverOpen = (isChildrenHovering || isMenuMaskHovering)
 
     if (childrenInMenuWhenOpen && !finalIsPopoverOpen)
@@ -161,6 +166,8 @@ export const PopoverMenu: React.FC<PopoverMenuProps> = memo((props) => {
   }
 
   const renderToolbar = () => {
+    const defaultShowToolbar = !childrenInMenuWhenOpen && !clickMode
+
     const toolbarStyle: CSSProperties = {
       flexDirection: xPosition === 'right' ? 'row-reverse' : 'row',
       borderBottomWidth: yPosition === 'top' ? '0px' : '1px',
@@ -172,7 +179,7 @@ export const PopoverMenu: React.FC<PopoverMenuProps> = memo((props) => {
       marginLeft: xPosition === 'right' ? '0.25rem' : '0',
     }
 
-    return (showToolbar ?? !childrenInMenuWhenOpen) && <Toolbar style={toolbarStyle}>
+    return (showToolbar ?? defaultShowToolbar) && <Toolbar style={toolbarStyle}>
       <Icon title={t('chat_page.close_btn')} className="codicon-close" style={iconStyle} onClick={handleCloseClick} />
       <Icon title={t('chat_page.pin_up_btn')} className={isPin ? 'codicon-pinned-dirty' : 'codicon-pinned'} onClick={handlePinClick} />
     </Toolbar>
@@ -186,6 +193,7 @@ export const PopoverMenu: React.FC<PopoverMenuProps> = memo((props) => {
       onClickOutside={() => {
         clickOutSideToClose && handleClose()
       }}
+      clickOutsideCapture={false}
       containerStyle={{
         zIndex: String(isPin ? zIndex + 10 : zIndex),
         display: getIsPopoverOpen() ? 'block' : 'none',
@@ -198,7 +206,7 @@ export const PopoverMenu: React.FC<PopoverMenuProps> = memo((props) => {
           <MenuMask
             ref={menuMaskHoverRef}
             onMouseLeave={() => {
-              if (!childrenInMenuWhenOpen)
+              if (clickMode)
                 return
 
               handleClose()
@@ -214,6 +222,10 @@ export const PopoverMenu: React.FC<PopoverMenuProps> = memo((props) => {
                 ...xPositionMenuStyleMap[xPosition].menu,
                 ...yPositionMenuStyleMap[yPosition].menu,
                 ...menuStyle,
+              }}
+              onClick={(e: any) => {
+                e.stopPropagation()
+                return false
               }}
             >
               {yPosition === 'bottom' && renderToolbar()}
@@ -239,7 +251,14 @@ export const PopoverMenu: React.FC<PopoverMenuProps> = memo((props) => {
         </div>
       )}
     >
-      <ChildrenWrapper>
+      <ChildrenWrapper onClick={() => {
+        if (!clickMode)
+          return
+        getIsPopoverOpen() ? handleClose() : handleOpen()
+
+        if (!clickOutSideToClose)
+          setIsPin(true)
+      }}>
         <Children
           ref={childrenHoverRef}
           style={{

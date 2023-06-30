@@ -1,5 +1,5 @@
 import type { StateCreator } from 'zustand'
-import type { SingleChat } from '@nicepkg/gpt-runner-shared/common'
+import type { ChatModelTypeMap, SingleChat } from '@nicepkg/gpt-runner-shared/common'
 import { ChatMessageStatus, ChatRole, STREAM_DONE_FLAG, travelTree } from '@nicepkg/gpt-runner-shared/common'
 import { v4 as uuidv4 } from 'uuid'
 import type { GetState } from '../types'
@@ -16,6 +16,7 @@ export enum GenerateAnswerType {
 export interface ChatSlice {
   activeChatId: string
   chatInstances: SingleChat[]
+  modelOverrideConfig: Partial<ChatModelTypeMap>
   updateActiveChatId: (activeChatId: string) => void
 
   /**
@@ -38,6 +39,7 @@ export interface ChatSlice {
   generateChatAnswer: (chatId: string, type?: GenerateAnswerType) => Promise<void>
   regenerateLastChatAnswer: (chatId: string) => Promise<void>
   stopGeneratingChatAnswer: (chatId: string) => void
+  updateModelOverrideConfig: (modelOverrideConfig: Partial<ChatModelTypeMap> | ((oldModelOverrideConfig: Partial<ChatModelTypeMap>) => ChatModelTypeMap)) => void
 }
 
 export type ChatState = GetState<ChatSlice>
@@ -46,6 +48,7 @@ function getInitialState() {
   return {
     activeChatId: '',
     chatInstances: [],
+    modelOverrideConfig: {},
   } satisfies ChatState
 }
 
@@ -338,5 +341,11 @@ export const createChatSlice: StateCreator<
     state.updateChatInstance(chatId, {
       status: ChatMessageStatus.Success,
     }, false)
+  },
+  updateModelOverrideConfig(modelOverrideConfig) {
+    const state = get()
+    const finalModelOverrideConfig = typeof modelOverrideConfig === 'function' ? modelOverrideConfig(state.modelOverrideConfig) : modelOverrideConfig
+
+    set({ modelOverrideConfig: finalModelOverrideConfig })
   },
 })

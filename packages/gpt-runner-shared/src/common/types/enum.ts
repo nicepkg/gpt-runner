@@ -1,5 +1,6 @@
 export enum ChatModelType {
   Openai = 'openai',
+  HuggingFace = 'huggingFace',
 }
 
 export enum ChatRole {
@@ -15,11 +16,14 @@ export enum ChatMessageStatus {
 }
 
 export enum ClientEventName {
+  InitSuccess = 'initSuccess',
   RefreshTree = 'refreshTree',
   RefreshChatTree = 'refreshChatTree',
   RefreshFileTree = 'refreshFileTree',
   InsertCodes = 'insertCodes',
   DiffCodes = 'diffCodes',
+  UpdateIdeOpeningFiles = 'updateIdeOpeningFiles',
+  UpdateIdeActiveFilePath = 'updateIdeActiveFilePath',
 }
 
 export enum GptFileTreeItemType {

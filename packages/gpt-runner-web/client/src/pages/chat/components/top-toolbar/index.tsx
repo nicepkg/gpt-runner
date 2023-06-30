@@ -1,5 +1,4 @@
-import type { FC } from 'react'
-import { memo } from 'react'
+import { forwardRef, memo } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { PopoverMenuProps } from '../../../../components/popover-menu'
 import { PopoverMenu } from '../../../../components/popover-menu'
@@ -14,7 +13,7 @@ export interface TopToolbarProps {
   aboutView?: React.ReactNode
 }
 
-export const TopToolbar: FC<TopToolbarProps> = memo((props) => {
+export const TopToolbar = memo(forwardRef<HTMLDivElement, TopToolbarProps>((props, ref) => {
   const { settingsView, configInfoView, aboutView } = props
 
   const { t } = useTranslation()
@@ -33,22 +32,25 @@ export const TopToolbar: FC<TopToolbarProps> = memo((props) => {
     menuView: settingsView,
   }, {
     text: t('chat_page.settings_tab_config_info'),
+    alwaysShowText: true,
     iconClassName: 'codicon-gist',
     menuView: configInfoView,
   }, {
     text: t('chat_page.settings_tab_about'),
+    alwaysShowText: true,
     iconClassName: 'codicon-info',
     menuView: aboutView,
   }]
 
   return <>
-    <TopToolbarWrapper>
+    <TopToolbarWrapper ref={ref}>
       {popMenus.map((popMenu, index) => {
         const { text, alwaysShowText, iconClassName, menuView, menuProps } = popMenu
 
         return <PopoverMenu
           key={index}
-          xPosition='right'
+          clickMode
+          xPosition='center'
           yPosition='bottom'
           menuMaskStyle={{
             marginLeft: '0',
@@ -59,7 +61,7 @@ export const TopToolbar: FC<TopToolbarProps> = memo((props) => {
             border: isMobile ? 'none' : '',
             width: isMobile ? '100vw' : '',
           }}
-          minusHeightSpace={10}
+          minusHeightSpace={isMobile ? 10 : 100}
           buildChildrenSlot={({ isHovering }) => {
             return <IconButton
               text={text}
@@ -81,6 +83,6 @@ export const TopToolbar: FC<TopToolbarProps> = memo((props) => {
     </TopToolbarWrapper>
     <TopToolbarBlank />
   </>
-})
+}))
 
 TopToolbar.displayName = 'TopToolbar'

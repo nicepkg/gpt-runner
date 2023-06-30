@@ -13,7 +13,7 @@ import { LoadingView } from '../../../../components/loading-view'
 import { useConfetti } from '../../../../hooks/use-confetti.hook'
 import { useElementVisible } from '../../../../hooks/use-element-visible.hook'
 import { ConfigInfoTitle, ConfigInfoWrapper } from './settings.styles'
-import { OpenaiSettings } from './components/openai-settings'
+import { OpenaiSecretsSettings } from './components/openai-settings/secrets-settings'
 import { GeneralSettings } from './components/general-settings'
 import { About } from './components/about'
 import { ProxySettings } from './components/proxy-settings'
@@ -83,7 +83,7 @@ export const Settings: FC<SettingsProps> = memo((props) => {
       <ConfigInfoTitle>{t('chat_page.settings_proxy')}</ConfigInfoTitle>
       <ProxySettings></ProxySettings>
       <ConfigInfoTitle>{t('chat_page.settings_openai_config')}</ConfigInfoTitle>
-      <OpenaiSettings></OpenaiSettings>
+      <OpenaiSecretsSettings></OpenaiSecretsSettings>
     </ConfigInfoWrapper>
   }
 

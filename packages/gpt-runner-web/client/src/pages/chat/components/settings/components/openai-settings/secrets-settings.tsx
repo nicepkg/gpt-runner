@@ -9,14 +9,13 @@ import { getServerStorage, saveServerStorage } from '../../../../../../networks/
 import { useLoading } from '../../../../../../hooks/use-loading.hook'
 import { HookFormInput } from '../../../../../../components/hook-form/hook-form-input'
 import { HookFormTextarea } from '../../../../../../components/hook-form/hook-form-textarea'
-import { CAN_SETTING_SECRETS } from '../../../../../../helpers/constant'
+import { IS_SAFE } from '../../../../../../helpers/constant'
 import { StyledForm, StyledFormItem } from '../../settings.styles'
 
 export interface FormData extends Pick<OpenaiSecrets, 'apiKey' | 'accessToken' | 'basePath'> {
-
 }
 
-export const OpenaiSettings: FC = memo(() => {
+export const OpenaiSecretsSettings: FC = memo(() => {
   const { t } = useTranslation()
   const { setLoading } = useLoading()
   const { data: querySecretsRes } = useQuery({
@@ -99,13 +98,13 @@ export const OpenaiSettings: FC = memo(() => {
     </StyledFormItem>
 
     <VSCodeButton
-      disabled={!CAN_SETTING_SECRETS}
+      disabled={!IS_SAFE}
       appearance='primary'
       type='submit'
     >
-      {CAN_SETTING_SECRETS ? t('chat_page.save_btn') : t('chat_page.disabled_save_secrets_config_btn')}
+      {IS_SAFE ? t('chat_page.save_btn') : t('chat_page.disabled_save_secrets_config_btn')}
     </VSCodeButton>
   </StyledForm>
 })
 
-OpenaiSettings.displayName = 'OpenaiSettings'
+OpenaiSecretsSettings.displayName = 'OpenaiSecretsSettings'

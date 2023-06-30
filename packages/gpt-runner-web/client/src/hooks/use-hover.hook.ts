@@ -1,5 +1,5 @@
 import type { RefObject } from 'react'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 
 export function useHover<Ref extends RefObject<any>>() {
   const [isHover, setIsHover] = useState(false)
@@ -35,15 +35,13 @@ export function useHover<Ref extends RefObject<any>>() {
 
 export function useHoverByMouseLocation<Ref extends RefObject<any>>() {
   const [isHover, setIsHover] = useState(false)
-  const isHoverRef = useRef(isHover)
   const ref = useRef(null) as Ref
   const [mouseLocation, setMouseLocation] = useState<{ x: number; y: number }>({ x: 0, y: 0 })
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const refBoundRect = ref.current?.getBoundingClientRect()
 
     if (!ref.current || (refBoundRect.height === 0 && refBoundRect.width === 0)) {
-      isHoverRef.current = false
       setIsHover(false)
       return
     }
@@ -53,7 +51,6 @@ export function useHoverByMouseLocation<Ref extends RefObject<any>>() {
     && mouseLocation.y >= refBoundRect.y
     && mouseLocation.y <= refBoundRect.y + refBoundRect.height
 
-    isHoverRef.current = isHover
     setIsHover(isHover)
   }, [ref, mouseLocation.x, mouseLocation.y])
 
@@ -67,7 +64,7 @@ export function useHoverByMouseLocation<Ref extends RefObject<any>>() {
       setMouseLocation({ x: -1, y: -1 })
     }
 
-    window.addEventListener('mousemove', handleMouseMove)
+    window.addEventListener('mousemove', handleMouseMove, { capture: true })
     document.addEventListener('mouseleave', handleMouseLeave)
     return () => {
       window.removeEventListener('mousemove', handleMouseMove)
@@ -75,5 +72,5 @@ export function useHoverByMouseLocation<Ref extends RefObject<any>>() {
     }
   }, [])
 
-  return [ref as Ref, isHover, isHoverRef] as const
+  return [ref as Ref, isHover] as const
 }

@@ -12,7 +12,7 @@ export const ChatMessageInput: FC<ChatMessageInputProps> = memo((props) => {
   const { value = '', toolbarSlot, showTopLogo = false, showBottomLogo = false, onChange } = props
 
   return <Wrapper style={{
-    paddingBottom: showBottomLogo ? 'unset' : 0,
+    paddingBottom: showBottomLogo ? 'unset' : '0.5rem',
   }}>
     <ToolbarWrapper>
       {toolbarSlot}

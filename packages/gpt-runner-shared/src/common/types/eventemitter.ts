@@ -1,6 +1,8 @@
 import type { ClientEventName } from './enum'
 
 export interface ClientEventData {
+  [ClientEventName.InitSuccess]: void
+
   [ClientEventName.RefreshTree]: void
 
   [ClientEventName.RefreshChatTree]: void
@@ -15,8 +17,15 @@ export interface ClientEventData {
     codes: string
   }
 
+  [ClientEventName.UpdateIdeOpeningFiles]: {
+    filePaths: string[]
+  }
+
+  [ClientEventName.UpdateIdeActiveFilePath]: {
+    filePath: string
+  }
 }
 
 export type EventEmitterMap = {
-  [K in ClientEventName]: (data: ClientEventData[K]) => void
+  [K in ClientEventName]: (data: ClientEventData[K]) => any
 }

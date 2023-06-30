@@ -21,7 +21,7 @@ import { useElementSizeRealTime } from '../../../../hooks/use-element-size-real-
 import { useTempStore } from '../../../../store/zustand/temp'
 import type { MessageCodeBlockTheme } from '../../../../components/chat-message-code-block'
 import { isDarkTheme } from '../../../../styles/themes'
-import { useEventEmitter } from '../../../../hooks/use-event-emitter.hook'
+import { emitter } from '../../../../helpers/emitter'
 import { ChatPanelPopoverTreeWrapper, ChatPanelWrapper } from './chat-panel.styles'
 import { createRemarkOpenEditorPlugin } from './remark-plugin'
 
@@ -59,9 +59,8 @@ export const ChatPanel: FC<ChatPanelProps> = memo((props) => {
 
   const status = chatInstance?.status ?? ChatMessageStatus.Success
   const [gptFileTreeItem, setGptFileTreeItem] = useState<GptFileTreeItem>()
-  const [chatPanelRef, { width: chatPanelWidth }] = useElementSizeRealTime<HTMLDivElement>()
+  const [chatPanelRef, { width: chatPanelWidth, height: chatPanelHeight }] = useElementSizeRealTime<HTMLDivElement>()
   const { filesRelativePaths } = useTempStore()
-  const emitter = useEventEmitter()
 
   const filesPathsAllPartsInfo = useMemo(() => {
     // not good, but fast
@@ -343,9 +342,13 @@ export const ChatPanel: FC<ChatPanelProps> = memo((props) => {
       {/* right icon */}
       {/* chat tree */}
       {chatTreeView && <PopoverMenu
+        clickMode
         menuMaskStyle={{
           marginLeft: '0.5rem',
           marginRight: '0.5rem',
+        }}
+        menuStyle={{
+          height: chatPanelHeight - 400,
         }}
         buildChildrenSlot={({ isHovering }) => {
           return <IconButton
@@ -366,7 +369,7 @@ export const ChatPanel: FC<ChatPanelProps> = memo((props) => {
 
       {/* file tree */}
       {fileTreeView && <PopoverMenu
-        clickOutSideToClose={false}
+        clickMode
         menuMaskStyle={{
           marginLeft: '0.5rem',
           marginRight: '0.5rem',
@@ -440,7 +443,7 @@ export const ChatPanel: FC<ChatPanelProps> = memo((props) => {
       dragDirectionConfigs={[
         {
           direction: 'top',
-          boundary: [-300, 50],
+          boundary: [-300, 100],
         },
       ]}>
       <ChatMessageInput

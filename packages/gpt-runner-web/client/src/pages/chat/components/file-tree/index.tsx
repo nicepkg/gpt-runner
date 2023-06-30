@@ -16,7 +16,7 @@ import { useGlobalStore } from '../../../../store/zustand/global'
 import type { FileInfoSidebarTreeItem, FileSidebarTreeItem } from '../../../../store/zustand/global/file-tree.slice'
 import { PopoverMenu } from '../../../../components/popover-menu'
 import { useTempStore } from '../../../../store/zustand/temp'
-import { useEventEmitter } from '../../../../hooks/use-event-emitter.hook'
+import { useOn } from '../../../../hooks/use-on.hook'
 import { FileTreeItemRightWrapper, FileTreeSidebarHighlight, FileTreeSidebarUnderSearchWrapper, FilterWrapper } from './file-tree.styles'
 
 export interface FileTreeProps {
@@ -28,7 +28,6 @@ export const FileTree: FC<FileTreeProps> = memo((props: FileTreeProps) => {
   const { rootPath, reverseTreeUi } = props
 
   const { t } = useTranslation()
-  const emitter = useEventEmitter()
   const [filesTree, _setFilesTree] = useState<FileSidebarTreeItem[]>([])
   const fullPathFileMapRef = useRef<Record<string, FileSidebarTreeItem>>({})
   const {
@@ -83,14 +82,11 @@ export const FileTree: FC<FileTreeProps> = memo((props: FileTreeProps) => {
     }),
   })
 
-  useEffect(() => {
-    const refresh = () => {
-      refreshFileTree()
-    }
-
-    emitter.on(ClientEventName.RefreshTree, refresh)
-    emitter.on(ClientEventName.RefreshFileTree, refresh)
-  }, [rootPath])
+  useOn({
+    eventName: [ClientEventName.RefreshTree, ClientEventName.RefreshFileTree],
+    listener: () => refreshFileTree(),
+    deps: [refreshFileTree],
+  })
 
   // sync checked state
   useEffect(() => {
@@ -304,7 +300,7 @@ export const FileTree: FC<FileTreeProps> = memo((props: FileTreeProps) => {
     return <>
       <PopoverMenu
         yPosition={reverseTreeUi ? 'top' : 'bottom'}
-        clickOutSideToClose={false}
+        clickMode
         zIndex={999}
         menuMaskStyle={{
           marginLeft: '1rem',

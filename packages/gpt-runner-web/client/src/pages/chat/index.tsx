@@ -14,6 +14,8 @@ import { getGlobalConfig } from '../../helpers/global-config'
 import { ErrorView } from '../../components/error-view'
 import { DragResizeView } from '../../components/drag-resize-view'
 import { fetchProjectInfo } from '../../networks/config'
+import { useEmitBind } from '../../hooks/use-emit-bind.hook'
+import { useSize } from '../../hooks/use-size.hook'
 import { ContentWrapper, StyledVSCodePanels } from './chat.styles'
 import { ChatSidebar } from './components/chat-sidebar'
 import { ChatPanel } from './components/chat-panel'
@@ -34,16 +36,21 @@ const Chat: FC = memo(() => {
   const { t } = useTranslation()
   const isMobile = useIsMobile()
   const { width: windowWidth, height: windowHeight } = useWindowSize()
+  const [toolbarRef, { height: toolbarHeight }] = useSize<HTMLDivElement>()
   const { activeChatId, sidebarTree, updateActiveChatId, updateSidebarTreeFromRemote } = useGlobalStore()
   const { chatInstance } = useChatInstance({ chatId: activeChatId })
   const [scrollDownRef, scrollDown, getScrollBottom] = useScrollDown()
   const [tabActiveId, setTabActiveId] = useState(TabId.Presets)
   const showFileTreeOnRightSide = windowWidth >= 1000
+  const chatPanelHeight = windowHeight - toolbarHeight
+
   const { data: fetchProjectInfoRes } = useQuery({
     queryKey: ['fetchProjectInfo'],
     queryFn: () => fetchProjectInfo(),
   })
   const rootPath = getGlobalConfig().rootPath
+
+  useEmitBind([rootPath])
 
   // when active chat id change, change tab active id
   useEffect(() => {
@@ -129,7 +136,7 @@ const Chat: FC = memo(() => {
         overflowY: 'auto',
       }
 
-      const tabIdViewMap: Partial<Record<TabId, { title: string; view: JSX.Element | null }>> = {
+      const tabIdViewMap: Partial<Record<TabId, { title: React.ReactNode; view: React.ReactNode }>> = {
         [TabId.Presets]: {
           title: t('chat_page.tab_presets'),
           view: renderSidebar(),
@@ -168,10 +175,10 @@ const Chat: FC = memo(() => {
       </StyledVSCodePanels>
     }
 
-    return <FlexRow style={{ height: '100%' }}>
+    return <FlexRow style={{ height: '100%', overflow: 'hidden' }}>
       <DragResizeView
         initWidth={300}
-        initHeight={windowHeight}
+        initHeight={chatPanelHeight}
         dragDirectionConfigs={[
           {
             direction: 'right',
@@ -186,7 +193,7 @@ const Chat: FC = memo(() => {
       {showFileTreeOnRightSide
         ? <DragResizeView
           initWidth={300}
-          initHeight={windowHeight}
+          initHeight={chatPanelHeight}
           dragDirectionConfigs={[
             {
               direction: 'left',
@@ -208,6 +215,7 @@ const Chat: FC = memo(() => {
 
     <FlexColumn style={{ width: '100%', height: '100%' }}>
       <TopToolbar
+        ref={toolbarRef}
         settingsView={renderSettings(true, SettingsTabId.Settings)}
         configInfoView={renderSettings(true, SettingsTabId.ConfigInfo)}
         aboutView={renderSettings(true, SettingsTabId.About)}

@@ -2,7 +2,7 @@ import fs from 'fs'
 import type { ExtensionContext } from 'vscode'
 import * as vscode from 'vscode'
 import * as uuid from 'uuid'
-import { toUnixPath } from '@nicepkg/gpt-runner-shared/common'
+import { ClientEventName, toUnixPath } from '@nicepkg/gpt-runner-shared/common'
 import { PathUtils } from '@nicepkg/gpt-runner-shared/node'
 import type { ContextLoader } from '../contextLoader'
 import { Commands, EXT_DISPLAY_NAME, EXT_NAME } from '../constant'
@@ -26,6 +26,23 @@ class ChatViewProvider implements vscode.WebviewViewProvider {
     this.#projectPath = projectPath
   }
 
+  static handleWebviewCreated(webview: vscode.Webview) {
+    webview.onDidReceiveMessage(({ eventName }: { eventName: ClientEventName }) => {
+      if (eventName === ClientEventName.InitSuccess)
+        ChatViewProvider.handleWebviewWindowInit()
+    })
+  }
+
+  static handleWebviewWindowInit() {
+    emitter.emit(ClientEventName.UpdateIdeOpeningFiles, {
+      filePaths: state.openingFilePaths,
+    })
+
+    emitter.emit(ClientEventName.UpdateIdeActiveFilePath, {
+      filePath: state.activeFilePath,
+    })
+  }
+
   resolveWebviewView(
     webviewView: vscode.WebviewView,
     _context: vscode.WebviewViewResolveContext,
@@ -33,8 +50,8 @@ class ChatViewProvider implements vscode.WebviewViewProvider {
   ) {
     this.#view = webviewView
     state.sidebarWebviewView = webviewView
-
     ChatViewProvider.updateWebview(webviewView.webview, this.#extContext, this.#projectPath)
+    ChatViewProvider.handleWebviewCreated(webviewView.webview)
   }
 
   static createWebviewPanel(extContext: ExtensionContext, projectPath: string): vscode.WebviewPanel {
@@ -48,14 +65,12 @@ class ChatViewProvider implements vscode.WebviewViewProvider {
       { retainContextWhenHidden: true },
     )
     panel.iconPath = vscode.Uri.joinPath(extContext.extensionUri, './res/logo.svg')
-
     panel.onDidDispose(() => {
       state.webviewPanels.delete(panel)
     })
-
     state.webviewPanels.add(panel)
-
     ChatViewProvider.updateWebview(panel.webview, extContext, projectPath)
+    ChatViewProvider.handleWebviewCreated(panel.webview)
 
     return panel
   }

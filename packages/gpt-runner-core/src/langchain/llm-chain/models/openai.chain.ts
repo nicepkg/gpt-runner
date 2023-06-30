@@ -1,30 +1,11 @@
-import './fixes'
-import {
-  ChatPromptTemplate, HumanMessagePromptTemplate, SystemMessagePromptTemplate,
-} from 'langchain/prompts'
-import { LLMChain } from 'langchain/chains'
-import { ChatOpenAI } from 'langchain/chat_models/openai'
-import { type ChatModel, ChatModelType, type SingleChatMessage } from '@nicepkg/gpt-runner-shared/common'
-import { CallbackManager } from 'langchain/callbacks'
 import type { BaseLanguageModel } from 'langchain/dist/base_language'
-import { mapStoredMessageToChatTemplateMessages } from './helper'
-import type { BaseStreamChainParams } from './types'
+import { ChatModelType } from '@nicepkg/gpt-runner-shared/common'
+import { ChatOpenAI } from 'langchain/chat_models/openai'
+import { CallbackManager } from 'langchain/callbacks'
+import type { GetLLMChainParams } from '../type'
 
-export interface LlmChainParams extends BaseStreamChainParams<SingleChatMessage> {
-  model: ChatModel
-}
-
-export async function llmChain(params: LlmChainParams) {
-  const {
-    messages,
-    systemPrompt,
-    onTokenStream,
-    onError,
-    onComplete,
-    model,
-  } = params
-
-  let llm: BaseLanguageModel | null = null
+export function getOpenaiLLM(params: GetLLMChainParams): BaseLanguageModel | null {
+  const { model, onTokenStream, onComplete, onError } = params
 
   if (model.type === ChatModelType.Openai) {
     const { secrets, modelName, temperature, maxTokens, topP, frequencyPenalty, presencePenalty } = model
@@ -40,7 +21,7 @@ export async function llmChain(params: LlmChainParams) {
       secrets.apiKey = 'unknown' // tell langchain don't throw error for missing api key
     }
 
-    llm = new ChatOpenAI({
+    return new ChatOpenAI({
       streaming: true,
       maxRetries: 1,
       openAIApiKey: secrets?.apiKey,
@@ -79,19 +60,5 @@ export async function llmChain(params: LlmChainParams) {
     })
   }
 
-  if (!llm)
-    throw new Error(`No LLM provided, model type ${model.type}`)
-
-  const chatPrompt = ChatPromptTemplate.fromPromptMessages([
-    SystemMessagePromptTemplate.fromTemplate(systemPrompt || 'You are a friendly assistant.'),
-    ...mapStoredMessageToChatTemplateMessages(messages),
-    HumanMessagePromptTemplate.fromTemplate('{global.input}'),
-  ])
-
-  const chain = new LLMChain({
-    prompt: chatPrompt,
-    llm,
-  })
-
-  return chain
+  return null
 }

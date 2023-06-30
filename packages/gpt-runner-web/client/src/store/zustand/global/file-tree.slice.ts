@@ -16,11 +16,17 @@ export interface FileTreeSlice {
   expendedFilePaths: string[]
   checkedFilePaths: string[]
   excludeFileExts: string[]
+  ideActiveFilePath: string
+  ideOpeningFilePaths: string[]
+  provideIdeOpeningFilePathsToGpt: boolean
   updateExcludeFileExts: (excludeFileExts: string[] | ((oldExcludeFileExts: string[]) => string[])) => void
   updateProvideFilePathsTreePromptToGpt: (provideFilePathsTreePromptToGpt: boolean) => void
   updateFilePathsTreePrompt: (promptOrFileTreeItem: string | FileSidebarTreeItem[]) => void
   updateExpendedFilePaths: (expendedFilePaths: string[] | ((oldExpendedFilePaths: string[]) => string[])) => void
   updateCheckedFilePaths: (checkedFilePaths: string[] | ((oldCheckedFilePaths: string[]) => string[])) => void
+  updateIdeActiveFilePath: (ideActiveFilePath: string) => void
+  updateIdeOpeningFilePaths: (ideOpeningFilePaths: string[] | ((oldIdeOpeningFilePaths: string[]) => string[])) => void
+  updateProvideIdeOpeningFilePathsToGpt: (provideIdeOpeningFilePathsToGpt: boolean) => void
 }
 
 export type FileTreeState = GetState<FileTreeSlice>
@@ -32,6 +38,9 @@ function getInitialState() {
     expendedFilePaths: [],
     checkedFilePaths: [],
     excludeFileExts: [],
+    ideActiveFilePath: '',
+    ideOpeningFilePaths: [],
+    provideIdeOpeningFilePathsToGpt: false,
   } satisfies FileTreeState
 }
 
@@ -75,5 +84,15 @@ export const createFileTreeSlice: StateCreator<
   updateCheckedFilePaths(checkedFilePaths) {
     const result = typeof checkedFilePaths === 'function' ? checkedFilePaths(get().checkedFilePaths) : checkedFilePaths
     set({ checkedFilePaths: result })
+  },
+  updateIdeActiveFilePath(ideActiveFilePath) {
+    set({ ideActiveFilePath })
+  },
+  updateIdeOpeningFilePaths(ideOpeningFilePaths) {
+    const result = typeof ideOpeningFilePaths === 'function' ? ideOpeningFilePaths(get().ideOpeningFilePaths) : ideOpeningFilePaths
+    set({ ideOpeningFilePaths: result })
+  },
+  updateProvideIdeOpeningFilePathsToGpt(provideIdeOpeningFilePathsToGpt) {
+    set({ provideIdeOpeningFilePathsToGpt })
   },
 })
