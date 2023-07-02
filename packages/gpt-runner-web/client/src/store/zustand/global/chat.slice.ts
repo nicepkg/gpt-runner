@@ -39,7 +39,7 @@ export interface ChatSlice {
   generateChatAnswer: (chatId: string, type?: GenerateAnswerType) => Promise<void>
   regenerateLastChatAnswer: (chatId: string) => Promise<void>
   stopGeneratingChatAnswer: (chatId: string) => void
-  updateModelOverrideConfig: (modelOverrideConfig: Partial<ChatModelTypeMap> | ((oldModelOverrideConfig: Partial<ChatModelTypeMap>) => ChatModelTypeMap)) => void
+  updateModelOverrideConfig: (modelOverrideConfig: Partial<ChatModelTypeMap> | ((oldModelOverrideConfig: Partial<ChatModelTypeMap>) => Partial<ChatModelTypeMap>)) => void
 }
 
 export type ChatState = GetState<ChatSlice>

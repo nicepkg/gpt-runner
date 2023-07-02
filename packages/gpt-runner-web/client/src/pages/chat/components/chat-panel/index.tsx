@@ -22,10 +22,13 @@ import { useTempStore } from '../../../../store/zustand/temp'
 import type { MessageCodeBlockTheme } from '../../../../components/chat-message-code-block'
 import { isDarkTheme } from '../../../../styles/themes'
 import { emitter } from '../../../../helpers/emitter'
+import { ModelSettings } from '../settings/components/model-settings'
+import { ContentWrapper } from '../../chat.styles'
 import { ChatPanelPopoverTreeWrapper, ChatPanelWrapper } from './chat-panel.styles'
 import { createRemarkOpenEditorPlugin } from './remark-plugin'
 
 export interface ChatPanelProps {
+  rootPath: string
   scrollDownRef: RefObject<any>
   chatTreeView?: React.ReactNode
   fileTreeView?: React.ReactNode
@@ -35,6 +38,7 @@ export interface ChatPanelProps {
 
 export const ChatPanel: FC<ChatPanelProps> = memo((props) => {
   const {
+    rootPath,
     scrollDownRef,
     chatTreeView,
     fileTreeView,
@@ -340,6 +344,34 @@ export const ChatPanel: FC<ChatPanelProps> = memo((props) => {
       ></IconButton>
 
       {/* right icon */}
+      {/* model settings */}
+      <PopoverMenu
+        clickMode
+        clickOutsideCapture={false}
+        xPosition='center'
+        menuMaskStyle={{
+          marginLeft: '0.5rem',
+          marginRight: '0.5rem',
+        }}
+        buildChildrenSlot={({ isHovering }) => {
+          return <IconButton
+            style={{
+              paddingLeft: '0.5rem',
+            }}
+            text={'Model Settings'}
+            iconClassName='codicon-settings'
+            hoverShowText={!isHovering}
+          ></IconButton>
+        }}
+        buildMenuSlot={() => {
+          return <ContentWrapper $isPopoverContent style={{
+            maxWidth: '400px',
+          }}>
+            <ModelSettings rootPath={rootPath} singleFilePath={chatInstance?.singleFilePath} viewType='model'></ModelSettings>
+          </ContentWrapper>
+        }}
+      />
+
       {/* chat tree */}
       {chatTreeView && <PopoverMenu
         clickMode
@@ -370,6 +402,7 @@ export const ChatPanel: FC<ChatPanelProps> = memo((props) => {
       {/* file tree */}
       {fileTreeView && <PopoverMenu
         clickMode
+        clickOutsideCapture={false}
         menuMaskStyle={{
           marginLeft: '0.5rem',
           marginRight: '0.5rem',

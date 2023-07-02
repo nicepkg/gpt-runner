@@ -5,12 +5,12 @@ import { useForm } from 'react-hook-form'
 import { VSCodeButton, VSCodeLink } from '@vscode/webview-ui-toolkit/react'
 import { useTranslation } from 'react-i18next'
 import toast from 'react-hot-toast'
-import { getServerStorage, saveServerStorage } from '../../../../../../networks/server-storage'
-import { useLoading } from '../../../../../../hooks/use-loading.hook'
-import { HookFormInput } from '../../../../../../components/hook-form/hook-form-input'
-import { HookFormTextarea } from '../../../../../../components/hook-form/hook-form-textarea'
-import { IS_SAFE } from '../../../../../../helpers/constant'
-import { StyledForm, StyledFormItem } from '../../settings.styles'
+import { getServerStorage, saveServerStorage } from '../../../../../../../networks/server-storage'
+import { useLoading } from '../../../../../../../hooks/use-loading.hook'
+import { HookFormInput } from '../../../../../../../components/hook-form/hook-form-input'
+import { HookFormTextarea } from '../../../../../../../components/hook-form/hook-form-textarea'
+import { IS_SAFE } from '../../../../../../../helpers/constant'
+import { StyledForm, StyledFormItem } from '../../../settings.styles'
 
 export interface FormData extends Pick<OpenaiSecrets, 'apiKey' | 'accessToken' | 'basePath'> {
 }
@@ -62,7 +62,6 @@ export const OpenaiSecretsSettings: FC = memo(() => {
   }
 
   return <StyledForm onSubmit={handleSubmit(onSubmit)}>
-
     <StyledFormItem key={0}>
       <HookFormInput
         label={t('chat_page.openai_api_key')}

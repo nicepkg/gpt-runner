@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react'
 import React, { memo } from 'react'
 import type {
   FieldPath,
@@ -16,7 +17,7 @@ export interface HookFormSwitchProps<
   TFieldValues extends FieldValues = FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
 > extends Pick<UseControllerProps<TFieldValues>, 'rules'>, Omit<SwitchProps, 'control'> {
-  label: string
+  label?: ReactNode
   name: TName
   errors: FormState<TFieldValues>['errors']
   control: UseControllerProps<TFieldValues>['control']

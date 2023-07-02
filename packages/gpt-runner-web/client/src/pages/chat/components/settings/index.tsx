@@ -1,22 +1,21 @@
 import { type CSSProperties, type FC, memo, useEffect, useMemo, useState } from 'react'
 import { VSCodePanelTab, VSCodePanelView } from '@vscode/webview-ui-toolkit/react'
 import { useTranslation } from 'react-i18next'
-import { useQuery } from '@tanstack/react-query'
 import { StyledVSCodePanels } from '../../chat.styles'
 import type { MessageCodeBlockTheme } from '../../../../components/chat-message-code-block'
 import { MessageCodeBlock } from '../../../../components/chat-message-code-block'
 import { useGlobalStore } from '../../../../store/zustand/global'
 import { FlexColumn } from '../../../../styles/global.styles'
 import { isDarkTheme } from '../../../../styles/themes'
-import { getGptFileInfo } from '../../../../networks/gpt-files'
 import { LoadingView } from '../../../../components/loading-view'
 import { useConfetti } from '../../../../hooks/use-confetti.hook'
 import { useElementVisible } from '../../../../hooks/use-element-visible.hook'
+import { useUserConfig } from '../../../../hooks/use-user-config.hook'
 import { ConfigInfoTitle, ConfigInfoWrapper } from './settings.styles'
-import { OpenaiSecretsSettings } from './components/openai-settings/secrets-settings'
 import { GeneralSettings } from './components/general-settings'
 import { About } from './components/about'
 import { ProxySettings } from './components/proxy-settings'
+import { ModelSettings } from './components/model-settings'
 
 export enum SettingsTabId {
   About = 'about',
@@ -54,16 +53,10 @@ export const Settings: FC<SettingsProps> = memo((props) => {
     return getGptFileTreeItemFromChatId(chatId)
   }, [chatId, getGptFileTreeItemFromChatId])
 
-  const { data: getGptFileInfoRes, isLoading: getGptFileInfoIsLoading } = useQuery({
-    queryKey: ['settings-gpt-file-info', gptFileTreeItem?.path],
-    enabled: !!gptFileTreeItem?.path,
-    queryFn: () => getGptFileInfo({
-      rootPath,
-      filePath: gptFileTreeItem!.path,
-    }),
+  const { userConfig, singleFileConfig, isLoading: getGptFileInfoIsLoading } = useUserConfig({
+    rootPath,
+    singleFilePath: gptFileTreeItem?.path,
   })
-
-  const { userConfig, singleFileConfig } = getGptFileInfoRes?.data || {}
 
   const viewStyle: CSSProperties = {
     height: '100%',
@@ -82,8 +75,11 @@ export const Settings: FC<SettingsProps> = memo((props) => {
       <GeneralSettings></GeneralSettings>
       <ConfigInfoTitle>{t('chat_page.settings_proxy')}</ConfigInfoTitle>
       <ProxySettings></ProxySettings>
-      <ConfigInfoTitle>{t('chat_page.settings_openai_config')}</ConfigInfoTitle>
-      <OpenaiSecretsSettings></OpenaiSecretsSettings>
+      <ConfigInfoTitle>
+        <ModelSettings userConfig={userConfig} singleFileConfig={singleFileConfig} viewType='title'></ModelSettings>
+        {` ${t('chat_page.settings_config')}`}
+      </ConfigInfoTitle>
+      <ModelSettings userConfig={userConfig} singleFileConfig={singleFileConfig} viewType='secrets'></ModelSettings>
     </ConfigInfoWrapper>
   }
 

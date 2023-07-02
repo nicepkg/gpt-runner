@@ -105,6 +105,7 @@ const Chat: FC = memo(() => {
 
   const renderChatPanel = useCallback(() => {
     return <ChatPanel
+      rootPath={rootPath}
       scrollDownRef={scrollDownRef}
       chatId={activeChatId}
       chatTreeView={isMobile ? renderSidebar(true, true) : null}

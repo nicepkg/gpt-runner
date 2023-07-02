@@ -41,7 +41,7 @@
     "settings_general": "General",
     "settings_language": "Language",
     "settings_theme": "Theme",
-    "settings_openai_config": "OpenAI Config",
+    "settings_config": "Config",
     "settings_proxy": "Proxy",
     "settings_tab_settings": "Settings",
     "settings_tab_config_info": "Config Info",

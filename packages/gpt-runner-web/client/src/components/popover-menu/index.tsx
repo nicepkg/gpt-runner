@@ -12,6 +12,7 @@ import { Children, ChildrenWrapper, Menu, MenuChildrenWrapper, MenuMask, Toolbar
 export interface PopoverMenuChildrenState {
   isHovering: boolean
   isInMenu: boolean
+  isOpen: boolean
 }
 
 type YPosition = 'top' | 'bottom'
@@ -30,6 +31,7 @@ export interface PopoverMenuProps {
   clickOutSideToClose?: boolean
   showToolbar?: boolean
   clickMode?: boolean
+  clickOutsideCapture?: boolean
   onPopoverDisplayChange?: (isPopoverOpen: boolean) => void
   buildMenuSlot: () => React.ReactNode
   buildChildrenSlot: (state: PopoverMenuChildrenState) => React.ReactNode
@@ -49,6 +51,7 @@ export const PopoverMenu: React.FC<PopoverMenuProps> = memo((props) => {
     clickOutSideToClose = true,
     showToolbar,
     clickMode = false,
+    clickOutsideCapture = true,
     onPopoverDisplayChange,
     buildMenuSlot,
     buildChildrenSlot,
@@ -82,6 +85,7 @@ export const PopoverMenu: React.FC<PopoverMenuProps> = memo((props) => {
   const childrenState: PopoverMenuChildrenState = {
     isHovering: isChildrenHovering || getIsPopoverOpen(),
     isInMenu: false,
+    isOpen: getIsPopoverOpen(),
   }
 
   const handleClose = () => {
@@ -193,7 +197,7 @@ export const PopoverMenu: React.FC<PopoverMenuProps> = memo((props) => {
       onClickOutside={() => {
         clickOutSideToClose && handleClose()
       }}
-      clickOutsideCapture={false}
+      clickOutsideCapture={clickOutsideCapture}
       containerStyle={{
         zIndex: String(isPin ? zIndex + 10 : zIndex),
         display: getIsPopoverOpen() ? 'block' : 'none',

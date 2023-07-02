@@ -41,7 +41,7 @@
     "settings_general": "通用",
     "settings_language": "语言",
     "settings_theme": "主题",
-    "settings_openai_config": "OpenAI 配置",
+    "settings_config": "配置",
     "settings_proxy": "代理配置",
     "settings_tab_settings": "设置",
     "settings_tab_config_info": "配置信息",

@@ -41,8 +41,10 @@ export interface SingleChatMessage {
   text: string
 }
 
+type OmitChatModelTypeSecrets<T> = T extends ChatModel ? Omit<T, 'secrets'> : never
+
 export interface SingleFileConfig {
-  model?: Omit<ChatModel, 'secrets'>
+  model?: OmitChatModelTypeSecrets<ChatModel>
   title?: string
   userPrompt?: string
   systemPrompt?: string

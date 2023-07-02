@@ -1,6 +1,4 @@
 {
-  "typescript.tsdk": "node_modules/typescript/lib",
-  "typescript.enablePromptUseWorkspaceTsdk": true,
   "prettier.enable": false,
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true
@@ -39,6 +37,7 @@
     "gptr",
     "GRADIO",
     "hideable",
+    "hookform",
     "jetbrains",
     "Jinming",
     "keyboardjs",
