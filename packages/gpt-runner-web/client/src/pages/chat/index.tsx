@@ -16,6 +16,7 @@ import { DragResizeView } from '../../components/drag-resize-view'
 import { fetchProjectInfo } from '../../networks/config'
 import { useEmitBind } from '../../hooks/use-emit-bind.hook'
 import { useSize } from '../../hooks/use-size.hook'
+import { useGetCommonFilesTree } from '../../hooks/use-get-common-files-tree.hook'
 import { ContentWrapper, StyledVSCodePanels } from './chat.styles'
 import { ChatSidebar } from './components/chat-sidebar'
 import { ChatPanel } from './components/chat-panel'
@@ -48,7 +49,14 @@ const Chat: FC = memo(() => {
     queryKey: ['fetchProjectInfo'],
     queryFn: () => fetchProjectInfo(),
   })
+
   const rootPath = getGlobalConfig().rootPath
+
+  // sometime file tree popover menu is hidden at mount
+  // and the store is not updated, so we need to update it
+  useGetCommonFilesTree({
+    rootPath,
+  })
 
   useEmitBind([rootPath])
 
@@ -217,6 +225,8 @@ const Chat: FC = memo(() => {
     <FlexColumn style={{ width: '100%', height: '100%' }}>
       <TopToolbar
         ref={toolbarRef}
+        rootPath={rootPath}
+        chatIdOrChatInstance={chatInstance}
         settingsView={renderSettings(true, SettingsTabId.Settings)}
         configInfoView={renderSettings(true, SettingsTabId.ConfigInfo)}
         aboutView={renderSettings(true, SettingsTabId.About)}

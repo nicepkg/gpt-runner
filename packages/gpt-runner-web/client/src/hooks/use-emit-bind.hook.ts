@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { ClientEventName } from '@nicepkg/gpt-runner-shared/common'
+import { ClientEventName, toUnixPath } from '@nicepkg/gpt-runner-shared/common'
 import { useGlobalStore } from '../store/zustand/global'
 import { emitter } from '../helpers/emitter'
 import { useOn } from './use-on.hook'
@@ -14,8 +14,10 @@ export function useEmitBind(deps: any[] = []) {
   useOn({
     eventName: ClientEventName.UpdateIdeOpeningFiles,
     listener: ({ filePaths }) => {
-      console.log('updateIdeOpeningFilePaths', filePaths)
-      updateIdeOpeningFilePaths(filePaths)
+      const unixFilePaths = filePaths?.map(toUnixPath)
+
+      console.log('updateIdeOpeningFilePaths', unixFilePaths)
+      updateIdeOpeningFilePaths(unixFilePaths)
     },
     deps: [...deps, updateIdeOpeningFilePaths],
   })
@@ -23,8 +25,10 @@ export function useEmitBind(deps: any[] = []) {
   useOn({
     eventName: ClientEventName.UpdateIdeActiveFilePath,
     listener: ({ filePath }) => {
-      console.log('updateIdeActiveFilePath', filePath)
-      updateIdeActiveFilePath(filePath)
+      const unixFilePath = toUnixPath(filePath)
+
+      console.log('updateIdeActiveFilePath', unixFilePath)
+      updateIdeActiveFilePath(unixFilePath)
     },
     deps: [...deps, updateIdeActiveFilePath],
   })

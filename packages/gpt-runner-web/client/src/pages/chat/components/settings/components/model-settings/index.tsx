@@ -42,7 +42,7 @@ export const ModelSettings: FC<ModelSettingsProps> = memo((props) => {
 
   const modelTypeViewMap: Record<ChatModelType, Record<ModelSettingsViewType, () => ReactNode>> = {
     [ChatModelType.Openai]: {
-      secrets: () => <OpenaiSecretsSettings />,
+      secrets: () => <OpenaiSecretsSettings singleFileConfig={resolvedSingleFileConfig} />,
       model: () => <OpenaiModelSettings singleFileConfig={resolvedSingleFileConfig} />,
       title: () => <>OpenAI</>,
     },

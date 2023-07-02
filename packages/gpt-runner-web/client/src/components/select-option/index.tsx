@@ -1,4 +1,4 @@
-import type { FC } from 'react'
+import type { FC, ReactNode } from 'react'
 import { memo, useState } from 'react'
 import type { PopoverMenuProps } from '../popover-menu'
 import { PopoverMenu } from '../popover-menu'
@@ -6,7 +6,7 @@ import { IconButton } from '../icon-button'
 import { SelectOptionItem, SelectOptionList } from './select-option.styles'
 
 export interface ISelectOption<T extends string = string> {
-  label: string
+  label: ReactNode
   value: T
 }
 

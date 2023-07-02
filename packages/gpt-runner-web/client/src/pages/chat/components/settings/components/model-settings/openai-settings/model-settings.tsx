@@ -6,7 +6,7 @@ import { HookFormInput } from '../../../../../../../components/hook-form/hook-fo
 import { type ISelectOption, SelectOption } from '../../../../../../../components/select-option'
 import { BaseModelSettings, type BaseModelSettingsFormItemConfig } from '../base-model-settings'
 
-export interface FormData extends Pick<OpenaiModelConfig, 'modelName' | 'temperature' | 'maxTokens' | 'topP' | 'frequencyPenalty' | 'presencePenalty'> {
+interface FormData extends Pick<OpenaiModelConfig, 'modelName' | 'temperature' | 'maxTokens' | 'topP' | 'frequencyPenalty' | 'presencePenalty'> {
 
 }
 
@@ -41,14 +41,11 @@ export const OpenaiModelSettings: FC<OpenaiModelSettingsProps> = memo((props) =>
         return <>
           <HookFormInput
             name="modelName"
-            label={buildLabel('Model Name')}
+            label={buildLabel(t('chat_page.openai_model_name'))}
             labelInLeft
             placeholder={''}
             errors={formState.errors}
             control={control}
-            style={{
-              width: '100%',
-            }}
           />
           <SelectOption
             options={modelTipOptions}
@@ -65,15 +62,12 @@ export const OpenaiModelSettings: FC<OpenaiModelSettingsProps> = memo((props) =>
         return <>
           <HookFormInput
             name="temperature"
-            label={buildLabel('Temperature')}
+            label={buildLabel(t('chat_page.openai_temperature'))}
             labelInLeft
             isNumber
             placeholder={'0 ~ 1'}
             errors={formState.errors}
             control={control}
-            style={{
-              width: '100%',
-            }}
           />
         </>
       },
@@ -84,16 +78,13 @@ export const OpenaiModelSettings: FC<OpenaiModelSettingsProps> = memo((props) =>
         return <>
           <HookFormInput
             name="maxTokens"
-            label={buildLabel('Max Reply Tokens')}
+            label={buildLabel(t('chat_page.openai_max_tokens'))}
             labelInLeft
             isNumber
             minNumber={0}
             placeholder={'0 ~ 2048'}
             errors={formState.errors}
             control={control}
-            style={{
-              width: '100%',
-            }}
           />
         </>
       },
@@ -104,7 +95,7 @@ export const OpenaiModelSettings: FC<OpenaiModelSettingsProps> = memo((props) =>
         return <>
           <HookFormInput
             name="topP"
-            label={buildLabel('Top P')}
+            label={buildLabel(t('chat_page.openai_top_p'))}
             labelInLeft
             minNumber={0}
             maxNumber={1}
@@ -112,9 +103,6 @@ export const OpenaiModelSettings: FC<OpenaiModelSettingsProps> = memo((props) =>
             isNumber
             errors={formState.errors}
             control={control}
-            style={{
-              width: '100%',
-            }}
           />
         </>
       },
@@ -125,7 +113,7 @@ export const OpenaiModelSettings: FC<OpenaiModelSettingsProps> = memo((props) =>
         return <>
           <HookFormInput
             name="frequencyPenalty"
-            label={buildLabel('Frequency Penalty')}
+            label={buildLabel(t('chat_page.openai_frequency_penalty'))}
             labelInLeft
             isNumber
             minNumber={-2}
@@ -133,9 +121,6 @@ export const OpenaiModelSettings: FC<OpenaiModelSettingsProps> = memo((props) =>
             placeholder={'-2 ~ 2'}
             errors={formState.errors}
             control={control}
-            style={{
-              width: '100%',
-            }}
           />
         </>
       },
@@ -146,7 +131,7 @@ export const OpenaiModelSettings: FC<OpenaiModelSettingsProps> = memo((props) =>
         return <>
           <HookFormInput
             name="presencePenalty"
-            label={buildLabel('Presence Penalty')}
+            label={buildLabel(t('chat_page.openai_presence_penalty'))}
             labelInLeft
             isNumber
             minNumber={-2}
@@ -154,9 +139,6 @@ export const OpenaiModelSettings: FC<OpenaiModelSettingsProps> = memo((props) =>
             placeholder={'-2 ~ 2'}
             errors={formState.errors}
             control={control}
-            style={{
-              width: '100%',
-            }}
           />
         </>
       },

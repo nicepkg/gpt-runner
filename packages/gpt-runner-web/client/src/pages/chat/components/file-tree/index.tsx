@@ -1,22 +1,24 @@
-import { type FC, memo, useCallback, useEffect, useRef, useState } from 'react'
-import { useQuery } from '@tanstack/react-query'
+import { type FC, memo, useCallback, useEffect } from 'react'
 import { ClientEventName, travelTree, travelTreeDeepFirst } from '@nicepkg/gpt-runner-shared/common'
 import clsx from 'clsx'
 import { VSCodeCheckbox, VSCodeLink } from '@vscode/webview-ui-toolkit/react'
 import { Trans, useTranslation } from 'react-i18next'
+import { toast } from 'react-hot-toast'
 import type { SidebarProps } from '../../../../components/sidebar'
 import { Sidebar } from '../../../../components/sidebar'
 import { ErrorView } from '../../../../components/error-view'
-import { fetchCommonFilesTree } from '../../../../networks/common-files'
 import type { TreeItemProps, TreeItemState } from '../../../../components/tree-item'
 import { Icon } from '../../../../components/icon'
 import { IconButton } from '../../../../components/icon-button'
-import { countTokenQuick, formatNumWithK } from '../../../../helpers/utils'
+import { formatNumWithK } from '../../../../helpers/utils'
 import { useGlobalStore } from '../../../../store/zustand/global'
 import type { FileInfoSidebarTreeItem, FileSidebarTreeItem } from '../../../../store/zustand/global/file-tree.slice'
 import { PopoverMenu } from '../../../../components/popover-menu'
 import { useTempStore } from '../../../../store/zustand/temp'
 import { useOn } from '../../../../hooks/use-on.hook'
+import { useGetCommonFilesTree } from '../../../../hooks/use-get-common-files-tree.hook'
+import { useDebounceFn } from '../../../../hooks/use-debounce-fn.hook'
+import { useTokenNum } from '../../../../hooks/use-token-num.hook'
 import { FileTreeItemRightWrapper, FileTreeSidebarHighlight, FileTreeSidebarUnderSearchWrapper, FilterWrapper } from './file-tree.styles'
 
 export interface FileTreeProps {
@@ -28,59 +30,53 @@ export const FileTree: FC<FileTreeProps> = memo((props: FileTreeProps) => {
   const { rootPath, reverseTreeUi } = props
 
   const { t } = useTranslation()
-  const [filesTree, _setFilesTree] = useState<FileSidebarTreeItem[]>([])
-  const fullPathFileMapRef = useRef<Record<string, FileSidebarTreeItem>>({})
   const {
     excludeFileExts,
     updateExcludeFileExts,
-    expendedFilePaths,
     updateExpendedFilePaths,
     checkedFilePaths,
     updateCheckedFilePaths,
-    provideFilePathsTreePromptToGpt,
-    updateProvideFilePathsTreePromptToGpt,
-    filePathsTreePrompt,
-    updateFilePathsTreePrompt,
+    provideFileInfoToGptMap,
+    updateProvideFileInfoToGptMap,
   } = useGlobalStore()
-  const { updateFilesRelativePaths } = useTempStore()
 
-  const updateMap = useCallback((tree: FileSidebarTreeItem[]) => {
-    const result: Record<string, FileSidebarTreeItem> = {}
-    travelTree(tree, (item) => {
-      if (item.otherInfo)
-        result[item.otherInfo.fullPath] = item
-    })
-    fullPathFileMapRef.current = result
-  }, [])
-
-  const setFilesTree = useCallback((tree: FileSidebarTreeItem[], isUpdateFullPathFileMap = false) => {
-    if (isUpdateFullPathFileMap)
-      updateMap(tree)
-
-    _setFilesTree(tree)
-  }, [_setFilesTree, updateMap])
+  const {
+    filesTree,
+    fullPathFileMap,
+    updateFilesTree,
+  } = useTempStore()
 
   const updateFileItem = useCallback((fileItemOrFullPath: FileSidebarTreeItem | string, updater: (fileItem: FileSidebarTreeItem) => void) => {
     const fullPath = typeof fileItemOrFullPath === 'string' ? fileItemOrFullPath : fileItemOrFullPath.otherInfo?.fullPath
     if (!fullPath)
       return
 
-    const fileItem = fullPathFileMapRef.current[fullPath]
+    const fileItem = fullPathFileMap[fullPath]
     if (!fileItem)
       return
 
     updater(fileItem)
-    setFilesTree([...filesTree])
-  }, [filesTree, setFilesTree])
+    updateFilesTree([...filesTree])
+  }, [filesTree])
 
-  const { data: fetchCommonFilesTreeRes, isLoading, refetch: refreshFileTree } = useQuery({
-    queryKey: ['file-tree', rootPath, excludeFileExts.join(',')],
-    enabled: !!rootPath,
-    queryFn: () => fetchCommonFilesTree({
-      rootPath,
-      excludeExts: excludeFileExts,
-    }),
+  const { data: fetchCommonFilesTreeRes, isLoading, refetch: refreshFileTree } = useGetCommonFilesTree({
+    rootPath,
   })
+
+  const { checkedFilesContentPromptTokenNum } = useTokenNum()
+
+  const openProvideCheckedFileContentsAsPrompt = useCallback(() => {
+    if (provideFileInfoToGptMap.checkedFileContents)
+      return
+
+    updateProvideFileInfoToGptMap({
+      checkedFileContents: true,
+    })
+
+    toast.success(t('chat_page.toast_selected_files_as_prompt_reopened'))
+  }, [provideFileInfoToGptMap.checkedFileContents, updateProvideFileInfoToGptMap])
+
+  const debounceOpenProvideCheckedFileContentsAsPrompt = useDebounceFn(openProvideCheckedFileContentsAsPrompt)
 
   useOn({
     eventName: [ClientEventName.RefreshTree, ClientEventName.RefreshFileTree],
@@ -90,12 +86,12 @@ export const FileTree: FC<FileTreeProps> = memo((props: FileTreeProps) => {
 
   // sync checked state
   useEffect(() => {
-    if (!Object.values(fullPathFileMapRef.current).length || !filesTree.length)
+    if (!Object.values(fullPathFileMap).length || !filesTree.length)
       return
 
     // check all path in checkedFilePaths
     checkedFilePaths.forEach((fullPath) => {
-      const file = fullPathFileMapRef.current[fullPath]
+      const file = fullPathFileMap[fullPath]
 
       if (!file?.otherInfo)
         return
@@ -119,50 +115,8 @@ export const FileTree: FC<FileTreeProps> = memo((props: FileTreeProps) => {
       return item
     })
 
-    // setFilesTree([...filesTree])
-  }, [checkedFilePaths, filesTree, setFilesTree])
-
-  useEffect(() => {
-    const filesInfoTree = fetchCommonFilesTreeRes?.data?.filesInfoTree
-    if (!filesInfoTree)
-      return
-
-    const filesRelativePaths: string[] = []
-    const finalFilesSidebarTree = travelTree(filesInfoTree, (item) => {
-      const oldIsExpanded = expendedFilePaths.includes(item.fullPath)
-      const oldIsChecked = checkedFilePaths.includes(item.fullPath)
-
-      const result: FileSidebarTreeItem = {
-        id: item.id,
-        name: item.name,
-        path: item.fullPath,
-        isLeaf: item.isFile,
-        otherInfo: {
-          ...item,
-          checked: oldIsChecked,
-        },
-        isExpanded: oldIsExpanded,
-      }
-
-      item.isFile && filesRelativePaths.push(item.projectRelativePath)
-
-      return result
-    })
-
-    setFilesTree(finalFilesSidebarTree, true)
-    updateFilePathsTreePrompt(finalFilesSidebarTree)
-    updateFilesRelativePaths(filesRelativePaths)
-  }, [fetchCommonFilesTreeRes])
-
-  useEffect(() => {
-    if (excludeFileExts.length)
-      return
-
-    const { includeFileExts = [], allFileExts = [] } = fetchCommonFilesTreeRes?.data || {}
-    const _excludeFileExts = allFileExts.filter(ext => !includeFileExts.includes(ext))
-
-    updateExcludeFileExts(_excludeFileExts)
-  }, [fetchCommonFilesTreeRes])
+    // updateFileTree([...filesTree])
+  }, [checkedFilePaths, filesTree])
 
   const renderTreeItemLeftSlot = useCallback((props: TreeItemState<FileInfoSidebarTreeItem>) => {
     const { isLeaf, isExpanded, otherInfo } = props
@@ -186,8 +140,8 @@ export const FileTree: FC<FileTreeProps> = memo((props: FileTreeProps) => {
           return preState
 
         let finalPaths: string[] = []
-        const isLeaf = fullPathFileMapRef.current[fullPath].isLeaf
-        const children = fullPathFileMapRef.current[fullPath]?.children || []
+        const isLeaf = fullPathFileMap[fullPath].isLeaf
+        const children = fullPathFileMap[fullPath]?.children || []
 
         if (!checked) {
           const shouldRemovePaths: string[] = []
@@ -220,6 +174,8 @@ export const FileTree: FC<FileTreeProps> = memo((props: FileTreeProps) => {
 
         return finalPaths
       })
+
+      debounceOpenProvideCheckedFileContentsAsPrompt()
     }
 
     return <>
@@ -274,7 +230,7 @@ export const FileTree: FC<FileTreeProps> = memo((props: FileTreeProps) => {
     if (!fullPath)
       return
 
-    const file = fullPathFileMapRef.current[fullPath]
+    const file = fullPathFileMap[fullPath]
     file.isExpanded = isExpanded
 
     updateExpendedFilePaths((preState) => {
@@ -282,8 +238,8 @@ export const FileTree: FC<FileTreeProps> = memo((props: FileTreeProps) => {
       return finalPaths
     })
 
-    setFilesTree([...filesTree])
-  }, [filesTree, setFilesTree])
+    updateFilesTree([...filesTree])
+  }, [filesTree])
 
   const buildSearchRightSlot = useCallback(() => {
     const { allFileExts = [] } = fetchCommonFilesTreeRes?.data || {}
@@ -346,51 +302,33 @@ export const FileTree: FC<FileTreeProps> = memo((props: FileTreeProps) => {
         showText={false}
         iconClassName='codicon-refresh'
         animatingWhenClick
-        onClick={refreshFileTree}
+        onClick={() => refreshFileTree()}
       ></IconButton>
     </>
   }, [fetchCommonFilesTreeRes, excludeFileExts, updateExcludeFileExts])
 
   const buildUnderSearchSlot = useCallback(() => {
-    if (!Object.keys(fullPathFileMapRef.current).length)
-      return null
-
-    const filaPathsPromptTokenNum = countTokenQuick(filePathsTreePrompt)
-
-    const checkedFilesContentPromptTokenNum = checkedFilePaths.reduce((pre, cur) => {
-      const file = fullPathFileMapRef.current[cur]
-      return pre + (file?.otherInfo?.tokenNum ?? 0)
-    }, 0)
-
-    let totalTokenNum = checkedFilesContentPromptTokenNum
-
-    if (provideFilePathsTreePromptToGpt)
-      totalTokenNum += filaPathsPromptTokenNum
-
     const resetAllChecked = () => {
       updateCheckedFilePaths((preState) => {
         preState.forEach((item) => {
-          const file = fullPathFileMapRef.current[item]
+          const file = fullPathFileMap[item]
           file.otherInfo!.checked = false
           return item
         })
 
+        updateFilesTree([...filesTree])
+
         return []
       })
-      updateProvideFilePathsTreePromptToGpt(false)
-    }
-
-    const handleProvideFilePathsTreePromptToGptChange = (e: any) => {
-      const checked = e.target?.checked as boolean
-      updateProvideFilePathsTreePromptToGpt(checked)
     }
 
     return <FileTreeSidebarUnderSearchWrapper>
       <Trans
+        t={t}
         i18nKey={'chat_page.file_tree_top_tokens_tips'}
         values={{
           fileNum: checkedFilePaths.length,
-          tokenNum: formatNumWithK(totalTokenNum),
+          tokenNum: formatNumWithK(checkedFilesContentPromptTokenNum),
         }}
         components={{
           FileNumWrapper: <FileTreeSidebarHighlight style={{ marginLeft: 0 }}></FileTreeSidebarHighlight>,
@@ -403,21 +341,8 @@ export const FileTree: FC<FileTreeProps> = memo((props: FileTreeProps) => {
       }} onClick={resetAllChecked}>
         {t('chat_page.file_tree_top_clear_checked_btn')}
       </VSCodeLink>
-
-      <div>
-        <VSCodeCheckbox
-          style={{
-            marginTop: '0.5rem',
-          }}
-          checked={provideFilePathsTreePromptToGpt}
-          onChange={handleProvideFilePathsTreePromptToGptChange}>
-          {t('chat_page.file_tree_top_all_file_path_as_prompt', {
-            tokenNum: formatNumWithK(filaPathsPromptTokenNum),
-          })}
-        </VSCodeCheckbox>
-      </div>
     </FileTreeSidebarUnderSearchWrapper>
-  }, [filePathsTreePrompt, checkedFilePaths, provideFilePathsTreePromptToGpt])
+  }, [checkedFilePaths])
 
   const sortTreeItems = useCallback((items: TreeItemProps<FileInfoSidebarTreeItem>[]) => {
     return items?.sort((a, b) => {

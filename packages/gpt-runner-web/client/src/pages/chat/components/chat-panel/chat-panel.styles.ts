@@ -17,3 +17,12 @@ export const ChatPanelWrapper = styled.div`
 export const ChatPanelPopoverTreeWrapper = styled.div`
   height: 100%;
 `
+
+export const ConfigFormTitle = styled.div`
+  padding-left: 0.5rem;
+  margin: 1rem;
+  margin-bottom: 0;
+  font-size: 1rem;
+  font-weight: bold;
+  border-left: 0.25rem solid var(--foreground);
+`

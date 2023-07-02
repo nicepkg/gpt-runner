@@ -1,5 +1,5 @@
 import { VSCodeButton } from '@vscode/webview-ui-toolkit/react'
-import type { FC } from 'react'
+import type { FC, MouseEvent } from 'react'
 import { memo, useCallback, useEffect, useState } from 'react'
 import clsx from 'clsx'
 import type { AnimationProps, Target, Tween } from 'framer-motion'
@@ -25,7 +25,7 @@ export interface IconButtonProps extends GetComponentProps<InstanceType<typeof V
     to: Target
   }
   animatingWhenClick?: boolean
-  onClick?: () => MaybePromise<any>
+  onClick?: (e: MouseEvent<HTMLElement>) => MaybePromise<any>
   buttonStyle?: React.CSSProperties
 }
 
@@ -68,11 +68,11 @@ export const IconButton: FC<IconButtonProps> = memo((props) => {
     isAnimating && setDebouncedIsAnimating(isAnimating)
   }, [isAnimating])
 
-  const handleClick = useCallback(async () => {
+  const handleClick = useCallback(async (e: MouseEvent<HTMLElement>) => {
     if (animatingWhenClick)
       setIsAnimating(true)
 
-    await onClick?.()
+    await onClick?.(e)
 
     if (animatingWhenClick)
       setIsAnimating(false)

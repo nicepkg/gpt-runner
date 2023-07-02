@@ -1,9 +1,8 @@
 import type { Request, Response } from 'express'
 import type { ChatModelType, ChatStreamReqParams, FailResponse, SingleFileConfig, SuccessResponse } from '@nicepkg/gpt-runner-shared/common'
-import { ChatStreamReqParamsSchema, STREAM_DONE_FLAG, buildFailResponse, buildSuccessResponse } from '@nicepkg/gpt-runner-shared/common'
+import { ChatStreamReqParamsSchema, Debug, STREAM_DONE_FLAG, buildFailResponse, buildSuccessResponse, toUnixPath } from '@nicepkg/gpt-runner-shared/common'
 import { PathUtils, verifyParamsByZod } from '@nicepkg/gpt-runner-shared/node'
-import { createFileContext, getSecrets, loadUserConfig, parseGptFile } from '@nicepkg/gpt-runner-core'
-import { llmChain } from '../services'
+import { createFileContext, getSecrets, llmChain, loadUserConfig, parseGptFile } from '@nicepkg/gpt-runner-core'
 import { getValidFinalPath } from '../services/valid-path'
 import type { ControllerConfig } from '../types'
 
@@ -14,6 +13,8 @@ export const llmControllers: ControllerConfig = {
       url: '/chat-stream',
       method: 'post',
       handler: async (req: Request, res: Response) => {
+        const debug = new Debug('llm.controller')
+
         res.writeHead(200, {
           'Content-Type': 'text/event-stream',
           'Cache-Control': 'no-cache, no-transform',
@@ -32,6 +33,8 @@ export const llmControllers: ControllerConfig = {
           singleFileConfig: singleFileConfigFromParams,
           appendSystemPrompt = '',
           contextFilePaths,
+          editingFilePath,
+          overrideModelsConfig,
           rootPath,
         } = body
 
@@ -53,7 +56,10 @@ export const llmControllers: ControllerConfig = {
           })
         }
 
-        const model = singleFileConfig?.model
+        const model = {
+          ...singleFileConfig?.model,
+          ...overrideModelsConfig?.[singleFileConfig?.model?.type as ChatModelType || ''],
+        } as SingleFileConfig['model']
 
         const secretFromUserConfig = userConfig.model?.type === model?.type ? userConfig.model?.secrets : undefined
         let secretsFromStorage = await getSecrets(model?.type as ChatModelType || null)
@@ -74,21 +80,25 @@ export const llmControllers: ControllerConfig = {
           return res.write(`data: ${JSON.stringify(buildFailResponse(options))}\n\n`)
         }
 
-        let finalSystemPrompt = systemPromptFromParams || singleFileConfig?.systemPrompt || ''
-
-        // provide file context
-        if (contextFilePaths && finalPath) {
-          const fileContext = await createFileContext({
-            rootPath: finalPath,
-            filePaths: contextFilePaths,
-          })
-
-          finalSystemPrompt += `\n${fileContext}\n`
-        }
-
-        finalSystemPrompt += appendSystemPrompt
+        console.log('debug', process.env.DEBUG)
+        debug.log('model config', model)
 
         try {
+          let finalSystemPrompt = systemPromptFromParams || singleFileConfig?.systemPrompt || ''
+
+          // provide file context
+          if (contextFilePaths && finalPath) {
+            const fileContext = await createFileContext({
+              rootPath: finalPath,
+              filePaths: contextFilePaths?.map(toUnixPath),
+              editingFilePath: toUnixPath(editingFilePath),
+            })
+
+            finalSystemPrompt += `\n${fileContext}\n`
+          }
+
+          finalSystemPrompt += appendSystemPrompt
+
           const chain = await llmChain({
             messages,
             systemPrompt: finalSystemPrompt,

@@ -2,7 +2,7 @@
 {
   "title": "分类目录/AI角色名字",
   "model": {
-    "modalName": "gpt-3.5-turbo-16k",
+    "modelName": "gpt-3.5-turbo-16k",
     "temperature": 0
   }
 }
@@ -20,6 +20,6 @@
 
 这里可以写你的备注
 
-`model` / `modalName` / `temperature` / `System Prompt` / `User Prompt` 都是**可选**参数，而且可定制参数还有非常多。
+`model` / `modelName` / `temperature` / `System Prompt` / `User Prompt` 都是**可选**参数，而且可定制参数还有非常多。
 
 你还可以通过项目根目录下的 `gptr.config.json` 覆盖很多参数的默认值

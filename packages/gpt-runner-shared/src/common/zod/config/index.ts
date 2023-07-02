@@ -2,7 +2,7 @@ import type { z } from 'zod'
 import type { GetModelConfigType } from '../../types'
 import { ChatModelType } from '../../types'
 import { OpenaiModelConfigSchema, OpenaiSecretsSchema } from './openai.zod'
-import { HuggingFaceModelConfigSchema, HuggingFaceSecretsSchema } from './hugging-fface.zod'
+import { HuggingFaceModelConfigSchema, HuggingFaceSecretsSchema } from './hugging-face.zod'
 
 export * from './base.zod'
 export * from './openai.zod'

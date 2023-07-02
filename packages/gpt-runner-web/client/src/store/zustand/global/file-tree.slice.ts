@@ -11,36 +11,48 @@ export type FileInfoSidebarTreeItem = FileInfoTreeItem & {
 export type FileSidebarTreeItem = TreeItemBaseState<FileInfoSidebarTreeItem>
 
 export interface FileTreeSlice {
-  filePathsTreePrompt: string
-  provideFilePathsTreePromptToGpt: boolean
   expendedFilePaths: string[]
   checkedFilePaths: string[]
   excludeFileExts: string[]
   ideActiveFilePath: string
   ideOpeningFilePaths: string[]
-  provideIdeOpeningFilePathsToGpt: boolean
+  provideFileInfoToGptMap: {
+    allFilePaths: boolean
+    checkedFileContents: boolean
+    activeIdeFileContents: boolean
+    openingIdeFileContents: boolean
+  }
+  provideFileInfoPromptMap: {
+    allFilePathsPrompt: string
+  }
   updateExcludeFileExts: (excludeFileExts: string[] | ((oldExcludeFileExts: string[]) => string[])) => void
-  updateProvideFilePathsTreePromptToGpt: (provideFilePathsTreePromptToGpt: boolean) => void
-  updateFilePathsTreePrompt: (promptOrFileTreeItem: string | FileSidebarTreeItem[]) => void
   updateExpendedFilePaths: (expendedFilePaths: string[] | ((oldExpendedFilePaths: string[]) => string[])) => void
   updateCheckedFilePaths: (checkedFilePaths: string[] | ((oldCheckedFilePaths: string[]) => string[])) => void
   updateIdeActiveFilePath: (ideActiveFilePath: string) => void
   updateIdeOpeningFilePaths: (ideOpeningFilePaths: string[] | ((oldIdeOpeningFilePaths: string[]) => string[])) => void
-  updateProvideIdeOpeningFilePathsToGpt: (provideIdeOpeningFilePathsToGpt: boolean) => void
+  updateProvideFileInfoToGptMap: (provideFileInfoToGptMap: Partial<FileTreeSlice['provideFileInfoToGptMap']>) => void
+  updateProvideFileInfoPromptMap: (provideFileInfoPromptMap: Partial<FileTreeSlice['provideFileInfoPromptMap']>) => void
+  updateAllFilePathsPrompt: (allFilePathsPromptOrFileTreeItem: string | FileSidebarTreeItem[]) => void
 }
 
 export type FileTreeState = GetState<FileTreeSlice>
 
 function getInitialState() {
   return {
-    filePathsTreePrompt: '',
-    provideFilePathsTreePromptToGpt: false,
     expendedFilePaths: [],
     checkedFilePaths: [],
     excludeFileExts: [],
     ideActiveFilePath: '',
     ideOpeningFilePaths: [],
-    provideIdeOpeningFilePathsToGpt: false,
+    provideFileInfoToGptMap: {
+      allFilePaths: false,
+      checkedFileContents: true,
+      activeIdeFileContents: false,
+      openingIdeFileContents: true,
+    },
+    provideFileInfoPromptMap: {
+      allFilePathsPrompt: '',
+    },
   } satisfies FileTreeState
 }
 
@@ -58,10 +70,25 @@ export const createFileTreeSlice: StateCreator<
       excludeFileExts: [...new Set(_excludeFileExts)],
     })
   },
-  updateProvideFilePathsTreePromptToGpt(provideFilePathsTreePromptToGpt) {
-    set({ provideFilePathsTreePromptToGpt })
+  updateProvideFileInfoToGptMap(provideFileInfoToGptMap) {
+    set({
+      provideFileInfoToGptMap: {
+        ...get().provideFileInfoToGptMap,
+        ...provideFileInfoToGptMap,
+      },
+    })
   },
-  updateFilePathsTreePrompt(promptOrFileTreeItem) {
+  updateProvideFileInfoPromptMap(provideFileInfoPromptMap) {
+    set({
+      provideFileInfoPromptMap: {
+        ...get().provideFileInfoPromptMap,
+        ...provideFileInfoPromptMap,
+      },
+    })
+  },
+  updateAllFilePathsPrompt(promptOrFileTreeItem) {
+    const state = get()
+
     let result = ''
 
     if (typeof promptOrFileTreeItem === 'string')
@@ -75,7 +102,9 @@ export const createFileTreeSlice: StateCreator<
       })
     }
 
-    set({ filePathsTreePrompt: result })
+    state.updateProvideFileInfoPromptMap({
+      allFilePathsPrompt: result,
+    })
   },
   updateExpendedFilePaths(expendedFilePaths) {
     const result = typeof expendedFilePaths === 'function' ? expendedFilePaths(get().expendedFilePaths) : expendedFilePaths
@@ -91,8 +120,5 @@ export const createFileTreeSlice: StateCreator<
   updateIdeOpeningFilePaths(ideOpeningFilePaths) {
     const result = typeof ideOpeningFilePaths === 'function' ? ideOpeningFilePaths(get().ideOpeningFilePaths) : ideOpeningFilePaths
     set({ ideOpeningFilePaths: result })
-  },
-  updateProvideIdeOpeningFilePathsToGpt(provideIdeOpeningFilePathsToGpt) {
-    set({ provideIdeOpeningFilePathsToGpt })
   },
 })

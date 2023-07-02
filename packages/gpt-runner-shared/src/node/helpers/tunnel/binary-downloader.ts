@@ -5,8 +5,6 @@ import { getGlobalCacheDir } from '../get-cache-dir'
 import { getAxiosInstance } from '../axios'
 import { Debug } from '../../../common'
 
-const debug = new Debug('tunnel')
-
 // see: https://github.com/gradio-app/gradio/blob/main/gradio/tunneling.py
 export class BinaryDownloader {
   private static readonly VERSION = '0.2'
@@ -23,6 +21,7 @@ export class BinaryDownloader {
   }
 
   public static async downloadBinary() {
+    const debug = new Debug('tunnel')
     const binaryPath = await BinaryDownloader.getBinaryPath()
 
     if (!fs.existsSync(binaryPath)) {

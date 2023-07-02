@@ -16,12 +16,12 @@ export function resetAllState() {
   resetStateQueue.forEach(resetState => resetState())
 }
 
-export function createStore(devtoolsName: string) {
+export function createStore(devtoolsName: string, connectToDevTools = true) {
   const newCreate = (store: any) => {
     let result: any
 
     // https://github.com/pmndrs/zustand/issues/852#issuecomment-1059783350
-    if (EnvConfig.get('NODE_ENV') === 'development') {
+    if (EnvConfig.get('NODE_ENV') === 'development' && connectToDevTools) {
       result = create(
         devtools(store, {
           name: devtoolsName,

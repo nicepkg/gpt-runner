@@ -47,6 +47,7 @@ export const InitGptFiles: FC<InitGptFilesProps> = memo((props) => {
   return <Wrapper>
     <Title>
       <Trans
+        t={t}
         i18nKey='chat_page.no_gpt_files_tips'
         components={{
           Title: <Title />,
@@ -57,6 +58,7 @@ export const InitGptFiles: FC<InitGptFilesProps> = memo((props) => {
 
     <Title>
       <Trans
+        t={t}
         i18nKey='chat_page.ask_for_create_gpt_file_tips'
         values={{
           fileName: `./${GPT_RUNNER_OFFICIAL_FOLDER}/copilot.gpt.md`,

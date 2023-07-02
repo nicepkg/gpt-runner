@@ -6,8 +6,6 @@ import { Debug, GetGptFileInfoReqParamsSchema, GetGptFilesReqParamsSchema, InitG
 import type { ControllerConfig } from '../types'
 import { getValidFinalPath } from '../services/valid-path'
 
-const debug = new Debug('gpt-files.controller')
-
 export const gptFilesControllers: ControllerConfig = {
   namespacePath: '/gpt-files',
   controllers: [
@@ -15,6 +13,7 @@ export const gptFilesControllers: ControllerConfig = {
       url: '/',
       method: 'get',
       handler: async (req, res) => {
+        const debug = new Debug('gpt-files.controller')
         const query = req.query as GetGptFilesReqParams
 
         verifyParamsByZod(query, GetGptFilesReqParamsSchema)

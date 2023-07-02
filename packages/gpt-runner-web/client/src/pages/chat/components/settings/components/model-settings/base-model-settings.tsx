@@ -1,6 +1,6 @@
 import { ChatModelType, getModelConfigTypeSchema } from '@nicepkg/gpt-runner-shared/common'
 import type { BaseModelConfig, SingleFileConfig } from '@nicepkg/gpt-runner-shared/common'
-import { memo, useCallback, useEffect, useMemo, useState } from 'react'
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { ReactNode } from 'react'
 import type { Path, UseFormReturn } from 'react-hook-form'
 import { useForm } from 'react-hook-form'
@@ -30,13 +30,13 @@ function BaseModelSettings_<FormData extends BaseModelConfig>(props: BaseModelSe
   const { singleFileConfig, formConfig } = props
 
   const { t } = useTranslation()
-  const { modelOverrideConfig, updateModelOverrideConfig } = useGlobalStore()
+  const { overrideModelsConfig, updateOverrideModelsConfig } = useGlobalStore()
   const currentModel = singleFileConfig?.model as FormData | undefined
   const currentModelType = currentModel?.type || ChatModelType.Openai
 
   const currentModelOverrideConfig = useMemo(() => {
-    return (modelOverrideConfig[currentModelType] || {}) as FormData
-  }, [modelOverrideConfig[currentModelType]])
+    return (overrideModelsConfig[currentModelType] || {}) as FormData
+  }, [overrideModelsConfig[currentModelType]])
 
   const currentFormNames = useMemo(() => formConfig.map(item => item.name), [formConfig])
 
@@ -52,16 +52,17 @@ function BaseModelSettings_<FormData extends BaseModelConfig>(props: BaseModelSe
 
   const { setValue, watch } = useFormReturns
 
-  const updateModelOverrideConfigFromCheckMap = useCallback((formData: FormData) => {
+  const updateOverrideModelsConfigFromCheckMap = useCallback((formData: FormData, _checkedMap?: Record<keyof FormData, boolean>) => {
     const checkedValues = {} as FormData
+    const finalCheckedMap = _checkedMap || checkedMap
 
-    Object.keys(checkedMap).forEach((key) => {
+    Object.keys(finalCheckedMap).forEach((key) => {
       const formName = key as keyof FormData
-      if (checkedMap[formName] === true)
+      if (finalCheckedMap[formName] === true)
         checkedValues[formName] = formData?.[formName] as any
     })
 
-    updateModelOverrideConfig(preState => ({
+    updateOverrideModelsConfig(preState => ({
       ...preState,
       [currentModelType]: {
         ...checkedValues,
@@ -71,14 +72,19 @@ function BaseModelSettings_<FormData extends BaseModelConfig>(props: BaseModelSe
 
   useEffect(() => {
     const subscription = watch((formData) => {
-      updateModelOverrideConfigFromCheckMap(formData as FormData)
+      updateOverrideModelsConfigFromCheckMap(formData as FormData)
     })
 
     return () => subscription.unsubscribe()
-  }, [watch, updateModelOverrideConfigFromCheckMap])
+  }, [watch, updateOverrideModelsConfigFromCheckMap])
 
+  const isInitCheckMap = useRef(false)
   useEffect(() => {
-    // update checked map
+    if (isInitCheckMap.current || !singleFileConfig?.model || !currentModelOverrideConfig)
+      return
+    isInitCheckMap.current = true
+
+    // init checked map
     const initCheckedMap = Object.keys(checkedMap).reduce((prev, key) => {
       const formName = key as keyof FormData
       const isOverride = currentModelOverrideConfig[formName] !== undefined
@@ -98,19 +104,21 @@ function BaseModelSettings_<FormData extends BaseModelConfig>(props: BaseModelSe
       if (!isOverride && currentModel?.[formName] !== undefined)
         setValue(formName as Path<FormData>, currentModel[formName] as any)
     })
-  }, [singleFileConfig?.model, JSON.stringify(currentModelOverrideConfig)])
+  }, [isInitCheckMap.current, singleFileConfig?.model, JSON.stringify(currentModelOverrideConfig)])
 
   const buildLabel = (label: string, formName: keyof FormData) => {
     return <LabelWrapper>
       <VSCodeCheckbox
         checked={checkedMap[formName]}
-        onChange={(e) => {
-          const checked = (e.target as HTMLInputElement).checked
-          setCheckedMap(prev => ({
-            ...prev,
-            [formName]: checked,
-          }))
-          updateModelOverrideConfigFromCheckMap(watch())
+        onClick={(e) => {
+          const newCheckedMap = {
+            ...checkedMap,
+            [formName]: !checkedMap[formName],
+          }
+
+          setCheckedMap(newCheckedMap)
+          updateOverrideModelsConfigFromCheckMap(watch(), newCheckedMap)
+
           e.stopPropagation()
           return false
         }}
@@ -118,22 +126,22 @@ function BaseModelSettings_<FormData extends BaseModelConfig>(props: BaseModelSe
     </LabelWrapper>
   }
 
+  const isAllChecked = Object.values(checkedMap).every(Boolean)
   return <StyledForm>
     <VSCodeCheckbox
       style={{
         marginBottom: '1rem',
       }}
-      checked={Object.values(checkedMap).every(Boolean)}
-      onChange={(e) => {
-        const checked = (e.target as HTMLInputElement).checked
-        setCheckedMap((prev) => {
-          return Object.fromEntries(Object.keys(prev).map(key => [key, checked])) as Record<keyof FormData, boolean>
-        })
-        updateModelOverrideConfigFromCheckMap(watch())
+      checked={isAllChecked}
+      onClick={(e) => {
+        const newCheckedMap = Object.fromEntries(Object.keys(checkedMap).map(key => [key, !isAllChecked])) as Record<keyof FormData, boolean>
+        setCheckedMap(newCheckedMap)
+        updateOverrideModelsConfigFromCheckMap(watch(), newCheckedMap)
+
         e.stopPropagation()
       }}
     >
-      Override All Settings
+      {t('chat_page.override_all_settings')}
     </VSCodeCheckbox>
 
     {formConfig.map((formItemConfig, index) => {

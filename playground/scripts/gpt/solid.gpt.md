@@ -2,7 +2,7 @@
 {
   "title": "common/",
   "model": {
-    "modalName": "gpt-3.5-turbo-16k",
+    "modelName": "gpt-3.5-turbo-16k",
     "temperature": 0
   }
 }

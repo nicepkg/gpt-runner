@@ -24,6 +24,8 @@ export interface ChatModelTypeMap {
   [ChatModelType.HuggingFace]: HuggingFaceModelConfig
 }
 
+export type PartialChatModelTypeMap = Partial<ChatModelTypeMap>
+
 export type GetModelConfigType<T extends ChatModelType, P extends 'config' | 'secrets'> = {
   config: ChatModelTypeMap[T]
   secrets: ChatModelTypeMap[T]['secrets']

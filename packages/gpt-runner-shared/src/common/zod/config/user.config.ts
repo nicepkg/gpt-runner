@@ -1,7 +1,9 @@
 import { z } from 'zod'
-import type { FilterPattern, FormCheckboxGroupConfig, FormFieldBaseConfig, FormInputConfig, FormItemConfig, FormOption, FormRadioGroupConfig, FormSelectConfig, FormTextareaConfig, SingleChatMessage, SingleFileConfig, UserConfig, UserConfigForUser } from '../../types'
+import { type ChatModel, ChatModelType, type FilterPattern, type FormCheckboxGroupConfig, type FormFieldBaseConfig, type FormInputConfig, type FormItemConfig, type FormOption, type FormRadioGroupConfig, type FormSelectConfig, type FormTextareaConfig, type SingleChatMessage, type SingleFileConfig, type UserConfig, type UserConfigForUser } from '../../types'
 import { ChatRoleSchema } from '../enum.zod'
+import type { PartialChatModelTypeMap } from './../../types/config/base.config'
 import { OpenaiModelConfigSchema } from './openai.zod'
+import { HuggingFaceModelConfigSchema } from './hugging-face.zod'
 
 export const FilterPatternSchema = z.union([
   z.array(z.union([z.string(), z.instanceof(RegExp)])),
@@ -12,8 +14,19 @@ export const FilterPatternSchema = z.union([
   z.undefined(),
 ]) satisfies z.ZodType<FilterPattern>
 
+// OpenaiModelConfigSchema or HuggingFaceModelConfigSchema
+export const ChatModelSchema = z.union([
+  OpenaiModelConfigSchema,
+  HuggingFaceModelConfigSchema,
+]) satisfies z.ZodType<ChatModel>
+
+export const PartialChatModelTypeMapSchema = z.object({
+  [ChatModelType.Openai]: OpenaiModelConfigSchema.optional(),
+  [ChatModelType.HuggingFace]: HuggingFaceModelConfigSchema.optional(),
+}) satisfies z.ZodType<PartialChatModelTypeMap>
+
 export const UserConfigSchema = z.object({
-  model: OpenaiModelConfigSchema.optional().describe('The LLM model configuration'),
+  model: ChatModelSchema.optional().describe('The LLM model configuration'),
   rootPath: z.string().optional().describe('The root path of the project'),
   exts: z.array(z.string()).optional().default(['.gpt.md']).describe('The file extensions to be used'),
   includes: FilterPatternSchema.optional().default(null).describe('The include patterns for filtering files'),

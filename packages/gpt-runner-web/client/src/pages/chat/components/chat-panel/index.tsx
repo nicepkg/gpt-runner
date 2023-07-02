@@ -24,7 +24,8 @@ import { isDarkTheme } from '../../../../styles/themes'
 import { emitter } from '../../../../helpers/emitter'
 import { ModelSettings } from '../settings/components/model-settings'
 import { ContentWrapper } from '../../chat.styles'
-import { ChatPanelPopoverTreeWrapper, ChatPanelWrapper } from './chat-panel.styles'
+import { ContextSettings } from '../settings/components/context-settings'
+import { ChatPanelPopoverTreeWrapper, ChatPanelWrapper, ConfigFormTitle } from './chat-panel.styles'
 import { createRemarkOpenEditorPlugin } from './remark-plugin'
 
 export interface ChatPanelProps {
@@ -358,7 +359,7 @@ export const ChatPanel: FC<ChatPanelProps> = memo((props) => {
             style={{
               paddingLeft: '0.5rem',
             }}
-            text={'Model Settings'}
+            text={t('chat_page.model_settings_btn')}
             iconClassName='codicon-settings'
             hoverShowText={!isHovering}
           ></IconButton>
@@ -367,7 +368,15 @@ export const ChatPanel: FC<ChatPanelProps> = memo((props) => {
           return <ContentWrapper $isPopoverContent style={{
             maxWidth: '400px',
           }}>
+            <ConfigFormTitle>
+              <ModelSettings rootPath={rootPath} singleFilePath={chatInstance?.singleFilePath} viewType='title'></ModelSettings>
+              {` ${t('chat_page.override_settings')}`}
+            </ConfigFormTitle>
             <ModelSettings rootPath={rootPath} singleFilePath={chatInstance?.singleFilePath} viewType='model'></ModelSettings>
+            <ConfigFormTitle>
+              {t('chat_page.context_settings')}
+            </ConfigFormTitle>
+            <ContextSettings rootPath={rootPath}></ContextSettings>
           </ContentWrapper>
         }}
       />

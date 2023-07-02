@@ -39,7 +39,7 @@ export async function registerSyncOpeningFilePaths(
       const maybeActiveDocs: (vscode.TextDocument | undefined)[] = [
         vscode.window.activeTextEditor?.document,
         state.activeEditor?.document,
-        ...vscode.window.visibleTextEditors.map(editor => editor.document),
+        // ...vscode.window.visibleTextEditors.map(editor => editor.document),
       ]
 
       state.activeFilePath = toUnixPath(maybeActiveDocs.find(doc => docIsFile(doc))?.uri.fsPath ?? '')
@@ -63,9 +63,12 @@ export async function registerSyncOpeningFilePaths(
       debounceUpdateActiveFile()
     }))
 
-    // update files when vscode is activated
-    debounceUpdateOpenFiles()
-    debounceUpdateActiveFile()
+    setTimeout(() => {
+      // wait for all document to be load
+      // update files when vscode is activated
+      debounceUpdateOpenFiles()
+      debounceUpdateActiveFile()
+    }, 1000)
 
     return vscode.Disposable.from({
       dispose,

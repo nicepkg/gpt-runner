@@ -255,13 +255,18 @@ export const PopoverMenu: React.FC<PopoverMenuProps> = memo((props) => {
         </div>
       )}
     >
-      <ChildrenWrapper onClick={() => {
+      <ChildrenWrapper onClick={(e: any) => {
+        e.stopPropagation()
+
         if (!clickMode)
-          return
+          return false
+
         getIsPopoverOpen() ? handleClose() : handleOpen()
 
         if (!clickOutSideToClose)
           setIsPin(true)
+
+        return false
       }}>
         <Children
           ref={childrenHoverRef}
