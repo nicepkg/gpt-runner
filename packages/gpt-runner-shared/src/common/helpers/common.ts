@@ -229,3 +229,20 @@ export function getErrorMsg(error: any) {
   )
   return errorMessage
 }
+
+export function waitForCondition(conditionFn: (...args: any[]) => boolean, timeout = 10000) {
+  return new Promise<void>((resolve, reject) => {
+    const startTime = Date.now()
+    const interval = setInterval(() => {
+      if (conditionFn()) {
+        clearInterval(interval)
+        resolve()
+      }
+      else if (Date.now() - startTime > timeout) {
+        clearInterval(interval)
+        console.warn('waitForCondition timeout with function', conditionFn.toString())
+        reject(new Error('waitForCondition timeout'))
+      }
+    }, 100)
+  })
+}

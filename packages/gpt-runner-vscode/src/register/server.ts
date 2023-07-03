@@ -2,6 +2,7 @@ import child_process from 'child_process'
 import { getPort, getRunServerEnv } from '@nicepkg/gpt-runner-shared/node'
 import type { Disposable, ExtensionContext } from 'vscode'
 import * as vscode from 'vscode'
+import waitPort from 'wait-port'
 import type { ContextLoader } from '../contextLoader'
 import { Commands } from '../constant'
 import { log } from '../log'
@@ -34,8 +35,6 @@ export async function registerServer(
         autoFreePort: true,
       })
 
-      state.serverPort = finalPort
-
       serverProcess = child_process.spawn('node', [
         serverUri.fsPath,
         '--port',
@@ -49,6 +48,13 @@ export async function registerServer(
           DEBUG: 'enabled',
         },
       })
+
+      await waitPort({
+        port: finalPort,
+        output: 'silent',
+      })
+
+      state.serverPort = finalPort
 
       serverProcess.stdout.on('data', (data: string) => {
         log.appendLine(`stdout: ${data}`)

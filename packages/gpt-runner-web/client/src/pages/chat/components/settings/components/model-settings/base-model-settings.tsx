@@ -132,7 +132,8 @@ function BaseModelSettings_<FormData extends BaseModelConfig>(props: BaseModelSe
       style={{
         marginBottom: '1rem',
       }}
-      checked={isAllChecked}
+      indeterminate={isAllChecked}
+      checked={false}
       onClick={(e) => {
         const newCheckedMap = Object.fromEntries(Object.keys(checkedMap).map(key => [key, !isAllChecked])) as Record<keyof FormData, boolean>
         setCheckedMap(newCheckedMap)

@@ -72,6 +72,7 @@ export const gptFilesControllers: ControllerConfig = {
       url: '/get-gpt-file-info',
       method: 'get',
       handler: async (req, res) => {
+        const debug = new Debug('gpt-files.controller')
         const query = req.query as GetGptFileInfoReqParams
 
         verifyParamsByZod(query, GetGptFileInfoReqParamsSchema)

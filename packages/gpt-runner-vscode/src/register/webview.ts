@@ -2,13 +2,13 @@ import fs from 'fs'
 import type { ExtensionContext } from 'vscode'
 import * as vscode from 'vscode'
 import * as uuid from 'uuid'
-import { ClientEventName, toUnixPath } from '@nicepkg/gpt-runner-shared/common'
+import { ClientEventName, toUnixPath, waitForCondition } from '@nicepkg/gpt-runner-shared/common'
 import { PathUtils } from '@nicepkg/gpt-runner-shared/node'
 import type { ContextLoader } from '../contextLoader'
 import { Commands, EXT_DISPLAY_NAME, EXT_NAME } from '../constant'
 import { createHash, getLang, getServerBaseUrl } from '../utils'
 import { state } from '../state'
-import { EventType, emitter } from '../emitter'
+import { EventType, VscodeEventName, emitter } from '../emitter'
 import { log } from '../log'
 
 class ChatViewProvider implements vscode.WebviewViewProvider {
@@ -34,13 +34,7 @@ class ChatViewProvider implements vscode.WebviewViewProvider {
   }
 
   static handleWebviewWindowInit() {
-    emitter.emit(ClientEventName.UpdateIdeOpeningFiles, {
-      filePaths: state.openingFilePaths,
-    })
-
-    emitter.emit(ClientEventName.UpdateIdeActiveFilePath, {
-      filePath: state.activeFilePath,
-    })
+    emitter.emit(VscodeEventName.VscodeUpdateOpeningFilePaths)
   }
 
   resolveWebviewView(
@@ -108,7 +102,8 @@ class ChatViewProvider implements vscode.WebviewViewProvider {
         initialRoutePath: '/chat',
         showDiffCodesBtn: true,
         showInsertCodesBtn: true,
-        defaultLangId: '${getLang()}'
+        defaultLangId: '${getLang()}',
+        showIdeFileContextOptions: true
       }
 
       window.addEventListener('message', event => {
@@ -148,6 +143,9 @@ export async function registerWebview(
     sidebarWebviewDisposer?.dispose?.()
     webviewPanelDisposer?.dispose?.()
   }
+
+  // ensure server port is ready
+  await waitForCondition(() => !!state.serverPort)
 
   const registerProvider = () => {
     dispose()

@@ -8,6 +8,7 @@ import { LoadingView } from '../../../../../../components/loading-view'
 import type { ISelectOption } from '../../../../../../components/select-option'
 import { SelectOption } from '../../../../../../components/select-option'
 import { useTokenNum } from '../../../../../../hooks/use-token-num.hook'
+import { getGlobalConfig } from '../../../../../../helpers/global-config'
 import { SelectWrapper, StyledBadge, StyledVSCodeCheckbox } from './context-settings.styles'
 
 export interface ContextSettingsProps {
@@ -78,7 +79,7 @@ export const ContextSettings = memo((props: ContextSettingsProps) => {
     {isLoading && <LoadingView absolute></LoadingView>}
 
     {/* ide opening files or active file */}
-    <SelectWrapper>
+    {getGlobalConfig().showIdeFileContextOptions && <SelectWrapper>
       <StyledVSCodeCheckbox
         style={{
           marginBottom: 0,
@@ -109,7 +110,7 @@ export const ContextSettings = memo((props: ContextSettingsProps) => {
             activeIdeFileContents: value === 'activeIdeFileContents',
           })
         }} />
-    </SelectWrapper>
+    </SelectWrapper>}
 
     {/* selected files */}
     <StyledVSCodeCheckbox

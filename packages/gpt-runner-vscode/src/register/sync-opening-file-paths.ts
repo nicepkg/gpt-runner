@@ -1,6 +1,6 @@
 import * as vscode from 'vscode'
 import { ClientEventName, debounce, toUnixPath } from '@nicepkg/gpt-runner-shared/common'
-import { emitter } from '../emitter'
+import { VscodeEventName, emitter } from '../emitter'
 import type { ContextLoader } from '../contextLoader'
 import { state } from '../state'
 import { docIsFile } from '../utils'
@@ -63,12 +63,16 @@ export async function registerSyncOpeningFilePaths(
       debounceUpdateActiveFile()
     }))
 
-    setTimeout(() => {
-      // wait for all document to be load
-      // update files when vscode is activated
-      debounceUpdateOpenFiles()
+    // FIXME: fix some file path is lost when vscode is activated
+    // update files when vscode is activated
+    debounceUpdateOpenFiles()
+    debounceUpdateActiveFile()
+
+    // for webview
+    emitter.on(VscodeEventName.VscodeUpdateOpeningFilePaths, () => {
       debounceUpdateActiveFile()
-    }, 1000)
+      debounceUpdateOpenFiles()
+    })
 
     return vscode.Disposable.from({
       dispose,

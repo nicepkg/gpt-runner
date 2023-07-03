@@ -80,7 +80,6 @@ export const llmControllers: ControllerConfig = {
           return res.write(`data: ${JSON.stringify(buildFailResponse(options))}\n\n`)
         }
 
-        console.log('debug', process.env.DEBUG)
         debug.log('model config', model)
 
         try {
