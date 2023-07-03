@@ -54,6 +54,7 @@
     "pycache",
     "rehype",
     "rubberband",
+    "svgr",
     "tablist",
     "tabpanel",
     "tagify",
@@ -61,6 +62,7 @@
     "tiktoken",
     "tsup",
     "unconfig",
+    "undici",
     "uuidv",
     "vsix",
     "zustand"

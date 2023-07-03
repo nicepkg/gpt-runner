@@ -19,6 +19,8 @@ import { useOn } from '../../../../hooks/use-on.hook'
 import { useGetCommonFilesTree } from '../../../../hooks/use-get-common-files-tree.hook'
 import { useDebounceFn } from '../../../../hooks/use-debounce-fn.hook'
 import { useTokenNum } from '../../../../hooks/use-token-num.hook'
+import { getIconComponent } from '../../../../helpers/file-icons/utils'
+import type { SvgComponent } from '../../../../types/common'
 import { FileTreeItemRightWrapper, FileTreeSidebarHighlight, FileTreeSidebarUnderSearchWrapper, FilterWrapper } from './file-tree.styles'
 
 export interface FileTreeProps {
@@ -121,11 +123,24 @@ export const FileTree: FC<FileTreeProps> = memo((props: FileTreeProps) => {
   const renderTreeItemLeftSlot = useCallback((props: TreeItemState<FileInfoSidebarTreeItem>) => {
     const { isLeaf, isExpanded, otherInfo } = props
 
-    const getIconClassName = () => {
-      if (isLeaf)
-        return 'codicon-file'
+    // const getIconClassName = () => {
+    //   if (isLeaf)
+    //     return 'codicon-file'
 
-      return isExpanded ? 'codicon-folder-opened' : 'codicon-folder'
+    //   return isExpanded ? 'codicon-folder-opened' : 'codicon-folder'
+    // }
+
+    const renderMaterialIconComponent: SvgComponent = (props) => {
+      const MaterialSvgComponent = getIconComponent({
+        isFolder: !isLeaf,
+        isOpen: isExpanded,
+        name: otherInfo?.name || '',
+      })
+
+      if (!MaterialSvgComponent)
+        return null
+
+      return <MaterialSvgComponent {...props} />
     }
 
     const handleCheckedChange = (checked: boolean) => {
@@ -198,10 +213,25 @@ export const FileTree: FC<FileTreeProps> = memo((props: FileTreeProps) => {
         marginRight: '0.25rem',
       }} className={clsx(isExpanded ? 'codicon-chevron-down' : 'codicon-chevron-right')}></Icon >}
 
-      <Icon style={{
+      {/* <Icon style={{
         marginLeft: !isLeaf ? '0' : '0.6rem',
         marginRight: '0.45rem',
-      }} className={getIconClassName()}></Icon>
+      }} className={getIconClassName()}></Icon> */}
+
+      {/* <MaterialIconComponent
+        style={{
+          marginLeft: !isLeaf ? '0' : '0.6rem',
+          marginRight: '0.45rem',
+        }}
+      ></MaterialIconComponent> */}
+      {renderMaterialIconComponent({
+        style: {
+          marginLeft: '0.2rem',
+          marginRight: '0.45rem',
+          width: '1rem',
+          height: '1rem',
+        },
+      })}
     </>
   }, [updateFileItem, updateCheckedFilePaths])
 
