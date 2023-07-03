@@ -1,0 +1,26 @@
+[versions]
+# libraries
+annotations = "24.0.1"
+
+# plugins
+dokka = "1.8.10"
+kotlin = "1.8.21"
+coroutines = "1.7.2"
+changelog = "2.1.0"
+gradleIntelliJPlugin = "1.14.1"
+qodana = "0.1.13"
+kover = "0.7.1"
+nodeGradle = "5.0.0"
+
+[libraries]
+annotations = { group = "org.jetbrains", name = "annotations", version.ref = "annotations" }
+coroutines = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines" }
+
+[plugins]
+changelog = { id = "org.jetbrains.changelog", version.ref = "changelog" }
+dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
+gradleIntelliJPlugin = { id = "org.jetbrains.intellij", version.ref = "gradleIntelliJPlugin" }
+kotlin = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
+qodana = { id = "org.jetbrains.qodana", version.ref = "qodana" }
+nodeGradle = { id = "com.github.node-gradle.node", version.ref = "nodeGradle" }
