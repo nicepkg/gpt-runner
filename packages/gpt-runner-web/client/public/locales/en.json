@@ -48,6 +48,7 @@
     "override_settings": "Override Settings",
     "override_all_settings": "Override All Settings",
     "context_settings": "Context Settings",
+    "context_settings_selected_text_checkbox_tips": "Selected Text As Prompt <TokenNumWrapper>{{tokenNum}}</TokenNumWrapper> Tokens.",
     "context_settings_opening_ide_file_contents_checkbox_tips": "Opening IDE File Contents As Prompt <FileNumWrapper>{{fileNum}}</FileNumWrapper> Files <TokenNumWrapper>{{tokenNum}}</TokenNumWrapper> Tokens.",
     "context_settings_active_ide_file_contents_checkbox_tips": "Active IDE File Contents As Prompt <TokenNumWrapper>{{tokenNum}}</TokenNumWrapper> Tokens.",
     "context_settings_selected_files_checkbox_label": "Selected Files As Prompt. Current Selected <FileNumWrapper>{{fileNum}}</FileNumWrapper> Files <TokenNumWrapper>{{tokenNum}}</TokenNumWrapper> Tokens.",

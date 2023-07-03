@@ -10,6 +10,7 @@ export interface State {
   diffCodes: string
   openingFilePaths: string[]
   activeFilePath: string
+  selectedText: string
 }
 
 export const state: State = {
@@ -22,4 +23,5 @@ export const state: State = {
   diffCodes: '',
   openingFilePaths: [],
   activeFilePath: '',
+  selectedText: '',
 }

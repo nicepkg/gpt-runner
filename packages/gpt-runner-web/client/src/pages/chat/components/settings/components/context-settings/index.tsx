@@ -9,6 +9,7 @@ import type { ISelectOption } from '../../../../../../components/select-option'
 import { SelectOption } from '../../../../../../components/select-option'
 import { useTokenNum } from '../../../../../../hooks/use-token-num.hook'
 import { getGlobalConfig } from '../../../../../../helpers/global-config'
+import { useTempStore } from '../../../../../../store/zustand/temp'
 import { SelectWrapper, StyledBadge, StyledVSCodeCheckbox } from './context-settings.styles'
 
 export interface ContextSettingsProps {
@@ -22,10 +23,14 @@ export const ContextSettings = memo((props: ContextSettingsProps) => {
   const {
     provideFileInfoToGptMap,
     checkedFilePaths,
-    ideOpeningFilePaths,
     updateProvideFileInfoToGptMap,
   } = useGlobalStore()
-  const { filaPathsPromptTokenNum, ideOpeningFileTokenNum, ideActiveFileTokenNum, checkedFilesContentPromptTokenNum } = useTokenNum()
+
+  const {
+    ideOpeningFilePaths,
+  } = useTempStore()
+
+  const { selectedTextPromptTokenNum, filePathsPromptTokenNum, ideOpeningFileTokenNum, ideActiveFileTokenNum, checkedFilesContentPromptTokenNum } = useTokenNum()
 
   const { isLoading } = useGetCommonFilesTree({
     rootPath,
@@ -77,6 +82,23 @@ export const ContextSettings = memo((props: ContextSettingsProps) => {
 
   return <StyledForm>
     {isLoading && <LoadingView absolute></LoadingView>}
+
+    {/* selected text */}
+    {getGlobalConfig().showUserSelectedTextContextOptions && <StyledVSCodeCheckbox
+      checked={provideFileInfoToGptMap.userSelectedText}
+      onChange={e => handleProvideChange(e, 'userSelectedText')}
+    >
+      <Trans
+        t={t}
+        i18nKey={'chat_page.context_settings_selected_text_checkbox_tips'}
+        values={{
+          tokenNum: formatNumWithK(selectedTextPromptTokenNum),
+        }}
+        components={{
+          TokenNumWrapper: <StyledBadge></StyledBadge>,
+        }}
+      ></Trans>
+    </StyledVSCodeCheckbox>}
 
     {/* ide opening files or active file */}
     {getGlobalConfig().showIdeFileContextOptions && <SelectWrapper>
@@ -140,7 +162,7 @@ export const ContextSettings = memo((props: ContextSettingsProps) => {
         t={t}
         i18nKey={'chat_page.context_settings_all_file_paths_checkbox_label'}
         values={{
-          tokenNum: formatNumWithK(filaPathsPromptTokenNum),
+          tokenNum: formatNumWithK(filePathsPromptTokenNum),
         }}
         components={{
           TokenNumWrapper: <StyledBadge></StyledBadge>,

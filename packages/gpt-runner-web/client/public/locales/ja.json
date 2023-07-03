@@ -48,6 +48,7 @@
     "override_settings": "設定を上書き",
     "override_all_settings": "すべての設定を上書きする",
     "context_settings": "コンテキスト設定",
+    "context_settings_selected_text_checkbox_tips": "選択したテキストをプロンプトとして使用<TokenNumWrapper>{{tokenNum}}</TokenNumWrapper>トークン。",
     "context_settings_opening_ide_file_contents_checkbox_tips": "開いているIDEファイルの内容をプロンプトとして使用<FileNumWrapper>{{fileNum}}</FileNumWrapper>ファイル<TokenNumWrapper>{{tokenNum}}</TokenNumWrapper>トークン。",
     "context_settings_active_ide_file_contents_checkbox_tips": "アクティブなIDEファイルの内容をプロンプトとして使用<TokenNumWrapper>{{tokenNum}}</TokenNumWrapper>トークン。",
     "context_settings_selected_files_checkbox_label": "選択したファイルをプロンプトとして使用。現在選択中<FileNumWrapper>{{fileNum}}</FileNumWrapper>ファイル<TokenNumWrapper>{{tokenNum}}</TokenNumWrapper>トークン。",

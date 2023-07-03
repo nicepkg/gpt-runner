@@ -24,6 +24,7 @@ export enum ClientEventName {
   DiffCodes = 'diffCodes',
   UpdateIdeOpeningFiles = 'updateIdeOpeningFiles',
   UpdateIdeActiveFilePath = 'updateIdeActiveFilePath',
+  UpdateUserSelectedText = 'updateUserSelectedText',
 }
 
 export enum GptFileTreeItemType {

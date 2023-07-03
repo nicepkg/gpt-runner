@@ -6,11 +6,13 @@ import { state } from './state'
 import { Commands } from './constant'
 
 export enum VscodeEventName {
-  VscodeUpdateOpeningFilePaths = 'VscodeUpdateOpeningFilePaths',
+  VscodeUpdateOpeningFilePaths = 'vscodeUpdateOpeningFilePaths',
+  VscodeGoTo = 'vscodeGoTo',
 }
 
 export interface VscodeEventData {
   [VscodeEventName.VscodeUpdateOpeningFilePaths]: void
+  [VscodeEventName.VscodeGoTo]: { url: string }
 }
 
 export type VscodeEventEmitterMap = EventEmitterMap & {

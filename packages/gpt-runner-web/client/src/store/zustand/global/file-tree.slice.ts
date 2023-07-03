@@ -14,13 +14,12 @@ export interface FileTreeSlice {
   expendedFilePaths: string[]
   checkedFilePaths: string[]
   excludeFileExts: string[]
-  ideActiveFilePath: string
-  ideOpeningFilePaths: string[]
   provideFileInfoToGptMap: {
     allFilePaths: boolean
     checkedFileContents: boolean
     activeIdeFileContents: boolean
     openingIdeFileContents: boolean
+    userSelectedText: boolean
   }
   provideFileInfoPromptMap: {
     allFilePathsPrompt: string
@@ -28,8 +27,6 @@ export interface FileTreeSlice {
   updateExcludeFileExts: (excludeFileExts: string[] | ((oldExcludeFileExts: string[]) => string[])) => void
   updateExpendedFilePaths: (expendedFilePaths: string[] | ((oldExpendedFilePaths: string[]) => string[])) => void
   updateCheckedFilePaths: (checkedFilePaths: string[] | ((oldCheckedFilePaths: string[]) => string[])) => void
-  updateIdeActiveFilePath: (ideActiveFilePath: string) => void
-  updateIdeOpeningFilePaths: (ideOpeningFilePaths: string[] | ((oldIdeOpeningFilePaths: string[]) => string[])) => void
   updateProvideFileInfoToGptMap: (provideFileInfoToGptMap: Partial<FileTreeSlice['provideFileInfoToGptMap']>) => void
   updateProvideFileInfoPromptMap: (provideFileInfoPromptMap: Partial<FileTreeSlice['provideFileInfoPromptMap']>) => void
   updateAllFilePathsPrompt: (allFilePathsPromptOrFileTreeItem: string | FileSidebarTreeItem[]) => void
@@ -42,13 +39,12 @@ function getInitialState() {
     expendedFilePaths: [],
     checkedFilePaths: [],
     excludeFileExts: [],
-    ideActiveFilePath: '',
-    ideOpeningFilePaths: [],
     provideFileInfoToGptMap: {
       allFilePaths: false,
       checkedFileContents: true,
       activeIdeFileContents: false,
       openingIdeFileContents: true,
+      userSelectedText: true,
     },
     provideFileInfoPromptMap: {
       allFilePathsPrompt: '',
@@ -113,12 +109,5 @@ export const createFileTreeSlice: StateCreator<
   updateCheckedFilePaths(checkedFilePaths) {
     const result = typeof checkedFilePaths === 'function' ? checkedFilePaths(get().checkedFilePaths) : checkedFilePaths
     set({ checkedFilePaths: result })
-  },
-  updateIdeActiveFilePath(ideActiveFilePath) {
-    set({ ideActiveFilePath })
-  },
-  updateIdeOpeningFilePaths(ideOpeningFilePaths) {
-    const result = typeof ideOpeningFilePaths === 'function' ? ideOpeningFilePaths(get().ideOpeningFilePaths) : ideOpeningFilePaths
-    set({ ideOpeningFilePaths: result })
   },
 })

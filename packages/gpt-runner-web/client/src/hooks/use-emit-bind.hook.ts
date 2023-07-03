@@ -1,11 +1,11 @@
 import { useEffect } from 'react'
 import { ClientEventName, toUnixPath } from '@nicepkg/gpt-runner-shared/common'
-import { useGlobalStore } from '../store/zustand/global'
 import { emitter } from '../helpers/emitter'
+import { useTempStore } from '../store/zustand/temp'
 import { useOn } from './use-on.hook'
 
 export function useEmitBind(deps: any[] = []) {
-  const { updateIdeOpeningFilePaths, updateIdeActiveFilePath } = useGlobalStore()
+  const { updateIdeSelectedText, updateIdeOpeningFilePaths, updateIdeActiveFilePath } = useTempStore()
 
   useEffect(() => {
     emitter.emit(ClientEventName.InitSuccess)
@@ -31,5 +31,13 @@ export function useEmitBind(deps: any[] = []) {
       updateIdeActiveFilePath(unixFilePath)
     },
     deps: [...deps, updateIdeActiveFilePath],
+  })
+
+  useOn({
+    eventName: ClientEventName.UpdateUserSelectedText,
+    listener: ({ text }) => {
+      updateIdeSelectedText(text)
+    },
+    deps: [...deps, updateIdeSelectedText],
   })
 }

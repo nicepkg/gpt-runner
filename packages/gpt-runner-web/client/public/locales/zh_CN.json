@@ -48,6 +48,7 @@
     "override_settings": "覆盖设置",
     "override_all_settings": "覆盖所有设置",
     "context_settings": "上下文设置",
+    "context_settings_selected_text_checkbox_tips": "将选定的文本作为提示，<TokenNumWrapper>{{tokenNum}}</TokenNumWrapper> tokens",
     "context_settings_opening_ide_file_contents_checkbox_tips": "将 IDE 正在打开的文件内容作为提示，<FileNumWrapper>{{fileNum}}</FileNumWrapper> 个文件， <TokenNumWrapper>{{tokenNum}}</TokenNumWrapper> tokens",
     "context_settings_active_ide_file_contents_checkbox_tips": "将 IDE 正在编辑的文件内容作为提示，<TokenNumWrapper>{{tokenNum}}</TokenNumWrapper> tokens",
     "context_settings_selected_files_checkbox_label": "将选定的文件作为提示，当前选定 <FileNumWrapper>{{fileNum}}</FileNumWrapper> 个文件，<TokenNumWrapper>{{tokenNum}}</TokenNumWrapper> tokens",

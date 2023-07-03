@@ -24,6 +24,10 @@ export interface ClientEventData {
   [ClientEventName.UpdateIdeActiveFilePath]: {
     filePath: string
   }
+
+  [ClientEventName.UpdateUserSelectedText]: {
+    text: string
+  }
 }
 
 export type EventEmitterMap = {

@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from 'uuid'
 import type { GetState } from '../types'
 import { fetchLlmStream } from '../../../networks/llm'
 import { getGlobalConfig } from '../../../helpers/global-config'
+import { useTempStore } from '../temp'
 import type { SidebarTreeItem, SidebarTreeSlice } from './sidebar-tree.slice'
 import type { FileTreeSlice } from './file-tree.slice'
 
@@ -203,6 +204,7 @@ export const createChatSlice: StateCreator<
 
   async generateChatAnswer(chatId, type = GenerateAnswerType.Generate) {
     const state = get()
+    const tempState = useTempStore.getState()
     const chatInstance = state.getChatInstance(chatId)
     if (!chatInstance)
       throw new Error(`Chat instance with id ${chatId} not found`)
@@ -268,8 +270,12 @@ export const createChatSlice: StateCreator<
 
     const appendSystemPrompt = (() => {
       let result = ''
+
       if (state.provideFileInfoToGptMap.allFilePaths)
         result += `\n${state.provideFileInfoPromptMap.allFilePathsPrompt}`
+
+      if (state.provideFileInfoToGptMap.userSelectedText)
+        result += tempState.getUserSelectTextPrompt()
 
       return result
     })()
@@ -293,7 +299,7 @@ export const createChatSlice: StateCreator<
       appendSystemPrompt,
       singleFilePath,
       contextFilePaths,
-      editingFilePath: state.ideActiveFilePath,
+      editingFilePath: tempState.ideActiveFilePath,
       overrideModelsConfig: state.overrideModelsConfig,
       rootPath: getGlobalConfig().rootPath,
       onError(e) {
@@ -355,6 +361,7 @@ export const createChatSlice: StateCreator<
   },
   getContextFilePaths() {
     const state = get()
+    const tempState = useTempStore.getState()
     const contextPaths: string[] = []
     const { checkedFileContents, activeIdeFileContents, openingIdeFileContents } = state.provideFileInfoToGptMap
 
@@ -362,10 +369,10 @@ export const createChatSlice: StateCreator<
       contextPaths.push(...state.checkedFilePaths)
 
     if (activeIdeFileContents)
-      contextPaths.push(state.ideActiveFilePath)
+      contextPaths.push(tempState.ideActiveFilePath)
 
     if (openingIdeFileContents)
-      contextPaths.push(...state.ideOpeningFilePaths)
+      contextPaths.push(...tempState.ideOpeningFilePaths)
 
     return [...new Set(contextPaths)]
   },

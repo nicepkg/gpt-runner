@@ -33,6 +33,7 @@ function BaseModelSettings_<FormData extends BaseModelConfig>(props: BaseModelSe
   const { overrideModelsConfig, updateOverrideModelsConfig } = useGlobalStore()
   const currentModel = singleFileConfig?.model as FormData | undefined
   const currentModelType = currentModel?.type || ChatModelType.Openai
+  const isInitCheckMap = useRef(false)
 
   const currentModelOverrideConfig = useMemo(() => {
     return (overrideModelsConfig[currentModelType] || {}) as FormData
@@ -53,6 +54,9 @@ function BaseModelSettings_<FormData extends BaseModelConfig>(props: BaseModelSe
   const { setValue, watch } = useFormReturns
 
   const updateOverrideModelsConfigFromCheckMap = useCallback((formData: FormData, _checkedMap?: Record<keyof FormData, boolean>) => {
+    if (!isInitCheckMap.current)
+      return
+
     const checkedValues = {} as FormData
     const finalCheckedMap = _checkedMap || checkedMap
 
@@ -68,7 +72,7 @@ function BaseModelSettings_<FormData extends BaseModelConfig>(props: BaseModelSe
         ...checkedValues,
       },
     }))
-  }, [checkedMap])
+  }, [checkedMap, isInitCheckMap.current])
 
   useEffect(() => {
     const subscription = watch((formData) => {
@@ -78,11 +82,10 @@ function BaseModelSettings_<FormData extends BaseModelConfig>(props: BaseModelSe
     return () => subscription.unsubscribe()
   }, [watch, updateOverrideModelsConfigFromCheckMap])
 
-  const isInitCheckMap = useRef(false)
+  // init
   useEffect(() => {
     if (isInitCheckMap.current || !singleFileConfig?.model || !currentModelOverrideConfig)
       return
-    isInitCheckMap.current = true
 
     // init checked map
     const initCheckedMap = Object.keys(checkedMap).reduce((prev, key) => {
@@ -104,6 +107,8 @@ function BaseModelSettings_<FormData extends BaseModelConfig>(props: BaseModelSe
       if (!isOverride && currentModel?.[formName] !== undefined)
         setValue(formName as Path<FormData>, currentModel[formName] as any)
     })
+
+    isInitCheckMap.current = true
   }, [isInitCheckMap.current, singleFileConfig?.model, JSON.stringify(currentModelOverrideConfig)])
 
   const buildLabel = (label: string, formName: keyof FormData) => {

@@ -34,7 +34,13 @@ class ChatViewProvider implements vscode.WebviewViewProvider {
   }
 
   static handleWebviewWindowInit() {
+    // ensure first time to update opening file paths
     emitter.emit(VscodeEventName.VscodeUpdateOpeningFilePaths)
+
+    // ensure first time to update selected text
+    emitter.emit(ClientEventName.UpdateUserSelectedText, {
+      text: state.selectedText,
+    })
   }
 
   resolveWebviewView(
@@ -103,7 +109,8 @@ class ChatViewProvider implements vscode.WebviewViewProvider {
         showDiffCodesBtn: true,
         showInsertCodesBtn: true,
         defaultLangId: '${getLang()}',
-        showIdeFileContextOptions: true
+        showIdeFileContextOptions: true,
+        showUserSelectedTextContextOptions: true
       }
 
       window.addEventListener('message', event => {
@@ -120,6 +127,27 @@ class ChatViewProvider implements vscode.WebviewViewProvider {
         }
         return oldEmit.apply(this, args)
       }
+
+      // fix vscode open link in browser
+      const vscodeGoTo = (url) => {
+        window.__emitter__.emit('${VscodeEventName.VscodeGoTo}', {url})
+      }
+
+      const originalWindowOpen = window.open
+      window.open = (url) => {
+        if (url.includes('vscode-resource.')) return
+        vscodeGoTo(url);
+      }
+
+      document.addEventListener('DOMContentLoaded', () => {
+        document.body.addEventListener('click', (event) => {
+          const target = event.target.closest('a') || event.target.closest('vscode-link')
+          if (target && target.href && !target.href.includes('vscode-resource.')) {
+            event.preventDefault();
+            vscodeGoTo(target.href);
+          }
+        }, true);
+      });
     `).replace(/<script\s*([\w\W]+)?>/g,
       (_, attr) => `<script ${attr} nonce="${nonce}">`,
     )
@@ -162,6 +190,10 @@ export async function registerWebview(
       dispose,
     })
   }
+
+  emitter.on(VscodeEventName.VscodeGoTo, ({ url }) => {
+    vscode.env.openExternal(vscode.Uri.parse(url))
+  })
 
   ext.subscriptions.push(registerProvider())
 

@@ -106,7 +106,7 @@ const Chat: FC = memo(() => {
     if (!rootPath)
       return null
 
-    return <ContentWrapper $isPopoverContent={isPopover}>
+    return <ContentWrapper $isTopToolbarPopover $isPopoverContent={isPopover}>
       <Settings rootPath={rootPath} chatId={activeChatId} onlyRenderTabId={onlyRenderTabId}></Settings>
     </ContentWrapper>
   }, [activeChatId])

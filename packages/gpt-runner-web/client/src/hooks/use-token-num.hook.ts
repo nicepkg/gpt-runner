@@ -17,13 +17,19 @@ export function useTokenNum(props?: UseTokenNumProps) {
     provideFileInfoPromptMap,
     provideFileInfoToGptMap,
     checkedFilePaths,
-    ideActiveFilePath,
-    ideOpeningFilePaths,
     getChatInstance,
     getContextFilePaths,
   } = useGlobalStore()
-  const { fullPathFileMap } = useTempStore()
-  const filaPathsPromptTokenNum = countTokenQuick(provideFileInfoPromptMap.allFilePathsPrompt)
+
+  const {
+    ideActiveFilePath,
+    ideOpeningFilePaths,
+    fullPathFileMap,
+    getUserSelectTextPrompt,
+  } = useTempStore()
+
+  const filePathsPromptTokenNum = countTokenQuick(provideFileInfoPromptMap.allFilePathsPrompt)
+  const selectedTextPromptTokenNum = countTokenQuick(getUserSelectTextPrompt())
 
   const chatInstance: SingleChat | undefined = useMemo(() => {
     if (!chatIdOrChatInstance)
@@ -90,11 +96,14 @@ export function useTokenNum(props?: UseTokenNumProps) {
   , [contextFilePaths, countFilePathsTokenNum])
 
   const totalTokenNum = useMemo(() => {
-    const { allFilePaths } = provideFileInfoToGptMap
+    const { allFilePaths, userSelectedText } = provideFileInfoToGptMap
     let result = systemPromptTokenNum + messageTokenNum + contextFilesTokenNum
 
     if (allFilePaths)
-      result += filaPathsPromptTokenNum
+      result += filePathsPromptTokenNum
+
+    if (userSelectedText)
+      result += selectedTextPromptTokenNum
 
     return result
   }, [
@@ -102,7 +111,8 @@ export function useTokenNum(props?: UseTokenNumProps) {
     messageTokenNum,
     contextFilesTokenNum,
     provideFileInfoToGptMap,
-    filaPathsPromptTokenNum,
+    filePathsPromptTokenNum,
+    selectedTextPromptTokenNum,
   ])
 
   return {
@@ -112,6 +122,7 @@ export function useTokenNum(props?: UseTokenNumProps) {
     ideOpeningFileTokenNum,
     ideActiveFileTokenNum,
     checkedFilesContentPromptTokenNum,
-    filaPathsPromptTokenNum,
+    filePathsPromptTokenNum,
+    selectedTextPromptTokenNum,
   }
 }
