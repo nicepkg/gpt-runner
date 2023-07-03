@@ -63,6 +63,9 @@ ${output.banner || ''}
           `
         }
       })
+
+      // remove esm
+      rollupOptions.output = rollupOptions.output.filter(output => output.format !== 'esm')
     },
   },
 })

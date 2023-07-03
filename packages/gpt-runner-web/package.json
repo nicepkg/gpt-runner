@@ -25,28 +25,23 @@
   "exports": {
     ".": {
       "types": "./dist/common/index.d.ts",
-      "require": "./dist/common.cjs",
-      "import": "./dist/common.mjs"
+      "require": "./dist/common.cjs"
     },
     "./*": "./*",
     "./server": {
       "types": "./dist/server/index.d.ts",
-      "require": "./dist/server.cjs",
-      "import": "./dist/server.mjs"
+      "require": "./dist/server.cjs"
     },
     "./start-server": {
       "types": "./dist/server/start-server.d.ts",
-      "require": "./dist/start-server.cjs",
-      "import": "./dist/start-server.mjs"
+      "require": "./dist/start-server.cjs"
     },
     "./common": {
       "types": "./dist/common/index.d.ts",
-      "require": "./dist/common.cjs",
-      "import": "./dist/common.mjs"
+      "require": "./dist/common.cjs"
     }
   },
   "main": "dist/common.cjs",
-  "module": "dist/common.mjs",
   "types": "./dist/common/index.d.ts",
   "files": [
     "dist/",
