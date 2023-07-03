@@ -70,8 +70,10 @@ export function getFolderNameIconMap(folderIcons: FolderTheme) {
  * Get the icon name based on the folder name
  */
 const folderNameIconMap = getFolderNameIconMap(folderIcons)
-export function getFolderIconByFolderName(folderName: string) {
-  return folderNameIconMap.get(folderName) || folderIcons.defaultIcon.name
+export function getFolderIconByFolderName(folderName: string, isOpen = false) {
+  const defaultIconName = folderIcons.defaultIcon.name
+  const defaultOpenIconName = `${folderIcons.defaultIcon.name}-open`
+  return folderNameIconMap.get(folderName) || (isOpen ? defaultOpenIconName : defaultIconName)
 }
 
 export interface GetIconComponentProps {

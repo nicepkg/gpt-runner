@@ -7,7 +7,7 @@ import { IconPack } from './types'
 export const folderIcons: FolderTheme
   = {
     name: 'specific',
-    defaultIcon: { name: 'folder-client' },
+    defaultIcon: { name: 'folder' },
     rootFolder: { name: 'folder-root' },
     icons: [
       {

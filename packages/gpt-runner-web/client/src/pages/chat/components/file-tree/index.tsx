@@ -213,23 +213,13 @@ export const FileTree: FC<FileTreeProps> = memo((props: FileTreeProps) => {
         marginRight: '0.25rem',
       }} className={clsx(isExpanded ? 'codicon-chevron-down' : 'codicon-chevron-right')}></Icon >}
 
-      {/* <Icon style={{
-        marginLeft: !isLeaf ? '0' : '0.6rem',
-        marginRight: '0.45rem',
-      }} className={getIconClassName()}></Icon> */}
-
-      {/* <MaterialIconComponent
-        style={{
-          marginLeft: !isLeaf ? '0' : '0.6rem',
-          marginRight: '0.45rem',
-        }}
-      ></MaterialIconComponent> */}
       {renderMaterialIconComponent({
         style: {
           marginLeft: '0.2rem',
           marginRight: '0.45rem',
           width: '1rem',
           height: '1rem',
+          flexShrink: '0',
         },
       })}
     </>
