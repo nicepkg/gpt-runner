@@ -32,3 +32,7 @@ website/_dogfooding/_swizzle_theme_tests
 website/i18n/**/*
 
 .gpt-runner
+
+# gpt-runner-intellij
+packages/gpt-runner-intellij/src/main/resources/dist.zip
+packages/gpt-runner-intellij/src/main/resources/gpt-runner-bundler.zip
