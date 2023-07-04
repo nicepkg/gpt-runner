@@ -65,3 +65,19 @@ export function getLang(): LocaleLang {
 export function docIsFile(doc: vscode.TextDocument | null | undefined) {
   return doc?.uri?.scheme === 'file'
 }
+
+export async function openFileInNewTab(filePath: string) {
+  try {
+    // to vscode uri
+    const uri = vscode.Uri.file(filePath)
+
+    // open file in new tab
+    const document = await vscode.workspace.openTextDocument(uri)
+
+    // show file in new tab
+    await vscode.window.showTextDocument(document)
+  }
+  catch (error) {
+    console.error('Error opening file:', error)
+  }
+}

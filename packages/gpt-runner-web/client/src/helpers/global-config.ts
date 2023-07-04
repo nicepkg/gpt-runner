@@ -12,6 +12,7 @@ export interface GlobalConfig {
   defaultLangId: LocaleLang
   showIdeFileContextOptions: boolean
   showUserSelectedTextContextOptions: boolean
+  editFileInIde: boolean
 }
 
 window.__DEFAULT_GLOBAL_CONFIG__ = {
@@ -23,6 +24,7 @@ window.__DEFAULT_GLOBAL_CONFIG__ = {
   defaultLangId: getLang(),
   showIdeFileContextOptions: false,
   showUserSelectedTextContextOptions: false,
+  editFileInIde: false,
 }
 
 export function getGlobalConfig() {

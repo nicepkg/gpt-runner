@@ -13,6 +13,10 @@ import { ErrorView } from '../../../../components/error-view'
 import { useGlobalStore } from '../../../../store/zustand/global'
 import { useChatInstance } from '../../../../hooks/use-chat-instance.hook'
 import { useOn } from '../../../../hooks/use-on.hook'
+import { getGlobalConfig } from '../../../../helpers/global-config'
+import { emitter } from '../../../../helpers/emitter'
+import { MAYBE_IDE } from '../../../../helpers/constant'
+import { StyledIcon } from './chat-sidebar.styles'
 
 export interface ChatSidebarProps {
   rootPath: string
@@ -107,26 +111,41 @@ export const ChatSidebar: FC<ChatSidebarProps> = memo((props) => {
   }
 
   const renderTreeItemRightSlot = (props: TreeItemState<GptTreeItemOtherInfo>) => {
-    const { isLeaf, otherInfo } = props
+    const { isLeaf, otherInfo, isHovering } = props
+    const { path } = otherInfo || {}
+
+    const handleEditGptFile = () => {
+      if (!path)
+        return
+
+      if (getGlobalConfig().editFileInIde)
+        emitter.emit(ClientEventName.OpenFileInIde, { filePath: path })
+    }
 
     if (otherInfo?.type === GptFileTreeItemType.Chat && isLeaf) {
       return <>
-        <IconButton
-          text={t('chat_page.delete_chat_btn')}
-          showText={false}
-          iconClassName='codicon-trash'
+        <StyledIcon
+          title={t('chat_page.delete_chat_btn')}
+          className='codicon-trash'
           onClick={() => handleDeleteChat(otherInfo.id)}
-        ></IconButton>
+        ></StyledIcon>
       </>
     }
 
     if (otherInfo?.type === GptFileTreeItemType.File) {
-      return <IconButton
-        text={t('chat_page.new_chat_btn')}
-        showText={false}
-        iconClassName='codicon-add'
-        onClick={() => handleCreateChat(otherInfo.id)}
-      ></IconButton>
+      return <>
+        {/* TODO: implement edit file in web */}
+        {isHovering && MAYBE_IDE && <StyledIcon
+          title={t('chat_page.edit_btn')}
+          className='codicon-edit'
+          onClick={handleEditGptFile}
+        ></StyledIcon>}
+        <StyledIcon
+          title={t('chat_page.new_chat_btn')}
+          className='codicon-add'
+          onClick={() => handleCreateChat(otherInfo.id)}
+        ></StyledIcon>
+      </>
     }
 
     return <></>

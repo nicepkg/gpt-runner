@@ -6,7 +6,7 @@ import { ClientEventName, toUnixPath, waitForCondition } from '@nicepkg/gpt-runn
 import { PathUtils } from '@nicepkg/gpt-runner-shared/node'
 import type { ContextLoader } from '../contextLoader'
 import { Commands, EXT_DISPLAY_NAME, EXT_NAME } from '../constant'
-import { createHash, getLang, getServerBaseUrl } from '../utils'
+import { createHash, getLang, getServerBaseUrl, openFileInNewTab } from '../utils'
 import { state } from '../state'
 import { EventType, VscodeEventName, emitter } from '../emitter'
 import { log } from '../log'
@@ -40,6 +40,11 @@ class ChatViewProvider implements vscode.WebviewViewProvider {
     // ensure first time to update selected text
     emitter.emit(ClientEventName.UpdateUserSelectedText, {
       text: state.selectedText,
+    })
+
+    // listen if webview want to open a file
+    emitter.on(ClientEventName.OpenFileInIde, ({ filePath }) => {
+      openFileInNewTab(filePath)
     })
   }
 
@@ -110,7 +115,8 @@ class ChatViewProvider implements vscode.WebviewViewProvider {
         showInsertCodesBtn: true,
         defaultLangId: '${getLang()}',
         showIdeFileContextOptions: true,
-        showUserSelectedTextContextOptions: true
+        showUserSelectedTextContextOptions: true,
+        editFileInIde: true
       }
 
       window.addEventListener('message', event => {

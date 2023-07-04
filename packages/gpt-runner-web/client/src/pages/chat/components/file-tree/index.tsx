@@ -21,6 +21,8 @@ import { useDebounceFn } from '../../../../hooks/use-debounce-fn.hook'
 import { useTokenNum } from '../../../../hooks/use-token-num.hook'
 import { getIconComponent } from '../../../../helpers/file-icons/utils'
 import type { SvgComponent } from '../../../../types/common'
+import { getGlobalConfig } from '../../../../helpers/global-config'
+import { emitter } from '../../../../helpers/emitter'
 import { FileTreeItemRightWrapper, FileTreeSidebarHighlight, FileTreeSidebarUnderSearchWrapper, FilterWrapper } from './file-tree.styles'
 
 export interface FileTreeProps {
@@ -122,13 +124,6 @@ export const FileTree: FC<FileTreeProps> = memo((props: FileTreeProps) => {
 
   const renderTreeItemLeftSlot = useCallback((props: TreeItemState<FileInfoSidebarTreeItem>) => {
     const { isLeaf, isExpanded, otherInfo } = props
-
-    // const getIconClassName = () => {
-    //   if (isLeaf)
-    //     return 'codicon-file'
-
-    //   return isExpanded ? 'codicon-folder-opened' : 'codicon-folder'
-    // }
 
     const renderMaterialIconComponent: SvgComponent = (props) => {
       const MaterialSvgComponent = getIconComponent({
@@ -233,13 +228,15 @@ export const FileTree: FC<FileTreeProps> = memo((props: FileTreeProps) => {
 
     return <FileTreeItemRightWrapper>
       {formatNumWithK(otherInfo.tokenNum)}
-      <Icon
+
+      {/* beautiful but too long */}
+      {/* <Icon
         style={{
           marginLeft: '0.25rem',
           fontSize: '1.2rem',
         }}
         className='codicon-symbol-string'
-      ></Icon >
+      ></Icon > */}
     </FileTreeItemRightWrapper>
   }, [])
 
@@ -260,6 +257,20 @@ export const FileTree: FC<FileTreeProps> = memo((props: FileTreeProps) => {
 
     updateFilesTree([...filesTree])
   }, [filesTree])
+
+  const handleTreeItemClick = useCallback((props: TreeItemState<FileInfoSidebarTreeItem>) => {
+    const { otherInfo, isLeaf } = props
+    const { fullPath } = otherInfo || {}
+
+    if (!fullPath || !isLeaf)
+      return
+
+    if (getGlobalConfig().editFileInIde) {
+      emitter.emit(ClientEventName.OpenFileInIde, {
+        filePath: fullPath,
+      })
+    }
+  }, [])
 
   const buildSearchRightSlot = useCallback(() => {
     const { allFileExts = [] } = fetchCommonFilesTreeRes?.data || {}
@@ -383,6 +394,7 @@ export const FileTree: FC<FileTreeProps> = memo((props: FileTreeProps) => {
       renderTreeItemRightSlot,
       onTreeItemCollapse: handleExpandChange,
       onTreeItemExpand: handleExpandChange,
+      onTreeItemClick: handleTreeItemClick,
     },
     buildSearchRightSlot,
     buildUnderSearchSlot,
