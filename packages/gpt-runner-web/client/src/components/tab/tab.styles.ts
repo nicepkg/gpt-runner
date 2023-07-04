@@ -1,3 +1,4 @@
+import { motion } from 'framer-motion'
 import styled from 'styled-components'
 
 export const TabContainer = styled.div`
@@ -6,20 +7,25 @@ export const TabContainer = styled.div`
   height: 100%;
 `
 
-export const TabListHeader = styled.div<{ $showMore: boolean }>`
+export const TabListHeader = styled.div`
   flex-shrink: 0;
   position: relative;
   padding: calc(var(--border-width) * 3px) 1rem;
 
-  ${({ $showMore }) => $showMore ? 'padding-right: calc(var(--type-ramp-minus1-font-size) * 2 + 1rem)' : ''}
+  &[data-show-more=true] {
+    padding-right: calc(var(--type-ramp-minus1-font-size) * 2 + 1rem);
+  }
 `
 
-export const TabListWrapper = styled.div<{ $showMore: boolean }>`
+export const TabListWrapper = styled.div`
   display: flex;
   overflow-x: auto;
   position: relative;
+  justify-content: space-evenly;
 
-  justify-content: ${({ $showMore }) => $showMore ? 'flex-start' : 'space-evenly'};
+  &[data-show-more=true] {
+    justify-content: flex-start;
+  }
 
   /* hide scroll bar style */
   &::-webkit-scrollbar {
@@ -34,7 +40,7 @@ export const TabItemWrapper = styled.div`
   display: flex;
 `
 
-export const TabItem = styled.div`
+export const TabItemLabel = styled.div`
   white-space: nowrap;
   flex: 1;
   padding: 0 var(--type-ramp-base-font-size);
@@ -45,23 +51,17 @@ export const TabItem = styled.div`
   font-size: var(--type-ramp-base-font-size);
   cursor: pointer;
 
-  &.active {
+  &.tab-item-active {
     color: var(--panel-tab-active-foreground);
   }
 `
 
-export const ActivedTabIndicator = styled.div<{
-  width: number
-  left: number
-}>`
-  width: ${props => props.width}px;
+export const ActiveTabIndicator = styled(motion.div)`
   height: 1px;
   background-color: var(--panel-tab-active-foreground);
-
   position: absolute;
   left: 0;
   bottom: 0;
-  transform: translateX(${props => props.left}px);
   transition: transform 0.2s ease-in-out;
 `
 
@@ -88,7 +88,8 @@ export const MoreList = styled.div`
   padding-bottom: 0;
   position: absolute;
   z-index: 3;
-  top: 33px;
+  /* top: 33px; */
+  top: calc(var(--design-unit) * 7px + var(--border-width) * 3px);
   right: 2px;
   background-color: var(--panel-view-background);
   box-shadow: 0 6px 16px 0 rgba(0, 0, 0, .08), 0 3px 6px -4px rgba(0, 0, 0, .12), 0 9px 28px 8px rgba(0, 0, 0, .05);

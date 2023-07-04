@@ -1,4 +1,3 @@
-import { VSCodeTextArea } from '@vscode/webview-ui-toolkit/react'
 import { styled } from 'styled-components'
 import { Logo } from '../logo'
 
@@ -35,16 +34,6 @@ export const TextAreaWrapper = styled.div`
     &:hover {
       border-color: var(--focus-border);
     }
-  }
-`
-
-export const StyledVSCodeTextArea = styled(VSCodeTextArea)`
-  width: 100%;
-  height: 100%;
-
-  &::part(control) {
-    border-radius: 0.25rem;
-    height: 100%;
   }
 `
 

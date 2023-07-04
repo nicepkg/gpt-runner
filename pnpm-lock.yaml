@@ -357,6 +357,9 @@ importers:
       framer-motion:
         specifier: ^10.12.18
         version: 10.12.18(react-dom@18.2.0)(react@18.2.0)
+      fs-extra:
+        specifier: ^11.1.1
+        version: 11.1.1
       global-agent:
         specifier: ^3.0.0
         version: 3.0.0
@@ -375,6 +378,9 @@ importers:
       lodash-es:
         specifier: ^4.17.21
         version: 4.17.21
+      monaco-editor:
+        specifier: ^0.39.0
+        version: 0.39.0
       react:
         specifier: ^18.2.0
         version: 18.2.0

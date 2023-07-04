@@ -12,12 +12,12 @@ import { useGlobalStore } from '../../store/zustand/global'
 import { getGlobalConfig } from '../../helpers/global-config'
 import { ErrorView } from '../../components/error-view'
 import { DragResizeView } from '../../components/drag-resize-view'
-
 import { PanelTab } from '../../components/panel-tab'
 import { fetchProjectInfo } from '../../networks/config'
 import { useEmitBind } from '../../hooks/use-emit-bind.hook'
 import { useSize } from '../../hooks/use-size.hook'
 import { useGetCommonFilesTree } from '../../hooks/use-get-common-files-tree.hook'
+import type { TabItem } from '../../components/tab'
 import { ContentWrapper } from './chat.styles'
 import { ChatSidebar } from './components/chat-sidebar'
 import { ChatPanel } from './components/chat-panel'
@@ -139,34 +139,25 @@ const Chat: FC = memo(() => {
 
   const renderChat = () => {
     if (isMobile) {
-      const tabIdViewMap: Partial<Record<TabId, { title: React.ReactNode; view: React.ReactNode }>> = {
-        [TabId.Presets]: {
-          title: t('chat_page.tab_presets'),
-          view: renderSidebar(),
+      const tabIdViewMap: TabItem<TabId>[] = [
+        {
+          id: TabId.Presets,
+          label: t('chat_page.tab_presets'),
+          children: renderSidebar(),
         },
-        [TabId.Chat]: {
-          title: t('chat_page.tab_chat'),
-          view: renderChatPanel(),
+        {
+          id: TabId.Chat,
+          label: t('chat_page.tab_chat'),
+          children: renderChatPanel(),
         },
-        [TabId.Files]: {
-          title: t('chat_page.tab_files'),
-          view: renderFileTree(),
+        {
+          id: TabId.Files,
+          label: t('chat_page.tab_files'),
+          children: renderFileTree(),
         },
-      }
+      ]
 
-      return <PanelTab
-        items={
-          Object.keys(tabIdViewMap).map((tabId) => {
-            const { title } = tabIdViewMap[tabId as TabId]!
-            return {
-              label: title,
-              key: tabId,
-              children: tabIdViewMap[tabId as TabId]!.view,
-            }
-          })
-        }
-        defaultActiveIndex={0}
-      />
+      return <PanelTab items={tabIdViewMap} activeId={tabActiveId} onChange={setTabActiveId} />
     }
 
     return <FlexRow style={{ height: '100%', overflow: 'hidden' }}>

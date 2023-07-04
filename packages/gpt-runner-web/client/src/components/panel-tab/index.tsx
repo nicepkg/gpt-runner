@@ -1,39 +1,32 @@
-import type { CSSProperties, FC } from 'react'
+import type { CSSProperties } from 'react'
 import { memo } from 'react'
-import { TabList } from '../tab-list'
-
+import type { TabProps } from '../tab'
+import { Tab } from '../tab'
 import {
   PanelTabContainer,
   PanelTabContent,
 } from './panel-tab.styles'
 
-export interface PanelProps {
-  defaultActiveIndex?: number
+export interface PanelTabProps<T extends string = string> extends Pick<TabProps<T>, 'defaultActiveId' | 'items' | 'onChange' | 'activeId'> {
   style?: CSSProperties
   tabStyle?: CSSProperties
-  items?: any[]
-  onChange?: (activeIndex: number) => void
 }
 
-export const PanelTab: FC<PanelProps> = memo(({
-  defaultActiveIndex,
-  style,
-  tabStyle,
-  items = [],
-  onChange,
-}) => {
+export function PanelTab_<T extends string = string>(props: PanelTabProps<T>) {
+  const { style, tabStyle, ...otherProps } = props
+
   return (
     <PanelTabContainer style={style}>
       <PanelTabContent>
-        <TabList
-          tabList={items}
-          defaultActiveIndex={defaultActiveIndex}
+        <Tab
           style={tabStyle}
-          onChange={onChange}
+          {...otherProps}
         />
       </PanelTabContent>
     </PanelTabContainer>
   )
-})
+}
 
-PanelTab.displayName = 'PanelTab'
+PanelTab_.displayName = 'PanelTab'
+
+export const PanelTab = memo(PanelTab_) as typeof PanelTab_

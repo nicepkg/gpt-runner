@@ -24,15 +24,6 @@ export const ChatMessageInput: FC<ChatMessageInputProps> = memo((props) => {
     </ToolbarWrapper>
 
     <TextAreaWrapper>
-      {/* <StyledVSCodeTextArea
-        rows={10}
-        value={value}
-        onInput={(e: any) => {
-          onChange(e.target?.value)
-        }}
-      >
-      </StyledVSCodeTextArea> */}
-
       <Editor
         className='chat-input-editor'
         language='markdown' value={value} onChange={(value) => {
