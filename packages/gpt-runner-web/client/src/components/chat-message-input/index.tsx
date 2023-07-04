@@ -1,5 +1,6 @@
 import { type FC, memo } from 'react'
-import { LogoWrapper, StyledLogo, StyledVSCodeTextArea, TextAreaWrapper, ToolbarWrapper, Wrapper } from './chat-message-input.styles'
+import { Editor } from '../../pages/chat/components/editor'
+import { LogoWrapper, StyledLogo, TextAreaWrapper, ToolbarWrapper, Wrapper } from './chat-message-input.styles'
 
 export interface ChatMessageInputProps {
   value: string
@@ -23,14 +24,20 @@ export const ChatMessageInput: FC<ChatMessageInputProps> = memo((props) => {
     </ToolbarWrapper>
 
     <TextAreaWrapper>
-      <StyledVSCodeTextArea
+      {/* <StyledVSCodeTextArea
         rows={10}
         value={value}
         onInput={(e: any) => {
           onChange(e.target?.value)
         }}
       >
-      </StyledVSCodeTextArea>
+      </StyledVSCodeTextArea> */}
+
+      <Editor
+        className='chat-input-editor'
+        language='markdown' value={value} onChange={(value) => {
+          onChange(value || '')
+        }}></Editor>
     </TextAreaWrapper>
 
     {showBottomLogo && <LogoWrapper style={{ position: 'static' }}>

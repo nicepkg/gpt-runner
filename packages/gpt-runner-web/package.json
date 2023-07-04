@@ -72,6 +72,7 @@
     "@kvs/node-localstorage": "^2.1.3",
     "@kvs/storage": "^2.1.3",
     "@microsoft/fetch-event-source": "^2.0.1",
+    "@monaco-editor/react": "^4.5.1",
     "@nicepkg/gpt-runner-core": "workspace:*",
     "@nicepkg/gpt-runner-shared": "workspace:*",
     "@tanstack/react-query": "^4.29.19",

@@ -13,7 +13,7 @@ export const Wrapper = styled.div`
 `
 
 export const ToolbarWrapper = styled.div`
-position: relative;
+  position: relative;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -26,6 +26,16 @@ export const TextAreaWrapper = styled.div`
   overflow: hidden;
   width: 100%;
   height: 100%;
+
+  .chat-input-editor {
+    border: 1px solid var(--panel-view-border);
+    border-radius: 0.25rem;
+    overflow: hidden;
+
+    &:hover {
+      border-color: var(--focus-border);
+    }
+  }
 `
 
 export const StyledVSCodeTextArea = styled(VSCodeTextArea)`
