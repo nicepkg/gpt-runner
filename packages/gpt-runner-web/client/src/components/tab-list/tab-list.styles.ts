@@ -62,7 +62,7 @@ export const ActivedTabIndicator = styled.div<{
   left: 0;
   bottom: 0;
   transform: translateX(${props => props.left}px);
-  transition: transform 0.3s ease-in-out, width 0.3s ease-in-out;
+  transition: transform 0.2s ease-in-out;
 `
 
 export const MoreWrapper = styled.div`

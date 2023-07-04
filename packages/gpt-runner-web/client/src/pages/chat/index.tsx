@@ -1,10 +1,9 @@
-import type { CSSProperties, FC } from 'react'
+import type { FC } from 'react'
 import React, { memo, useCallback, useEffect, useState } from 'react'
 import { ChatMessageStatus } from '@nicepkg/gpt-runner-shared/common'
 import { useWindowSize } from 'react-use'
 import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
-import { VSCodePanelTab, VSCodePanelView } from '@vscode/webview-ui-toolkit/react'
 import { useIsMobile } from '../../hooks/use-is-mobile.hook'
 import { FlexColumn, FlexRow } from '../../styles/global.styles'
 import { useScrollDown } from '../../hooks/use-scroll-down.hook'
@@ -14,12 +13,12 @@ import { getGlobalConfig } from '../../helpers/global-config'
 import { ErrorView } from '../../components/error-view'
 import { DragResizeView } from '../../components/drag-resize-view'
 
-// import { Panel } from '../../components/panel'
+import { PanelTab } from '../../components/panel-tab'
 import { fetchProjectInfo } from '../../networks/config'
 import { useEmitBind } from '../../hooks/use-emit-bind.hook'
 import { useSize } from '../../hooks/use-size.hook'
 import { useGetCommonFilesTree } from '../../hooks/use-get-common-files-tree.hook'
-import { ContentWrapper, StyledVSCodePanels } from './chat.styles'
+import { ContentWrapper } from './chat.styles'
 import { ChatSidebar } from './components/chat-sidebar'
 import { ChatPanel } from './components/chat-panel'
 import { FileTree } from './components/file-tree'
@@ -140,13 +139,6 @@ const Chat: FC = memo(() => {
 
   const renderChat = () => {
     if (isMobile) {
-      const viewStyle: CSSProperties = {
-        height: '100%',
-        maxHeight: '100%',
-        overflowX: 'hidden',
-        overflowY: 'auto',
-      }
-
       const tabIdViewMap: Partial<Record<TabId, { title: React.ReactNode; view: React.ReactNode }>> = {
         [TabId.Presets]: {
           title: t('chat_page.tab_presets'),
@@ -162,28 +154,19 @@ const Chat: FC = memo(() => {
         },
       }
 
-      return <StyledVSCodePanels
-        activeid={tabActiveId}
-        style={viewStyle}
-        onChange={(e: any) => {
-          const activeId = e.target?.activeid as TabId
-          setTabActiveId(activeId)
-          activeId === TabId.Chat && scrollDown()
-        }}
-      >
-
-        {Object.keys(tabIdViewMap).map((tabId) => {
-          const { title } = tabIdViewMap[tabId as TabId]!
-          return <VSCodePanelTab key={tabId} id={tabId as TabId}>{title}</VSCodePanelTab>
-        })}
-
-        {Object.keys(tabIdViewMap).map((tabId) => {
-          const { view } = tabIdViewMap[tabId as TabId]!
-          return <VSCodePanelView key={tabId} style={viewStyle} id={tabId as TabId}>
-            {view}
-          </VSCodePanelView>
-        })}
-      </StyledVSCodePanels>
+      return <PanelTab
+        items={
+          Object.keys(tabIdViewMap).map((tabId) => {
+            const { title } = tabIdViewMap[tabId as TabId]!
+            return {
+              label: title,
+              key: tabId,
+              children: tabIdViewMap[tabId as TabId]!.view,
+            }
+          })
+        }
+        defaultActiveIndex={0}
+      />
     }
 
     return <FlexRow style={{ height: '100%', overflow: 'hidden' }}>
