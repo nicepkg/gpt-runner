@@ -97,9 +97,10 @@ export async function registerDiffCodes(
 
       const title = 'Your codes ↔ GPT Runner codes'
       const selectionText = editor.document.getText(editor.selection)
+      const originalFileContents = editor.document.getText()
 
       const diffCodesInfoId = DiffCodesProvider.getInstance().addDiffCodesInfo({
-        originalContents: selectionText,
+        originalContents: selectionText || originalFileContents,
         contents: state.diffCodes,
       })
 
@@ -107,7 +108,7 @@ export async function registerDiffCodes(
       const rightUri = createDiffUri(diffCodesInfoId, false)
 
       await vscode.commands.executeCommand('vscode.diff', leftUri, rightUri, title, {
-        viewColumn: vscode.ViewColumn.Beside,
+        viewColumn: vscode.ViewColumn.Active,
         preview: true,
       })
     })

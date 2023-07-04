@@ -1,6 +1,7 @@
 import path from 'node:path'
 import { defineConfig } from 'vite'
 import React from '@vitejs/plugin-react'
+import Svgr from 'vite-plugin-svgr'
 import { EnvConfig } from '@nicepkg/gpt-runner-shared/common'
 import { PathUtils } from '@nicepkg/gpt-runner-shared/node'
 import { alias } from './../../../alias'
@@ -18,6 +19,7 @@ export default defineConfig({
   },
   plugins: [
     React(),
+    Svgr(),
   ],
   build: {
     outDir: resolvePath('../dist/browser'),

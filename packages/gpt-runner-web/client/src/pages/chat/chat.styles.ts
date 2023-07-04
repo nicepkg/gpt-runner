@@ -2,7 +2,7 @@ import { css, styled } from 'styled-components'
 import { VSCodePanels } from '@vscode/webview-ui-toolkit/react'
 import { withBreakpoint } from '../../helpers/with-breakpoint'
 
-export const ContentWrapper = styled.div<{ $isPopoverContent: boolean }>`
+export const ContentWrapper = styled.div<{ $isPopoverContent: boolean; $isTopToolbarPopover?: boolean }>`
   width: 100%;
   height: 100%;
   flex-shrink: 0;
@@ -19,8 +19,8 @@ export const ContentWrapper = styled.div<{ $isPopoverContent: boolean }>`
     max-width: 500px;
 
     ${withBreakpoint('sm', css`
-      min-width: min(calc(100vw - 1rem), 500px);
-      width: min(calc(100vw - 1rem), 500px);
+      min-width: ${props.$isTopToolbarPopover ? 'min(100vw, 500px)' : 'min(calc(100vw - 1rem), 500px)'};
+      width: ${props.$isTopToolbarPopover ? 'min(100vw, 500px)' : 'min(calc(100vw - 1rem), 500px)'};
     `)}
 
     .tree-item__children {

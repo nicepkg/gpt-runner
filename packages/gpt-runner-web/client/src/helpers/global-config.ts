@@ -10,6 +10,9 @@ export interface GlobalConfig {
   showDiffCodesBtn: boolean
   showInsertCodesBtn: boolean
   defaultLangId: LocaleLang
+  showIdeFileContextOptions: boolean
+  showUserSelectedTextContextOptions: boolean
+  editFileInIde: boolean
 }
 
 window.__DEFAULT_GLOBAL_CONFIG__ = {
@@ -19,6 +22,9 @@ window.__DEFAULT_GLOBAL_CONFIG__ = {
   showDiffCodesBtn: false,
   showInsertCodesBtn: false,
   defaultLangId: getLang(),
+  showIdeFileContextOptions: false,
+  showUserSelectedTextContextOptions: false,
+  editFileInIde: false,
 }
 
 export function getGlobalConfig() {

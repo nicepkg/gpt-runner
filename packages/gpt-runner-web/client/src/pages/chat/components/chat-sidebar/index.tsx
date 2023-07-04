@@ -12,7 +12,11 @@ import { IconButton } from '../../../../components/icon-button'
 import { ErrorView } from '../../../../components/error-view'
 import { useGlobalStore } from '../../../../store/zustand/global'
 import { useChatInstance } from '../../../../hooks/use-chat-instance.hook'
-import { useEventEmitter } from '../../../../hooks/use-event-emitter.hook'
+import { useOn } from '../../../../hooks/use-on.hook'
+import { getGlobalConfig } from '../../../../helpers/global-config'
+import { emitter } from '../../../../helpers/emitter'
+import { MAYBE_IDE } from '../../../../helpers/constant'
+import { StyledIcon } from './chat-sidebar.styles'
 
 export interface ChatSidebarProps {
   rootPath: string
@@ -36,7 +40,6 @@ export const ChatSidebar: FC<ChatSidebarProps> = memo((props) => {
   } = useGlobalStore()
 
   const [isLoading, setIsLoading] = useState(false)
-  const emitter = useEventEmitter()
 
   const { removeChatInstance } = useChatInstance({
     chatId,
@@ -59,10 +62,13 @@ export const ChatSidebar: FC<ChatSidebarProps> = memo((props) => {
 
   useEffect(() => {
     refreshSidebarTree()
-
-    emitter.on(ClientEventName.RefreshTree, refreshSidebarTree)
-    emitter.on(ClientEventName.RefreshChatTree, refreshSidebarTree)
   }, [rootPath])
+
+  useOn({
+    eventName: [ClientEventName.RefreshTree, ClientEventName.RefreshChatTree],
+    listener: refreshSidebarTree,
+    deps: [refreshSidebarTree],
+  })
 
   const handleCreateChat = useCallback((gptFileId: string) => {
     createChatAndActive(gptFileId)
@@ -79,7 +85,7 @@ export const ChatSidebar: FC<ChatSidebarProps> = memo((props) => {
       updateActiveChatId(otherInfo.id)
   }, [updateActiveChatId])
 
-  const renderTreeItemLeftSlot = (props: TreeItemState<GptTreeItemOtherInfo>) => {
+  const renderTreeItemLeftSlot = useCallback((props: TreeItemState<GptTreeItemOtherInfo>) => {
     const { isLeaf, isExpanded, otherInfo } = props
 
     const getIconClassName = () => {
@@ -102,35 +108,50 @@ export const ChatSidebar: FC<ChatSidebarProps> = memo((props) => {
         marginRight: '0.45rem',
       }} className={getIconClassName()}></Icon>
     </>
-  }
+  }, [])
 
-  const renderTreeItemRightSlot = (props: TreeItemState<GptTreeItemOtherInfo>) => {
-    const { isLeaf, otherInfo } = props
+  const renderTreeItemRightSlot = useCallback((props: TreeItemState<GptTreeItemOtherInfo>) => {
+    const { isLeaf, otherInfo, isHovering } = props
+    const { path } = otherInfo || {}
+
+    const handleEditGptFile = () => {
+      if (!path)
+        return
+
+      if (getGlobalConfig().editFileInIde)
+        emitter.emit(ClientEventName.OpenFileInIde, { filePath: path })
+    }
 
     if (otherInfo?.type === GptFileTreeItemType.Chat && isLeaf) {
       return <>
-        <IconButton
-          text={t('chat_page.delete_chat_btn')}
-          showText={false}
-          iconClassName='codicon-trash'
+        <StyledIcon
+          title={t('chat_page.delete_chat_btn')}
+          className='codicon-trash'
           onClick={() => handleDeleteChat(otherInfo.id)}
-        ></IconButton>
+        ></StyledIcon>
       </>
     }
 
     if (otherInfo?.type === GptFileTreeItemType.File) {
-      return <IconButton
-        text={t('chat_page.new_chat_btn')}
-        showText={false}
-        iconClassName='codicon-add'
-        onClick={() => handleCreateChat(otherInfo.id)}
-      ></IconButton>
+      return <>
+        {/* TODO: implement edit file in web */}
+        {isHovering && MAYBE_IDE && <StyledIcon
+          title={t('chat_page.edit_btn')}
+          className='codicon-edit'
+          onClick={handleEditGptFile}
+        ></StyledIcon>}
+        <StyledIcon
+          title={t('chat_page.new_chat_btn')}
+          className='codicon-add'
+          onClick={() => handleCreateChat(otherInfo.id)}
+        ></StyledIcon>
+      </>
     }
 
     return <></>
-  }
+  }, [handleCreateChat, handleDeleteChat, t])
 
-  const buildSearchRightSlot = () => {
+  const buildSearchRightSlot = useCallback(() => {
     return <IconButton
       style={{
         marginLeft: '0.5rem',
@@ -142,7 +163,7 @@ export const ChatSidebar: FC<ChatSidebarProps> = memo((props) => {
       animatingWhenClick
       onClick={refreshSidebarTree}
     ></IconButton>
-  }
+  }, [refreshSidebarTree, t])
 
   const handleExpandChange = useCallback((props: TreeItemState<GptFileInfoTreeItem>) => {
     updateSidebarTreeItem(props.id, {

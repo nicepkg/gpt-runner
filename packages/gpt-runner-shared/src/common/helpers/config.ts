@@ -1,4 +1,4 @@
-import type { ReadonlyDeep, SingleFileConfig, UserConfig } from '../types'
+import { ChatModelType, type ReadonlyDeep, type SingleFileConfig, type UserConfig } from '../types'
 import { getProcessCwd } from './common'
 import { DEFAULT_EXCLUDE_FILES } from './constants'
 import { EnvConfig } from './env-config'
@@ -12,7 +12,7 @@ export function singleFileConfigWithDefault(singleFileConfig?: Partial<SingleFil
 export function userConfigWithDefault(userConfig?: Partial<UserConfig>) {
   return ({
     model: {
-      type: 'openai',
+      type: ChatModelType.Openai,
       modelName: 'gpt-3.5-turbo-16k',
       temperature: 0.9,
       maxTokens: 2000,

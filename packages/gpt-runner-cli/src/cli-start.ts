@@ -10,7 +10,7 @@ import { version } from '../package.json'
 import type { CliOptions } from './types'
 
 const dirname = PathUtils.getCurrentDirName(import.meta.url, () => __dirname)
-const startServerJsPath = PathUtils.resolve(dirname, '../node_modules/@nicepkg/gpt-runner-web/dist/start-server.mjs')
+const startServerJsPath = PathUtils.resolve(dirname, '../node_modules/@nicepkg/gpt-runner-web/dist/start-server.cjs')
 
 export async function startCli(cwd = PathUtils.resolve(process.cwd()), argv = process.argv, options: CliOptions = {}) {
   const cli = cac('gptr')

@@ -143,10 +143,16 @@ export async function getCommonFileTree(params: GetCommonFileTreeParams): Promis
 export interface CreateFileContextParams {
   rootPath: string
   filePaths: string[]
+  editingFilePath?: string
 }
 
 export async function createFileContext(params: CreateFileContextParams) {
-  const { rootPath, filePaths } = params
+  const { rootPath, filePaths, editingFilePath } = params
+
+  // exclude editing file path
+  const contextFilePaths = editingFilePath ? filePaths.filter(filePath => filePath !== editingFilePath) : filePaths
+  const editingFileRelativePath = editingFilePath ? PathUtils.relative(rootPath, editingFilePath) : ''
+  const editingFileContent = editingFilePath ? await FileUtils.readFile({ filePath: editingFilePath }) : ''
 
   const baseTips = `Please answer the user's question based on the user's file path and file content.
   The file path and file content will be separated by five single quotes.
@@ -155,7 +161,7 @@ export async function createFileContext(params: CreateFileContextParams) {
 
   let tips = baseTips
 
-  for (const filePath of filePaths) {
+  for (const filePath of contextFilePaths) {
     const relativePath = PathUtils.relative(rootPath, filePath)
     const content = await FileUtils.readFile({ filePath })
 
@@ -170,6 +176,22 @@ ${content}
 `
 
     tips += fileTips
+  }
+
+  if (editingFileRelativePath) {
+    tips += `\nAt the same time,
+User is editing the content of this file,
+maybe User is asking you about this file,
+Here is the file:
+'''''
+[file path]
+${editingFileRelativePath}
+
+[file content]
+${editingFileContent}
+'''''
+
+`
   }
 
   tips += `\nWhen you want to create/modify/delete a file or talk about a file, you should always return the full path of the file.

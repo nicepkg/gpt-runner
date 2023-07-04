@@ -65,7 +65,6 @@ export async function registerCompletion(
   const registerProvider = () => {
     dispose()
 
-    console.log('aaa registerCompletion')
     const disposable = vscode.languages.registerCompletionItemProvider(
       { scheme: 'file', pattern: '**/*.gpt.md' },
       {

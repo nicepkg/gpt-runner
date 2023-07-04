@@ -38,10 +38,12 @@ export const StyledForm = styled.form`
   display: flex;
   flex-direction: column;
   margin: 1rem;
+  position: relative;
 `
 
 export const StyledFormItem = styled.div`
   display: flex;
   flex-direction: column;
   margin-bottom: 1rem;
+  width: 100%;
 `

@@ -19,10 +19,11 @@ export function openInBrowser(props: OpenInBrowserProps) {
 export interface GetPortProps {
   defaultPort?: number
   autoFreePort?: boolean
+  excludePorts?: number[]
 }
 
 export async function getPort(props: GetPortProps): Promise<number> {
-  const { defaultPort, autoFreePort } = props
+  const { defaultPort, autoFreePort, excludePorts } = props
 
   if (defaultPort) {
     if (!autoFreePort)
@@ -34,12 +35,18 @@ export async function getPort(props: GetPortProps): Promise<number> {
       return defaultPort
   }
 
-  const [freePort] = await fp.findFreePorts(1, {
+  const freePorts = await fp.findFreePorts(1, {
     startPort: 3001,
     endPort: 9999,
+    isFree: async (port) => {
+      if (excludePorts?.includes(port))
+        return false
+
+      return fp.isFreePort(port)
+    },
   })
 
-  return freePort
+  return freePorts[0]
 }
 
 // return 192.168.xxx.xxx or 127.0.0.1

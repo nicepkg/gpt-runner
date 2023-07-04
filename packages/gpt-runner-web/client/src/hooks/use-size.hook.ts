@@ -5,16 +5,16 @@ interface Size {
   height: number
 }
 
-interface UseSizeProps {
-  ref?: React.RefObject<HTMLElement>
+interface UseSizeProps<T extends HTMLElement = HTMLElement> {
+  ref?: React.RefObject<T>
   width?: number
   height?: number
 }
 
-export function useSize(props?: UseSizeProps): [ref: React.RefObject<HTMLElement>, size: Size] {
+export function useSize<T extends HTMLElement = HTMLElement>(props?: UseSizeProps<T>): [ref: React.RefObject<T>, size: Size] {
   const { width = 0, height = 0 } = props || {}
 
-  const ref = props?.ref ?? useRef<HTMLElement>(null)
+  const ref = props?.ref ?? useRef<T>(null)
   const [size, setSize] = useState<Size>({ width, height })
 
   useLayoutEffect(() => {

@@ -1,4 +1,4 @@
-import { type FC, memo, useState } from 'react'
+import { type FC, memo, useCallback, useState } from 'react'
 import { useMutation } from '@tanstack/react-query'
 import { GPT_RUNNER_OFFICIAL_FOLDER, type MaybePromise, sleep } from '@nicepkg/gpt-runner-shared/common'
 import { Trans, useTranslation } from 'react-i18next'
@@ -27,7 +27,7 @@ export const InitGptFiles: FC<InitGptFilesProps> = memo((props) => {
     }),
   })
 
-  const handleCreate = async () => {
+  const handleCreate = useCallback(async () => {
     setIsLoading(true)
 
     try {
@@ -42,11 +42,12 @@ export const InitGptFiles: FC<InitGptFilesProps> = memo((props) => {
     finally {
       setIsLoading(false)
     }
-  }
+  }, [onCreated, runInitGptFiles, setIsLoading, t])
 
   return <Wrapper>
     <Title>
       <Trans
+        t={t}
         i18nKey='chat_page.no_gpt_files_tips'
         components={{
           Title: <Title />,
@@ -57,6 +58,7 @@ export const InitGptFiles: FC<InitGptFilesProps> = memo((props) => {
 
     <Title>
       <Trans
+        t={t}
         i18nKey='chat_page.ask_for_create_gpt_file_tips'
         values={{
           fileName: `./${GPT_RUNNER_OFFICIAL_FOLDER}/copilot.gpt.md`,

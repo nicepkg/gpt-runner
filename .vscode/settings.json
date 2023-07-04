@@ -1,6 +1,4 @@
 {
-  "typescript.tsdk": "node_modules/typescript/lib",
-  "typescript.enablePromptUseWorkspaceTsdk": true,
   "prettier.enable": false,
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true
@@ -39,6 +37,7 @@
     "gptr",
     "GRADIO",
     "hideable",
+    "hookform",
     "jetbrains",
     "Jinming",
     "keyboardjs",
@@ -52,9 +51,11 @@
     "OPENAI",
     "OVSE",
     "ovsx",
+    "ponyfill",
     "pycache",
     "rehype",
     "rubberband",
+    "svgr",
     "tablist",
     "tabpanel",
     "tagify",
@@ -62,6 +63,7 @@
     "tiktoken",
     "tsup",
     "unconfig",
+    "undici",
     "uuidv",
     "vsix",
     "zustand"

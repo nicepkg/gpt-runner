@@ -1,10 +1,10 @@
-import child_process from 'child_process'
-import { getPort, getRunServerEnv } from '@nicepkg/gpt-runner-shared/node'
+import type child_process from 'child_process'
+import { getPort } from '@nicepkg/gpt-runner-shared/node'
 import type { Disposable, ExtensionContext } from 'vscode'
 import * as vscode from 'vscode'
+import waitPort from 'wait-port'
 import type { ContextLoader } from '../contextLoader'
 import { Commands } from '../constant'
-import { log } from '../log'
 import { state } from '../state'
 
 export async function registerServer(
@@ -27,40 +27,28 @@ export async function registerServer(
       serverProcess?.kill?.()
 
       const { extensionUri } = ext
-      const serverUri = vscode.Uri.joinPath(extensionUri, './dist/web/start-server.cjs')
+      const serverUri = vscode.Uri.joinPath(extensionUri, './dist/web/server.cjs')
+      // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
+      const { startServer } = require(serverUri.fsPath)
 
       // always get a random free port
       const finalPort = await getPort({
         autoFreePort: true,
+        excludePorts: [3003, 3006],
+      })
+
+      await startServer({
+        port: finalPort,
+        autoFreePort: false,
+        clientDistPath: vscode.Uri.joinPath(extensionUri, './dist/web/browser').fsPath,
+      })
+
+      await waitPort({
+        port: finalPort,
+        output: 'silent',
       })
 
       state.serverPort = finalPort
-
-      serverProcess = child_process.spawn('node', [
-        serverUri.fsPath,
-        '--port',
-        String(finalPort),
-        '--client-dist-path',
-        vscode.Uri.joinPath(extensionUri, './dist/web/browser').fsPath,
-      ], {
-        env: {
-          ...process.env,
-          ...getRunServerEnv(),
-          DEBUG: 'enabled',
-        },
-      })
-
-      serverProcess.stdout.on('data', (data: string) => {
-        log.appendLine(`stdout: ${data}`)
-      })
-
-      serverProcess.stderr.on('data', (data: string) => {
-        log.appendLine(`stderr: ${data}`)
-      })
-
-      serverProcess.on('close', (code: string) => {
-        log.appendLine(`child process exited with code ${code}`)
-      })
     })
 
     return serverDisposable

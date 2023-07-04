@@ -9,8 +9,9 @@ export class Debug {
 
   constructor(label: string) {
     this.label = `gpt-runner:${label}`
-    if (process.env.DEBUG === 'enabled')
+    if (process.env.DEBUG)
       debug.enable(this.label)
+
     this.debugger = debug(this.label)
 
     // @ts-ignore

@@ -2,13 +2,13 @@ import fs from 'fs'
 import type { ExtensionContext } from 'vscode'
 import * as vscode from 'vscode'
 import * as uuid from 'uuid'
-import { toUnixPath } from '@nicepkg/gpt-runner-shared/common'
+import { ClientEventName, toUnixPath, waitForCondition } from '@nicepkg/gpt-runner-shared/common'
 import { PathUtils } from '@nicepkg/gpt-runner-shared/node'
 import type { ContextLoader } from '../contextLoader'
 import { Commands, EXT_DISPLAY_NAME, EXT_NAME } from '../constant'
-import { createHash, getLang, getServerBaseUrl } from '../utils'
+import { createHash, getLang, getServerBaseUrl, openFileInNewTab } from '../utils'
 import { state } from '../state'
-import { EventType, emitter } from '../emitter'
+import { EventType, VscodeEventName, emitter } from '../emitter'
 import { log } from '../log'
 
 class ChatViewProvider implements vscode.WebviewViewProvider {
@@ -26,6 +26,28 @@ class ChatViewProvider implements vscode.WebviewViewProvider {
     this.#projectPath = projectPath
   }
 
+  static handleWebviewCreated(webview: vscode.Webview) {
+    webview.onDidReceiveMessage(({ eventName }: { eventName: ClientEventName }) => {
+      if (eventName === ClientEventName.InitSuccess)
+        ChatViewProvider.handleWebviewWindowInit()
+    })
+  }
+
+  static handleWebviewWindowInit() {
+    // ensure first time to update opening file paths
+    emitter.emit(VscodeEventName.VscodeUpdateOpeningFilePaths)
+
+    // ensure first time to update selected text
+    emitter.emit(ClientEventName.UpdateUserSelectedText, {
+      text: state.selectedText,
+    })
+
+    // listen if webview want to open a file
+    emitter.on(ClientEventName.OpenFileInIde, ({ filePath }) => {
+      openFileInNewTab(filePath)
+    })
+  }
+
   resolveWebviewView(
     webviewView: vscode.WebviewView,
     _context: vscode.WebviewViewResolveContext,
@@ -33,8 +55,8 @@ class ChatViewProvider implements vscode.WebviewViewProvider {
   ) {
     this.#view = webviewView
     state.sidebarWebviewView = webviewView
-
     ChatViewProvider.updateWebview(webviewView.webview, this.#extContext, this.#projectPath)
+    ChatViewProvider.handleWebviewCreated(webviewView.webview)
   }
 
   static createWebviewPanel(extContext: ExtensionContext, projectPath: string): vscode.WebviewPanel {
@@ -48,14 +70,12 @@ class ChatViewProvider implements vscode.WebviewViewProvider {
       { retainContextWhenHidden: true },
     )
     panel.iconPath = vscode.Uri.joinPath(extContext.extensionUri, './res/logo.svg')
-
     panel.onDidDispose(() => {
       state.webviewPanels.delete(panel)
     })
-
     state.webviewPanels.add(panel)
-
     ChatViewProvider.updateWebview(panel.webview, extContext, projectPath)
+    ChatViewProvider.handleWebviewCreated(panel.webview)
 
     return panel
   }
@@ -93,7 +113,10 @@ class ChatViewProvider implements vscode.WebviewViewProvider {
         initialRoutePath: '/chat',
         showDiffCodesBtn: true,
         showInsertCodesBtn: true,
-        defaultLangId: '${getLang()}'
+        defaultLangId: '${getLang()}',
+        showIdeFileContextOptions: true,
+        showUserSelectedTextContextOptions: true,
+        editFileInIde: true
       }
 
       window.addEventListener('message', event => {
@@ -110,6 +133,27 @@ class ChatViewProvider implements vscode.WebviewViewProvider {
         }
         return oldEmit.apply(this, args)
       }
+
+      // fix vscode open link in browser
+      const vscodeGoTo = (url) => {
+        window.__emitter__.emit('${VscodeEventName.VscodeGoTo}', {url})
+      }
+
+      const originalWindowOpen = window.open
+      window.open = (url) => {
+        if (url.includes('vscode-resource.')) return
+        vscodeGoTo(url);
+      }
+
+      document.addEventListener('DOMContentLoaded', () => {
+        document.body.addEventListener('click', (event) => {
+          const target = event.target.closest('a') || event.target.closest('vscode-link')
+          if (target && target.href && !target.href.includes('vscode-resource.')) {
+            event.preventDefault();
+            vscodeGoTo(target.href);
+          }
+        }, true);
+      });
     `).replace(/<script\s*([\w\W]+)?>/g,
       (_, attr) => `<script ${attr} nonce="${nonce}">`,
     )
@@ -134,6 +178,9 @@ export async function registerWebview(
     webviewPanelDisposer?.dispose?.()
   }
 
+  // ensure server port is ready
+  await waitForCondition(() => !!state.serverPort)
+
   const registerProvider = () => {
     dispose()
 
@@ -149,6 +196,10 @@ export async function registerWebview(
       dispose,
     })
   }
+
+  emitter.on(VscodeEventName.VscodeGoTo, ({ url }) => {
+    vscode.env.openExternal(vscode.Uri.parse(url))
+  })
 
   ext.subscriptions.push(registerProvider())
 

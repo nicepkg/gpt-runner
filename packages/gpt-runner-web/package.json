@@ -1,6 +1,6 @@
 {
   "name": "@nicepkg/gpt-runner-web",
-  "version": "0.3.0",
+  "version": "0.4.5",
   "description": "",
   "author": "Jinming Yang <2214962083@qq.com>",
   "license": "MIT",
@@ -25,28 +25,23 @@
   "exports": {
     ".": {
       "types": "./dist/common/index.d.ts",
-      "require": "./dist/common.cjs",
-      "import": "./dist/common.mjs"
+      "require": "./dist/common.cjs"
     },
     "./*": "./*",
     "./server": {
       "types": "./dist/server/index.d.ts",
-      "require": "./dist/server.cjs",
-      "import": "./dist/server.mjs"
+      "require": "./dist/server.cjs"
     },
     "./start-server": {
       "types": "./dist/server/start-server.d.ts",
-      "require": "./dist/start-server.cjs",
-      "import": "./dist/start-server.mjs"
+      "require": "./dist/start-server.cjs"
     },
     "./common": {
       "types": "./dist/common/index.d.ts",
-      "require": "./dist/common.cjs",
-      "import": "./dist/common.mjs"
+      "require": "./dist/common.cjs"
     }
   },
   "main": "dist/common.cjs",
-  "module": "dist/common.mjs",
   "types": "./dist/common/index.d.ts",
   "files": [
     "dist/",
@@ -73,6 +68,7 @@
     "stub": "unbuild --stub"
   },
   "devDependencies": {
+    "@hookform/resolvers": "^3.1.1",
     "@kvs/node-localstorage": "^2.1.3",
     "@kvs/storage": "^2.1.3",
     "@microsoft/fetch-event-source": "^2.0.1",
@@ -99,13 +95,12 @@
     "cross-env": "^7.0.3",
     "eventemitter": "^0.3.3",
     "express": "^4.18.2",
-    "framer-motion": "^10.12.17",
+    "framer-motion": "^10.12.18",
     "global-agent": "^3.0.0",
     "i18next": "^23.2.6",
     "i18next-browser-languagedetector": "^7.1.0",
     "i18next-http-backend": "^2.2.1",
     "keyboardjs": "^2.7.0",
-    "langchain": "^0.0.100",
     "lodash-es": "^4.17.21",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -114,16 +109,17 @@
     "react-hot-toast": "^2.4.1",
     "react-i18next": "^13.0.1",
     "react-markdown": "^8.0.7",
-    "react-router-dom": "^6.14.0",
+    "react-router-dom": "^6.14.1",
     "react-syntax-highlighter": "^15.5.0",
     "react-tiny-popover": "^7.2.4",
     "react-use": "^17.4.0",
     "remark-gfm": "^3.0.1",
-    "styled-components": "^6.0.1",
+    "styled-components": "^6.0.2",
     "undici": "^5.22.1",
     "unist-util-visit": "^4.1.2",
     "uuid": "^9.0.0",
     "vite": "^4.3.9",
+    "vite-plugin-svgr": "^3.2.0",
     "zustand": "^4.3.8"
   }
 }

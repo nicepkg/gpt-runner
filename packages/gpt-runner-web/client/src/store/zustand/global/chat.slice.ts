@@ -1,10 +1,11 @@
 import type { StateCreator } from 'zustand'
-import type { SingleChat } from '@nicepkg/gpt-runner-shared/common'
+import type { PartialChatModelTypeMap, SingleChat } from '@nicepkg/gpt-runner-shared/common'
 import { ChatMessageStatus, ChatRole, STREAM_DONE_FLAG, travelTree } from '@nicepkg/gpt-runner-shared/common'
 import { v4 as uuidv4 } from 'uuid'
 import type { GetState } from '../types'
 import { fetchLlmStream } from '../../../networks/llm'
 import { getGlobalConfig } from '../../../helpers/global-config'
+import { useTempStore } from '../temp'
 import type { SidebarTreeItem, SidebarTreeSlice } from './sidebar-tree.slice'
 import type { FileTreeSlice } from './file-tree.slice'
 
@@ -16,6 +17,7 @@ export enum GenerateAnswerType {
 export interface ChatSlice {
   activeChatId: string
   chatInstances: SingleChat[]
+  overrideModelsConfig: PartialChatModelTypeMap
   updateActiveChatId: (activeChatId: string) => void
 
   /**
@@ -38,6 +40,8 @@ export interface ChatSlice {
   generateChatAnswer: (chatId: string, type?: GenerateAnswerType) => Promise<void>
   regenerateLastChatAnswer: (chatId: string) => Promise<void>
   stopGeneratingChatAnswer: (chatId: string) => void
+  updateOverrideModelsConfig: (overrideModelsConfig: PartialChatModelTypeMap | ((oldModelOverrideConfig: PartialChatModelTypeMap) => PartialChatModelTypeMap)) => void
+  getContextFilePaths: () => string[]
 }
 
 export type ChatState = GetState<ChatSlice>
@@ -46,6 +50,7 @@ function getInitialState() {
   return {
     activeChatId: '',
     chatInstances: [],
+    overrideModelsConfig: {},
   } satisfies ChatState
 }
 
@@ -199,6 +204,7 @@ export const createChatSlice: StateCreator<
 
   async generateChatAnswer(chatId, type = GenerateAnswerType.Generate) {
     const state = get()
+    const tempState = useTempStore.getState()
     const chatInstance = state.getChatInstance(chatId)
     if (!chatInstance)
       throw new Error(`Chat instance with id ${chatId} not found`)
@@ -264,8 +270,12 @@ export const createChatSlice: StateCreator<
 
     const appendSystemPrompt = (() => {
       let result = ''
-      if (state.provideFilePathsTreePromptToGpt)
-        result += `\n${state.filePathsTreePrompt}`
+
+      if (state.provideFileInfoToGptMap.allFilePaths)
+        result += `\n${state.provideFileInfoPromptMap.allFilePathsPrompt}`
+
+      if (state.provideFileInfoToGptMap.userSelectedText)
+        result += tempState.getUserSelectTextPrompt()
 
       return result
     })()
@@ -280,13 +290,17 @@ export const createChatSlice: StateCreator<
 
     chatIdAbortCtrlMap.set(chatId, abortCtrl)
 
+    const contextFilePaths = state.getContextFilePaths()
+
     await fetchLlmStream({
       signal: abortCtrl.signal,
       messages: sendMessages,
       prompt: sendInputtingPrompt,
       appendSystemPrompt,
       singleFilePath,
-      contextFilePaths: state.checkedFilePaths,
+      contextFilePaths,
+      editingFilePath: tempState.ideActiveFilePath,
+      overrideModelsConfig: state.overrideModelsConfig,
       rootPath: getGlobalConfig().rootPath,
       onError(e) {
         console.error('fetchLlmStream error:', e)
@@ -338,5 +352,28 @@ export const createChatSlice: StateCreator<
     state.updateChatInstance(chatId, {
       status: ChatMessageStatus.Success,
     }, false)
+  },
+  updateOverrideModelsConfig(overrideModelsConfig) {
+    const state = get()
+    const finalModelOverrideConfig = typeof overrideModelsConfig === 'function' ? overrideModelsConfig(state.overrideModelsConfig) : overrideModelsConfig
+
+    set({ overrideModelsConfig: finalModelOverrideConfig })
+  },
+  getContextFilePaths() {
+    const state = get()
+    const tempState = useTempStore.getState()
+    const contextPaths: string[] = []
+    const { checkedFileContents, activeIdeFileContents, openingIdeFileContents } = state.provideFileInfoToGptMap
+
+    if (checkedFileContents)
+      contextPaths.push(...state.checkedFilePaths)
+
+    if (activeIdeFileContents)
+      contextPaths.push(tempState.ideActiveFilePath)
+
+    if (openingIdeFileContents)
+      contextPaths.push(...tempState.ideOpeningFilePaths)
+
+    return [...new Set(contextPaths)]
   },
 })

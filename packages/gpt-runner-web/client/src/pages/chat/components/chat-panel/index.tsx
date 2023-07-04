@@ -21,11 +21,15 @@ import { useElementSizeRealTime } from '../../../../hooks/use-element-size-real-
 import { useTempStore } from '../../../../store/zustand/temp'
 import type { MessageCodeBlockTheme } from '../../../../components/chat-message-code-block'
 import { isDarkTheme } from '../../../../styles/themes'
-import { useEventEmitter } from '../../../../hooks/use-event-emitter.hook'
-import { ChatPanelPopoverTreeWrapper, ChatPanelWrapper } from './chat-panel.styles'
+import { emitter } from '../../../../helpers/emitter'
+import { ModelSettings } from '../settings/components/model-settings'
+import { ContentWrapper } from '../../chat.styles'
+import { ContextSettings } from '../settings/components/context-settings'
+import { ChatPanelPopoverTreeWrapper, ChatPanelWrapper, ConfigFormTitle } from './chat-panel.styles'
 import { createRemarkOpenEditorPlugin } from './remark-plugin'
 
 export interface ChatPanelProps {
+  rootPath: string
   scrollDownRef: RefObject<any>
   chatTreeView?: React.ReactNode
   fileTreeView?: React.ReactNode
@@ -35,6 +39,7 @@ export interface ChatPanelProps {
 
 export const ChatPanel: FC<ChatPanelProps> = memo((props) => {
   const {
+    rootPath,
     scrollDownRef,
     chatTreeView,
     fileTreeView,
@@ -59,9 +64,8 @@ export const ChatPanel: FC<ChatPanelProps> = memo((props) => {
 
   const status = chatInstance?.status ?? ChatMessageStatus.Success
   const [gptFileTreeItem, setGptFileTreeItem] = useState<GptFileTreeItem>()
-  const [chatPanelRef, { width: chatPanelWidth }] = useElementSizeRealTime<HTMLDivElement>()
+  const [chatPanelRef, { width: chatPanelWidth, height: chatPanelHeight }] = useElementSizeRealTime<HTMLDivElement>()
   const { filesRelativePaths } = useTempStore()
-  const emitter = useEventEmitter()
 
   const filesPathsAllPartsInfo = useMemo(() => {
     // not good, but fast
@@ -211,7 +215,7 @@ export const ChatPanel: FC<ChatPanelProps> = memo((props) => {
   useKeyboard('ctrl + enter', handleGenerateAnswer)
   useKeyboard('command + enter', handleGenerateAnswer)
 
-  const buildCodeToolbar: MessageItemProps['buildCodeToolbar'] = ({ contents }) => {
+  const buildCodeToolbar = useCallback<NonNullable<MessageItemProps['buildCodeToolbar']>>(({ contents }) => {
     return <>
       <IconButton
         text={t('chat_page.copy_btn')}
@@ -234,11 +238,11 @@ export const ChatPanel: FC<ChatPanelProps> = memo((props) => {
       >
       </IconButton>}
     </>
-  }
+  }, [handleCopy, handleInsertCodes, handleDiffCodes])
 
   const codeBlockTheme: MessageCodeBlockTheme = isDarkTheme(themeName) ? 'dark' : 'light'
 
-  const messagePanelProps: ChatMessagePanelProps = {
+  const messagePanelProps: ChatMessagePanelProps = useMemo(() => ({
     messageItems: chatInstance?.messages.map((message, i) => {
       const isLast = i === chatInstance.messages.length - 1
       const isLastTwo = i >= chatInstance.messages.length - 2
@@ -311,7 +315,20 @@ export const ChatPanel: FC<ChatPanelProps> = memo((props) => {
         buildMessageToolbar,
       } satisfies MessageItemProps
     }) ?? [],
-  }
+  }), [
+    chatInstance,
+    chatPanelWidth,
+    filesPathsAllPartsInfo,
+    status,
+    codeBlockTheme,
+    buildCodeToolbar,
+    t,
+    updateCurrentChatInstance,
+    regenerateCurrentLastChatAnswer,
+    stopCurrentGeneratingChatAnswer,
+    handleCopy,
+    handleEditMessage,
+  ])
 
   const renderInputToolbar = () => {
     return <>
@@ -341,11 +358,51 @@ export const ChatPanel: FC<ChatPanelProps> = memo((props) => {
       ></IconButton>
 
       {/* right icon */}
-      {/* chat tree */}
-      {chatTreeView && <PopoverMenu
+      {/* model settings */}
+      <PopoverMenu
+        clickMode
+        clickOutsideCapture={false}
+        xPosition='center'
         menuMaskStyle={{
           marginLeft: '0.5rem',
           marginRight: '0.5rem',
+        }}
+        buildChildrenSlot={({ isHovering }) => {
+          return <IconButton
+            style={{
+              paddingLeft: '0.5rem',
+            }}
+            text={t('chat_page.model_settings_btn')}
+            iconClassName='codicon-settings'
+            hoverShowText={!isHovering}
+          ></IconButton>
+        }}
+        buildMenuSlot={() => {
+          return <ContentWrapper $isPopoverContent style={{
+            maxWidth: '400px',
+          }}>
+            <ConfigFormTitle>
+              <ModelSettings rootPath={rootPath} singleFilePath={chatInstance?.singleFilePath} viewType='title'></ModelSettings>
+              {` ${t('chat_page.override_settings')}`}
+            </ConfigFormTitle>
+            <ModelSettings rootPath={rootPath} singleFilePath={chatInstance?.singleFilePath} viewType='model'></ModelSettings>
+            <ConfigFormTitle>
+              {t('chat_page.context_settings')}
+            </ConfigFormTitle>
+            <ContextSettings rootPath={rootPath}></ContextSettings>
+          </ContentWrapper>
+        }}
+      />
+
+      {/* chat tree */}
+      {chatTreeView && <PopoverMenu
+        clickMode
+        menuMaskStyle={{
+          marginLeft: '0.5rem',
+          marginRight: '0.5rem',
+        }}
+        menuStyle={{
+          height: chatPanelHeight - 400,
         }}
         buildChildrenSlot={({ isHovering }) => {
           return <IconButton
@@ -366,7 +423,8 @@ export const ChatPanel: FC<ChatPanelProps> = memo((props) => {
 
       {/* file tree */}
       {fileTreeView && <PopoverMenu
-        clickOutSideToClose={false}
+        clickMode
+        clickOutsideCapture={false}
         menuMaskStyle={{
           marginLeft: '0.5rem',
           marginRight: '0.5rem',
@@ -440,7 +498,7 @@ export const ChatPanel: FC<ChatPanelProps> = memo((props) => {
       dragDirectionConfigs={[
         {
           direction: 'top',
-          boundary: [-300, 50],
+          boundary: [-300, 100],
         },
       ]}>
       <ChatMessageInput

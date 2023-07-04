@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react'
 import React, { memo } from 'react'
 import type {
   FieldPath,
@@ -17,7 +18,7 @@ export interface HookFormTextareaProps<
   TFieldValues extends FieldValues = FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
 > extends Pick<UseControllerProps<TFieldValues>, 'rules'>, Omit<TextareaProps, 'control'> {
-  label: string
+  label?: ReactNode
   name: TName
   errors: FormState<TFieldValues>['errors']
   control: UseControllerProps<TFieldValues>['control']

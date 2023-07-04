@@ -2,7 +2,7 @@
 {
   "title": "Categories-Name/AI-Preset-Name",
   "model": {
-    "modalName": "gpt-3.5-turbo-16k",
+    "modelName": "gpt-3.5-turbo-16k",
     "temperature": 0
   }
 }
@@ -21,6 +21,6 @@ when you create a new chat with this preset, user prompt text will auto fill in 
 
 Here you can write your remarks
 
-`model` / `modalName` / `temperature` / `System Prompt` / `User Prompt` are **optional** parameters, and there are many customizable parameters
+`model` / `modelName` / `temperature` / `System Prompt` / `User Prompt` are **optional** parameters, and there are many customizable parameters
 
 You can also override the default values of many parameters through `gptr.config.json` in the project root directory

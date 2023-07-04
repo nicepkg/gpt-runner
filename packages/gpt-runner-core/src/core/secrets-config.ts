@@ -1,5 +1,5 @@
 import { ChatModelType, ServerStorageName } from '@nicepkg/gpt-runner-shared/common'
-import type { OpenaiSecrets } from '@nicepkg/gpt-runner-shared/common'
+import type { GetModelConfigType } from '@nicepkg/gpt-runner-shared/common'
 import { getStorage } from '@nicepkg/gpt-runner-shared/node'
 
 async function getSecretsStorage() {
@@ -9,8 +9,8 @@ async function getSecretsStorage() {
 
 const isValidSecretsStorageKey = (key: string) => Object.values(ChatModelType).includes(key as any)
 
-export interface SetSecretsParams {
-  [ChatModelType.Openai]?: Partial<OpenaiSecrets>
+export type SetSecretsParams = {
+  [Key in ChatModelType]?: GetModelConfigType<Key, 'secrets'>
 }
 
 export async function setSecrets(params: SetSecretsParams, override = false) {

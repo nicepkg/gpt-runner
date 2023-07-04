@@ -5,11 +5,25 @@ import { commands } from 'vscode'
 import { state } from './state'
 import { Commands } from './constant'
 
+export enum VscodeEventName {
+  VscodeUpdateOpeningFilePaths = 'vscodeUpdateOpeningFilePaths',
+  VscodeGoTo = 'vscodeGoTo',
+}
+
+export interface VscodeEventData {
+  [VscodeEventName.VscodeUpdateOpeningFilePaths]: void
+  [VscodeEventName.VscodeGoTo]: { url: string }
+}
+
+export type VscodeEventEmitterMap = EventEmitterMap & {
+  [K in VscodeEventName]: (data: VscodeEventData[K]) => any
+}
+
 export enum EventType {
   ReceiveMessage = 'ReceiveMessage',
 }
 
-const emitter = new EventEmitter<EventEmitterMap>()
+const emitter = new EventEmitter<VscodeEventEmitterMap>()
 
 // rewrite emit method to send message to webview
 const oldEmit = emitter.emit

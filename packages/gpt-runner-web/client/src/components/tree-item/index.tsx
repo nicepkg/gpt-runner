@@ -63,9 +63,7 @@ export function TreeItem_<OtherInfo extends TreeItemBaseStateOtherInfo = TreeIte
       else
         onExpand?.({ ...stateProps, isExpanded: true })
     }
-    else {
-      onClick?.(stateProps)
-    }
+    onClick?.(stateProps)
   }
 
   const contentVariants: Variants = {

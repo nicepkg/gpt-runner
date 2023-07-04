@@ -23,6 +23,8 @@ export async function fetchLlmStream(
     singleFilePath,
     singleFileConfig,
     contextFilePaths,
+    editingFilePath,
+    overrideModelsConfig,
     rootPath,
     namespace,
     onMessage = () => {},
@@ -30,6 +32,16 @@ export async function fetchLlmStream(
   } = params
 
   try {
+    const finalOverrideModelsConfig = Object.fromEntries(
+      Object.entries(overrideModelsConfig || {})
+        .map(([key, value]) => {
+          return [key, {
+            ...value,
+            type: key,
+          }]
+        }),
+    )
+
     await fetchEventSource(`${getGlobalConfig().serverBaseUrl}/api/chatgpt/chat-stream`, {
       method: 'POST',
       signal,
@@ -45,6 +57,8 @@ export async function fetchLlmStream(
         singleFilePath,
         singleFileConfig,
         contextFilePaths,
+        editingFilePath,
+        overrideModelsConfig: finalOverrideModelsConfig,
         rootPath,
       } satisfies ChatStreamReqParams),
       openWhenHidden: true,
