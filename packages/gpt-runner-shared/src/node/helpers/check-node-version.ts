@@ -26,10 +26,14 @@ export function checkNodeVersion() {
     return `You are using Node ${currentNodeVersion}, but GPT-Runner requires Node ${MIN_NODE_VERSION}.\nPlease upgrade your Node version in https://nodejs.org/en/download`
 }
 
-export function getRunServerEnv() {
+export function canUseNodeFetchWithoutCliFlag() {
   const currentNodeVersion = process.version
 
-  if (compareVersion(currentNodeVersion, '19.0.0') <= 0) {
+  return compareVersion(currentNodeVersion, '18.0.0') > 0
+}
+
+export function getRunServerEnv() {
+  if (!canUseNodeFetchWithoutCliFlag()) {
     return {
       NODE_OPTIONS: '--experimental-fetch',
       NODE_NO_WARNINGS: '1',

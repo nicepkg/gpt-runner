@@ -4,7 +4,8 @@
     "unbuild",
     "msw",
     "open",
-    "commander"
+    "commander",
+    "axios"
   ],
   "packageMode": {
     "react": "minor"

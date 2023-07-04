@@ -65,7 +65,8 @@
   },
   "pnpm": {
     "overrides": {
-      "magic-string": "^0.30.0"
+      "magic-string": "^0.30.0",
+      "axios": "1.3.4"
     }
   },
   "simple-git-hooks": {
