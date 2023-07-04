@@ -373,7 +373,7 @@ export const FileTree: FC<FileTreeProps> = memo((props: FileTreeProps) => {
         {t('chat_page.file_tree_top_clear_checked_btn')}
       </VSCodeLink>
     </FileTreeSidebarUnderSearchWrapper>
-  }, [checkedFilePaths])
+  }, [checkedFilePaths, checkedFilesContentPromptTokenNum, filesTree, fullPathFileMap])
 
   const sortTreeItems = useCallback((items: TreeItemProps<FileInfoSidebarTreeItem>[]) => {
     return items?.sort((a, b) => {
