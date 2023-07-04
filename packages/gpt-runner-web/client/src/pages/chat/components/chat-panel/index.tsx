@@ -215,7 +215,7 @@ export const ChatPanel: FC<ChatPanelProps> = memo((props) => {
   useKeyboard('ctrl + enter', handleGenerateAnswer)
   useKeyboard('command + enter', handleGenerateAnswer)
 
-  const buildCodeToolbar: MessageItemProps['buildCodeToolbar'] = ({ contents }) => {
+  const buildCodeToolbar = useCallback<NonNullable<MessageItemProps['buildCodeToolbar']>>(({ contents }) => {
     return <>
       <IconButton
         text={t('chat_page.copy_btn')}
@@ -238,11 +238,11 @@ export const ChatPanel: FC<ChatPanelProps> = memo((props) => {
       >
       </IconButton>}
     </>
-  }
+  }, [handleCopy, handleInsertCodes, handleDiffCodes])
 
   const codeBlockTheme: MessageCodeBlockTheme = isDarkTheme(themeName) ? 'dark' : 'light'
 
-  const messagePanelProps: ChatMessagePanelProps = {
+  const messagePanelProps: ChatMessagePanelProps = useMemo(() => ({
     messageItems: chatInstance?.messages.map((message, i) => {
       const isLast = i === chatInstance.messages.length - 1
       const isLastTwo = i >= chatInstance.messages.length - 2
@@ -315,7 +315,20 @@ export const ChatPanel: FC<ChatPanelProps> = memo((props) => {
         buildMessageToolbar,
       } satisfies MessageItemProps
     }) ?? [],
-  }
+  }), [
+    chatInstance,
+    chatPanelWidth,
+    filesPathsAllPartsInfo,
+    status,
+    codeBlockTheme,
+    buildCodeToolbar,
+    t,
+    updateCurrentChatInstance,
+    regenerateCurrentLastChatAnswer,
+    stopCurrentGeneratingChatAnswer,
+    handleCopy,
+    handleEditMessage,
+  ])
 
   const renderInputToolbar = () => {
     return <>

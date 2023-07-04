@@ -85,7 +85,7 @@ export const ChatSidebar: FC<ChatSidebarProps> = memo((props) => {
       updateActiveChatId(otherInfo.id)
   }, [updateActiveChatId])
 
-  const renderTreeItemLeftSlot = (props: TreeItemState<GptTreeItemOtherInfo>) => {
+  const renderTreeItemLeftSlot = useCallback((props: TreeItemState<GptTreeItemOtherInfo>) => {
     const { isLeaf, isExpanded, otherInfo } = props
 
     const getIconClassName = () => {
@@ -108,9 +108,9 @@ export const ChatSidebar: FC<ChatSidebarProps> = memo((props) => {
         marginRight: '0.45rem',
       }} className={getIconClassName()}></Icon>
     </>
-  }
+  }, [])
 
-  const renderTreeItemRightSlot = (props: TreeItemState<GptTreeItemOtherInfo>) => {
+  const renderTreeItemRightSlot = useCallback((props: TreeItemState<GptTreeItemOtherInfo>) => {
     const { isLeaf, otherInfo, isHovering } = props
     const { path } = otherInfo || {}
 
@@ -149,9 +149,9 @@ export const ChatSidebar: FC<ChatSidebarProps> = memo((props) => {
     }
 
     return <></>
-  }
+  }, [handleCreateChat, handleDeleteChat, t])
 
-  const buildSearchRightSlot = () => {
+  const buildSearchRightSlot = useCallback(() => {
     return <IconButton
       style={{
         marginLeft: '0.5rem',
@@ -163,7 +163,7 @@ export const ChatSidebar: FC<ChatSidebarProps> = memo((props) => {
       animatingWhenClick
       onClick={refreshSidebarTree}
     ></IconButton>
-  }
+  }, [refreshSidebarTree, t])
 
   const handleExpandChange = useCallback((props: TreeItemState<GptFileInfoTreeItem>) => {
     updateSidebarTreeItem(props.id, {
