@@ -1,6 +1,6 @@
 {
   "name": "@nicepkg/gpt-runner-cli",
-  "version": "0.4.5",
+  "version": "0.5.0",
   "description": "CLI for GPT Runner",
   "author": {
     "name": "Jinming Yang",
