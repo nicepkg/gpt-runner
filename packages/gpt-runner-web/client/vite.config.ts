@@ -5,8 +5,8 @@ import React from '@vitejs/plugin-react'
 import Svgr from 'vite-plugin-svgr'
 import { EnvConfig } from '@nicepkg/gpt-runner-shared/common'
 import { PathUtils } from '@nicepkg/gpt-runner-shared/node'
+import MonacoEditorPlugin from 'vite-plugin-monaco-editor'
 import { alias } from './../../../alias'
-import { copyMonacoEditor } from './scripts/copy-monaco-editor'
 
 const dirname = PathUtils.getCurrentDirName(import.meta.url, () => __dirname)
 
@@ -14,7 +14,7 @@ const resolvePath = (...paths: string[]) => path.resolve(dirname, ...paths)
 
 // https://vitejs.dev/config/
 export default defineConfig(async () => {
-  await copyMonacoEditor()
+  // await copyMonacoEditor()
 
   return {
     root: resolvePath('./'),
@@ -25,6 +25,12 @@ export default defineConfig(async () => {
     plugins: [
       React(),
       Svgr(),
+      MonacoEditorPlugin({
+        publicPath: 'monaco-editor',
+        customDistPath() {
+          return resolvePath('../dist/browser/monaco-editor')
+        },
+      }),
     ],
     build: {
       outDir: resolvePath('../dist/browser'),

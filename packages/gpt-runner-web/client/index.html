@@ -21,6 +21,32 @@
       }
     }
 
+    // fix get worker url not working in vscode
+    function getWorkerBlobUrl(url) {
+      if (/^((http:)|(https:)|(file:)|(\/\/))/.test(url)) {
+        const currentUrl = String(window.location)
+        const currentOrigin = currentUrl.substr(0, currentUrl.length - window.location.hash.length - window.location.search.length - window.location.pathname.length)
+        if (url.substring(0, currentOrigin.length) !== currentOrigin) {
+          const js = `importScripts("${url}");`
+          const blob = new Blob([js], { type: 'application/javascript' })
+          return URL.createObjectURL(blob)
+        }
+      }
+      return url
+    }
+
+    // change monaco editor worker url
+    const oldMonacoEnvironment = window?.MonacoEnvironment || {}
+    window.MonacoEnvironment = {
+      ...oldMonacoEnvironment,
+      getWorkerUrl: (moduleId, label) => {
+        const oldUrl = oldMonacoEnvironment.getWorkerUrl(moduleId, label)
+        const workerUrl = `${window.getGlobalConfig().webWorkerBaseUrl || ''}${oldUrl}`
+        const workerBlobUrl = getWorkerBlobUrl(workerUrl)
+        return workerBlobUrl
+      },
+    }
+
     // change locale language to navigator language
     document.documentElement.lang = window.navigator.language
   </script>

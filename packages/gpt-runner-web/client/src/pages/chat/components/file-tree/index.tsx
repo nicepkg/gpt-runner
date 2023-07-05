@@ -123,7 +123,12 @@ export const FileTree: FC<FileTreeProps> = memo((props: FileTreeProps) => {
   }, [checkedFilePaths, filesTree])
 
   const renderTreeItemLeftSlot = useCallback((props: TreeItemState<FileInfoSidebarTreeItem>) => {
-    const { isLeaf, isExpanded, otherInfo } = props
+    const { isLeaf, isExpanded, otherInfo, children } = props
+
+    if (otherInfo)
+      (otherInfo as any).getIsSomeChildrenIsChecked = () => children?.some(child => child.otherInfo?.checked || (child?.otherInfo as any)?.getIsSomeChildrenIsChecked?.())
+
+    const isSomeChildrenIsChecked = (otherInfo as any)?.getIsSomeChildrenIsChecked?.()
 
     const renderMaterialIconComponent: SvgComponent = (props) => {
       const MaterialSvgComponent = getIconComponent({
@@ -194,14 +199,13 @@ export const FileTree: FC<FileTreeProps> = memo((props: FileTreeProps) => {
           marginRight: '0.25rem',
         }}
         onClick={(e) => {
+          handleCheckedChange(!otherInfo?.checked)
           e.stopPropagation()
           return false
         }}
-        checked={otherInfo?.checked}
-        onChange={(e) => {
-          const checked = (e.target as HTMLInputElement).checked
-          handleCheckedChange(checked)
-        }}
+
+        checked={otherInfo?.checked ? true : undefined}
+        indeterminate={isSomeChildrenIsChecked && !otherInfo?.checked ? true : undefined}
       ></VSCodeCheckbox>
 
       {!isLeaf && <Icon style={{
@@ -313,12 +317,16 @@ export const FileTree: FC<FileTreeProps> = memo((props: FileTreeProps) => {
         buildMenuSlot={() => {
           return <FilterWrapper>
             {allFileExts.map((ext) => {
+              const checked = !excludeFileExts.includes(ext)
+
               return <VSCodeCheckbox
                 key={ext}
-                checked={!excludeFileExts.includes(ext)}
-                onChange={(e) => {
-                  const checked = (e.target as HTMLInputElement).checked
-                  handleExtCheckedChange(ext, checked)
+                checked={checked}
+                onClick={(e) => {
+                  handleExtCheckedChange(ext, !checked)
+
+                  e.stopPropagation()
+                  return false
                 }}>{ext}</VSCodeCheckbox>
             })}
           </FilterWrapper>

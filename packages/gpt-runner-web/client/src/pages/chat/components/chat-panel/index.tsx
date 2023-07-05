@@ -15,7 +15,6 @@ import { useGlobalStore } from '../../../../store/zustand/global'
 import type { GptFileTreeItem } from '../../../../store/zustand/global/sidebar-tree.slice'
 import { getGlobalConfig } from '../../../../helpers/global-config'
 import { PopoverMenu } from '../../../../components/popover-menu'
-import { useKeyboard } from '../../../../hooks/use-keyboard.hook'
 import { DragResizeView } from '../../../../components/drag-resize-view'
 import { useElementSizeRealTime } from '../../../../hooks/use-element-size-real-time.hook'
 import { useTempStore } from '../../../../store/zustand/temp'
@@ -211,10 +210,6 @@ export const ChatPanel: FC<ChatPanelProps> = memo((props) => {
     }, false)
   }, [updateCurrentChatInstance])
 
-  // keyboard bind ctrl + enter
-  useKeyboard('ctrl + enter', handleGenerateAnswer)
-  useKeyboard('command + enter', handleGenerateAnswer)
-
   const buildCodeToolbar = useCallback<NonNullable<MessageItemProps['buildCodeToolbar']>>(({ contents }) => {
     return <>
       <IconButton
@@ -242,7 +237,7 @@ export const ChatPanel: FC<ChatPanelProps> = memo((props) => {
 
   const codeBlockTheme: MessageCodeBlockTheme = isDarkTheme(themeName) ? 'dark' : 'light'
 
-  const messagePanelProps: ChatMessagePanelProps = useMemo(() => ({
+  const messagePanelProps: ChatMessagePanelProps = {
     messageItems: chatInstance?.messages.map((message, i) => {
       const isLast = i === chatInstance.messages.length - 1
       const isLastTwo = i >= chatInstance.messages.length - 2
@@ -315,20 +310,7 @@ export const ChatPanel: FC<ChatPanelProps> = memo((props) => {
         buildMessageToolbar,
       } satisfies MessageItemProps
     }) ?? [],
-  }), [
-    chatInstance,
-    chatPanelWidth,
-    filesPathsAllPartsInfo,
-    status,
-    codeBlockTheme,
-    buildCodeToolbar,
-    t,
-    updateCurrentChatInstance,
-    regenerateCurrentLastChatAnswer,
-    stopCurrentGeneratingChatAnswer,
-    handleCopy,
-    handleEditMessage,
-  ])
+  }
 
   const renderInputToolbar = () => {
     return <>
@@ -507,6 +489,7 @@ export const ChatPanel: FC<ChatPanelProps> = memo((props) => {
         value={chatInstance?.inputtingPrompt || ''}
         onChange={handleInputChange}
         toolbarSlot={renderInputToolbar()}
+        onSendMessage={handleGenerateAnswer}
       ></ChatMessageInput>
     </DragResizeView>
   </ChatPanelWrapper>

@@ -6,6 +6,8 @@ import { getLang } from './i18n'
 export interface GlobalConfig {
   rootPath: string
   serverBaseUrl: string
+  baseUrl: string // browser, in vscode it's vscode-resource
+  webWorkerBaseUrl: string
   initialRoutePath: string
   showDiffCodesBtn: boolean
   showInsertCodesBtn: boolean
@@ -17,8 +19,10 @@ export interface GlobalConfig {
 
 window.__DEFAULT_GLOBAL_CONFIG__ = {
   rootPath: getSearchParams('rootPath'),
-  initialRoutePath: '/chat',
   serverBaseUrl: urlRemoveLocalhost(EnvConfig.get('GPTR_BASE_SERVER_URL')),
+  baseUrl: '',
+  webWorkerBaseUrl: '',
+  initialRoutePath: '/chat',
   showDiffCodesBtn: false,
   showInsertCodesBtn: false,
   defaultLangId: getLang(),

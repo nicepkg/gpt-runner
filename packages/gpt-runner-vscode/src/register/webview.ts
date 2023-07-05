@@ -101,6 +101,8 @@ class ChatViewProvider implements vscode.WebviewViewProvider {
     const indexHtml = fs.readFileSync(PathUtils.join(baseUri.fsPath, 'index.html'), 'utf8')
     const nonce = createHash()
 
+    const webviewBaseUrl = webview.asWebviewUri(baseUri).toString().replace(/\/$/, '')
+
     const indexHtmlWithBaseUri = indexHtml.replace(
       /\s+(href|src)="(.+?)"/g,
       (_, attr, url) => ` ${attr}="${webview.asWebviewUri(vscode.Uri.joinPath(baseUri, url))}"`,
@@ -110,6 +112,8 @@ class ChatViewProvider implements vscode.WebviewViewProvider {
       window.__GLOBAL_CONFIG__ = {
         rootPath: '${toUnixPath(projectPath)}',
         serverBaseUrl: '${getServerBaseUrl()}',
+        baseUrl: '${webviewBaseUrl}',
+        webWorkerBaseUrl: '${getServerBaseUrl()}',
         initialRoutePath: '/chat',
         showDiffCodesBtn: true,
         showInsertCodesBtn: true,

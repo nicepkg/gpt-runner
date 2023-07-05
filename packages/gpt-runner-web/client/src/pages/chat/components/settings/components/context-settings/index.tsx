@@ -36,8 +36,7 @@ export const ContextSettings = memo((props: ContextSettingsProps) => {
     rootPath,
   })
 
-  const handleProvideChange = (e: any, key: keyof typeof provideFileInfoToGptMap) => {
-    const checked = (e.target as HTMLInputElement).checked
+  const handleProvideChange = (checked: boolean, key: keyof typeof provideFileInfoToGptMap) => {
     updateProvideFileInfoToGptMap({
       [key]: checked,
     })
@@ -86,7 +85,7 @@ export const ContextSettings = memo((props: ContextSettingsProps) => {
     {/* selected text */}
     {getGlobalConfig().showUserSelectedTextContextOptions && <StyledVSCodeCheckbox
       checked={provideFileInfoToGptMap.userSelectedText}
-      onChange={e => handleProvideChange(e, 'userSelectedText')}
+      onClick={() => handleProvideChange(!provideFileInfoToGptMap.userSelectedText, 'userSelectedText')}
     >
       <Trans
         t={t}
@@ -107,8 +106,8 @@ export const ContextSettings = memo((props: ContextSettingsProps) => {
           marginBottom: 0,
         }}
         checked={isProvideIdeFiles}
-        onChange={(e) => {
-          const checked = (e.target as HTMLInputElement).checked
+        onClick={() => {
+          const checked = !isProvideIdeFiles
           updateProvideFileInfoToGptMap({
             [ideOptionActiveValue]: checked,
           })
@@ -137,7 +136,7 @@ export const ContextSettings = memo((props: ContextSettingsProps) => {
     {/* selected files */}
     <StyledVSCodeCheckbox
       checked={provideFileInfoToGptMap.checkedFileContents}
-      onChange={e => handleProvideChange(e, 'checkedFileContents')}
+      onClick={() => handleProvideChange(!provideFileInfoToGptMap.checkedFileContents, 'checkedFileContents')}
     >
       <Trans
         t={t}
@@ -156,7 +155,7 @@ export const ContextSettings = memo((props: ContextSettingsProps) => {
     {/* all file paths */}
     <StyledVSCodeCheckbox
       checked={provideFileInfoToGptMap.allFilePaths}
-      onChange={e => handleProvideChange(e, 'allFilePaths')}
+      onClick={() => handleProvideChange(!provideFileInfoToGptMap.allFilePaths, 'allFilePaths')}
     >
       <Trans
         t={t}
