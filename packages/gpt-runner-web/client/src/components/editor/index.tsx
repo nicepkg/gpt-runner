@@ -145,10 +145,6 @@ export const Editor: FC<EditorProps> = memo((props) => {
           enabled: false,
         },
         suggestOnTriggerCharacters: true,
-        // acceptSuggestionOnEnter: 'on',
-        // acceptSuggestionOnCommitCharacter: true,
-        // tabCompletion: 'on',
-        // wordBasedSuggestions: true,
         fixedOverflowWidgets: true,
         ...options,
       }}

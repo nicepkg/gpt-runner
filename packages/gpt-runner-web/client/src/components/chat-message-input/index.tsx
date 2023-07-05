@@ -62,10 +62,9 @@ export const ChatMessageInput: FC<ChatMessageInputProps> = memo((props) => {
     if (!monacoRef.current || !currentLanguage)
       return
 
-    // when user input >.xxx,
-    // match xxx to language,
+    // when user input .xxx,
     // and show suggestion,
-    //  when user click suggestion,
+    // when user click suggestion,
     // switch to that language.
     const completionDispose = monacoRef.current.languages.registerCompletionItemProvider(currentLanguage, {
       triggerCharacters: ['.'],
