@@ -18,6 +18,7 @@ import { useEmitBind } from '../../hooks/use-emit-bind.hook'
 import { useSize } from '../../hooks/use-size.hook'
 import { useGetCommonFilesTree } from '../../hooks/use-get-common-files-tree.hook'
 import type { TabItem } from '../../components/tab'
+import { IconButton } from '../../components/icon-button'
 import { ContentWrapper } from './chat.styles'
 import { ChatSidebar } from './components/chat-sidebar'
 import { ChatPanel } from './components/chat-panel'
@@ -45,6 +46,7 @@ const Chat: FC = memo(() => {
   const [tabActiveId, setTabActiveId] = useState(TabId.Presets)
   const showFileTreeOnRightSide = windowWidth >= 1000
   const chatPanelHeight = windowHeight - toolbarHeight
+  const [isOpenTreeDrawer, setIsOpenTreeDrawer] = useState(true)
 
   const { data: fetchProjectInfoRes } = useQuery({
     queryKey: ['fetchProjectInfo'],
@@ -162,6 +164,7 @@ const Chat: FC = memo(() => {
 
     return <FlexRow style={{ height: '100%', overflow: 'hidden' }}>
       <DragResizeView
+        open={isOpenTreeDrawer}
         initWidth={300}
         initHeight={chatPanelHeight}
         dragDirectionConfigs={[
@@ -177,6 +180,7 @@ const Chat: FC = memo(() => {
 
       {showFileTreeOnRightSide
         ? <DragResizeView
+          open={isOpenTreeDrawer}
           initWidth={300}
           initHeight={chatPanelHeight}
           dragDirectionConfigs={[
@@ -206,9 +210,20 @@ const Chat: FC = memo(() => {
         settingsView={renderSettings(true, SettingsTabId.Settings)}
         configInfoView={renderSettings(true, SettingsTabId.ConfigInfo)}
         aboutView={renderSettings(true, SettingsTabId.About)}
+        rightSlot={
+          !isMobile && <IconButton
+            text={isOpenTreeDrawer ? t('chat_page.close_sidebar_btn') : t('chat_page.open_sidebar_btn')}
+            iconClassName={isOpenTreeDrawer ? 'codicon-layout-sidebar-right-off' : 'codicon-layout-sidebar-right'}
+            hoverShowText={false}
+            onClick={() => setIsOpenTreeDrawer(!isOpenTreeDrawer)}
+            style={{
+              paddingLeft: '0.5rem',
+            }}
+          ></IconButton>
+        }
       ></TopToolbar>
       {renderChat()}
-    </FlexColumn>
+    </FlexColumn >
   </>
 })
 

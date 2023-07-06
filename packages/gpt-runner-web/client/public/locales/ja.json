@@ -30,6 +30,8 @@
     "filter_btn": "フィルター",
     "pin_up_btn": "ピンアップ",
     "close_btn": "閉じる",
+    "close_sidebar_btn": "サイドバーを閉じる",
+    "open_sidebar_btn": "サイドバーを開く",
     "search_placeholder": "検索...",
     "file_tree_top_tokens_tips": "<FileNumWrapper>{{fileNum}}</FileNumWrapper>個のファイル、合計<TokenNumWrapper>{{tokenNum}}</TokenNumWrapper>トークン。",
     "file_tree_top_clear_checked_btn": "選択をクリア",
@@ -80,6 +82,7 @@
     "toast_create_success": "作成しました！",
     "toast_create_error": "作成できませんでした！",
     "toast_copy_success": "コピーしました！",
-    "toast_selected_files_as_prompt_reopened": "選択したファイルをプロンプトとして再度開きました！"
+    "toast_selected_files_as_prompt_reopened": "選択したファイルをプロンプトとして再度開きました！",
+    "monaco_switch_language_tips": "言語の切り替え"
   }
 }

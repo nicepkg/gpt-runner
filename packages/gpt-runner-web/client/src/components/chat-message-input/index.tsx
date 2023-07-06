@@ -1,5 +1,6 @@
 import { type FC, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { Monaco } from '@monaco-editor/react'
+import { useTranslation } from 'react-i18next'
 import { Editor, EditorCommand } from '../editor'
 import type { MonacoEditorInstance } from '../../types/monaco-editor'
 import { LogoWrapper, StyledLogo, TextAreaWrapper, ToolbarWrapper, Wrapper } from './chat-message-input.styles'
@@ -11,14 +12,16 @@ export interface ChatMessageInputProps {
   showBottomLogo?: boolean
   onChange: (value: string) => void
   onSendMessage?: () => void
+  logoProps?: React.ComponentProps<typeof StyledLogo>
 }
 export const ChatMessageInput: FC<ChatMessageInputProps> = memo((props) => {
-  const { value = '', toolbarSlot, showTopLogo = false, showBottomLogo = false, onChange, onSendMessage } = props
+  const { value = '', toolbarSlot, showTopLogo = false, showBottomLogo = false, logoProps, onChange, onSendMessage } = props
+
+  const { t } = useTranslation()
   const monacoRef = useRef<Monaco>()
   const monacoEditorRef = useRef<MonacoEditorInstance>()
   const DEFAULT_LANGUAGE = 'markdown'
   const currentValue = useRef(value || '')
-
   const [currentLanguage, setCurrentLanguage] = useState(DEFAULT_LANGUAGE)
 
   const extMapLanguage = useMemo(() => {
@@ -35,28 +38,37 @@ export const ChatMessageInput: FC<ChatMessageInputProps> = memo((props) => {
   }, [monacoRef.current])
 
   const handleEditorDidMount = useCallback((editor: MonacoEditorInstance, monaco: Monaco) => {
+    monacoRef.current = monaco
+    monacoEditorRef.current = editor
+  }, [])
+
+  // add action
+  useEffect(() => {
+    if (!monacoRef.current || !monacoEditorRef.current)
+      return
+
     // send message when user press ctrl+enter
-    editor.addAction({
+    const sendMessageActionDispose = monacoEditorRef.current.addAction({
       id: 'send-message',
       label: 'Control+Enter Action Send Message',
       keybindings: [
         // Ctrl+Enter / Cmd+Enter
-        monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter,
-        monaco.KeyMod.WinCtrl | monaco.KeyCode.Enter,
+        monacoRef.current.KeyMod.CtrlCmd | monacoRef.current.KeyCode.Enter,
+        monacoRef.current.KeyMod.WinCtrl | monacoRef.current.KeyCode.Enter,
       ],
       contextMenuGroupId: 'navigation',
       contextMenuOrder: 1.5,
       run() {
         if (!currentValue.current.trim())
           return
-
         onSendMessage?.()
       },
     })
 
-    monacoRef.current = monaco
-    monacoEditorRef.current = editor
-  }, [])
+    return () => {
+      sendMessageActionDispose.dispose()
+    }
+  }, [onSendMessage, monacoRef.current, monacoEditorRef.current])
 
   useEffect(() => {
     if (!monacoRef.current || !currentLanguage)
@@ -82,7 +94,7 @@ export const ChatMessageInput: FC<ChatMessageInputProps> = memo((props) => {
 
           return {
             suggestions: maybeExts.map((ext) => {
-              const title = `Switch To Language: ${extMapLanguage[ext]}`
+              const title = `${t('chat_page.monaco_switch_language_tips')}: ${extMapLanguage[ext]}`
 
               return {
                 label: ext,
@@ -114,13 +126,12 @@ export const ChatMessageInput: FC<ChatMessageInputProps> = memo((props) => {
     return () => {
       completionDispose.dispose()
     }
-  }, [currentLanguage, extMapLanguage, monacoRef.current, monacoEditorRef.current])
+  }, [t, currentLanguage, extMapLanguage, monacoRef.current, monacoEditorRef.current])
 
   const handleChange = useCallback((value: string | undefined) => {
     currentValue.current = value || ''
-
     onChange(currentValue.current)
-  }, [])
+  }, [onChange])
 
   return <Wrapper style={{
     paddingBottom: showBottomLogo ? 'unset' : '0.5rem',
@@ -129,7 +140,7 @@ export const ChatMessageInput: FC<ChatMessageInputProps> = memo((props) => {
       {toolbarSlot}
 
       {showTopLogo && <LogoWrapper>
-        <StyledLogo color={'var(--panel-tab-foreground)'}></StyledLogo>
+        <StyledLogo color={'var(--panel-tab-foreground)'} {...logoProps} ></StyledLogo>
       </LogoWrapper>}
     </ToolbarWrapper>
 
@@ -150,7 +161,7 @@ export const ChatMessageInput: FC<ChatMessageInputProps> = memo((props) => {
     </TextAreaWrapper>
 
     {showBottomLogo && <LogoWrapper style={{ position: 'static' }}>
-      <StyledLogo color={'var(--panel-tab-foreground)'}></StyledLogo>
+      <StyledLogo color={'var(--panel-tab-foreground)'} {...logoProps}></StyledLogo>
     </LogoWrapper>}
   </Wrapper>
 })

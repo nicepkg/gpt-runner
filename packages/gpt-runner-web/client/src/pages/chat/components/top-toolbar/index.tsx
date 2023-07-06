@@ -14,10 +14,11 @@ export interface TopToolbarProps extends UseTokenNumProps {
   settingsView?: React.ReactNode
   configInfoView?: React.ReactNode
   aboutView?: React.ReactNode
+  rightSlot?: React.ReactNode
 }
 
 export const TopToolbar = memo(forwardRef<HTMLDivElement, TopToolbarProps>((props, ref) => {
-  const { settingsView, configInfoView, aboutView, ...useTokenNumProps } = props
+  const { settingsView, configInfoView, aboutView, rightSlot, ...useTokenNumProps } = props
 
   const { t } = useTranslation()
   const isMobile = useIsMobile()
@@ -88,7 +89,8 @@ export const TopToolbar = memo(forwardRef<HTMLDivElement, TopToolbarProps>((prop
       </TopToolbarLeft>
 
       <TopToolbarRight>
-        <div title="Tokens" style={{ marginRight: '0.5rem' }}>
+        {rightSlot}
+        <div title="Tokens" style={{ marginRight: '0.5rem', marginLeft: '0.5rem' }}>
           {(isMobile ? '' : 'Tokens: ') + formatNumWithK(totalTokenNum)}
         </div>
       </TopToolbarRight>

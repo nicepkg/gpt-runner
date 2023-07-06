@@ -30,6 +30,8 @@
     "filter_btn": "Filtern",
     "pin_up_btn": "Anheften",
     "close_btn": "Schließen",
+    "close_sidebar_btn": "Seitenleiste schließen",
+    "open_sidebar_btn": "Seitenleiste öffnen",
     "search_placeholder": "Suchen...",
     "file_tree_top_tokens_tips": "<FileNumWrapper>{{fileNum}}</FileNumWrapper> Dateien <TokenNumWrapper>{{tokenNum}}</TokenNumWrapper> Tokens.",
     "file_tree_top_clear_checked_btn": "Auswahl aufheben",
@@ -80,6 +82,7 @@
     "toast_create_success": "Erstellen erfolgreich!",
     "toast_create_error": "Erstellen fehlgeschlagen!",
     "toast_copy_success": "Kopiert!",
-    "toast_selected_files_as_prompt_reopened": "Ausgewählte Dateien als Aufforderung wurden wieder geöffnet!"
+    "toast_selected_files_as_prompt_reopened": "Ausgewählte Dateien als Aufforderung wurden wieder geöffnet!",
+    "monaco_switch_language_tips": "Sprache wechseln"
   }
 }

@@ -66,6 +66,17 @@ export const ChatPanel: FC<ChatPanelProps> = memo((props) => {
   const [chatPanelRef, { width: chatPanelWidth, height: chatPanelHeight }] = useElementSizeRealTime<HTMLDivElement>()
   const { filesRelativePaths } = useTempStore()
 
+  const defaultInitChatInputHeight = useMemo(() => {
+    const DEFAULT_CHAT_INPUT_HEIGHT = 250
+    return window.innerHeight / 5 > DEFAULT_CHAT_INPUT_HEIGHT ? window.innerHeight / 5 : DEFAULT_CHAT_INPUT_HEIGHT
+  }, [])
+
+  const maxInitChatInputHeight = useMemo(() => {
+    return chatPanelHeight - 100
+  }, [chatPanelHeight])
+
+  const [initChatInputHeight, setInitChatInputHeight] = useState(defaultInitChatInputHeight)
+
   const filesPathsAllPartsInfo = useMemo(() => {
     // not good, but fast
     return filesRelativePaths.map((item) => {
@@ -475,12 +486,13 @@ export const ChatPanel: FC<ChatPanelProps> = memo((props) => {
 
   return <ChatPanelWrapper ref={chatPanelRef}>
     <ChatMessagePanel ref={scrollDownRef} {...messagePanelProps}></ChatMessagePanel>
-    <DragResizeView
-      initHeight={250}
+
+    {initChatInputHeight && <DragResizeView
+      initHeight={initChatInputHeight}
       dragDirectionConfigs={[
         {
           direction: 'top',
-          boundary: [-300, 100],
+          boundary: [-(maxInitChatInputHeight - initChatInputHeight), 100],
         },
       ]}>
       <ChatMessageInput
@@ -490,8 +502,13 @@ export const ChatPanel: FC<ChatPanelProps> = memo((props) => {
         onChange={handleInputChange}
         toolbarSlot={renderInputToolbar()}
         onSendMessage={handleGenerateAnswer}
+        logoProps={{
+          onClick() {
+            setInitChatInputHeight(initChatInputHeight === defaultInitChatInputHeight ? maxInitChatInputHeight : defaultInitChatInputHeight)
+          },
+        }}
       ></ChatMessageInput>
-    </DragResizeView>
+    </DragResizeView>}
   </ChatPanelWrapper>
 })
 

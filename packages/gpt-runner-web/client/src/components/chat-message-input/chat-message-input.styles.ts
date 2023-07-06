@@ -41,16 +41,21 @@ export const LogoWrapper = styled.div`
   position: absolute;
   top: 0;
   left: 0;
+  z-index: 1;
   width: 100%;
   height: 1.5rem;
   padding: 0.25rem;
   display: flex;
   justify-content: center;
   align-items: center;
+  user-select: none;
   pointer-events: none;
 `
 
 export const StyledLogo = styled(Logo)`
+  width: auto;
   height: 100%;
   opacity: 1;
+  cursor: pointer;
+  pointer-events: all;
 `

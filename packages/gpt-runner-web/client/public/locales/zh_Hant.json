@@ -30,6 +30,8 @@
     "filter_btn": "篩選",
     "pin_up_btn": "钉住",
     "close_btn": "關閉",
+    "close_sidebar_btn": "關閉側邊欄",
+    "open_sidebar_btn": "打開側邊欄",
     "search_placeholder": "搜索...",
     "file_tree_top_tokens_tips": "<FileNumWrapper>{{fileNum}}</FileNumWrapper>個文件，共<TokenNumWrapper>{{tokenNum}}</TokenNumWrapper>個 tokens。",
     "file_tree_top_clear_checked_btn": "清除選中",
@@ -80,6 +82,7 @@
     "toast_create_success": "创建成功！",
     "toast_create_error": "创建失败！",
     "toast_copy_success": "複製成功！",
-    "toast_selected_files_as_prompt_reopened": "已重新開啟選定文件作為提示！"
+    "toast_selected_files_as_prompt_reopened": "已重新開啟選定文件作為提示！",
+    "monaco_switch_language_tips": "切換語言"
   }
 }
