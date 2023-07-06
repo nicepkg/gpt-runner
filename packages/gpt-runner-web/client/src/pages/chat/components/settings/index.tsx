@@ -2,6 +2,7 @@ import { type CSSProperties, type FC, memo, useEffect, useMemo, useState } from 
 import { VSCodePanelTab, VSCodePanelView } from '@vscode/webview-ui-toolkit/react'
 import { useTranslation } from 'react-i18next'
 import { StyledVSCodePanels } from '../../chat.styles'
+import { FormTitle } from '../../../../components/form-title'
 import type { MessageCodeBlockTheme } from '../../../../components/chat-message-code-block'
 import { MessageCodeBlock } from '../../../../components/chat-message-code-block'
 import { useGlobalStore } from '../../../../store/zustand/global'
@@ -11,7 +12,7 @@ import { LoadingView } from '../../../../components/loading-view'
 import { useConfetti } from '../../../../hooks/use-confetti.hook'
 import { useElementVisible } from '../../../../hooks/use-element-visible.hook'
 import { useUserConfig } from '../../../../hooks/use-user-config.hook'
-import { ConfigInfoTitle, ConfigInfoWrapper } from './settings.styles'
+import { ConfigInfoWrapper } from './settings.styles'
 import { GeneralSettings } from './components/general-settings'
 import { About } from './components/about'
 import { ProxySettings } from './components/proxy-settings'
@@ -71,32 +72,36 @@ export const Settings: FC<SettingsProps> = memo((props) => {
 
   const renderOverrideSetting = () => {
     return <ConfigInfoWrapper>
-      <ConfigInfoTitle>{t('chat_page.settings_general')}</ConfigInfoTitle>
+      <FormTitle style={{ fontSize: '1.2rem' }}>
+        {t('chat_page.settings_general')}
+      </FormTitle>
       <GeneralSettings></GeneralSettings>
-      <ConfigInfoTitle>{t('chat_page.settings_proxy')}</ConfigInfoTitle>
+      <FormTitle style={{ fontSize: '1.2rem' }}>
+        {t('chat_page.settings_proxy')}
+      </FormTitle>
       <ProxySettings></ProxySettings>
-      <ConfigInfoTitle>
+      <FormTitle style={{ fontSize: '1.2rem' }}>
         <ModelSettings userConfig={userConfig} singleFileConfig={singleFileConfig} viewType='title'></ModelSettings>
         {` ${t('chat_page.settings_config')}`}
-      </ConfigInfoTitle>
+      </FormTitle>
       <ModelSettings userConfig={userConfig} singleFileConfig={singleFileConfig} viewType='secrets'></ModelSettings>
     </ConfigInfoWrapper>
   }
 
   const renderGlobalConfigInfo = () => {
     return <ConfigInfoWrapper>
-      <ConfigInfoTitle>
+      <FormTitle style={{ fontSize: '1.2rem' }}>
         gptr.config.json
-      </ConfigInfoTitle>
+      </FormTitle>
       <MessageCodeBlock theme={codeBlockTheme} language='json' contents={globalConfigInfo}></MessageCodeBlock>
     </ConfigInfoWrapper>
   }
 
   const renderSingleFileConfigInfo = () => {
     return <ConfigInfoWrapper>
-      <ConfigInfoTitle>
+      <FormTitle style={{ fontSize: '1.2rem' }}>
         {gptFileName}
-      </ConfigInfoTitle>
+      </FormTitle>
       <MessageCodeBlock theme={codeBlockTheme} language='json' contents={singleFileConfigInfo}></MessageCodeBlock>
     </ConfigInfoWrapper>
   }

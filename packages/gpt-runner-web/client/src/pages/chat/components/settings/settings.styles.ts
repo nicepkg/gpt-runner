@@ -25,15 +25,6 @@ export const ConfigInfoWrapper = styled.div`
   }
 `
 
-export const ConfigInfoTitle = styled.div`
-  margin: 1rem;
-  margin-bottom: 0;
-  padding-left: 0.5rem;
-  font-size: 1.2rem;
-  font-weight: bold;
-  border-left: 0.25rem solid var(--foreground);
-`
-
 export const StyledForm = styled.form`
   display: flex;
   flex-direction: column;
