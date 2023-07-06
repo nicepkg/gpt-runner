@@ -72,15 +72,15 @@ export const Settings: FC<SettingsProps> = memo((props) => {
 
   const renderOverrideSetting = () => {
     return <ConfigInfoWrapper>
-      <FormTitle style={{ fontSize: '1.2rem' }}>
+      <FormTitle size="large">
         {t('chat_page.settings_general')}
       </FormTitle>
       <GeneralSettings></GeneralSettings>
-      <FormTitle style={{ fontSize: '1.2rem' }}>
+      <FormTitle size="large">
         {t('chat_page.settings_proxy')}
       </FormTitle>
       <ProxySettings></ProxySettings>
-      <FormTitle style={{ fontSize: '1.2rem' }}>
+      <FormTitle size="large">
         <ModelSettings userConfig={userConfig} singleFileConfig={singleFileConfig} viewType='title'></ModelSettings>
         {` ${t('chat_page.settings_config')}`}
       </FormTitle>
@@ -90,7 +90,7 @@ export const Settings: FC<SettingsProps> = memo((props) => {
 
   const renderGlobalConfigInfo = () => {
     return <ConfigInfoWrapper>
-      <FormTitle style={{ fontSize: '1.2rem' }}>
+      <FormTitle size="large">
         gptr.config.json
       </FormTitle>
       <MessageCodeBlock theme={codeBlockTheme} language='json' contents={globalConfigInfo}></MessageCodeBlock>
@@ -99,7 +99,7 @@ export const Settings: FC<SettingsProps> = memo((props) => {
 
   const renderSingleFileConfigInfo = () => {
     return <ConfigInfoWrapper>
-      <FormTitle style={{ fontSize: '1.2rem' }}>
+      <FormTitle size="large">
         {gptFileName}
       </FormTitle>
       <MessageCodeBlock theme={codeBlockTheme} language='json' contents={singleFileConfigInfo}></MessageCodeBlock>
