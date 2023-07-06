@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { toast } from 'react-hot-toast'
 import { copyToClipboard } from '@nicepkg/gpt-runner-shared/browser'
 import type { ChatMessagePanelProps } from '../../../../components/chat-message-panel'
+import { FormTitle } from '../../../../components/form-title'
 import { ChatMessagePanel } from '../../../../components/chat-message-panel'
 import { ChatMessageInput } from '../../../../components/chat-message-input'
 import { IconButton } from '../../../../components/icon-button'
@@ -24,7 +25,7 @@ import { emitter } from '../../../../helpers/emitter'
 import { ModelSettings } from '../settings/components/model-settings'
 import { ContentWrapper } from '../../chat.styles'
 import { ContextSettings } from '../settings/components/context-settings'
-import { ChatPanelPopoverTreeWrapper, ChatPanelWrapper, ConfigFormTitle } from './chat-panel.styles'
+import { ChatPanelPopoverTreeWrapper, ChatPanelWrapper } from './chat-panel.styles'
 import { createRemarkOpenEditorPlugin } from './remark-plugin'
 
 export interface ChatPanelProps {
@@ -374,14 +375,14 @@ export const ChatPanel: FC<ChatPanelProps> = memo((props) => {
           return <ContentWrapper $isPopoverContent style={{
             maxWidth: '400px',
           }}>
-            <ConfigFormTitle>
+            <FormTitle>
               <ModelSettings rootPath={rootPath} singleFilePath={chatInstance?.singleFilePath} viewType='title'></ModelSettings>
               {` ${t('chat_page.override_settings')}`}
-            </ConfigFormTitle>
+            </FormTitle>
             <ModelSettings rootPath={rootPath} singleFilePath={chatInstance?.singleFilePath} viewType='model'></ModelSettings>
-            <ConfigFormTitle>
+            <FormTitle>
               {t('chat_page.context_settings')}
-            </ConfigFormTitle>
+            </FormTitle>
             <ContextSettings rootPath={rootPath}></ContextSettings>
           </ContentWrapper>
         }}
