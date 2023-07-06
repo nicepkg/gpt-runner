@@ -114,6 +114,14 @@ export function Tab_<T extends string = string>(props: TabProps<T>) {
     })
   }, [getActiveLabelDom, tabSize.width])
 
+  // let it scroll when mouse wheel on tab list
+  const handleTabListScroll = useCallback((event: React.WheelEvent<HTMLDivElement>) => {
+    const tabListWrapper = event.currentTarget
+    const scrollAmount = event.deltaY
+
+    tabListWrapper.scrollLeft += scrollAmount
+  }, [])
+
   const updateMoreList = useCallback(() => {
     const labelDoms = getLabelDoms()
     const _moreList: TabItem<T>[] = []
@@ -163,7 +171,7 @@ export function Tab_<T extends string = string>(props: TabProps<T>) {
   return (
     <TabContainer>
       <TabListHeader data-show-more={showMore}>
-        <TabListWrapper ref={tabRef} data-show-more={showMore}>
+        <TabListWrapper ref={tabRef} data-show-more={showMore} onWheel={handleTabListScroll}>
           {items.map(item => (
             <div {...{
               key: item.id,

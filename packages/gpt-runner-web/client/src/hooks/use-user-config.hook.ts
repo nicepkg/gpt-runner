@@ -9,10 +9,11 @@ export interface UseUserConfigProps {
 
 export function useUserConfig(props: UseUserConfigProps) {
   const { rootPath, singleFilePath, enabled = true } = props
+  const queryEnabled = !!singleFilePath && !!rootPath && enabled
 
   const { data: getGptFileInfoRes, isLoading } = useQuery({
     queryKey: ['settings-gpt-file-info', singleFilePath],
-    enabled: !!singleFilePath && !!rootPath && enabled,
+    enabled: queryEnabled,
     queryFn: () => getGptFileInfo({
       rootPath: rootPath!,
       filePath: singleFilePath!,
@@ -22,7 +23,7 @@ export function useUserConfig(props: UseUserConfigProps) {
   const { userConfig, singleFileConfig } = getGptFileInfoRes?.data || {}
 
   return {
-    isLoading,
+    isLoading: queryEnabled ? isLoading : false,
     userConfig,
     singleFileConfig,
   }

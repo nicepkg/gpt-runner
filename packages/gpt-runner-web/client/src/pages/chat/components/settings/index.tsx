@@ -3,20 +3,17 @@ import { VSCodePanelTab, VSCodePanelView } from '@vscode/webview-ui-toolkit/reac
 import { useTranslation } from 'react-i18next'
 import { StyledVSCodePanels } from '../../chat.styles'
 import { FormTitle } from '../../../../components/form-title'
-import type { MessageCodeBlockTheme } from '../../../../components/chat-message-code-block'
-import { MessageCodeBlock } from '../../../../components/chat-message-code-block'
 import { useGlobalStore } from '../../../../store/zustand/global'
-import { FlexColumn } from '../../../../styles/global.styles'
-import { isDarkTheme } from '../../../../styles/themes'
-import { LoadingView } from '../../../../components/loading-view'
 import { useConfetti } from '../../../../hooks/use-confetti.hook'
 import { useElementVisible } from '../../../../hooks/use-element-visible.hook'
 import { useUserConfig } from '../../../../hooks/use-user-config.hook'
+import { LoadingView } from '../../../../components/loading-view'
 import { ConfigInfoWrapper } from './settings.styles'
 import { GeneralSettings } from './components/general-settings'
 import { About } from './components/about'
 import { ProxySettings } from './components/proxy-settings'
 import { ModelSettings } from './components/model-settings'
+import { ConfigInfo } from './components/config-info'
 
 export enum SettingsTabId {
   About = 'about',
@@ -35,7 +32,7 @@ export const Settings: FC<SettingsProps> = memo((props) => {
 
   const { t } = useTranslation()
   const [tabActiveId, setTabActiveId] = useState(SettingsTabId.Settings)
-  const { themeName, getGptFileTreeItemFromChatId } = useGlobalStore()
+  const { getGptFileTreeItemFromChatId } = useGlobalStore()
   const { runConfettiAnime } = useConfetti()
   const [aboutRef, isAboutPageVisible] = useElementVisible<HTMLDivElement>()
 
@@ -43,10 +40,6 @@ export const Settings: FC<SettingsProps> = memo((props) => {
     if (isAboutPageVisible)
       runConfettiAnime()
   }, [isAboutPageVisible])
-
-  const codeBlockTheme: MessageCodeBlockTheme = useMemo(() => {
-    return isDarkTheme(themeName) ? 'dark' : 'light'
-  }, [themeName])
 
   const gptFileTreeItem = useMemo(() => {
     if (!chatId)
@@ -66,10 +59,6 @@ export const Settings: FC<SettingsProps> = memo((props) => {
     overflowY: 'auto',
   }
 
-  const globalConfigInfo = JSON.stringify(userConfig, null, 4)
-  const singleFileConfigInfo = JSON.stringify(singleFileConfig, null, 4)
-  const gptFileName = gptFileTreeItem?.path.split('/').pop()
-
   const renderOverrideSetting = () => {
     return <ConfigInfoWrapper>
       <FormTitle size="large">
@@ -88,24 +77,6 @@ export const Settings: FC<SettingsProps> = memo((props) => {
     </ConfigInfoWrapper>
   }
 
-  const renderGlobalConfigInfo = () => {
-    return <ConfigInfoWrapper>
-      <FormTitle size="large">
-        gptr.config.json
-      </FormTitle>
-      <MessageCodeBlock theme={codeBlockTheme} language='json' contents={globalConfigInfo}></MessageCodeBlock>
-    </ConfigInfoWrapper>
-  }
-
-  const renderSingleFileConfigInfo = () => {
-    return <ConfigInfoWrapper>
-      <FormTitle size="large">
-        {gptFileName}
-      </FormTitle>
-      <MessageCodeBlock theme={codeBlockTheme} language='json' contents={singleFileConfigInfo}></MessageCodeBlock>
-    </ConfigInfoWrapper>
-  }
-
   const renderAbout = () => {
     return <About ref={aboutRef}></About>
   }
@@ -117,12 +88,14 @@ export const Settings: FC<SettingsProps> = memo((props) => {
     },
     [SettingsTabId.ConfigInfo]: {
       title: t('chat_page.settings_tab_config_info'),
-      view: <FlexColumn style={{ position: 'relative', width: '100%' }}>
-        {getGptFileInfoIsLoading && <LoadingView absolute></LoadingView>}
-
-        {renderSingleFileConfigInfo()}
-        {renderGlobalConfigInfo()}
-      </FlexColumn>,
+      view: <>
+        {getGptFileInfoIsLoading
+          ? <LoadingView absolute></LoadingView>
+          : <ConfigInfo
+            userConfig={userConfig}
+            singleFileConfig={singleFileConfig}
+          ></ConfigInfo>}
+      </>,
     },
     [SettingsTabId.About]: {
       title: t('chat_page.settings_tab_about'),

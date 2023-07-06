@@ -482,8 +482,11 @@ export const ChatPanel: FC<ChatPanelProps> = memo((props) => {
     </>
   }
 
-  if (!chatInstance)
-    return <ErrorView text={t('chat_page.chat_id_not_found_tips')}></ErrorView>
+  if (!chatInstance) {
+    return <ChatPanelWrapper>
+      <ErrorView text={t('chat_page.chat_id_not_found_tips')}></ErrorView>
+    </ChatPanelWrapper>
+  }
 
   return <ChatPanelWrapper ref={chatPanelRef}>
     <ChatMessagePanel ref={scrollDownRef} {...messagePanelProps}></ChatMessagePanel>
