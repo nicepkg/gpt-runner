@@ -10,7 +10,7 @@
 
   <extensions defaultExtensionNs="com.intellij">
     <toolWindow
-      factoryClass="cn.nicepkg.gptrunner.intellij.windows.GPTRunnerWindowFactory"
+      factoryClass="cn.nicepkg.gptrunner.intellij.ui.windows.GPTRunnerWindowFactory"
       id="GPT-Runner"/>
 
     <applicationService
@@ -31,4 +31,9 @@
       class="cn.nicepkg.gptrunner.intellij.listeners.PluginInstallerStateListener"
       topic="com.intellij.ide.plugins.PluginStateListener"/>
   </applicationListeners>
+
+  <actions>
+    <action id="cn.nicepkg.gptrunner.intellij.actions.OpenInEditorMode" class="cn.nicepkg.gptrunner.intellij.actions.OpenInEditorMode">
+    </action>
+  </actions>
 </idea-plugin>
