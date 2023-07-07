@@ -13,11 +13,11 @@ import kotlin.concurrent.thread
 class GPTRunnerService(project: Project) : AbstractService(),
   IGPTRunnerService {
 
-  val executableService = service<IGPTRunnerExecutableService>()
+  private val executableService = service<IGPTRunnerExecutableService>()
 
-  var process: Process? = null
-  var inputFlowJob: Job? = null
-  var errorFlowJob: Job? = null
+  private var process: Process? = null
+  private var inputFlowJob: Job? = null
+  private var errorFlowJob: Job? = null
 
   private var _port = 13000
   override val port: Int
