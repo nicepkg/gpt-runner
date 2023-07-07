@@ -2,7 +2,7 @@
   "publisher": "nicepkg",
   "name": "gpt-runner",
   "displayName": "GPT Runner",
-  "version": "0.5.1",
+  "version": "0.6.0",
   "private": true,
   "description": "GPT Runner for VS Code",
   "license": "MIT",
