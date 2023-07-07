@@ -196,7 +196,7 @@ const Chat: FC = memo(() => {
         },
       ]
 
-      if (IS_SAFE) {
+      if (IS_SAFE && !getGlobalConfig().editFileInIde) {
         mobileTabItems.push(
           {
             id: MobileTabId.FileEditor,
@@ -236,7 +236,7 @@ const Chat: FC = memo(() => {
         {renderSidebar()}
       </DragResizeView>
 
-      {IS_SAFE
+      {IS_SAFE && !getGlobalConfig().editFileInIde
         ? <PanelTab
           items={pcTabItems}
           activeId={pcTabActiveId}
