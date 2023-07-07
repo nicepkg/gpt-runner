@@ -46,8 +46,9 @@ export function Tree_<OtherInfo extends TreeItemBaseStateOtherInfo = TreeItemBas
           onTreeItemContextMenu?.(state)
         },
         onClick(state) {
-          item.onClick?.(state)
-          onTreeItemClick?.(state)
+          const isStopA = item.onClick?.(state)
+          const isStopB = onTreeItemClick?.(state)
+          return (isStopA === false || isStopB === false) ? false : undefined
         },
         onExpand(state) {
           item.onExpand?.(state)

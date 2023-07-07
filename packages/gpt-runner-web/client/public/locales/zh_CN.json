@@ -6,6 +6,7 @@
     "tab_files": "文件",
     "tab_settings": "设置",
     "tab_about": "关于",
+    "tab_file_editor": "文件编辑器",
     "continue_inputting_prompt": "请继续",
     "copy_btn": "复制",
     "insert_btn": "插入",
@@ -30,6 +31,8 @@
     "filter_btn": "筛选",
     "pin_up_btn": "钉住",
     "close_btn": "关闭",
+    "cancel_btn": "取消",
+    "ok_btn": "确认",
     "close_sidebar_btn": "关闭侧栏",
     "open_sidebar_btn": "打开侧栏",
     "search_placeholder": "搜索...",
@@ -83,6 +86,8 @@
     "toast_create_error": "创建失败！",
     "toast_copy_success": "复制成功！",
     "toast_selected_files_as_prompt_reopened": "已重新打开选定的文件作为提示！",
-    "monaco_switch_language_tips": "切换语言"
+    "monaco_switch_language_tips": "切换语言",
+    "file_editor_forgot_save_tips_title": "你想要保存对{{fileName}}的更改吗?",
+    "file_editor_forgot_save_tips_content": "如果你不保存，你的改动将会丢失."
   }
 }

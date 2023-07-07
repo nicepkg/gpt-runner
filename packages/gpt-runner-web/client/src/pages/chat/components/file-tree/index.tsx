@@ -23,6 +23,10 @@ import { getIconComponent } from '../../../../helpers/file-icons/utils'
 import type { SvgComponent } from '../../../../types/common'
 import { getGlobalConfig } from '../../../../helpers/global-config'
 import { emitter } from '../../../../helpers/emitter'
+import { IS_SAFE } from '../../../../helpers/constant'
+import { useFileEditorStore } from '../../../../store/zustand/file-editor'
+import { useKeyIsPressed } from '../../../../hooks/use-keyboard.hook'
+import { openEditor } from '../../../../networks/editor'
 import { FileTreeItemRightWrapper, FileTreeSidebarHighlight, FileTreeSidebarUnderSearchWrapper, FilterWrapper } from './file-tree.styles'
 
 export interface FileTreeProps {
@@ -49,6 +53,12 @@ export const FileTree: FC<FileTreeProps> = memo((props: FileTreeProps) => {
     fullPathFileMap,
     updateFilesTree,
   } = useTempStore()
+
+  const {
+    addFileEditorItem,
+  } = useFileEditorStore()
+
+  const isPressedCtrl = useKeyIsPressed(['command', 'ctrl'])
 
   const updateFileItem = useCallback((fileItemOrFullPath: FileSidebarTreeItem | string, updater: (fileItem: FileSidebarTreeItem) => void) => {
     const fullPath = typeof fileItemOrFullPath === 'string' ? fileItemOrFullPath : fileItemOrFullPath.otherInfo?.fullPath
@@ -273,8 +283,24 @@ export const FileTree: FC<FileTreeProps> = memo((props: FileTreeProps) => {
       emitter.emit(ClientEventName.OpenFileInIde, {
         filePath: fullPath,
       })
+      return
     }
-  }, [])
+
+    if (!IS_SAFE)
+      return
+
+    if (isPressedCtrl) {
+      openEditor({
+        path: fullPath,
+      })
+      return
+    }
+
+    addFileEditorItem({
+      fullPath,
+      relativePath: otherInfo?.projectRelativePath,
+    })
+  }, [isPressedCtrl])
 
   const buildSearchRightSlot = useCallback(() => {
     const { allFileExts = [] } = fetchCommonFilesTreeRes?.data || {}

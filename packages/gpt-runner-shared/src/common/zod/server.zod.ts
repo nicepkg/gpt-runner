@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import type { ChatStreamReqParams, GetCommonFilesReqParams, GetGptFileInfoReqParams, GetGptFilesReqParams, GetUserConfigReqParams, InitGptFilesReqParams, OpenEditorReqParams, StorageClearReqParams, StorageGetItemReqParams, StorageRemoveItemReqParams, StorageSetItemReqParams } from '../types'
+import type { ChatStreamReqParams, CreateFilePathReqParams, DeleteFilePathReqParams, GetCommonFilesReqParams, GetFileInfoReqParams, GetGptFileInfoReqParams, GetGptFilesReqParams, GetUserConfigReqParams, InitGptFilesReqParams, OpenEditorReqParams, RenameFilePathReqParams, SaveFileContentReqParams, StorageClearReqParams, StorageGetItemReqParams, StorageRemoveItemReqParams, StorageSetItemReqParams } from '../types'
 import { PartialChatModelTypeMapSchema, SingleChatMessageSchema, SingleFileConfigSchema } from './config'
 import { ServerStorageNameSchema } from './enum.zod'
 
@@ -64,3 +64,26 @@ export const OpenEditorReqParamsSchema = z.object({
   path: z.string(),
   matchContent: z.string().optional(),
 }) satisfies z.ZodType<OpenEditorReqParams>
+
+export const CreateFilePathReqParamsSchema = z.object({
+  fileFullPath: z.string(),
+  isDir: z.boolean(),
+}) satisfies z.ZodType<CreateFilePathReqParams>
+
+export const RenameFilePathReqParamsSchema = z.object({
+  oldFileFullPath: z.string(),
+  newFileFullPath: z.string(),
+}) satisfies z.ZodType<RenameFilePathReqParams>
+
+export const DeleteFilePathReqParamsSchema = z.object({
+  fileFullPath: z.string(),
+}) satisfies z.ZodType<DeleteFilePathReqParams>
+
+export const GetFileInfoReqParamsSchema = z.object({
+  fileFullPath: z.string(),
+}) satisfies z.ZodType<GetFileInfoReqParams>
+
+export const SaveFileContentReqParamsSchema = z.object({
+  fileFullPath: z.string(),
+  content: z.string(),
+}) satisfies z.ZodType<SaveFileContentReqParams>

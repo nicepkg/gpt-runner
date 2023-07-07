@@ -38,20 +38,37 @@ function debounceSaveStateToServer(key: string, value: ServerStorageValue) {
   debounceSaveStateToServerFn(key, value)
 }
 
+export interface CustomStorageOptions {
+  storage: Storage
+  namespace?: string
+  syncToServer?: boolean
+}
+
 export class CustomStorage implements StateStorage {
   #storage: Storage
+  #prefixKey: string
+  #syncToServer: boolean
 
-  static get prefixKey() {
+  static get basePrefixKey() {
     const rootPath = getGlobalConfig().rootPath
     return `gpt-runner:${rootPath}:`
   }
 
-  constructor(storage: Storage) {
+  constructor(options: CustomStorageOptions) {
+    const { storage, namespace, syncToServer } = options
+    const finalNamespace = namespace ? `${namespace}:` : ''
+
     this.#storage = storage
+    this.#prefixKey = `${CustomStorage.basePrefixKey + finalNamespace}`
+    this.#syncToServer = syncToServer ?? false
   }
 
   getItem = async (key: string) => {
-    const finalKey = CustomStorage.prefixKey + key
+    const finalKey = this.#prefixKey + key
+
+    if (!this.#syncToServer)
+      return this.#storage.getItem(finalKey)
+
     const remoteSourceValue = await getStateFromServerOnce(finalKey)
 
     if (remoteSourceValue !== undefined) {
@@ -65,19 +82,23 @@ export class CustomStorage implements StateStorage {
   }
 
   setItem = (key: string, value: string) => {
-    const finalKey = CustomStorage.prefixKey + key
+    const finalKey = this.#prefixKey + key
 
-    // save to server
-    debounceSaveStateToServer(finalKey, tryParseJson(value))
+    if (this.#syncToServer) {
+      // save to server
+      debounceSaveStateToServer(finalKey, tryParseJson(value))
+    }
 
     return this.#storage.setItem(finalKey, value)
   }
 
   removeItem = (key: string) => {
-    const finalKey = CustomStorage.prefixKey + key
+    const finalKey = this.#prefixKey + key
 
+    if (!this.#syncToServer) {
     // save to server
-    debounceSaveStateToServer(finalKey, null)
+      debounceSaveStateToServer(finalKey, null)
+    }
 
     return this.#storage.removeItem(finalKey)
   }

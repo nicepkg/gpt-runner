@@ -3,16 +3,13 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 
 export function useHover<Ref extends RefObject<any>>() {
   const [isHover, setIsHover] = useState(false)
-  const isHoverRef = useRef(isHover)
   const ref = useRef(null) as Ref
 
   const handleMouseEnter = () => {
-    isHoverRef.current = true
     setIsHover(true)
   }
 
   const handleMouseLeave = async () => {
-    isHoverRef.current = false
     setIsHover(false)
   }
 
@@ -30,7 +27,7 @@ export function useHover<Ref extends RefObject<any>>() {
     }
   }, [ref.current])
 
-  return [ref, isHover, isHoverRef] as const
+  return [ref, isHover] as const
 }
 
 export function useHoverByMouseLocation<Ref extends RefObject<any>>() {

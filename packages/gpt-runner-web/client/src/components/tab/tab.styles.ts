@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion'
 import styled from 'styled-components'
+import { Icon } from '../icon'
 
 export const TabContainer = styled.div`
   display: flex;
@@ -13,7 +14,7 @@ export const TabListHeader = styled.div`
   padding: calc(var(--border-width) * 3px) 1rem;
 
   &[data-show-more=true] {
-    padding-right: calc(var(--type-ramp-minus1-font-size) * 2 + 1rem);
+    padding-right: 2rem;
   }
 `
 
@@ -67,7 +68,6 @@ export const ActiveTabIndicator = styled(motion.div)`
 
 export const MoreWrapper = styled.div`
   height: 100%;
-  padding: 0 var(--type-ramp-minus1-font-size);
   background-color: var(--panel-view-background);
   position: absolute;
   right: 0;
@@ -78,14 +78,31 @@ export const MoreWrapper = styled.div`
   align-items: center;
 `
 
-export const MoreIcon = styled.div`
-  display: inline-block;
+export const MoreIconWrapper = styled.div`
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.2rem;
+  width: 1.5rem;
+  height: 1.5rem;
+  margin: 0 0.25rem;
+  border-radius: 0.25rem;
+  overflow: hidden;
+  cursor: pointer;
+
+  &:hover {
+    background: var(--panel-view-border);
+  }
+`
+
+export const StyledMoreIcon = styled(Icon)`
+
 `
 
 export const MoreList = styled.div`
   min-width: var(--input-min-width);
-  padding: 1rem var(--type-ramp-minus1-font-size);
-  padding-bottom: 0;
+  padding: 0.5rem;
+  border: 1px solid var(--panel-view-border);
   position: absolute;
   z-index: 3;
   /* top: 33px; */
@@ -100,7 +117,12 @@ export const MoreListItem = styled.div`
   text-align: center;
   color: var(--panel-tab-foreground);
   font-size: var(--type-ramp-base-font-size);
-  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  cursor: pointer;
+
+  &:last-child {
+    padding-bottom: 0;
+  }
 `
 
 export const TabView = styled.div`

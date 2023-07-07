@@ -6,6 +6,7 @@
     "tab_files": "Dateien",
     "tab_settings": "Einstellungen",
     "tab_about": "Über",
+    "tab_file_editor": "Datei-Editor",
     "continue_inputting_prompt": "Bitte weitermachen",
     "copy_btn": "Kopieren",
     "insert_btn": "Einfügen",
@@ -30,6 +31,8 @@
     "filter_btn": "Filtern",
     "pin_up_btn": "Anheften",
     "close_btn": "Schließen",
+    "cancel_btn": "Abbrechen",
+    "ok_btn": "Bestätigen",
     "close_sidebar_btn": "Seitenleiste schließen",
     "open_sidebar_btn": "Seitenleiste öffnen",
     "search_placeholder": "Suchen...",
@@ -83,6 +86,8 @@
     "toast_create_error": "Erstellen fehlgeschlagen!",
     "toast_copy_success": "Kopiert!",
     "toast_selected_files_as_prompt_reopened": "Ausgewählte Dateien als Aufforderung wurden wieder geöffnet!",
-    "monaco_switch_language_tips": "Sprache wechseln"
+    "monaco_switch_language_tips": "Sprache wechseln",
+    "file_editor_forgot_save_tips_title": "Möchten Sie die Änderungen an {{fileName}} speichern?",
+    "file_editor_forgot_save_tips_content": "Ihre Änderungen gehen verloren, wenn Sie sie nicht speichern."
   }
 }

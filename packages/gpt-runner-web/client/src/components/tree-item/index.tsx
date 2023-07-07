@@ -25,7 +25,7 @@ export interface TreeItemProps<OtherInfo extends TreeItemBaseStateOtherInfo = Tr
   renderRightSlot?: (props: TreeItemState<OtherInfo>) => React.ReactNode
   onExpand?: (props: TreeItemState<OtherInfo>) => void
   onCollapse?: (props: TreeItemState<OtherInfo>) => void
-  onClick?: (props: TreeItemState<OtherInfo>) => void
+  onClick?: (props: TreeItemState<OtherInfo>) => void | boolean
   onContextMenu?: (props: TreeItemState<OtherInfo>) => void
 }
 
@@ -56,6 +56,11 @@ export function TreeItem_<OtherInfo extends TreeItemBaseStateOtherInfo = TreeIte
   }
 
   const handleClick = () => {
+    const isStop = onClick?.(stateProps)
+
+    if (isStop === false)
+      return
+
     if (!isLeaf) {
       if (isExpanded)
         onCollapse?.({ ...stateProps, isExpanded: false })
@@ -63,7 +68,6 @@ export function TreeItem_<OtherInfo extends TreeItemBaseStateOtherInfo = TreeIte
       else
         onExpand?.({ ...stateProps, isExpanded: true })
     }
-    onClick?.(stateProps)
   }
 
   const contentVariants: Variants = {

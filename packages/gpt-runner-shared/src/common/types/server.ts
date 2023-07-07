@@ -132,3 +132,39 @@ export interface OpenEditorReqParams {
 }
 
 export type OpenEditorResData = null
+
+export interface CreateFilePathReqParams {
+  fileFullPath: string
+  isDir: boolean
+}
+
+export type CreateFilePathResData = null
+
+export interface RenameFilePathReqParams {
+  oldFileFullPath: string
+  newFileFullPath: string
+}
+
+export type RenameFilePathResData = null
+
+export interface DeleteFilePathReqParams {
+  fileFullPath: string
+}
+
+export type DeleteFilePathResData = null
+
+export interface GetFileInfoReqParams {
+  fileFullPath: string
+}
+
+export interface GetFileInfoResData {
+  content: string
+  isDir: boolean
+}
+
+export interface SaveFileContentReqParams {
+  fileFullPath: string
+  content: string
+}
+
+export type SaveFileContentResData = null

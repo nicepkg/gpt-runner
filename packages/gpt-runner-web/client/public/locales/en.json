@@ -6,6 +6,7 @@
     "tab_files": "Files",
     "tab_settings": "Settings",
     "tab_about": "About",
+    "tab_file_editor": "File Editor",
     "continue_inputting_prompt": "Please continue",
     "copy_btn": "Copy",
     "insert_btn": "Insert",
@@ -30,6 +31,8 @@
     "filter_btn": "Filter",
     "pin_up_btn": "Pin Up",
     "close_btn": "Close",
+    "cancel_btn": "Cancel",
+    "ok_btn": "Confirm",
     "close_sidebar_btn": "Close Sidebar",
     "open_sidebar_btn": "Open Sidebar",
     "search_placeholder": "Search...",
@@ -83,6 +86,8 @@
     "toast_create_error": "Create error!",
     "toast_copy_success": "Copied!",
     "toast_selected_files_as_prompt_reopened": "Selected Files As Prompt Has Reopened!",
-    "monaco_switch_language_tips": "Switch To Language"
+    "monaco_switch_language_tips": "Switch To Language",
+    "file_editor_forgot_save_tips_title": "Do you want to save changes to {{fileName}}?",
+    "file_editor_forgot_save_tips_content": "Your changes will be lost if you don't save them."
   }
 }

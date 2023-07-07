@@ -32,6 +32,10 @@ export interface ClientEventData {
   [ClientEventName.OpenFileInIde]: {
     filePath: string
   }
+
+  [ClientEventName.OpenFileInFileEditor]: {
+    fileFullPath: string
+  }
 }
 
 export type EventEmitterMap = {

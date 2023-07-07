@@ -56,8 +56,6 @@ export const ChatMessageInput: FC<ChatMessageInputProps> = memo((props) => {
         monacoRef.current.KeyMod.CtrlCmd | monacoRef.current.KeyCode.Enter,
         monacoRef.current.KeyMod.WinCtrl | monacoRef.current.KeyCode.Enter,
       ],
-      contextMenuGroupId: 'navigation',
-      contextMenuOrder: 1.5,
       run() {
         if (!currentValue.current.trim())
           return

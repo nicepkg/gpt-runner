@@ -127,7 +127,7 @@ export const ChatPanel: FC<ChatPanelProps> = memo((props) => {
     catch (error) {
       toast.error(getErrorMsg(error))
     }
-  }, [])
+  }, [t])
 
   // insert codes
   const handleInsertCodes = useCallback((value: string) => {
@@ -203,7 +203,7 @@ export const ChatPanel: FC<ChatPanelProps> = memo((props) => {
       inputtingPrompt: t('chat_page.continue_inputting_prompt'),
     }, false)
     generateCurrentChatAnswer()
-  }, [chatInstance, updateCurrentChatInstance, generateCurrentChatAnswer])
+  }, [chatInstance, updateCurrentChatInstance, generateCurrentChatAnswer, t])
 
   // stop
   const handleStopGenerateAnswer = useCallback(() => {

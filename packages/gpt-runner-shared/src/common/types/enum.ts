@@ -26,6 +26,7 @@ export enum ClientEventName {
   UpdateIdeActiveFilePath = 'updateIdeActiveFilePath',
   UpdateUserSelectedText = 'updateUserSelectedText',
   OpenFileInIde = 'openFileInIde',
+  OpenFileInFileEditor = 'openFileInFileEditor',
 }
 
 export enum GptFileTreeItemType {
