@@ -1,5 +1,5 @@
-import { DEFAULT_ANTHROPIC_API_BASE_PATH } from '@nicepkg/gpt-runner-shared/common'
-import type { AnthropicSecrets, SingleFileConfig } from '@nicepkg/gpt-runner-shared/common'
+import { ChatModelType, DEFAULT_ANTHROPIC_API_BASE_PATH } from '@nicepkg/gpt-runner-shared/common'
+import type { AnthropicSecrets } from '@nicepkg/gpt-runner-shared/common'
 import { type FC, memo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { HookFormInput } from '../../../../../../../components/hook-form/hook-form-input'
@@ -9,12 +9,9 @@ interface FormData extends Pick<AnthropicSecrets, 'apiKey' | 'basePath'> {
 }
 
 export interface AnthropicSecretsSettingsProps {
-  singleFileConfig: SingleFileConfig
 }
 
 export const AnthropicSecretsSettings: FC<AnthropicSecretsSettingsProps> = memo((props) => {
-  const { singleFileConfig } = props
-
   const { t } = useTranslation()
 
   const formConfig: BaseSecretsSettingsFormItemConfig<FormData>[] = [
@@ -49,7 +46,7 @@ export const AnthropicSecretsSettings: FC<AnthropicSecretsSettingsProps> = memo(
     },
   ]
 
-  return <BaseSecretsSettings singleFileConfig={singleFileConfig} formConfig={formConfig} />
+  return <BaseSecretsSettings modelType={ChatModelType.Anthropic} formConfig={formConfig} />
 })
 
 AnthropicSecretsSettings.displayName = 'AnthropicSecretsSettings'

@@ -15,11 +15,12 @@ export interface ModelSettingsProps {
   singleFilePath?: string
   singleFileConfig?: SingleFileConfig
   userConfig?: UserConfig
+  modelType?: ChatModelType
   viewType: ModelSettingsViewType
 }
 
 export const ModelSettings: FC<ModelSettingsProps> = memo((props) => {
-  const { rootPath, singleFilePath, singleFileConfig: singleFileConfigFromParams, userConfig: userConfigFromParams, viewType } = props
+  const { rootPath, singleFilePath, singleFileConfig: singleFileConfigFromParams, userConfig: userConfigFromParams, viewType, modelType } = props
 
   const { singleFileConfig: singleFileConfigFromRemote, userConfig: userConfigFromRemote } = useUserConfig({
     rootPath,
@@ -40,11 +41,11 @@ export const ModelSettings: FC<ModelSettingsProps> = memo((props) => {
     })
   }, [singleFileConfig, userConfig])
 
-  const finalModelType = resolvedSingleFileConfig?.model?.type || ChatModelType.Openai
+  const finalModelType = modelType || resolvedSingleFileConfig?.model?.type || ChatModelType.Openai
 
   const modelTypeViewMap: Record<ChatModelType, Record<ModelSettingsViewType, () => ReactNode>> = {
     [ChatModelType.Anthropic]: {
-      secrets: () => <AnthropicSecretsSettings singleFileConfig={resolvedSingleFileConfig} />,
+      secrets: () => <AnthropicSecretsSettings />,
       model: () => <AnthropicModelSettings singleFileConfig={resolvedSingleFileConfig} />,
       title: () => <>Anthropic</>,
     },
@@ -54,7 +55,7 @@ export const ModelSettings: FC<ModelSettingsProps> = memo((props) => {
       title: () => <>Hugging Face</>,
     },
     [ChatModelType.Openai]: {
-      secrets: () => <OpenaiSecretsSettings singleFileConfig={resolvedSingleFileConfig} />,
+      secrets: () => <OpenaiSecretsSettings />,
       model: () => <OpenaiModelSettings singleFileConfig={resolvedSingleFileConfig} />,
       title: () => <>OpenAI</>,
     },
