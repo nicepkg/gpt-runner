@@ -1,4 +1,4 @@
-import type { OpenaiModelConfig, SingleFileConfig } from '@nicepkg/gpt-runner-shared/common'
+import type { AnthropicModelConfig, SingleFileConfig } from '@nicepkg/gpt-runner-shared/common'
 import { memo, useState } from 'react'
 import type { FC } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -6,31 +6,35 @@ import { HookFormInput } from '../../../../../../../components/hook-form/hook-fo
 import { type ISelectOption, SelectOption } from '../../../../../../../components/select-option'
 import { BaseModelSettings, type BaseModelSettingsFormItemConfig } from '../base-model-settings'
 
-interface FormData extends Pick<OpenaiModelConfig, 'modelName' | 'temperature' | 'maxTokens' | 'topP' | 'frequencyPenalty' | 'presencePenalty'> {
+interface FormData extends Pick<AnthropicModelConfig, 'modelName' | 'temperature' | 'maxTokens' | 'topP' | 'topK'> {
 
 }
 
-export interface OpenaiModelSettingsProps {
+export interface AnthropicModelSettingsProps {
   singleFileConfig?: SingleFileConfig
 }
 
-export const OpenaiModelSettings: FC<OpenaiModelSettingsProps> = memo((props) => {
+export const AnthropicModelSettings: FC<AnthropicModelSettingsProps> = memo((props) => {
   const { singleFileConfig } = props
 
   const { t } = useTranslation()
 
   const [modelTipOptions] = useState<ISelectOption[]>([
     {
-      label: 'gpt-3.5-turbo-16k',
-      value: 'gpt-3.5-turbo-16k',
+      label: 'claude-1',
+      value: 'claude-1',
     },
     {
-      label: 'gpt-4',
-      value: 'gpt-4',
+      label: 'claude-1-100k',
+      value: 'claude-1-100k',
     },
     {
-      label: 'gpt-3.5-turbo',
-      value: 'gpt-3.5-turbo',
+      label: 'claude-instant-1',
+      value: 'claude-instant-1',
+    },
+    {
+      label: 'claude-instant-1-100k',
+      value: 'claude-instant-1-100k',
     },
   ])
 
@@ -108,35 +112,17 @@ export const OpenaiModelSettings: FC<OpenaiModelSettingsProps> = memo((props) =>
       },
     },
     {
-      name: 'frequencyPenalty',
+      name: 'topK',
       buildView: ({ buildLabel, useFormReturns: { control, formState } }) => {
         return <>
           <HookFormInput
-            name="frequencyPenalty"
-            label={buildLabel(t('chat_page.frequency_penalty'))}
+            name="topK"
+            label={buildLabel(t('chat_page.top_k'))}
             labelInLeft
+            minNumber={0}
+            maxNumber={1}
+            placeholder={'0 ~ 1'}
             isNumber
-            minNumber={-2}
-            maxNumber={2}
-            placeholder={'-2 ~ 2'}
-            errors={formState.errors}
-            control={control}
-          />
-        </>
-      },
-    },
-    {
-      name: 'presencePenalty',
-      buildView: ({ buildLabel, useFormReturns: { control, formState } }) => {
-        return <>
-          <HookFormInput
-            name="presencePenalty"
-            label={buildLabel(t('chat_page.presence_penalty'))}
-            labelInLeft
-            isNumber
-            minNumber={-2}
-            maxNumber={2}
-            placeholder={'-2 ~ 2'}
             errors={formState.errors}
             control={control}
           />
@@ -148,4 +134,4 @@ export const OpenaiModelSettings: FC<OpenaiModelSettingsProps> = memo((props) =>
   return <BaseModelSettings singleFileConfig={singleFileConfig} formConfig={formConfig} />
 })
 
-OpenaiModelSettings.displayName = 'OpenaiModelSettings'
+AnthropicModelSettings.displayName = 'AnthropicModelSettings'

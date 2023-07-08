@@ -253,7 +253,7 @@ export const ChatPanel: FC<ChatPanelProps> = memo((props) => {
     messageItems: chatInstance?.messages.map((message, i) => {
       const isLast = i === chatInstance.messages.length - 1
       const isLastTwo = i >= chatInstance.messages.length - 2
-      const isAi = message.name === ChatRole.ASSISTANT
+      const isAi = message.name === ChatRole.Assistant
 
       const handleRegenerateMessage = () => {
         if (!isLast)

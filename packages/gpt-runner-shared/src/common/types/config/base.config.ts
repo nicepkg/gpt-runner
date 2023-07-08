@@ -1,4 +1,5 @@
 import type { ChatModelType } from '../enum'
+import type { AnthropicModelConfig } from './anthropic.config'
 import type { HuggingFaceModelConfig } from './hugging-face.config'
 import type { OpenaiModelConfig } from './openai.config'
 
@@ -20,8 +21,9 @@ export interface BaseModelConfig {
 }
 
 export interface ChatModelTypeMap {
-  [ChatModelType.Openai]: OpenaiModelConfig
+  [ChatModelType.Anthropic]: AnthropicModelConfig
   [ChatModelType.HuggingFace]: HuggingFaceModelConfig
+  [ChatModelType.Openai]: OpenaiModelConfig
 }
 
 export type PartialChatModelTypeMap = Partial<ChatModelTypeMap>

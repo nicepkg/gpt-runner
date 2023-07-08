@@ -2,8 +2,9 @@ import { z } from 'zod'
 import { type ChatModel, ChatModelType, type FilterPattern, type FormCheckboxGroupConfig, type FormFieldBaseConfig, type FormInputConfig, type FormItemConfig, type FormOption, type FormRadioGroupConfig, type FormSelectConfig, type FormTextareaConfig, type SingleChatMessage, type SingleFileConfig, type UserConfig, type UserConfigForUser } from '../../types'
 import { ChatRoleSchema } from '../enum.zod'
 import type { PartialChatModelTypeMap } from './../../types/config/base.config'
-import { OpenaiModelConfigSchema } from './openai.zod'
+import { AnthropicModelConfigSchema } from './anthropic.zod'
 import { HuggingFaceModelConfigSchema } from './hugging-face.zod'
+import { OpenaiModelConfigSchema } from './openai.zod'
 
 export const FilterPatternSchema = z.union([
   z.array(z.union([z.string(), z.instanceof(RegExp)])),
@@ -14,15 +15,16 @@ export const FilterPatternSchema = z.union([
   z.undefined(),
 ]) satisfies z.ZodType<FilterPattern>
 
-// OpenaiModelConfigSchema or HuggingFaceModelConfigSchema
 export const ChatModelSchema = z.union([
-  OpenaiModelConfigSchema,
+  AnthropicModelConfigSchema,
   HuggingFaceModelConfigSchema,
+  OpenaiModelConfigSchema,
 ]) satisfies z.ZodType<ChatModel>
 
 export const PartialChatModelTypeMapSchema = z.object({
-  [ChatModelType.Openai]: OpenaiModelConfigSchema.optional(),
+  [ChatModelType.Anthropic]: AnthropicModelConfigSchema.optional(),
   [ChatModelType.HuggingFace]: HuggingFaceModelConfigSchema.optional(),
+  [ChatModelType.Openai]: OpenaiModelConfigSchema.optional(),
 }) satisfies z.ZodType<PartialChatModelTypeMap>
 
 export const UserConfigSchema = z.object({

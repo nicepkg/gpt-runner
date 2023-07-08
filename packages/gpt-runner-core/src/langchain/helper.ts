@@ -12,9 +12,9 @@ export function mapStoredMessagesToChatMessages(
     switch (message.name) {
       case ChatRole.User:
         return new HumanChatMessage(message.text)
-      case ChatRole.ASSISTANT:
+      case ChatRole.Assistant:
         return new AIChatMessage(message.text)
-      case ChatRole.SYSTEM:
+      case ChatRole.System:
         return new SystemChatMessage(message.text)
       default:
         throw new Error('Role must be defined for generic messages')
@@ -29,9 +29,9 @@ export function mapStoredMessageToChatTemplateMessages(
     switch (message.name) {
       case ChatRole.User:
         return HumanMessagePromptTemplate.fromTemplate(message.text)
-      case ChatRole.ASSISTANT:
+      case ChatRole.Assistant:
         return AIMessagePromptTemplate.fromTemplate(message.text)
-      case ChatRole.SYSTEM:
+      case ChatRole.System:
         return SystemMessagePromptTemplate.fromTemplate(message.text)
       default:
         throw new Error('Role must be defined for generic messages')

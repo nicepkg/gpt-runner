@@ -228,7 +228,7 @@ export const createChatSlice: StateCreator<
       }
 
       finalMessages.push({
-        name: ChatRole.ASSISTANT,
+        name: ChatRole.Assistant,
         text: '',
       })
 

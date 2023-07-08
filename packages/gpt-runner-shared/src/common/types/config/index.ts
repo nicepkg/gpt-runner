@@ -1,3 +1,4 @@
+export * from './anthropic.config'
 export * from './base.config'
 export * from './hugging-face.config'
 export * from './openai.config'
