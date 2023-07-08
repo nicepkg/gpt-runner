@@ -11,13 +11,16 @@
   - [Chat Model Configuration](#chat-model-configuration)
     - [OpenAI](#openai)
     - [Anthropic](#anthropic)
+- [Other](#other)
 
 <br></details>
 
 ## Introduction
 
 1. When you start GPT-Runner, it first reads the project-level configuration file.
+
 2. This isn't necessary, but it's useful when you want to override some global configurations.
+
 3. Sorted by priority, it prefers to read the file at topmost.
 
 ```yml
@@ -31,15 +34,21 @@
 ```
 
 4. Then GPT-Runner will deeply retrieve all `*.gpt.md` files under the current folder.
+
 5. This process defaults to skipping the files in the project's `.gitignore` which saves time.
+
 6. You can change the retrieval range by configuring the `gptr.config.ts` file.
+
 7. Each `*.gpt.md` file is parsed into an AI preset.
 
 ### .gpt-runner Directory
 
 1. `<rootPath>/.gpt-runner/` directory is a special directory. Even if you include it in `.gitignore`, it will be retrieved. This is useful for people who hope GPT-Runner doesn't intrude into the project.
+
 2. You can put both `gptr.config.json` and `*.gpt.md` files in this directory.
+
 3. Then add `.gpt-runner` in `.gitignore`. So you can keep the project clean and let GPT-Runner read the configuration files at the same time.
+
 4. If you want to git ignore the `.gpt-runner` directory once and for all, you can execute this command to achieve global git ignore:
 
 ```bash
@@ -51,6 +60,7 @@ echo '.gpt-runner' >> ~/.gitignore_global
 ## gptr.config.ts/js/json Configuration Files
 
 1. gpt.config.ts/js/json is a configuration file, it can override project-level global configurations.
+
 2. Its configuration type is as follows
 
 ```ts
@@ -129,6 +139,7 @@ export default defineConfig({
 ```
 
 5. Of course, you can also install our VSCode plugin, it will automatically prompt your configuration file based on our [JSON Schema](https://unpkg.com/@nicepkg/gpt-runner-shared@latest/dist/json-schema/user-config.json).
+
 6. This is the simple example for `gptr.config.json`:
 
 ```json
@@ -175,28 +186,34 @@ export default defineConfig({
 ## xxx.gpt.md AI Preset Files
 
 1. `xxx.gpt.md` files are AI preset files, each file represents an AI character.
-2. For example, a `uni-test.gpt.md` is specifically for this project to write unit tests, and a `doc.gpt.md` is specifically for this project to write documentation. It has great value and can be reused by team members.
-3. Why not `xxx.gpt.json`? Because in that case, the content within `System Prompt` and `User Prompt` often need to escape characters, which makes it very troublesome to write.
-4. It's easy to write, read, and maintain `xxx.gpt.md`.
-5. A minimalist AI preset file looks like this:
 
-```md
-\`\`\`json
+2. For example, a `uni-test.gpt.md` is specifically for this project to write unit tests, and a `doc.gpt.md` is specifically for this project to write documentation. 
+
+3. It has great value and can be reused by team members.
+
+4. Why not `xxx.gpt.json`? Because in that case, the content within `System Prompt` and `User Prompt` often need to escape characters, which makes it very troublesome to write.
+
+5. It's easy to write, read, and maintain `xxx.gpt.md`.
+
+6. A minimalist AI preset file looks like this:
+
+````md
+```json
 {
   "title": "Category/AI character name"
 }
-\`\`\`
+```
 
 # System Prompt
 
 You're a coding master specializing in refactoring code. Please follow SOLID, KISS and DRY principles, and refactor this section of code to make it better.
 
-```
+```````
 
-6. A complete AI preset file looks like this:
+7. A complete AI preset file looks like this:
 
-```md
-\`\`\`json
+````md
+```json
 {
   "title": "Category/AI Character Name",
   "model": {
@@ -209,7 +226,7 @@ You're a coding master specializing in refactoring code. Please follow SOLID, KI
     "presencePenalty": 0
   }
 }
-\`\`\`
+```
 
 
 # System Prompt
@@ -227,7 +244,7 @@ You can write your remarks here.
 `model` / `modelName` / `temperature` / `System Prompt` / `User Prompt` are all **optional** parameters, and there are many more to customize.
 
 You can also override many default parameter values through the `gptr.config.json` at the root directory of the project.
-```
+````
 
 ## Chat Model Configuration
 
@@ -305,3 +322,24 @@ export interface AnthropicModelConfig {
   topK?: number
 }
 ```
+
+
+# Other
+
+1. If you have installed GPT Runner VSCode extension. You can set in `.vscode/settings.json`:
+
+```json
+{
+  "[markdown]": {
+    "editor.quickSuggestions": {
+      "other": true,
+      "comments": false,
+      "strings": true
+    }
+  }
+}
+```
+
+Thus, in `xxx.gpt.md` file, you can open suggestions and fast code snippets, for instance, create a new `test.gpt.md` file, type in `gptr` then hit Enter, you will quickly get a simple AI preset file.
+
+2. In the future, we will support more llm models
