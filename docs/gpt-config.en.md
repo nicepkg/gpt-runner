@@ -1,9 +1,9 @@
-# GPT-Runner Files
+# GPT-Runner Configs And AI Preset Files
 
 <details>
 <summary>Table of Contents</summary><br>
 
-- [GPT-Runner Files](#gpt-runner-files)
+- [GPT-Runner Configs And AI Preset Files](#gpt-runner-configs-and-ai-preset-files)
   - [Introduction](#introduction)
     - [.gpt-runner Directory](#gpt-runner-directory)
   - [gptr.config.ts/js/json Configuration Files](#gptrconfigtsjsjson-configuration-files)

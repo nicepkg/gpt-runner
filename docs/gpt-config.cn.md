@@ -1,9 +1,9 @@
-# GPT-Runner 文件
+# GPT-Runner 配置和 AI 预设文件
 
 <details>
 <summary>目录</summary><br>
 
-- [GPT-Runner 文件](#gpt-runner-文件)
+- [GPT-Runner 配置和 AI 预设文件](#gpt-runner-配置和-ai-预设文件)
   - [介绍](#介绍)
     - [.gpt-runner 目录](#gpt-runner-目录)
   - [gptr.config.ts/js/json 配置文件](#gptrconfigtsjsjson-配置文件)

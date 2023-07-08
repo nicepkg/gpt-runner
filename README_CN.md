@@ -33,7 +33,9 @@
 - [快速开始](#快速开始)
   - [方式一：CLI](#方式一cli)
   - [方式二：VSCode 扩展](#方式二vscode-扩展)
-- [GPT-Runner 文件](#gpt-runner-文件)
+- [文档](#文档)
+  - [GPT-Runner 配置和 AI 预设文件](#gpt-runner-配置和-ai-预设文件)
+  - [GPT-Runner Ui 用法](#gpt-runner-ui-用法)
 - [开发计划](#开发计划)
 - [最新动态](#最新动态)
 - [常见问题](#常见问题)
@@ -52,7 +54,7 @@
 
 2. **管理项目的AI预设：** 
     - 使用 GPT-Runner 前：保存在备忘录中的项目提示需要复制粘贴给 ChatGPT 才能提问，难以进行 git 版本管理。
-    - 使用 GPT-Runner 后：[xxx.gpt.md](https://github.com/nicepkg/gpt-runner/tree/main/docs/example-cn.gpt.md) 文件代表一个AI角色预设，它易于阅读、修改并可进行版本控制。团队成员可以分享和优化 AI 预设，使其生成的代码更接近 100% 的可用性。
+    - 使用 GPT-Runner 后：[xxx.gpt.md](https://github.com/nicepkg/gpt-runner/tree/main/docs/examples/example-cn.gpt.md) 文件代表一个AI角色预设，它易于阅读、修改并可进行版本控制。团队成员可以分享和优化 AI 预设，使其生成的代码更接近 100% 的可用性。
 
 ## 主要功能
 
@@ -89,11 +91,17 @@ npx gptr
 
 从 VSCode Marketplace 安装 [GPT-Runner VSCode 扩展](https://marketplace.visualstudio.com/items?itemName=nicepkg.gpt-runner)。
 
-## GPT-Runner 文件
+## 文档
 
-关于 `.gpt-runner` 目录和 `*.gpt.md` 文件和 `gptr.config.json` 文件详细介绍请看这里：
+### GPT-Runner 配置和 AI 预设文件
 
- [GPT-Runner 文件介绍](https://github.com/nicepkg/gpt-runner/blob/main/docs/gpt-config-cn.gpt.md)
+关于 `gptr.config.json` 配置文件、`xxx.gpt.md` AI 预设文件、`.gpt-runner` 特殊目录的详细介绍请参见这里：
+
+[GPT-Runner 配置和 AI 预设文件](https://github.com/nicepkg/gpt-runner/blob/main/docs/gpt-config.cn.md)
+
+### GPT-Runner Ui 用法
+
+[GPT-Runner Ui使用介绍](https://github.com/nicepkg/gpt-runner/blob/main/docs/ui-usage.cn.md)
 
 ## 开发计划
 
@@ -109,7 +117,7 @@ npx gptr
 
 ## 常见问题
 
-[简体中文 > 常见问题](https://github.com/nicepkg/gpt-runner/tree/main/docs/faq-cn.md)
+[简体中文 > 常见问题](https://github.com/nicepkg/gpt-runner/tree/main/docs/faq.cn.md)
 
 ## 赞助者
 

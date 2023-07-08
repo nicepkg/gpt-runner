@@ -21,7 +21,9 @@ GPT-Runner VSCode 扩展是 GPT-Runner 跟 VSCode 深度结合的结果。
 - [特性](#特性)
 - [安装](#安装)
 - [快速开始](#快速开始)
-- [GPT-Runner 文件](#gpt-runner-文件)
+- [文档](#文档)
+  - [GPT-Runner 配置和 AI 预设文件](#gpt-runner-配置和-ai-预设文件)
+  - [GPT-Runner Ui 用法](#gpt-runner-ui-用法)
 - [常见问题](#常见问题)
 - [赞助](#赞助)
 - [贡献者](#贡献者)
@@ -63,15 +65,21 @@ GPT-Runner VSCode 扩展是 GPT-Runner 跟 VSCode 深度结合的结果。
 > 1. 注意你的右上角有个聊天 icon，那个也能点击
 > 2. 注意你的底部状态栏，有个 `🚀 GPT-Runner` 也能点击
 
-## GPT-Runner 文件
+## 文档
 
-关于 `.gpt-runner` 目录和 `*.gpt.md` 文件和 `gptr.config.json` 文件详细介绍请看这里：
+### GPT-Runner 配置和 AI 预设文件
 
- [GPT-Runner 文件介绍](https://github.com/nicepkg/gpt-runner/blob/main/docs/gpt-config-cn.gpt.md)
+关于 `gptr.config.json` 配置文件、`xxx.gpt.md` AI 预设文件、`.gpt-runner` 特殊目录的详细介绍请参见这里：
+
+[GPT-Runner 配置和 AI 预设文件](https://github.com/nicepkg/gpt-runner/blob/main/docs/gpt-config.cn.md)
+
+### GPT-Runner Ui 用法
+
+[GPT-Runner Ui使用介绍](https://github.com/nicepkg/gpt-runner/blob/main/docs/ui-usage.cn.md)
 
 ## 常见问题
 
-[简体中文 > 常见问题](https://github.com/nicepkg/gpt-runner/tree/main/docs/faq-cn.md)
+[简体中文 > 常见问题](https://github.com/nicepkg/gpt-runner/tree/main/docs/faq.cn.md)
 
 ## 赞助
 

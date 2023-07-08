@@ -37,7 +37,9 @@ Use GPT-Runner to manage your AI presets, engage in AI-powered conversations wit
 - [Quick Start](#quick-start)
   - [The first way: CLI](#the-first-way-cli)
   - [The second way:  VSCode Extension](#the-second-way--vscode-extension)
-- [GPT-Runner File](#gpt-runner-file)
+- [Documentation](#documentation)
+  - [GPT-Runner Configs And AI Preset Files](#gpt-runner-configs-and-ai-preset-files)
+  - [GPT-Runner Ui Usage](#gpt-runner-ui-usage)
 - [Road map](#road-map)
 - [What's New](#whats-new)
 - [FAQ](#faq)
@@ -56,7 +58,7 @@ Use GPT-Runner to manage your AI presets, engage in AI-powered conversations wit
 
 2. **Manage the Project's AI Presets:** 
     - Before using GPT-Runner: Project prompts saved in memos needed to be copied and pasted to ChatGPT for inquiries, making it difficult to put them under git version control.
-    - After using GPT-Runner: Each [xxx.gpt.md](https://github.com/nicepkg/gpt-runner/tree/main/docs/example.gpt.md) file represents an AI role preset. They are easy to read, modify, and can be version-controlled. Team members can share and enhance AI presets, making the code they produce closer to 100% usability.
+    - After using GPT-Runner: Each [xxx.gpt.md](https://github.com/nicepkg/gpt-runner/tree/main/docs/examples/example-en.gpt.md) file represents an AI role preset. They are easy to read, modify, and can be version-controlled. Team members can share and enhance AI presets, making the code they produce closer to 100% usability.
 
 
 ## Features
@@ -94,11 +96,17 @@ You can see the web interface in your browser at [http://localhost:3003](http://
 
 Install the [GPT-Runner VSCode Extension](https://marketplace.visualstudio.com/items?itemName=nicepkg.gpt-runner) from the VSCode Marketplace.
 
-## GPT-Runner File
+## Documentation
 
-For a detailed introduction about `.gpt-runner` directory, `*.gpt.md` files, and `gptr.config.json` files, please see here:
+### GPT-Runner Configs And AI Preset Files
 
-[Introduction to GPT-Runner Files](https://github.com/nicepkg/gpt-runner/blob/main/docs/gpt-config-en.gpt.md)
+For details about `gptr.config.json` configuration file, `xxx.gpt.md` AI preset file, `.gpt-runner` special directory, please refer to here:
+
+[Introduction to GPT-Runner Configs And AI Preset Files](https://github.com/nicepkg/gpt-runner/blob/main/docs/gpt-config.en.md)
+
+### GPT-Runner Ui Usage
+
+[Introduction to GPT-Runner Ui Usage](https://github.com/nicepkg/gpt-runner/blob/main/docs/ui-usage.en.md)
 
 ## Road map
 
@@ -114,7 +122,7 @@ For a detailed introduction about `.gpt-runner` directory, `*.gpt.md` files, and
 
 ## FAQ
 
-[English > FAQ](https://github.com/nicepkg/gpt-runner/tree/main/docs/faq-en.md)
+[English > FAQ](https://github.com/nicepkg/gpt-runner/tree/main/docs/faq.en.md)
 
 ## Sponsor
 

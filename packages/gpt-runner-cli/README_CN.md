@@ -21,7 +21,9 @@ GPT-Runner CLI 是一款功能强大的命令行工具，可帮助您管理 AI �
 - [安装](#安装)
 - [快速开始](#快速开始)
 - [CLI 命令](#cli-命令)
-- [GPT-Runner 文件](#gpt-runner-文件)
+- [文档](#文档)
+  - [GPT-Runner 配置和 AI 预设文件](#gpt-runner-配置和-ai-预设文件)
+  - [GPT-Runner Ui 用法](#gpt-runner-ui-用法)
 - [常见问题](#常见问题)
 - [赞助](#赞助)
 - [贡献者](#贡献者)
@@ -79,7 +81,7 @@ gptr ./src
 # npx gptr ./src
 ```
 
-当你运行 gptr 时，它将检索当前目录和整个项目有效文件中的全局配置文件 [gptr.config.json](https://github.com/nicepkg/gpt-runner/tree/main/docs/gptr.config.json) 和 [*.gpt.md](https://github.com/nicepkg/gpt-runner/tree/main/docs/example-cn.gpt.md) AI 预设文件，然后在浏览器中打开一个 Web AI 聊天窗口。
+当你运行 gptr 时，它将检索当前目录和整个项目有效文件中的全局配置文件 [gptr.config.json](https://github.com/nicepkg/gpt-runner/tree/main/docs/examples/gptr.config.json) 和 [*.gpt.md](https://github.com/nicepkg/gpt-runner/tree/main/docs/examples/example-cn.gpt.md) AI 预设文件，然后在浏览器中打开一个 Web AI 聊天窗口。
 
 现在，你可以在浏览器的 [http://localhost:3003](http://localhost:3003) 上看到 GPT-Runner 的 Web 界面。
 
@@ -89,7 +91,7 @@ gptr ./src
 
 - `-p，--port [端口号]`：此选项允许您指定服务器监听的端口号。默认值为 `3003` 。如果您希望修改这个值，只需在您的命令后面添加此选项，然后跟上您想要的端口号。例如：`--port 8080` 。
 
-- `-c，--config [文件路径]`：此选项允许您指定 GPT-Runner 的全局配置文件路径。如果您的配置文件不在默认位置，或者您有多个配置文件，您可以使用此选项告诉 GPT-Runner 使用哪个文件。例如，如果您在项目的根目录中有一个名为 [gptr.config.json](https://github.com/nicepkg/gpt-runner/tree/main/docs/gptr.config.json) 的配置文件，您可以如下使用此选项：`--config ./gptr.config.json`。当然我们会默认检测 gptr 运行目录下的 [gptr.config.json](https://github.com/nicepkg/gpt-runner/tree/main/docs/gptr.config.json)。
+- `-c，--config [文件路径]`：此选项允许您指定 GPT-Runner 的全局配置文件路径。如果您的配置文件不在默认位置，或者您有多个配置文件，您可以使用此选项告诉 GPT-Runner 使用哪个文件。例如，如果您在项目的根目录中有一个名为 [gptr.config.json](https://github.com/nicepkg/gpt-runner/tree/main/docs/examples/gptr.config.json) 的配置文件，您可以如下使用此选项：`--config ./gptr.config.json`。当然我们会默认检测 gptr 运行目录下的 [gptr.config.json](https://github.com/nicepkg/gpt-runner/tree/main/docs/examples/gptr.config.json)。
 
 - `--share`：此标志通过一个临时链接分享正在运行的服务器。它不需要一个值，你可以简单地添加它来启用分享功能。例如：`gptr --share` 。首次分享时需要下载一些依赖，所以会比较慢。
 
@@ -103,17 +105,23 @@ gptr ./src
 gptr --port 8080 --config ./gptr.config.json --share --no-open --debug
 ```
 
-在这个例子中，GPT-Runner CLI 将在端口 8080 上启动一个服务器，使用 [gptr.config.json](https://github.com/nicepkg/gpt-runner/tree/main/docs/gptr.config.json) 的配置文件，分享服务器链接，不自动在浏览器中打开，并以调试模式运行。
+在这个例子中，GPT-Runner CLI 将在端口 8080 上启动一个服务器，使用 [gptr.config.json](https://github.com/nicepkg/gpt-runner/tree/main/docs/examples/gptr.config.json) 的配置文件，分享服务器链接，不自动在浏览器中打开，并以调试模式运行。
 
-## GPT-Runner 文件
+## 文档
 
-关于 `.gpt-runner` 目录和 `*.gpt.md` 文件和 `gptr.config.json` 文件详细介绍请看这里：
+### GPT-Runner 配置和 AI 预设文件
 
-[GPT-Runner 文件介绍](https://github.com/nicepkg/gpt-runner/blob/main/docs/gpt-config-cn.gpt.md)
+关于 `gptr.config.json` 配置文件、`xxx.gpt.md` AI 预设文件、`.gpt-runner` 特殊目录的详细介绍请参见这里：
+
+[GPT-Runner 配置和 AI 预设文件](https://github.com/nicepkg/gpt-runner/blob/main/docs/gpt-config.cn.md)
+
+### GPT-Runner Ui 用法
+
+[GPT-Runner Ui使用介绍](https://github.com/nicepkg/gpt-runner/blob/main/docs/ui-usage.cn.md)
 
 ## 常见问题
 
-[简体中文 > 常见问题](https://github.com/nicepkg/gpt-runner/tree/main/docs/faq-cn.md)
+[简体中文 > 常见问题](https://github.com/nicepkg/gpt-runner/tree/main/docs/faq.cn.md)
 
 ## 赞助
 

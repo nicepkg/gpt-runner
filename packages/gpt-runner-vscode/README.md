@@ -20,7 +20,9 @@ This extension helps you manage AI presets and drive conversations with code usi
 - [Features](#features)
 - [Installation](#installation)
 - [Quick Start](#quick-start)
-- [GPT-Runner File](#gpt-runner-file)
+- [Documentation](#documentation)
+  - [GPT-Runner Configs And AI Preset Files](#gpt-runner-configs-and-ai-preset-files)
+  - [GPT-Runner Ui Usage](#gpt-runner-ui-usage)
 - [Common Questions](#common-questions)
 - [Sponsor](#sponsor)
 - [Contributors](#contributors)
@@ -61,15 +63,22 @@ Or, click here to install [GPT-Runner VSCode Extension](https://marketplace.visu
 > 1. Note the chat icon in the top right corner, which is also clickable
 > 2. Note the status bar at the bottom, `🚀 GPT-Runner` is also clickable
 
-## GPT-Runner File
+## Documentation
 
-For a detailed introduction about `.gpt-runner` directory, `*.gpt.md` files, and `gptr.config.json` files, please see here:
+### GPT-Runner Configs And AI Preset Files
 
- [Introduction to GPT-Runner Files](https://github.com/nicepkg/gpt-runner/blob/main/docs/gpt-config-en.gpt.md)
+For details about `gptr.config.json` configuration file, `xxx.gpt.md` AI preset file, `.gpt-runner` special directory, please refer to here:
+
+[Introduction to GPT-Runner Configs And AI Preset Files](https://github.com/nicepkg/gpt-runner/blob/main/docs/gpt-config.en.md)
+
+### GPT-Runner Ui Usage
+
+[Introduction to GPT-Runner Ui Usage](https://github.com/nicepkg/gpt-runner/blob/main/docs/ui-usage.en.md)
+
 
 ## Common Questions
 
-[English > Common Questions](https://github.com/nicepkg/gpt-runner/tree/main/docs/faq-en.md)
+[English > Common Questions](https://github.com/nicepkg/gpt-runner/tree/main/docs/faq.en.md)
 
 ## Sponsor
 

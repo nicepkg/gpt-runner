@@ -23,7 +23,9 @@ GPT-Runner CLI 是一款功能强大的命令行工具，可帮助您管理 AI �
 - [Installation](#installation)
 - [Quick Start](#quick-start)
 - [CLI Commands](#cli-commands)
-- [GPT-Runner File](#gpt-runner-file)
+- [Documentation](#documentation)
+  - [GPT-Runner Configs And AI Preset Files](#gpt-runner-configs-and-ai-preset-files)
+  - [GPT-Runner Ui Usage](#gpt-runner-ui-usage)
 - [FAQ](#faq)
 - [Sponsor](#sponsor)
 - [Contributor](#contributor)
@@ -81,7 +83,7 @@ gptr ./src
 # npx gptr ./src
 ```
 
-When you run gptr, it will retrieve the global config file [gptr.config.json](https://github.com/nicepkg/gpt-runner/tree/main/docs/gptr.config.json) and [*.gpt.md](https://github.com/nicepkg/gpt-runner/tree/main/docs/example-cn.gpt.md) AI preset files in your current directory and the entire project valid files, and then open a web AI chat window in the browser.
+When you run gptr, it will retrieve the global config file [gptr.config.json](https://github.com/nicepkg/gpt-runner/tree/main/docs/examples/gptr.config.json) and [*.gpt.md](https://github.com/nicepkg/gpt-runner/tree/main/docs/examples/example-en.gpt.md) AI preset files in your current directory and the entire project valid files, and then open a web AI chat window in the browser.
 
 You can now see the GPT-Runner's web in your browser at [http://localhost:3003](http://localhost:3003).
 
@@ -91,7 +93,7 @@ You can utilize the following options with GPT-Runner CLI:
 
 - `-p, --port [port number]`: This option allows you to specify the port number for the server to listen on. By default, the value is `3003`. If you wish to modify this, simply append this option followed by the desired port number to your command. For example: `--port 8080`.
 
-- `-c, --config [filepath]`: This option allows you to specify the global configuration file path for GPT-Runner. If your configuration file is not in the default location, or if you have multiple configuration files, you can use this option to tell GPT-Runner which file to use. For example, if you have a configuration called [gptr.config.json](https://github.com/nicepkg/gpt-runner/tree/main/docs/gptr.config.json) in the root of your project file, you can use this option as follows: `--config ./gptr.config.json`. Of course, we will detect [gptr.config.json](https://github.com/nicepkg/gpt-runner/tree/main/docs/gptr.config.json) in the gptr running directory by default.
+- `-c, --config [filepath]`: This option allows you to specify the global configuration file path for GPT-Runner. If your configuration file is not in the default location, or if you have multiple configuration files, you can use this option to tell GPT-Runner which file to use. For example, if you have a configuration called [gptr.config.json](https://github.com/nicepkg/gpt-runner/tree/main/docs/examples/gptr.config.json) in the root of your project file, you can use this option as follows: `--config ./gptr.config.json`. Of course, we will detect [gptr.config.json](https://github.com/nicepkg/gpt-runner/tree/main/docs/examples/gptr.config.json) in the gptr running directory by default.
 
 - `--share`: This flag shares the link to the running server through a temporal link. It doesn't require a value, you can simple add it to enable the sharing feature. For example: `gptr --share`. Some dependencies need to be downloaded when sharing for the first time, so it will be slower.
 
@@ -105,18 +107,25 @@ Here is an example of using all options:
 gptr --port 8080 --config ./gptr.config.json --share --no-open --debug
 ```
 
-In this example, the GPT-Runner CLI will start a server available at port 8080, use the [gptr.config.json](https://github.com/nicepkg/gpt-runner/tree/main/docs/gptr.config.json) configuration file, share the server link, not automatically open in the browser, and run in debug mode.
+In this example, the GPT-Runner CLI will start a server available at port 8080, use the [gptr.config.json](https://github.com/nicepkg/gpt-runner/tree/main/docs/examples/gptr.config.json) configuration file, share the server link, not automatically open in the browser, and run in debug mode.
 
 
-## GPT-Runner File
+## Documentation
 
-For a detailed introduction about `.gpt-runner` directory, `*.gpt.md` files, and `gptr.config.json` files, please see here:
+### GPT-Runner Configs And AI Preset Files
 
-[Introduction to GPT-Runner Files](https://github.com/nicepkg/gpt-runner/blob/main/docs/gpt-config-en.gpt.md)
+For details about `gptr.config.json` configuration file, `xxx.gpt.md` AI preset file, `.gpt-runner` special directory, please refer to here:
+
+[Introduction to GPT-Runner Configs And AI Preset Files](https://github.com/nicepkg/gpt-runner/blob/main/docs/gpt-config.en.md)
+
+### GPT-Runner Ui Usage
+
+[Introduction to GPT-Runner Ui Usage](https://github.com/nicepkg/gpt-runner/blob/main/docs/ui-usage.en.md)
+
   
 ## FAQ
 
-[English > FAQ](https://github.com/nicepkg/gpt-runner/tree/main/docs/faq-en.md)
+[English > FAQ](https://github.com/nicepkg/gpt-runner/tree/main/docs/faq.en.md)
 
 ## Sponsor
 
