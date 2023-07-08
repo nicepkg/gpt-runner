@@ -23,6 +23,7 @@ GPT-Runner CLI 是一款功能强大的命令行工具，可帮助您管理 AI �
 - [Installation](#installation)
 - [Quick Start](#quick-start)
 - [CLI Commands](#cli-commands)
+- [GPT-Runner File](#gpt-runner-file)
 - [FAQ](#faq)
 - [Sponsor](#sponsor)
 - [Contributor](#contributor)
@@ -43,7 +44,7 @@ GPT-Runner CLI 是一款功能强大的命令行工具，可帮助您管理 AI �
 
 > 1. Requirements NodeJS >= 16.15.0
 >     - To check your NodeJS version, run `node -v` in your terminal. If you need to install or update NodeJS, visit [the official NodeJS website](https://nodejs.org/) for download and installation instructions.
-> 2. Make sure you have an Open AI Key or a free ChatGPT account.
+> 2. Make sure you have an Open AI Key or a Anthropic Key. You can get it from [Open AI](https://platform.openai.com/) or [Anthropic](https://www.anthropic.com/).
 > 3. Slow installation is normal, because the package is a bit big.
 
 To install the GPT-Runner CLI, use npm:
@@ -106,8 +107,13 @@ gptr --port 8080 --config ./gptr.config.json --share --no-open --debug
 
 In this example, the GPT-Runner CLI will start a server available at port 8080, use the [gptr.config.json](https://github.com/nicepkg/gpt-runner/tree/main/docs/gptr.config.json) configuration file, share the server link, not automatically open in the browser, and run in debug mode.
 
-For more detailed guidance, please refer to the project [documentation](https://gpt-runner.nicepkg.cn/).
 
+## GPT-Runner File
+
+For a detailed introduction about `.gpt-runner` directory, `*.gpt.md` files, and `gptr.config.json` files, please see here:
+
+[Introduction to GPT-Runner Files](https://github.com/nicepkg/gpt-runner/blob/main/docs/gpt-config-en.gpt.md)
+  
 ## FAQ
 
 [English > FAQ](https://github.com/nicepkg/gpt-runner/tree/main/docs/faq-en.md)

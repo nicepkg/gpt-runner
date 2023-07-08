@@ -16,11 +16,11 @@
 
 [终端工具](https://github.com/nicepkg/gpt-runner/tree/main/packages/gpt-runner-cli/) / [网页版](https://github.com/nicepkg/gpt-runner/tree/main/packages/gpt-runner-web/) / [VSCode 扩展](https://github.com/nicepkg/gpt-runner/tree/main/packages/gpt-runner-vscode/) / [反馈](https://github.com/Yidadaa/ChatGPT-Next-Web/issues) / [打赏开发者](https://github.com/nicepkg/gpt-runner/assets/35005637/98a4962a-8a2e-4177-8781-1e1ee886ecdc)
 
-[cli-url]: https://github.com/nicepkg/gpt-runner/tree/main/packages/gpt-runner-cli/
+[cli-url]: https://github.com/nicepkg/gpt-runner/blob/main/packages/gpt-runner-cli/README_CN.md
 [cli-image]: https://img.shields.io/badge/CLI-Node.js-green?logo=node.js
-[web-url]: https://github.com/nicepkg/gpt-runner/tree/main/packages/gpt-runner-web/
+[web-url]: https://github.com/nicepkg/gpt-runner/tree/main/packages/gpt-runner-web/README_CN.md
 [web-image]: https://img.shields.io/badge/Web-React-blue?logo=react
-[vscode-url]: https://github.com/nicepkg/gpt-runner/tree/main/packages/gpt-runner-vscode/
+[vscode-url]: https://github.com/nicepkg/gpt-runner/tree/main/packages/gpt-runner-vscode/README_CN.md
 [vscode-image]: https://img.shields.io/badge/VSCode-Extension-blue?logo=visualstudiocode
 
 </div>
@@ -33,7 +33,7 @@
 - [快速开始](#快速开始)
   - [方式一：CLI](#方式一cli)
   - [方式二：VSCode 扩展](#方式二vscode-扩展)
-- [文档](#文档)
+- [GPT-Runner 文件](#gpt-runner-文件)
 - [开发计划](#开发计划)
 - [最新动态](#最新动态)
 - [常见问题](#常见问题)
@@ -66,13 +66,15 @@
 
 ## 快速开始
 
-> 1. 要求 NodeJS >= 16.15.0
->    - 要检查您的 NodeJS 版本，请在终端中运行 `node -v`。如果您需要安装或更新 NodeJS，请访问 [官方 NodeJS 网站](https://nodejs.org/) 以获取下载和安装说明。
->
-> 2. 确保你有一个 Open AI Key 或一个免费的 ChatGPT 账号。
-> 3. 确保你的命令终端能 ping 通 api.openai.com （如果你在中国大陆，你可能需要科学上网）。
+> 确保你有一个 Open AI Key 或 Anthropic Key，如果没有，请访问 [Open AI](https://platform.openai.com/) 或 [Anthropic](https://www.anthropic.com/product/) 申请。
+> 2. 确保你的命令终端能 ping 通 google.com （如果你在中国大陆，你可能需要科学上网）。
 
 ### 方式一：CLI
+
+
+> 1. 要求 NodeJS >= 16.15.0
+>    - 要检查您的 NodeJS 版本，请在终端中运行 `node -v`。如果您需要安装或更新 NodeJS，请访问 [官方 NodeJS 网站](https://nodejs.org/) 以获取下载和安装说明。
+> 2. 首次执行以下命令会下载这个包，时间会比较长，这是正常的。
 
 ```bash
 cd <你的项目路径>
@@ -83,11 +85,15 @@ npx gptr
 
 ### 方式二：VSCode 扩展
 
+> 要求 VSCode >= 1.72.0
+
 从 VSCode Marketplace 安装 [GPT-Runner VSCode 扩展](https://marketplace.visualstudio.com/items?itemName=nicepkg.gpt-runner)。
 
-## 文档
+## GPT-Runner 文件
 
-阅读 [文档](https://gpt-runner.nicepkg.cn/) 以获取安装说明、使用指南和有关 GPT-Runner 功能的更多详细信息。
+关于 `.gpt-runner` 目录和 `*.gpt.md` 文件和 `gptr.config.json` 文件详细介绍请看这里：
+
+ [GPT-Runner 文件介绍](https://github.com/nicepkg/gpt-runner/blob/main/docs/gpt-config-cn.gpt.md)
 
 ## 开发计划
 

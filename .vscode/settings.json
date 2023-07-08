@@ -30,6 +30,7 @@
     "dylib",
     "esbuild",
     "esno",
+    "excludesfile",
     "execa",
     "fetti",
     "fettis",

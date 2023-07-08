@@ -37,7 +37,7 @@ Use GPT-Runner to manage your AI presets, engage in AI-powered conversations wit
 - [Quick Start](#quick-start)
   - [The first way: CLI](#the-first-way-cli)
   - [The second way:  VSCode Extension](#the-second-way--vscode-extension)
-- [Documentation](#documentation)
+- [GPT-Runner File](#gpt-runner-file)
 - [Road map](#road-map)
 - [What's New](#whats-new)
 - [FAQ](#faq)
@@ -71,11 +71,15 @@ Use GPT-Runner to manage your AI presets, engage in AI-powered conversations wit
 
 ## Quick Start
 
-> 1. Requirements NodeJS >= 16.15.0
->     - To check your NodeJS version, run `node -v` in your terminal. If you need to install or update NodeJS, visit [the official NodeJS website](https://nodejs.org/) for download and installation instructions.
-> 2. Make sure you have an Open AI Key or a free ChatGPT account.
+> Make sure you have an Open AI Key or a Anthropic Key. You can get it from [Open AI](https://platform.openai.com/) or [Anthropic](https://www.anthropic.com/).
+
 
 ### The first way: CLI
+
+> 1. Requirements NodeJS >= 16.15.0
+>     - To check your NodeJS version, run `node -v` in your terminal. If you need to install or update NodeJS, visit [the official NodeJS website](https://nodejs.org/) for download and installation instructions.
+> 2. First run the following command to download this package, which will take a long time, which is normal.
+
 
 ```bash
 cd <your project folder>
@@ -86,11 +90,15 @@ You can see the web interface in your browser at [http://localhost:3003](http://
 
 ### The second way:  VSCode Extension
 
+> Requirements VSCode >= 1.72.0
+
 Install the [GPT-Runner VSCode Extension](https://marketplace.visualstudio.com/items?itemName=nicepkg.gpt-runner) from the VSCode Marketplace.
 
-## Documentation
+## GPT-Runner File
 
-Read the [documentation](https://gpt-runner.nicepkg.cn/) for installation instructions, usage guide, and more details on GPT-Runner's features.
+For a detailed introduction about `.gpt-runner` directory, `*.gpt.md` files, and `gptr.config.json` files, please see here:
+
+[Introduction to GPT-Runner Files](https://github.com/nicepkg/gpt-runner/blob/main/docs/gpt-config-en.gpt.md)
 
 ## Road map
 

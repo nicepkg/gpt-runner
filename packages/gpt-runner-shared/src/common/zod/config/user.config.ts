@@ -38,6 +38,7 @@ export const UserConfigSchema = z.object({
 
 export const UserConfigForUserSchema = UserConfigSchema.omit({
   rootPath: true,
+  exts: true,
 }) satisfies z.ZodType<UserConfigForUser>
 
 export const SingleChatMessageSchema = z.object({
