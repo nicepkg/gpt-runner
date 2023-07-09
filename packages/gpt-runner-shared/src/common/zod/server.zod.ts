@@ -1,7 +1,7 @@
 import { z } from 'zod'
 import type { ChatStreamReqParams, CreateFilePathReqParams, DeleteFilePathReqParams, GetCommonFilesReqParams, GetFileInfoReqParams, GetGptFileInfoReqParams, GetGptFilesReqParams, GetUserConfigReqParams, InitGptFilesReqParams, OpenEditorReqParams, RenameFilePathReqParams, SaveFileContentReqParams, StorageClearReqParams, StorageGetItemReqParams, StorageRemoveItemReqParams, StorageSetItemReqParams } from '../types'
 import { PartialChatModelTypeMapSchema, SingleChatMessageSchema, SingleFileConfigSchema } from './config'
-import { ServerStorageNameSchema } from './enum.zod'
+import { ChatModelTypeSchema, ServerStorageNameSchema } from './enum.zod'
 
 export const ChatStreamReqParamsSchema = z.object({
   messages: z.array(SingleChatMessageSchema),
@@ -10,6 +10,7 @@ export const ChatStreamReqParamsSchema = z.object({
   appendSystemPrompt: z.string().optional(),
   singleFilePath: z.string().optional(),
   singleFileConfig: SingleFileConfigSchema.optional(),
+  overrideModelType: ChatModelTypeSchema.optional(),
   overrideModelsConfig: PartialChatModelTypeMapSchema.optional(),
   contextFilePaths: z.array(z.string()).optional(),
   editingFilePath: z.string().optional(),

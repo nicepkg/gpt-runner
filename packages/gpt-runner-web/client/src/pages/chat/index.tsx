@@ -244,6 +244,9 @@ const Chat: FC = memo(() => {
           style={{
             flex: 1,
           }}
+          tabListStyles={{
+            justifyContent: 'flex-start',
+          }}
         />
         : renderChatPanel()}
 

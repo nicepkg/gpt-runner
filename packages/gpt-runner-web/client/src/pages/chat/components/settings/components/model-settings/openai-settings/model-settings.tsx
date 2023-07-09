@@ -1,4 +1,4 @@
-import type { OpenaiModelConfig, SingleFileConfig } from '@nicepkg/gpt-runner-shared/common'
+import { ChatModelType, type OpenaiModelConfig, type SingleFileConfig } from '@nicepkg/gpt-runner-shared/common'
 import { memo, useState } from 'react'
 import type { FC } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -145,7 +145,11 @@ export const OpenaiModelSettings: FC<OpenaiModelSettingsProps> = memo((props) =>
     },
   ]
 
-  return <BaseModelSettings singleFileConfig={singleFileConfig} formConfig={formConfig} />
+  return <BaseModelSettings
+    modelType={ChatModelType.Openai}
+    singleFileConfig={singleFileConfig}
+    formConfig={formConfig}
+  />
 })
 
 OpenaiModelSettings.displayName = 'OpenaiModelSettings'

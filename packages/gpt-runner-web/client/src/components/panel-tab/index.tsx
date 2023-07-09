@@ -11,7 +11,7 @@ export interface PanelTabProps<T extends string = string> extends Pick<TabProps<
   style?: CSSProperties
 }
 
-export function PanelTab_<T extends string = string>(props: PanelTabProps<T>) {
+function PanelTab_<T extends string = string>(props: PanelTabProps<T>) {
   const { style, ...otherProps } = props
 
   return (

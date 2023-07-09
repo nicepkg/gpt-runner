@@ -10,22 +10,40 @@ import { OpenaiModelSettings } from './openai-settings/model-settings'
 
 export type ModelSettingsViewType = 'secrets' | 'model' | 'title'
 
-export interface ModelSettingsProps {
+export interface ModelSettingsBaseViewProps {
+  viewType: ModelSettingsViewType
+}
+
+export interface ModelSettingsTitleViewProps extends ModelSettingsBaseViewProps {
+  viewType: 'title'
+  modelType?: ChatModelType
+}
+
+export interface ModelSettingsSecretsViewProps extends ModelSettingsBaseViewProps {
+  viewType: 'secrets'
+  modelType: ChatModelType
+}
+
+export interface ModelSettingsModelViewProps extends ModelSettingsBaseViewProps {
+  viewType: 'model'
+  modelType?: ChatModelType
   rootPath?: string
   singleFilePath?: string
   singleFileConfig?: SingleFileConfig
   userConfig?: UserConfig
-  modelType?: ChatModelType
-  viewType: ModelSettingsViewType
 }
 
+export type ModelSettingsProps = ModelSettingsTitleViewProps | ModelSettingsSecretsViewProps | ModelSettingsModelViewProps
+
+type ModelSettingsPropsMerge = Omit<ModelSettingsTitleViewProps, 'viewType'> & Omit<ModelSettingsSecretsViewProps, 'viewType'> & Omit<ModelSettingsModelViewProps, 'viewType'> & { viewType: ModelSettingsViewType }
+
 export const ModelSettings: FC<ModelSettingsProps> = memo((props) => {
-  const { rootPath, singleFilePath, singleFileConfig: singleFileConfigFromParams, userConfig: userConfigFromParams, viewType, modelType } = props
+  const { rootPath, singleFilePath, singleFileConfig: singleFileConfigFromParams, userConfig: userConfigFromParams, viewType, modelType } = props as ModelSettingsPropsMerge
 
   const { singleFileConfig: singleFileConfigFromRemote, userConfig: userConfigFromRemote } = useUserConfig({
     rootPath,
     singleFilePath,
-    enabled: !singleFileConfigFromParams,
+    enabled: !singleFileConfigFromParams && viewType === 'model',
   })
 
   const singleFileConfig = singleFileConfigFromParams || singleFileConfigFromRemote
@@ -35,11 +53,16 @@ export const ModelSettings: FC<ModelSettingsProps> = memo((props) => {
     if (!userConfig || !singleFileConfig)
       return {}
 
-    return resolveSingleFileConfig({
+    const result = resolveSingleFileConfig({
       userConfig,
       singleFileConfig,
     })
-  }, [singleFileConfig, userConfig])
+
+    if (modelType && result.model?.type !== modelType)
+      return undefined
+
+    return result
+  }, [singleFileConfig, userConfig, modelType])
 
   const finalModelType = modelType || resolvedSingleFileConfig?.model?.type || ChatModelType.Openai
 

@@ -52,7 +52,7 @@
     "cac": "^6.7.14",
     "chokidar": "^3.5.3",
     "colorette": "^2.0.20",
-    "consola": "^3.2.2",
+    "consola": "^3.2.3",
     "execa": "^7.1.1",
     "wait-port": "^1.0.4"
   }

@@ -1,5 +1,5 @@
 import type { StateCreator } from 'zustand'
-import type { PartialChatModelTypeMap, SingleChat } from '@nicepkg/gpt-runner-shared/common'
+import type { ChatModelType, PartialChatModelTypeMap, SingleChat } from '@nicepkg/gpt-runner-shared/common'
 import { ChatMessageStatus, ChatRole, STREAM_DONE_FLAG, travelTree } from '@nicepkg/gpt-runner-shared/common'
 import { v4 as uuidv4 } from 'uuid'
 import type { GetState } from '../types'
@@ -14,9 +14,12 @@ export enum GenerateAnswerType {
   Regenerate = 'regenerate',
 }
 
+export type OverrideModelType = ChatModelType | ''
+
 export interface ChatSlice {
   activeChatId: string
   chatInstances: SingleChat[]
+  overrideModelType: OverrideModelType
   overrideModelsConfig: PartialChatModelTypeMap
   updateActiveChatId: (activeChatId: string) => void
 
@@ -40,6 +43,7 @@ export interface ChatSlice {
   generateChatAnswer: (chatId: string, type?: GenerateAnswerType) => Promise<void>
   regenerateLastChatAnswer: (chatId: string) => Promise<void>
   stopGeneratingChatAnswer: (chatId: string) => void
+  updateOverrideModelType: (overrideModelType: OverrideModelType) => void
   updateOverrideModelsConfig: (overrideModelsConfig: PartialChatModelTypeMap | ((oldModelOverrideConfig: PartialChatModelTypeMap) => PartialChatModelTypeMap)) => void
   getContextFilePaths: () => string[]
 }
@@ -50,6 +54,7 @@ function getInitialState() {
   return {
     activeChatId: '',
     chatInstances: [],
+    overrideModelType: '',
     overrideModelsConfig: {},
   } satisfies ChatState
 }
@@ -300,6 +305,7 @@ export const createChatSlice: StateCreator<
       singleFilePath,
       contextFilePaths,
       editingFilePath: tempState.ideActiveFilePath,
+      overrideModelType: state.overrideModelType || undefined,
       overrideModelsConfig: state.overrideModelsConfig,
       rootPath: getGlobalConfig().rootPath,
       onError(e) {
@@ -352,6 +358,9 @@ export const createChatSlice: StateCreator<
     state.updateChatInstance(chatId, {
       status: ChatMessageStatus.Success,
     }, false)
+  },
+  updateOverrideModelType(overrideModelType) {
+    set({ overrideModelType })
   },
   updateOverrideModelsConfig(overrideModelsConfig) {
     const state = get()

@@ -90,20 +90,10 @@ export const Settings: FC<SettingsProps> = memo((props) => {
       {showModelTypeSecretsSettings.map((modelType) => {
         return <Fragment key={modelType}>
           <FormTitle size="large">
-            <ModelSettings
-              modelType={modelType}
-              userConfig={userConfig}
-              singleFileConfig={singleFileConfig}
-              viewType='title'
-            ></ModelSettings>
+            <ModelSettings viewType='title' ></ModelSettings>
             {` ${t('chat_page.settings_config')}`}
           </FormTitle>
-          <ModelSettings
-            userConfig={userConfig}
-            singleFileConfig={singleFileConfig}
-            viewType='secrets'
-            modelType={modelType}
-          ></ModelSettings>
+          <ModelSettings viewType='secrets' modelType={modelType}></ModelSettings>
         </Fragment>
       })}
     </ConfigInfoWrapper>

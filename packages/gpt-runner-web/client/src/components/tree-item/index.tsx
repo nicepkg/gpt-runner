@@ -29,7 +29,7 @@ export interface TreeItemProps<OtherInfo extends TreeItemBaseStateOtherInfo = Tr
   onContextMenu?: (props: TreeItemState<OtherInfo>) => void
 }
 
-export function TreeItem_<OtherInfo extends TreeItemBaseStateOtherInfo = TreeItemBaseStateOtherInfo>(props: TreeItemProps<OtherInfo>) {
+function TreeItem_<OtherInfo extends TreeItemBaseStateOtherInfo = TreeItemBaseStateOtherInfo>(props: TreeItemProps<OtherInfo>) {
   const { renderLeftSlot, renderRightSlot, onExpand, onCollapse, onClick, onContextMenu, ...baseStateProps } = props
   const {
     name,

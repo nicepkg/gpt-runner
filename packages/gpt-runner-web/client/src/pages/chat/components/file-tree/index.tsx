@@ -377,7 +377,10 @@ export const FileTree: FC<FileTreeProps> = memo((props: FileTreeProps) => {
       updateCheckedFilePaths((preState) => {
         preState.forEach((item) => {
           const file = fullPathFileMap[item]
-          file.otherInfo!.checked = false
+
+          if (file?.otherInfo)
+            file.otherInfo.checked = false
+
           return item
         })
 

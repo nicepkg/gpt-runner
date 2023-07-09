@@ -1,6 +1,6 @@
 import type { FileInfoTree } from './common-file'
 import type { PartialChatModelTypeMap, SingleChatMessage, SingleFileConfig, UserConfig } from './config'
-import type { ServerStorageName } from './enum'
+import type { ChatModelType, ServerStorageName } from './enum'
 import type { GptFileInfo, GptFileInfoTree } from './gpt-file'
 
 export interface BaseResponse<T = any> {
@@ -34,6 +34,7 @@ export interface ChatStreamReqParams {
    * and get the real time singleFileConfig and then provide singleFileConfig to LangchainJs
    */
   singleFileConfig?: SingleFileConfig
+  overrideModelType?: ChatModelType
   overrideModelsConfig?: PartialChatModelTypeMap
   contextFilePaths?: string[]
   editingFilePath?: string

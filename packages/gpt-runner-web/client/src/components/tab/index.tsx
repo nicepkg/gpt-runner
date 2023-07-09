@@ -34,7 +34,7 @@ export interface TabProps<T extends string = string> {
   onChange?: (activeTabId: T) => void
 }
 
-export function Tab_<T extends string = string>(props: TabProps<T>) {
+function Tab_<T extends string = string>(props: TabProps<T>) {
   const {
     defaultActiveId,
     activeId: activeIdFromProp,

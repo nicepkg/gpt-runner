@@ -6,7 +6,7 @@ import * as monaco from 'monaco-editor'
 import type { MonacoEditorInstance } from '../../types/monaco-editor'
 import { useGlobalStore } from '../../store/zustand/global'
 import { isDarkTheme } from '../../styles/themes'
-import { initTsLanguageSettings } from './monaco/init-ts-settings'
+import { initLanguageSettings } from './monaco/init-languages-settings'
 import { createSwitchLanguageCommand } from './monaco/commands/switch-language'
 import { createCtrlSToSaveAction } from './monaco/actions/ctrls-to-save'
 
@@ -87,7 +87,7 @@ export const Editor: FC<EditorProps> = memo((props) => {
     // here is another way to get monaco instance
     // you can also store it in `useRef` for further usage
 
-    initTsLanguageSettings(monaco)
+    initLanguageSettings(monaco)
 
     monacoEditorRef.current = editor
     onMount?.(editor, monaco)
@@ -98,9 +98,9 @@ export const Editor: FC<EditorProps> = memo((props) => {
 
   // register command
   useEffect(() => {
-    const disposes: (() => void)[] = []
-
-    disposes.push(createSwitchLanguageCommand(monacoRef.current, monacoEditorRef.current, extMapLanguage, onLanguageChange))
+    const disposes: (() => void)[] = [
+      createSwitchLanguageCommand(monacoRef.current, monacoEditorRef.current, extMapLanguage, onLanguageChange),
+    ]
 
     return () => {
       disposes.forEach(dispose => dispose())
@@ -109,9 +109,9 @@ export const Editor: FC<EditorProps> = memo((props) => {
 
   // add action
   useEffect(() => {
-    const disposes: (() => void)[] = []
-
-    disposes.push(createCtrlSToSaveAction(monacoRef.current, monacoEditorRef.current, onSave))
+    const disposes: (() => void)[] = [
+      createCtrlSToSaveAction(monacoRef.current, monacoEditorRef.current, onSave),
+    ]
 
     return () => {
       disposes.forEach(dispose => dispose())

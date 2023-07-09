@@ -1,4 +1,4 @@
-import type { AnthropicModelConfig, SingleFileConfig } from '@nicepkg/gpt-runner-shared/common'
+import { type AnthropicModelConfig, ChatModelType, type SingleFileConfig } from '@nicepkg/gpt-runner-shared/common'
 import { memo, useState } from 'react'
 import type { FC } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -131,7 +131,11 @@ export const AnthropicModelSettings: FC<AnthropicModelSettingsProps> = memo((pro
     },
   ]
 
-  return <BaseModelSettings singleFileConfig={singleFileConfig} formConfig={formConfig} />
+  return <BaseModelSettings
+    modelType={ChatModelType.Anthropic}
+    singleFileConfig={singleFileConfig}
+    formConfig={formConfig}
+  />
 })
 
 AnthropicModelSettings.displayName = 'AnthropicModelSettings'

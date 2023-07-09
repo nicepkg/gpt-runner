@@ -43,7 +43,7 @@ export interface HookFormInputProps<
   filterField?: (field: Partial<InputProps>) => Partial<InputProps>
 }
 
-export function HookFormInput_<
+function HookFormInput_<
   TFieldValues extends FieldValues = FieldValues,
 >(props: HookFormInputProps<TFieldValues>) {
   const { label, labelInLeft, name, control, isNumber, maxNumber, minNumber, rules, errors, filterField, ...otherProps }

@@ -24,7 +24,7 @@ export interface HookFormSwitchProps<
   filterField?: (field: Partial<SwitchProps>) => Partial<SwitchProps>
 }
 
-export function HookFormSwitch_<
+function HookFormSwitch_<
   TFieldValues extends FieldValues = FieldValues,
 >(props: HookFormSwitchProps<TFieldValues>) {
   const { label, name, control, rules, errors, filterField, ...otherProps }

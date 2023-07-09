@@ -23,6 +23,7 @@ export const FileContentEditor: FC<FileContentEditorProps> = memo((props) => {
   return <EditorWrapper>
     <Editor
       filePath={item.fullPath}
+      path={item.fullPath}
       value={item.editingContent}
       onChange={(value, e) => {
         onChange?.(value || '', e)

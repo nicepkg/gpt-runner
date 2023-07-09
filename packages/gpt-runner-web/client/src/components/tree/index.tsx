@@ -14,7 +14,7 @@ export interface TreeProps<OtherInfo extends TreeItemBaseStateOtherInfo = TreeIt
   renderTreeItemRightSlot?: TreeItemProps<OtherInfo>['renderRightSlot']
 }
 
-export function Tree_<OtherInfo extends TreeItemBaseStateOtherInfo = TreeItemBaseStateOtherInfo>(props: TreeProps<OtherInfo>) {
+function Tree_<OtherInfo extends TreeItemBaseStateOtherInfo = TreeItemBaseStateOtherInfo>(props: TreeProps<OtherInfo>) {
   const {
     items,
     buildTreeItem,

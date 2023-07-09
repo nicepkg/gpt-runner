@@ -33,7 +33,7 @@ export interface HookFormSelectProps<
   filterField?: (field: Partial<SelectProps>) => Partial<SelectProps>
 }
 
-export function HookFormSelect_<
+function HookFormSelect_<
   TFieldValues extends FieldValues = FieldValues,
 >(props: HookFormSelectProps<TFieldValues>) {
   const { label, name, options, control, rules, errors, filterField, ...otherProps }

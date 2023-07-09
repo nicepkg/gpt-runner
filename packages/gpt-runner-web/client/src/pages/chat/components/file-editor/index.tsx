@@ -104,6 +104,7 @@ export const FileEditor: FC<FileEditorProps> = memo((props) => {
   const fileTabItems = useMemo<TabItem<string>[]>(() => {
     return fileEditorItems.map((item) => {
       const itemRenderInfo = fullPathMapRenderInfo[item.fullPath]
+
       const onItemUpdate = (item: FileEditorItem) => {
         updateFileEditorItem(item.fullPath, item)
       }
