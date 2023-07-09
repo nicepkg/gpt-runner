@@ -1,9 +1,9 @@
 <div align="center">
 <img src="https://github.com/nicepkg/vr360/assets/35005637/102953c3-e804-46db-b0b3-acc26a8d37da" alt="icon"/>
 
-<h1 align="center">GPT-Runner VSCode</h1>
+<h1 align="center">GPT-Runner VSCode 🧑‍💻</h1>
 
-[简体中文](https://github.com/nicepkg/gpt-runner/tree/main/packages/gpt-runner-vscode/README_CN.md) / English
+[简体中文 🌏](https://github.com/nicepkg/gpt-runner/tree/main/packages/gpt-runner-vscode/README_CN.md) / English
 
 [![VSCode](https://img.shields.io/badge/VSCode-Extension-blue?logo=visualstudiocode)](https://marketplace.visualstudio.com/items?itemName=nicepkg.gpt-runner) [![License](https://img.shields.io/github/license/nicepkg/gpt-runner)](https://github.com/nicepkg/gpt-runner/blob/main/LICENSE)
 ![GitHub stars](https://img.shields.io/github/stars/nicepkg/gpt-runner?style=social)
@@ -15,35 +15,35 @@ This extension helps you manage AI presets and drive conversations with code usi
 </div>
 
 <details>
-<summary>Contents</summary><br>
+<summary> 📚 Table of Contents</summary><br>
 
-- [Features](#features)
-- [Installation](#installation)
-- [Quick Start](#quick-start)
-- [Documentation](#documentation)
+- [⚙️ Features](#️-features)
+- [📦 Installation](#-installation)
+- [🚀 Quick Start](#-quick-start)
+- [📖 Documentation](#-documentation)
   - [GPT-Runner Configs And AI Preset Files](#gpt-runner-configs-and-ai-preset-files)
   - [GPT-Runner Ui Usage](#gpt-runner-ui-usage)
-- [Common Questions](#common-questions)
-- [Sponsor](#sponsor)
-- [Contributors](#contributors)
-- [License](#license)
+- [❓ FAQ](#-faq)
+- [💖 Sponsor](#-sponsor)
+- [🤝 Contributors](#-contributors)
+- [📜 License](#-license)
 
 <br></details>
 
-## Features
+## ⚙️ Features
 
-- **Real-time context:** It can observe the files you have edited and the text you have selected to answer your questions.
-- **Multiple chat window instances:** You can not only open a chat in the sidebar, but you can also open a chat page in the editor.
-- **Responsive UI:** It adjusts its layout automatically based on the current window width.
-- **Shareable LAN links:** Click the `🚀 GPT-Runner` at the bottom to open it in the browser.
-- **Conversation with code files:** Select files or folders to chat with AI in real-time.
-- **Manage your AI presets:** Manage your AI presets, it's like the local Storybook for AI presets.
-- **Custom AI Parameters:** Flexible control over the configuration of AI models.
-- **Support for third-party LLMs:** High compatibility and adaptability.
-- **Privacy-First:** Local data storage to protect your privacy.
-- **Localization:** Support for multiple languages.
+- **📁 Real-time context:** It can observe the files you have edited and the text you have selected to answer your questions.
+- **🖥️ Multiple chat window instances:** You can not only open a chat in the sidebar, but you can also open a chat page in the editor.
+- **📱 Responsive UI:** It adjusts its layout automatically based on the current window width.
+- **🔗 Shareable LAN links:** Click the `🚀 GPT-Runner` at the bottom to open it in the browser.
+- **🔍 Conversation with code files:** Select files or folders to chat with AI in real-time.
+- **🔖 Manage your AI presets:** Manage your AI presets, it's like the local Storybook for AI presets.
+- **🤖 Custom AI Parameters:** Flexible control over the configuration of AI models.
+- **🔌 Support for third-party LLMs:** High compatibility and adaptability.
+- **🔒 Privacy-First:** Local data storage to protect your privacy.
+- **🌎 Localization:** Support for multiple languages.
 
-## Installation
+## 📦 Installation
 
 > 1. Requires VSCode >= 1.72.0
 > 2. Make sure you have an Open AI Key or Anthropic Key. If you do not have, please visit [Open AI](https://platform.openai.com/account/api-keys) or [Anthropic](https://www.anthropic.com/product/) to apply.
@@ -52,7 +52,7 @@ You can search `GPT Runner` in the VSCode Extension Marketplace for installation
 
 Or, click here to install [GPT-Runner VSCode Extension](https://marketplace.visualstudio.com/items?itemName=nicepkg.gpt-runner).
 
-## Quick Start
+## 🚀 Quick Start
 
 1. Open a project and click on the chat icon on the sidebar.
 2. Click to confirm the initialization of the `.gpt.md` file.
@@ -63,7 +63,7 @@ Or, click here to install [GPT-Runner VSCode Extension](https://marketplace.visu
 > 1. Note the chat icon in the top right corner, which is also clickable
 > 2. Note the status bar at the bottom, `🚀 GPT-Runner` is also clickable
 
-## Documentation
+## 📖 Documentation
 
 ### GPT-Runner Configs And AI Preset Files
 
@@ -76,15 +76,15 @@ For details about `gptr.config.json` configuration file, `xxx.gpt.md` AI preset 
 [Introduction to GPT-Runner Ui Usage](https://github.com/nicepkg/gpt-runner/blob/main/docs/ui-usage.en.md)
 
 
-## Common Questions
+## ❓ FAQ
 
-[English > Common Questions](https://github.com/nicepkg/gpt-runner/tree/main/docs/faq.en.md)
+[English > FAQ](https://github.com/nicepkg/gpt-runner/tree/main/docs/faq.en.md)
 
-## Sponsor
+## 💖 Sponsor
 
 Waiting for your sponsorship...
 
-## Contributors
+## 🤝 Contributors
 
 You can check out our [Contribution Guidelines](https://github.com/nicepkg/gpt-runner/tree/main/CONTRIBUTING.md)
 
@@ -94,6 +94,6 @@ This project exists thanks to all the people who contribute:
   <img src="https://contrib.rocks/image?repo=nicepkg/gpt-runner" />
 </a>
 
-## License
+## 📜 License
 
 [MIT](https://github.com/nicepkg/gpt-runner/tree/main/LICENSE) License &copy; 2023-PRESENT [Jinming Yang](https://github.com/2214962083)

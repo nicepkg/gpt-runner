@@ -1,47 +1,47 @@
 <div align="center">
 <img src="https://github.com/nicepkg/vr360/assets/35005637/102953c3-e804-46db-b0b3-acc26a8d37da" alt="icon"/>
 
-<h1 align="center">GPT-Runner CLI</h1>
+<h1 align="center">GPT-Runner CLI 🛠️</h1>
 
-English / [简体中文](https://github.com/nicepkg/gpt-runner/tree/main/packages/gpt-runner-cli/README_CN.md)
+English / [简体中文 🌏](https://github.com/nicepkg/gpt-runner/tree/main/packages/gpt-runner-cli/README_CN.md)
 
 [![npm](https://img.shields.io/npm/v/@nicepkg/gpt-runner-cli.svg)](https://www.npmjs.com/package/@nicepkg/gpt-runner-cli)
 [![CLI](https://img.shields.io/badge/CLI-Node.js-green?logo=node.js)](https://github.com/nicepkg/gpt-runner/tree/main/packages/gpt-runner-cli/)
 [![License](https://img.shields.io/github/license/nicepkg/gpt-runner)](https://github.com/nicepkg/gpt-runner/blob/main/LICENSE)
 ![GitHub stars](https://img.shields.io/github/stars/nicepkg/gpt-runner?style=social)
 
-The GPT-Runner CLI is a powerful command-line tool that helps you manage your AI presets and engage in AI-powered conversations with your code to significantly boost your development efficiency.
+The GPT-Runner CLI is a powerful command-line tool that helps you manage your AI presets and engage in AI-powered conversations with your code to significantly boost your development efficiency 💪.
 
-GPT-Runner CLI 是一款功能强大的命令行工具，可帮助您管理 AI 预设并与代码进行 AI 驱动的对话，从而显着提高您的开发效率。
+GPT-Runner CLI 是一款功能强大的命令行工具，可帮助您管理 AI 预设并与代码进行 AI 驱动的对话，从而显着提高您的开发效率 💪。
 
 </div>
 
 <details>
-<summary>Table of Contents</summary><br>
+<summary> 📚 Table of Contents</summary><br>
 
-- [Features](#features)
-- [Installation](#installation)
-- [Quick Start](#quick-start)
-- [CLI Commands](#cli-commands)
-- [Documentation](#documentation)
+- [⚙️ Features](#️-features)
+- [📦 Installation](#-installation)
+- [🚀 Quick Start](#-quick-start)
+- [💡 CLI Commands](#-cli-commands)
+- [📖 Documentation](#-documentation)
   - [GPT-Runner Configs And AI Preset Files](#gpt-runner-configs-and-ai-preset-files)
   - [GPT-Runner Ui Usage](#gpt-runner-ui-usage)
-- [FAQ](#faq)
-- [Sponsor](#sponsor)
-- [Contributor](#contributor)
-- [License](#license)
+- [❓ FAQ](#-faq)
+- [💖 Sponsor](#-sponsor)
+- [🤝 Contributor](#-contributor)
+- [📜 License](#-license)
 
 <br></details>
 
-## Features
+## ⚙️ Features
 
-- **Start GPT-Runner Server:** Quickly start a local development server for GPT-Runner with a simple command.
-- **Customizable Server Port:** Specify the server port
-- **Customizable Global Configuration:** Specify the path to the global configuration file of GPT-Runner.
-- **Shareable Server Link:** Share the running server through a temporal link.
-- **Debugging Support:** Run the server in debug mode to facilitate troubleshooting.
+- **⚡ Start GPT-Runner Server:** Quickly start a local development server for GPT-Runner with a simple command.
+- **🔧 Customizable Server Port:** Specify the server port
+- **🌍 Customizable Global Configuration:** Specify the path to the global configuration file of GPT-Runner.
+- **🔄 Shareable Server Link:** Share the running server through a temporal link.
+- **🐞 Debugging Support:** Run the server in debug mode to facilitate troubleshooting.
 
-## Installation
+## 📦 Installation
 
 
 > 1. Requirements NodeJS >= 16.15.0
@@ -63,7 +63,7 @@ gptr --version
 
 This command tells npm (Node.js package manager) to install GPT-Runner CLI globally. Among them, the `-g` option means global installation, which means you can run GPT-Runner CLI anywhere.
 
-## Quick Start
+## 🚀 Quick Start
 
 Go to your project folder and type the following command:
 
@@ -87,7 +87,7 @@ When you run gptr, it will retrieve the global config file [gptr.config.json](ht
 
 You can now see the GPT-Runner's web in your browser at [http://localhost:3003](http://localhost:3003).
 
-## CLI Commands
+## 💡 CLI Commands
 
 You can utilize the following options with GPT-Runner CLI:
 
@@ -110,7 +110,7 @@ gptr --port 8080 --config ./gptr.config.json --share --no-open --debug
 In this example, the GPT-Runner CLI will start a server available at port 8080, use the [gptr.config.json](https://github.com/nicepkg/gpt-runner/tree/main/docs/examples/gptr.config.json) configuration file, share the server link, not automatically open in the browser, and run in debug mode.
 
 
-## Documentation
+## 📖 Documentation
 
 ### GPT-Runner Configs And AI Preset Files
 
@@ -123,15 +123,15 @@ For details about `gptr.config.json` configuration file, `xxx.gpt.md` AI preset 
 [Introduction to GPT-Runner Ui Usage](https://github.com/nicepkg/gpt-runner/blob/main/docs/ui-usage.en.md)
 
   
-## FAQ
+## ❓ FAQ
 
 [English > FAQ](https://github.com/nicepkg/gpt-runner/tree/main/docs/faq.en.md)
 
-## Sponsor
+## 💖 Sponsor
 
 Waiting for you...
 
-## Contributor
+## 🤝 Contributor
 
 You can check out our [Contribution Guidelines](https://github.com/nicepkg/gpt-runner/tree/main/CONTRIBUTING.md)
 
@@ -141,6 +141,6 @@ This project exists thanks to all the people who contribute:
   <img src="https://contrib.rocks/image?repo=nicepkg/gpt-runner" />
 </a>
 
-## License
+## 📜 License
 
 [MIT](https://github.com/nicepkg/gpt-runner/tree/main/LICENSE) License &copy; 2023-PRESENT [Jinming Yang](https://github.com/2214962083)

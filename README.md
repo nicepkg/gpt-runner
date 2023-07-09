@@ -3,7 +3,7 @@
 
 <h1 align="center">GPT Runner</h1>
 
-English / [简体中文](https://github.com/nicepkg/gpt-runner/tree/main/README_CN.md)
+English / [简体中文 🌏](https://github.com/nicepkg/gpt-runner/tree/main/README_CN.md)
 
 Use GPT-Runner to manage your AI presets, engage in AI-powered conversations with your code, and significantly boost the development efficiency of both you and your team!
 
@@ -30,48 +30,48 @@ Use GPT-Runner to manage your AI presets, engage in AI-powered conversations wit
 </div>
 
 <details>
-<summary>Table of Contents</summary><br>
+<summary>📚 Table of Contents</summary><br>
 
-- [Why GPT-Runner?](#why-gpt-runner)
-- [Features](#features)
-- [Quick Start](#quick-start)
+- [🤷‍♂️ Why GPT-Runner?](#️-why-gpt-runner)
+- [⚙️ Features](#️-features)
+- [🚀 Quick Start](#-quick-start)
   - [The first way: CLI](#the-first-way-cli)
   - [The second way:  VSCode Extension](#the-second-way--vscode-extension)
-- [Documentation](#documentation)
+- [📖 Documentation](#-documentation)
   - [GPT-Runner Configs And AI Preset Files](#gpt-runner-configs-and-ai-preset-files)
   - [GPT-Runner Ui Usage](#gpt-runner-ui-usage)
-- [Road map](#road-map)
-- [What's New](#whats-new)
-- [FAQ](#faq)
-- [Sponsor](#sponsor)
-- [Contributor](#contributor)
-- [Acknowledgement](#acknowledgement)
-- [LICENSE](#license)
+- [🗒️ Road map](#️-road-map)
+- [🆕 What's New](#-whats-new)
+- [❓ FAQ](#-faq)
+- [💖 Sponsor](#-sponsor)
+- [🤝 Contributor](#-contributor)
+- [🙏 Acknowledgement](#-acknowledgement)
+- [📜 LICENSE](#-license)
 
 <br></details>
 
-## Why GPT-Runner?
+## 🤷‍♂️ Why GPT-Runner?
 
-1. **Conversations with Code Files:** 
-    - Before using GPT-Runner: Manual copy and paste of multiple file codes into the ChatGPT window were required to propose features or fix bugs to AI.
-    - After using GPT-Runner: Simply select your project files from the file tree. The AI will provide responses based on the most recent contents of those files.
+1. **🔍 Conversations with Code Files:** 
+    - Before using GPT-Runner: Manual copy and paste of multiple file codes into the ChatGPT window were required to propose features or fix bugs to AI.🙁
+    - After using GPT-Runner: Simply select your project files from the file tree. The AI will provide responses based on the most recent contents of those files.🤩
 
-2. **Manage the Project's AI Presets:** 
-    - Before using GPT-Runner: Project prompts saved in memos needed to be copied and pasted to ChatGPT for inquiries, making it difficult to put them under git version control.
-    - After using GPT-Runner: Each [xxx.gpt.md](https://github.com/nicepkg/gpt-runner/tree/main/docs/examples/example-en.gpt.md) file represents an AI role preset. They are easy to read, modify, and can be version-controlled. Team members can share and enhance AI presets, making the code they produce closer to 100% usability.
+2. **📑 Manage the Project's AI Presets:** 
+    - Before using GPT-Runner: Project prompts saved in memos needed to be copied and pasted to ChatGPT for inquiries, making it difficult to put them under git version control.🤪
+    - After using GPT-Runner: Each [xxx.gpt.md](https://github.com/nicepkg/gpt-runner/tree/main/docs/examples/example-en.gpt.md) file represents an AI role preset. They are easy to read, modify, and can be version-controlled. Team members can share and enhance AI presets, making the code they produce closer to 100% usability.🥰
 
 
-## Features
+## ⚙️ Features
 
-- **Conversations with Code Files**: Select files or folders and engage in real-time conversations with AI.
-- **Powerful CLI and IDE integration:** Implement efficient AI workflows in various IDEs.
-- **AI Preset Manager:** Manage your AI presets, Just like a locally Storybook for AI presets.
-- **Customize AI parameters:** Flexibly control the configuration of AI models.
-- **Support for third-party LLMs:** High compatibility and adaptability.
-- **Privacy-first:** Local data storage protects your privacy.
-- **Locale support:** Support for multiple languages.
+- **🔍 Conversations with Code Files**: Select files or folders and engage in real-time conversations with AI.
+- **🛠️ Powerful CLI and IDE integration:** Implement efficient AI workflows in various IDEs.
+- **🔖 AI Preset Manager:** Manage your AI presets, Just like a locally Storybook for AI presets.
+- **🤖 Customize AI parameters:** Flexibly control the configuration of AI models.
+- **🔌 Support for third-party LLMs:** High compatibility and adaptability.
+- **🔒 Privacy-first:** Local data storage protects your privacy.
+- **🌎 Locale support:** Support for multiple languages.
 
-## Quick Start
+## 🚀 Quick Start
 
 > Make sure you have an Open AI Key or a Anthropic Key. You can get it from [Open AI](https://platform.openai.com/account/api-keys) or [Anthropic](https://www.anthropic.com/).
 
@@ -96,7 +96,7 @@ You can see the web interface in your browser at [http://localhost:3003](http://
 
 Install the [GPT-Runner VSCode Extension](https://marketplace.visualstudio.com/items?itemName=nicepkg.gpt-runner) from the VSCode Marketplace.
 
-## Documentation
+## 📖 Documentation
 
 ### GPT-Runner Configs And AI Preset Files
 
@@ -108,7 +108,7 @@ For details about `gptr.config.json` configuration file, `xxx.gpt.md` AI preset 
 
 [Introduction to GPT-Runner Ui Usage](https://github.com/nicepkg/gpt-runner/blob/main/docs/ui-usage.en.md)
 
-## Road map
+## 🗒️ Road map
 
 - [ ] Jetbrains Plugin: Add Jetbrains IDE Plugin
 - [ ] Export And Import Chat History: Add dialogue import and export function
@@ -116,19 +116,19 @@ For details about `gptr.config.json` configuration file, `xxx.gpt.md` AI preset 
 - [ ] Template Interpolation: Add template interpolation support
 - [ ] Electron: Add an Electron client to expand the target audience to non-developers
 
-## What's New
+## 🆕 What's New
 
 - 🚀 v1.0.0: First Release
 
-## FAQ
+## ❓ FAQ
 
 [English > FAQ](https://github.com/nicepkg/gpt-runner/tree/main/docs/faq.en.md)
 
-## Sponsor
+## 💖 Sponsor
 
 Waiting for you...
 
-## Contributor
+## 🤝 Contributor
 
 You can check out our [Contribution Guidelines](https://github.com/nicepkg/gpt-runner/tree/main/CONTRIBUTING.md)
 
@@ -138,7 +138,7 @@ This project exists thanks to all the people who contribute:
   <img src="https://contrib.rocks/image?repo=nicepkg/gpt-runner" />
 </a>
 
-## Acknowledgement
+## 🙏 Acknowledgement
 
 GPT-Runner is made possible thanks to the inspirations from the following projects:
 
@@ -150,6 +150,6 @@ GPT-Runner is made possible thanks to the inspirations from the following projec
 - [UnoCss](https://github.com/unocss/unocss)
 - [VSCode-Webview-Ui-Toolkit](https://github.com/microsoft/vscode-webview-ui-toolkit)
 
-## LICENSE
+## 📜 LICENSE
 
 [MIT](https://github.com/nicepkg/gpt-runner/tree/main/LICENSE) License &copy; 2023-PRESENT [Jinming Yang](https://github.com/2214962083)

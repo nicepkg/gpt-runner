@@ -1,21 +1,21 @@
-# GPT-Runner 配置和 AI 预设文件
+# 📖 GPT-Runner 配置和 AI 预设文件
 
 <details>
-<summary>目录</summary><br>
+<summary> 📚 目录</summary><br>
 
-- [GPT-Runner 配置和 AI 预设文件](#gpt-runner-配置和-ai-预设文件)
-  - [介绍](#介绍)
-    - [.gpt-runner 目录](#gpt-runner-目录)
-  - [gptr.config.ts/js/json 配置文件](#gptrconfigtsjsjson-配置文件)
-  - [xxx.gpt.md AI 预设文件](#xxxgptmd-ai-预设文件)
-  - [聊天模型配置](#聊天模型配置)
+- [📖 GPT-Runner 配置和 AI 预设文件](#-gpt-runner-配置和-ai-预设文件)
+  - [✨ 介绍](#-介绍)
+    - [📂 .gpt-runner 目录](#-gpt-runner-目录)
+  - [📄 gptr.config.ts/js/json 配置文件](#-gptrconfigtsjsjson-配置文件)
+  - [📑 xxx.gpt.md AI 预设文件](#-xxxgptmd-ai-预设文件)
+  - [🤖 聊天模型配置](#-聊天模型配置)
     - [OpenAI](#openai)
     - [Anthropic](#anthropic)
-- [其他](#其他)
+- [🔍 其他](#-其他)
 
 <br></details>
 
-## 介绍
+## ✨ 介绍
 
 1. 当你启动 GPT-Runner 时，它会读先读取项目级配置文件。
    
@@ -41,7 +41,7 @@
    
 7. 每个 `*.gpt.md` 文件都会被解析成一个 AI 预设。
 
-### .gpt-runner 目录
+### 📂 .gpt-runner 目录
 
 1. `<rootPath>/.gpt-runner/` 目录是一个特殊目录，即便你把它包含在 `.gitignore` 里，它也会被检索。这对希望 GPT-Runner 不入侵项目的人很有用。
 
@@ -57,7 +57,7 @@ git config --global core.excludesfile '~/.gitignore_global'
 echo '.gpt-runner' >> ~/.gitignore_global
 ```
 
-## gptr.config.ts/js/json 配置文件
+## 📄 gptr.config.ts/js/json 配置文件
 
 1. gpt.config.ts/js/json 是一个配置文件，它可以覆盖项目级别全局配置。
 
@@ -183,7 +183,7 @@ export default defineConfig({
 }
 ```
 
-## xxx.gpt.md AI 预设文件
+## 📑 xxx.gpt.md AI 预设文件
 
 1. `xxx.gpt.md` 文件是一个 AI 预设文件，一个文件代表一个 AI 角色。
 
@@ -244,7 +244,7 @@ export default defineConfig({
 你还可以通过项目根目录下的 `gptr.config.json` 覆盖很多参数的默认值
 ````
 
-## 聊天模型配置
+## 🤖 聊天模型配置
 
 ### OpenAI 
 
@@ -321,7 +321,7 @@ export interface AnthropicModelConfig {
 }
 ```
 
-# 其他
+# 🔍 其他
 
 1. 如果你安装了 GPT Runner VSCode 扩展。你可以通过在 `.vscode/settings.json` 设置：
 

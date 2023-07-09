@@ -1,21 +1,21 @@
-# GPT-Runner Configs And AI Preset Files
+# 📖 GPT-Runner Configs And AI Preset Files
 
 <details>
-<summary>Table of Contents</summary><br>
+<summary> 📚 Table of Contents</summary><br>
 
-- [GPT-Runner Configs And AI Preset Files](#gpt-runner-configs-and-ai-preset-files)
-  - [Introduction](#introduction)
-    - [.gpt-runner Directory](#gpt-runner-directory)
-  - [gptr.config.ts/js/json Configuration Files](#gptrconfigtsjsjson-configuration-files)
-  - [xxx.gpt.md AI Preset Files](#xxxgptmd-ai-preset-files)
-  - [Chat Model Configuration](#chat-model-configuration)
+- [📖 GPT-Runner Configs And AI Preset Files](#-gpt-runner-configs-and-ai-preset-files)
+  - [✨ Introduction](#-introduction)
+    - [📂 .gpt-runner Directory](#-gpt-runner-directory)
+  - [📄 gptr.config.ts/js/json Configuration Files](#-gptrconfigtsjsjson-configuration-files)
+  - [📑 xxx.gpt.md AI Preset Files](#-xxxgptmd-ai-preset-files)
+  - [🤖 Chat Model Configuration](#-chat-model-configuration)
     - [OpenAI](#openai)
     - [Anthropic](#anthropic)
-- [Other](#other)
+- [🔍 Other](#-other)
 
 <br></details>
 
-## Introduction
+## ✨ Introduction
 
 1. When you start GPT-Runner, it first reads the project-level configuration file.
 
@@ -41,7 +41,7 @@
 
 7. Each `*.gpt.md` file is parsed into an AI preset.
 
-### .gpt-runner Directory
+### 📂 .gpt-runner Directory
 
 1. `<rootPath>/.gpt-runner/` directory is a special directory. Even if you include it in `.gitignore`, it will be retrieved. This is useful for people who hope GPT-Runner doesn't intrude into the project.
 
@@ -57,7 +57,7 @@ git config --global core.excludesfile '~/.gitignore_global'
 echo '.gpt-runner' >> ~/.gitignore_global
 ```
 
-## gptr.config.ts/js/json Configuration Files
+## 📄 gptr.config.ts/js/json Configuration Files
 
 1. gpt.config.ts/js/json is a configuration file, it can override project-level global configurations.
 
@@ -183,7 +183,7 @@ export default defineConfig({
 }
 ```
 
-## xxx.gpt.md AI Preset Files
+## 📑 xxx.gpt.md AI Preset Files
 
 1. `xxx.gpt.md` files are AI preset files, each file represents an AI character.
 
@@ -246,7 +246,7 @@ You can write your remarks here.
 You can also override many default parameter values through the `gptr.config.json` at the root directory of the project.
 ````
 
-## Chat Model Configuration
+## 🤖 Chat Model Configuration
 
 ### OpenAI 
 
@@ -324,7 +324,7 @@ export interface AnthropicModelConfig {
 ```
 
 
-# Other
+# 🔍 Other
 
 1. If you have installed GPT Runner VSCode extension. You can set in `.vscode/settings.json`:
 
