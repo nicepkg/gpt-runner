@@ -13,8 +13,11 @@ export interface ModalProps {
   okText?: string
   showCancelBtn?: boolean
   showOkBtn?: boolean
-  // centered?: boolean
   showCloseIcon?: boolean
+  footerCenterButtons?: {
+    text: string
+    onClick: () => void
+  }[]
   contentWidth?: string
   children?: ReactNode
   onCancel?: () => void
@@ -29,8 +32,8 @@ export const Modal = memo(({
   okText,
   showCancelBtn = true,
   showOkBtn = true,
-  // centered = false,
   showCloseIcon = true,
+  footerCenterButtons = [],
   contentWidth,
   children,
   onCancel,
@@ -74,6 +77,17 @@ export const Modal = memo(({
             onClick={onCancel}>
             {finalCancelText}
           </StyledFooterButton>}
+
+          {footerCenterButtons.map((btn, index) => (
+            <StyledFooterButton
+              key={index}
+              style={{
+                marginLeft: '1rem',
+              }}
+              onClick={btn.onClick}>
+              {btn.text}
+            </StyledFooterButton>
+          ))}
 
           {showOkBtn && <StyledFooterButton
             style={{

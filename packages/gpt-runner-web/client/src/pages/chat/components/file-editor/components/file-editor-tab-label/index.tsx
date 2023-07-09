@@ -102,10 +102,17 @@ export const FileEditorTabLabel: FC<FileEditorTabLabelProps> = memo((props) => {
             }),
             children: t('chat_page.file_editor_forgot_save_tips_content'),
             okText: t('chat_page.save_btn'),
-            cancelText: t('chat_page.do_not_save_btn'),
+            footerCenterButtons: [
+              {
+                text: t('chat_page.do_not_save_btn'),
+                onClick() {
+                  setModalProps({ open: false })
+                  onRemoveItem?.(item)
+                },
+              },
+            ],
             onCancel() {
               setModalProps({ open: false })
-              onRemoveItem?.(item)
             },
             async onOk() {
               await onSave?.(item)
