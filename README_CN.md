@@ -1,5 +1,5 @@
 <div align="center">
-<img src="./website/static/img/svg/logo-text.svg" alt="icon"/>
+<img src="https://github.com/nicepkg/vr360/assets/35005637/102953c3-e804-46db-b0b3-acc26a8d37da" alt="icon"/>
 
 <h1 align="center">GPT Runner</h1>
 
