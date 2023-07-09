@@ -10,9 +10,9 @@ English / [简体中文 🌏](https://github.com/nicepkg/gpt-runner/tree/main/pa
 [![License](https://img.shields.io/github/license/nicepkg/gpt-runner)](https://github.com/nicepkg/gpt-runner/blob/main/LICENSE)
 ![GitHub stars](https://img.shields.io/github/stars/nicepkg/gpt-runner?style=social)
 
-The GPT-Runner CLI is a powerful command-line tool that helps you manage your AI presets and engage in AI-powered conversations with your code to significantly boost your development efficiency 💪.
+The GPT-Runner CLI is a powerful command-line tool that helps you manage your AI presets and engage in AI-powered conversations with your code to significantly boost your development efficiency. 💪
 
-GPT-Runner CLI 是一款功能强大的命令行工具，可帮助您管理 AI 预设并与代码进行 AI 驱动的对话，从而显着提高您的开发效率 💪。
+GPT-Runner CLI 是一款功能强大的命令行工具，可帮助您管理 AI 预设并与代码进行 AI 驱动的对话，从而显着提高您的开发效率。💪
 
 </div>
 
