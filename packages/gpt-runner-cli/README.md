@@ -46,7 +46,7 @@ GPT-Runner CLI 是一款功能强大的命令行工具，可帮助您管理 AI �
 
 > 1. Requirements NodeJS >= 16.15.0
 >     - To check your NodeJS version, run `node -v` in your terminal. If you need to install or update NodeJS, visit [the official NodeJS website](https://nodejs.org/) for download and installation instructions.
-> 2. Make sure you have an Open AI Key or a Anthropic Key. You can get it from [Open AI](https://platform.openai.com/) or [Anthropic](https://www.anthropic.com/).
+> 2. Make sure you have an Open AI Key or a Anthropic Key. You can get it from [Open AI](https://platform.openai.com/account/api-keys) or [Anthropic](https://www.anthropic.com/).
 > 3. Slow installation is normal, because the package is a bit big.
 
 To install the GPT-Runner CLI, use npm:

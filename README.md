@@ -73,7 +73,7 @@ Use GPT-Runner to manage your AI presets, engage in AI-powered conversations wit
 
 ## Quick Start
 
-> Make sure you have an Open AI Key or a Anthropic Key. You can get it from [Open AI](https://platform.openai.com/) or [Anthropic](https://www.anthropic.com/).
+> Make sure you have an Open AI Key or a Anthropic Key. You can get it from [Open AI](https://platform.openai.com/account/api-keys) or [Anthropic](https://www.anthropic.com/).
 
 
 ### The first way: CLI

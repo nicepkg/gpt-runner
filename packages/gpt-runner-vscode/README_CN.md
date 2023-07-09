@@ -47,7 +47,7 @@ GPT-Runner VSCode 扩展是 GPT-Runner 跟 VSCode 深度结合的结果。
 ## 安装
 
 > 1. 要求 VSCode >= 1.72.0
-> 2. 确保你有一个 Open AI Key 或 Anthropic Key，如果没有，请访问 [Open AI](https://platform.openai.com/) 或 [Anthropic](https://www.anthropic.com/product/) 申请。
+> 2. 确保你有一个 Open AI Key 或 Anthropic Key，如果没有，请访问 [Open AI](https://platform.openai.com/account/api-keys) 或 [Anthropic](https://www.anthropic.com/product/) 申请。
 
 
 你可以在 VSCode 扩展市场搜索 `GPT Runner` 进行安装。

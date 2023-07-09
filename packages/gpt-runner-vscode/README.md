@@ -46,7 +46,7 @@ This extension helps you manage AI presets and drive conversations with code usi
 ## Installation
 
 > 1. Requires VSCode >= 1.72.0
-> 2. Make sure you have an Open AI Key or Anthropic Key. If you do not have, please visit [Open AI](https://platform.openai.com/) or [Anthropic](https://www.anthropic.com/product/) to apply.
+> 2. Make sure you have an Open AI Key or Anthropic Key. If you do not have, please visit [Open AI](https://platform.openai.com/account/api-keys) or [Anthropic](https://www.anthropic.com/product/) to apply.
 
 You can search `GPT Runner` in the VSCode Extension Marketplace for installation.
 

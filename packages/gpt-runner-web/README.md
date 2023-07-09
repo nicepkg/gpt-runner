@@ -1,6 +1,8 @@
 # Gpt-runner Web
 
-Gpt-runner Web is the web interface of GPT-Runner.
+**You can use `GPT-Runner Web` in `GPT-Runner CLI` or `GPT-Runner VSCode extension`**
+
+GPT-Runner Web is the web interface of GPT-Runner.
 
 It contains both server side and client side code.
 
