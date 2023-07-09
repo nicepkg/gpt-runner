@@ -18,7 +18,7 @@ Use GPT-Runner to manage your AI presets, engage in AI-powered conversations wit
 
 [CLI](https://github.com/nicepkg/gpt-runner/tree/main/packages/gpt-runner-cli/) / [Web Page](https://github.com/nicepkg/gpt-runner/tree/main/packages/gpt-runner-web/) / [VSCode Extension](https://github.com/nicepkg/gpt-runner/tree/main/packages/gpt-runner-vscode/) / [Issues](https://github.com/nicepkg/gpt-runner/issues) / [Buy Me a Coffee](https://bmc.link/jinmingyang)
 
-[终端工具](https://github.com/nicepkg/gpt-runner/tree/main/packages/gpt-runner-cli/) / [网页版](https://github.com/nicepkg/gpt-runner/tree/main/packages/gpt-runner-web/) / [VSCode 扩展](https://github.com/nicepkg/gpt-runner/tree/main/packages/gpt-runner-vscode/) / [反馈](https://github.com/Yidadaa/ChatGPT-Next-Web/issues) / [打赏开发者](https://github.com/nicepkg/gpt-runner/assets/35005637/98a4962a-8a2e-4177-8781-1e1ee886ecdc)
+[终端工具](https://github.com/nicepkg/gpt-runner/blob/main/packages/gpt-runner-cli/README_CN.md) / [网页版](https://github.com/nicepkg/gpt-runner/tree/main/packages/gpt-runner-web/) / [VSCode 扩展](https://github.com/nicepkg/gpt-runner/blob/main/packages/gpt-runner-vscode/README_CN.md) / [反馈](https://github.com/nicepkg/gpt-runner/issues) / [打赏开发者](https://github.com/nicepkg/gpt-runner/assets/35005637/98a4962a-8a2e-4177-8781-1e1ee886ecdc)
 
 [cli-url]: https://github.com/nicepkg/gpt-runner/tree/main/packages/gpt-runner-cli/
 [cli-image]: https://img.shields.io/badge/CLI-Node.js-green?logo=node.js
@@ -146,6 +146,7 @@ GPT-Runner is made possible thanks to the inspirations from the following projec
 
 - [Docusaurus](https://github.com/facebook/docusaurus)
 - [LangchainJs](https://github.com/hwchase17/langchainjs)
+- [Monaco-React](https://github.com/suren-atoyan/monaco-react)
 - [UnoCss](https://github.com/unocss/unocss)
 - [VSCode-Webview-Ui-Toolkit](https://github.com/microsoft/vscode-webview-ui-toolkit)
 

@@ -14,7 +14,7 @@
 ![GitHub stars](https://img.shields.io/github/stars/nicepkg/gpt-runner?style=social)
 
 
-[终端工具](https://github.com/nicepkg/gpt-runner/tree/main/packages/gpt-runner-cli/) / [网页版](https://github.com/nicepkg/gpt-runner/tree/main/packages/gpt-runner-web/) / [VSCode 扩展](https://github.com/nicepkg/gpt-runner/tree/main/packages/gpt-runner-vscode/) / [反馈](https://github.com/Yidadaa/ChatGPT-Next-Web/issues) / [打赏开发者](https://github.com/nicepkg/gpt-runner/assets/35005637/98a4962a-8a2e-4177-8781-1e1ee886ecdc)
+[终端工具](https://github.com/nicepkg/gpt-runner/tree/main/packages/gpt-runner-cli/README_CN.md) / [网页版](https://github.com/nicepkg/gpt-runner/tree/main/packages/gpt-runner-web/) / [VSCode 扩展](https://github.com/nicepkg/gpt-runner/tree/main/packages/gpt-runner-vscode/README_CN.md) / [反馈](https://github.com/nicepkg/gpt-runner/issues) / [打赏开发者](https://github.com/nicepkg/gpt-runner/assets/35005637/98a4962a-8a2e-4177-8781-1e1ee886ecdc)
 
 [cli-url]: https://github.com/nicepkg/gpt-runner/blob/main/packages/gpt-runner-cli/README_CN.md
 [cli-image]: https://img.shields.io/badge/CLI-Node.js-green?logo=node.js
@@ -141,6 +141,7 @@ npx gptr
 
 - [Docusaurus](https://github.com/facebook/docusaurus)
 - [LangchainJs](https://github.com/hwchase17/langchainjs)
+- [Monaco-React](https://github.com/suren-atoyan/monaco-react)
 - [UnoCss](https://github.com/unocss/unocss)
 - [VSCode-Webview-Ui-Toolkit](https://github.com/microsoft/vscode-webview-ui-toolkit)
 

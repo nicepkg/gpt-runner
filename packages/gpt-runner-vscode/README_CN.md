@@ -3,7 +3,7 @@
 
 <h1 align="center">GPT-Runner VSCode</h1>
 
-[English](https://github.com/nicepkg/gpt-runner/tree/main/packages/gpt-runner-cli/README.md) / 简体中文
+[English](https://github.com/nicepkg/gpt-runner/tree/main/packages/gpt-runner-vscode/README.md) / 简体中文
 
 
 [![VSCode](https://img.shields.io/badge/VSCode-Extension-blue?logo=visualstudiocode)](https://marketplace.visualstudio.com/items?itemName=nicepkg.gpt-runner) [![License](https://img.shields.io/github/license/nicepkg/gpt-runner)](https://github.com/nicepkg/gpt-runner/blob/main/LICENSE)
