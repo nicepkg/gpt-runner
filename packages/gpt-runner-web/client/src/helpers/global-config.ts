@@ -1,6 +1,7 @@
 import { getSearchParams } from '@nicepkg/gpt-runner-shared/browser'
 import type { LocaleLang } from '@nicepkg/gpt-runner-shared/common'
 import { EnvConfig, toUnixPath, urlRemoveLocalhost } from '@nicepkg/gpt-runner-shared/common'
+import type { ThemeName } from '../styles/themes'
 import { getLang } from './i18n'
 
 export interface GlobalConfig {
@@ -15,6 +16,7 @@ export interface GlobalConfig {
   showIdeFileContextOptions: boolean
   showUserSelectedTextContextOptions: boolean
   editFileInIde: boolean
+  defaultTheme: ThemeName
 }
 
 window.__DEFAULT_GLOBAL_CONFIG__ = {
@@ -29,6 +31,7 @@ window.__DEFAULT_GLOBAL_CONFIG__ = {
   showIdeFileContextOptions: false,
   showUserSelectedTextContextOptions: false,
   editFileInIde: false,
+  defaultTheme: 'default',
 }
 
 export function getGlobalConfig() {

@@ -6,7 +6,7 @@ export interface LogoProps extends React.SVGProps<SVGSVGElement> {
 }
 
 export const Logo: FC<LogoProps> = memo((props) => {
-  const { color = 'var(--link-foreground)', ...otherProps } = props
+  const { color = '#19c37d', ...otherProps } = props
 
   return <svg width="100%" height="100%" viewBox="0 0 395.52 53.60552078266557" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" {...otherProps}>
     <g transform="matrix(1,0,0,1,0,10.897599999999997)"><svg width="103.85"

@@ -32,6 +32,18 @@ export const GeneralSettings: FC = memo(() => {
       value: 'default',
     },
     {
+      label: 'GPT-Runner Dark',
+      value: 'gptrDark',
+    },
+    {
+      label: 'GPT-Runner Light',
+      value: 'gptrLight',
+    },
+    {
+      label: 'VSCode Dynamic',
+      value: 'vscodeDynamic',
+    },
+    {
       label: 'VSCode Dark',
       value: 'vscodeDark',
     },

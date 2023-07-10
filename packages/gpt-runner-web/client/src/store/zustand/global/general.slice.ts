@@ -16,7 +16,7 @@ export type GeneralState = GetState<GeneralSlice>
 function getInitialState() {
   return {
     langId: getGlobalConfig().defaultLangId,
-    themeName: 'default',
+    themeName: getGlobalConfig().defaultTheme,
   } satisfies GeneralState
 }
 
