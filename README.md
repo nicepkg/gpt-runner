@@ -3,6 +3,7 @@
 
 <h1 align="center">GPT Runner</h1>
 
+
 English / [简体中文 🌏](https://github.com/nicepkg/gpt-runner/tree/main/README_CN.md)
 
 Use GPT-Runner to manage your AI presets, engage in AI-powered conversations with your code, and significantly boost the development efficiency of both you and your team!
@@ -28,6 +29,8 @@ Use GPT-Runner to manage your AI presets, engage in AI-powered conversations wit
 [vscode-image]: https://img.shields.io/badge/VSCode-Extension-blue?logo=visualstudiocode
 
 </div>
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/_CEvOjmyFrM" title="GPT-Runner Intro" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
 
 <details>
 <summary>📚 Table of Contents</summary><br>
