@@ -4,7 +4,7 @@
   "displayName": "GPT Runner",
   "version": "0.6.5",
   "private": true,
-  "description": "An efficient VS Code extension to manage AI presets, interact with code through AI chat, and enhance developers' productivity using GPT-Runner.",
+  "description": "Use GPT-Runner to manage your AI presets, engage in AI-powered conversations with your code, and significantly boost the development efficiency of both you and your team!",
   "license": "MIT",
   "funding": "https://github.com/sponsors/2214962083",
   "homepage": "https://github.com/nicepkg/gpt-runner/tree/main/packages/gpt-runner-vscode#readme",
@@ -18,16 +18,24 @@
   },
   "keywords": [
     "chatgpt",
-    "ai",
     "copilot",
+    "openai",
+    "ai",
+    "codex",
+    "gpt-4",
     "gpt-runner",
     "prompt",
-    "openai",
-    "huggingFace",
-    "anthropic"
+    "anthropic",
+    "unit testing"
   ],
   "categories": [
-    "Other"
+    "Data Science",
+    "Machine Learning",
+    "Programming Languages",
+    "Testing",
+    "Linters",
+    "Formatters",
+    "Education"
   ],
   "main": "./dist/index.js",
   "preview": true,
