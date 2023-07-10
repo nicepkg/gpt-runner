@@ -2,7 +2,7 @@
   "publisher": "nicepkg",
   "name": "gpt-runner",
   "displayName": "GPT Runner",
-  "version": "0.6.2",
+  "version": "0.6.3",
   "private": true,
   "description": "An efficient VS Code extension to manage AI presets, interact with code through AI chat, and enhance developers' productivity using GPT-Runner.",
   "license": "MIT",
