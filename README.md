@@ -148,6 +148,7 @@ GPT-Runner is made possible thanks to the inspirations from the following projec
 - [LangchainJs](https://github.com/hwchase17/langchainjs)
 - [Monaco-React](https://github.com/suren-atoyan/monaco-react)
 - [UnoCss](https://github.com/unocss/unocss)
+- [VSCode-Material-Icon-Theme](https://github.com/PKief/vscode-material-icon-theme)
 - [VSCode-Webview-Ui-Toolkit](https://github.com/microsoft/vscode-webview-ui-toolkit)
 
 ## 📜 LICENSE

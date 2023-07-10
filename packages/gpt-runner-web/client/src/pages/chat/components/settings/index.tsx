@@ -90,7 +90,7 @@ export const Settings: FC<SettingsProps> = memo((props) => {
       {showModelTypeSecretsSettings.map((modelType) => {
         return <Fragment key={modelType}>
           <FormTitle size="large">
-            <ModelSettings viewType='title' ></ModelSettings>
+            <ModelSettings viewType='title' modelType={modelType}></ModelSettings>
             {` ${t('chat_page.settings_config')}`}
           </FormTitle>
           <ModelSettings viewType='secrets' modelType={modelType}></ModelSettings>
