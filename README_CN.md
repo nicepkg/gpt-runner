@@ -68,7 +68,7 @@
 
 ## 🚀 快速开始
 
-> 确保你有一个 Open AI Key 或 Anthropic Key，如果没有，请访问 [Open AI](https://platform.openai.com/account/api-keys) 或 [Anthropic](https://www.anthropic.com/product/) 申请。
+> 1. 确保你有一个 Open AI Key 或 Anthropic Key，如果没有，请访问 [Open AI](https://platform.openai.com/account/api-keys) 或 [Anthropic](https://www.anthropic.com/product/) 申请。
 > 2. 确保你的命令终端能 ping 通 google.com （如果你在中国大陆，你可能需要科学上网）。
 
 ### 方式一：CLI

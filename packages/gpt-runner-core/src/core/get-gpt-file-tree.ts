@@ -42,6 +42,92 @@ export async function getGptFilesInfo(params: GetGptFilesInfoParams): Promise<Ge
   const filesInfoTree: GptFileInfoTree = []
   const tempTitleFileInfoTMap = new Map<string, GptFileInfoTreeItem>()
 
+  const startWithRoot = (path: string) => {
+    return path.startsWith('/') ? path : `/${path}`
+  }
+
+  const getName = (title: string, filePath: string): string => {
+    const titleParts = title.split('/')
+    const pathParts = filePath.split('/') || []
+    const name = titleParts[titleParts.length - 1] || pathParts[pathParts.length - 1] || 'unknown'
+    return name
+  }
+
+  const getId = (title: string, name: string, filePath: string): string => {
+    const titleParts = title.split('/')
+    return startWithRoot([...titleParts.slice(0, -1), name].join('/') || filePath)
+  }
+
+  const getParentTitle = (title: string): string => {
+    const titleParts = title.split('/')
+    const parentTitleParts = titleParts.slice(0, -1)
+    return startWithRoot(parentTitleParts.join('/').replace(/\/$/, ''))
+  }
+
+  const getParent = (title: string): GptFileInfoTreeItem => {
+    const parentTitle = getParentTitle(title)
+    let parentFileInfo = tempTitleFileInfoTMap.get(parentTitle)
+
+    if (!parentFileInfo) {
+      const parentPath = ''
+      parentFileInfo = {
+        id: parentTitle,
+        parentId: null,
+        path: parentPath,
+        name: getName(parentTitle, parentPath),
+        type: GptFileTreeItemType.Folder,
+        children: [],
+      }
+
+      tempTitleFileInfoTMap.set(parentTitle, parentFileInfo)
+
+      if (parentTitle && parentTitle !== '/') {
+        // init parent
+        const parentOfParent = getParent(parentTitle)
+
+        if (!parentOfParent.children)
+          parentOfParent.children = []
+
+        parentOfParent.children.push(parentFileInfo)
+      }
+    }
+
+    return parentFileInfo
+  }
+
+  const processFilePath = async (filePath: string) => {
+    try {
+      const content = await FileUtils.readFile({ filePath })
+      const singleFileConfig = await parseGptFile({
+        filePath,
+        userConfig: resolvedUserConfig as UserConfig,
+      })
+      const title = singleFileConfig.title || ''
+      const name = getName(title, filePath)
+      const id = getId(title, name, filePath)
+      const parentFileInfo = getParent(title)
+
+      if (!parentFileInfo.children)
+        parentFileInfo.children = []
+
+      const fileNodeInfo: GptFileInfo = {
+        id,
+        parentId: parentFileInfo.id,
+        path: filePath,
+        name,
+        content,
+        singleFileConfig,
+        type: GptFileTreeItemType.File,
+      }
+
+      parentFileInfo.children.push(fileNodeInfo)
+      filesInfo.push(fileNodeInfo)
+    }
+    catch (error) {
+      console.log('processFilePath error', error)
+    }
+  }
+
   await FileUtils.travelFilesByFilterPattern({
     filePath: fullRootPath,
     exts: [...exts],
@@ -51,71 +137,11 @@ export async function getGptFilesInfo(params: GetGptFilesInfoParams): Promise<Ge
       return !isGitignorePaths(filePath)
     },
     callback: async (filePath) => {
-      const content = await FileUtils.readFile({ filePath })
-      const singleFileConfig = await parseGptFile({
-        filePath,
-        userConfig: resolvedUserConfig as UserConfig,
-      })
-
-      const { title = '' } = singleFileConfig
-      const titleParts = title.split('/')
-
-      const getName = (title: string, filePath: string): string => {
-        const titleParts = title.split('/')
-        const pathParts = filePath.split('/') || []
-        const name = titleParts[titleParts.length - 1] || pathParts[pathParts.length - 1] || 'unknown'
-        return name
-      }
-
-      const parentTitleParts = titleParts.slice(0, -1)
-
-      const name = getName(title, filePath)
-
-      const fileId = [...titleParts.slice(0, -1), name].join('/') || filePath
-
-      const fileInfo: GptFileInfo = {
-        id: fileId,
-        parentId: null,
-        path: filePath,
-        name,
-        content,
-        singleFileConfig,
-        type: GptFileTreeItemType.File,
-      }
-
-      if (parentTitleParts.length) {
-        const parentTitle = parentTitleParts.join('/')
-        const parentFileInfo = tempTitleFileInfoTMap.get(parentTitle)
-
-        if (parentFileInfo) {
-          if (!parentFileInfo.children)
-            parentFileInfo.children = []
-
-          parentFileInfo.children.push({ ...fileInfo, parentId: parentFileInfo.id })
-        }
-        else {
-          const parentPath = ''
-
-          const parentFileInfo: GptFileInfoTreeItem = {
-            id: parentTitle.endsWith('/') ? parentTitle : `${parentTitle}/`,
-            parentId: null,
-            path: parentPath,
-            name: getName(parentTitle, parentPath),
-            type: GptFileTreeItemType.Folder,
-            children: [{ ...fileInfo }],
-          }
-
-          tempTitleFileInfoTMap.set(parentTitle, parentFileInfo)
-          filesInfoTree.push(parentFileInfo)
-        }
-      }
-      else {
-        filesInfoTree.push({ ...fileInfo })
-      }
-
-      filesInfo.push({ ...fileInfo })
+      await processFilePath(filePath)
     },
   })
+
+  filesInfoTree.push(...tempTitleFileInfoTMap.get('/')?.children || [])
 
   return {
     filesInfo,

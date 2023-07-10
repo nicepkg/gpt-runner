@@ -1,6 +1,6 @@
 ```json
 {
-  "title": "common/",
+  "title": "common/test/bbb/ddd/test",
   "model": {
     "type": "openai",
     "modelName": "gpt-3.5-turbo-16k",

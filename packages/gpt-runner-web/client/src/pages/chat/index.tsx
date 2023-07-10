@@ -80,6 +80,14 @@ const Chat: FC = memo(() => {
       setPcTabActiveId(PcTabId.Chat)
   }, [activeChatId, isMobile])
 
+  useOn({
+    eventName: ClientEventName.GoToChatPanel,
+    listener: () => {
+      setMobileTabActiveId(MobileTabId.Chat)
+      setPcTabActiveId(PcTabId.Chat)
+    },
+  })
+
   // any status will scroll down
   useEffect(() => {
     scrollDown()

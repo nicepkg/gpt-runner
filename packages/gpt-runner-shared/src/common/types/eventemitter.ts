@@ -36,6 +36,8 @@ export interface ClientEventData {
   [ClientEventName.OpenFileInFileEditor]: {
     fileFullPath: string
   }
+
+  [ClientEventName.GoToChatPanel]: void
 }
 
 export type EventEmitterMap = {

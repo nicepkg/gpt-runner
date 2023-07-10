@@ -85,10 +85,14 @@ export const createFileEditorSlice: StateCreator<
   },
   removeFileEditorItem(fullPath) {
     const state = get()
+    const finalFileEditorItems = state.fileEditorItems.filter(item => item.fullPath !== fullPath)
 
     set({
-      fileEditorItems: state.fileEditorItems.filter(item => item.fullPath !== fullPath),
+      fileEditorItems: finalFileEditorItems,
     })
+
+    if (!finalFileEditorItems.length)
+      emitter.emit(ClientEventName.GoToChatPanel)
   },
   updateFileEditorItem(fullPath, item) {
     const state = get()
