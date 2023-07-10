@@ -1,3 +1,4 @@
+import { getGlobalConfig } from '../../helpers/global-config'
 import { gptrLightTheme } from './gptr-light.theme'
 import { gptrDarkTheme } from './gptr-dark.theme'
 import { jetbrainsDarkTheme } from './jetbrains-dark.theme'
@@ -16,6 +17,11 @@ export const themeMap = {
   jetbrainsDark: jetbrainsDarkTheme,
   jetbrainsLight: jetbrainsLightTheme,
 } as const
+
+if (getGlobalConfig().defaultTheme !== 'default') {
+  const defaultTheme = themeMap[getGlobalConfig().defaultTheme] || themeMap.default
+  ;(themeMap as any).default = defaultTheme
+}
 
 export function isDarkTheme(themeName: ThemeName) {
   const darkThemes: ThemeName[] = ['default', 'gptrDark', 'vscodeDynamic', 'vscodeDark', 'jetbrainsDark']
