@@ -12,6 +12,8 @@ The GPT-Runner VSCode extension is the result of integrating GPT-Runner and VSCo
 
 This extension helps you manage AI presets and drive conversations with code using AI, thereby significantly boosting your development efficiency.
 
+[![GPT-Runner Intro](https://raw.githubusercontent.com/2214962083/2214962083/main/gpt-runner-vscode-intro.gif)](https://user-images.githubusercontent.com/35005637/252378643-f0d053ac-88db-4b92-966a-75a411a1ce6c.mp4 "GPT-Runner Intro")
+
 </div>
 
 <details>

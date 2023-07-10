@@ -30,8 +30,6 @@ Use GPT-Runner to manage your AI presets, engage in AI-powered conversations wit
 
 </div>
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/_CEvOjmyFrM" title="GPT-Runner Intro" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-
 https://user-images.githubusercontent.com/35005637/252378643-f0d053ac-88db-4b92-966a-75a411a1ce6c.mp4
 
 <details>

@@ -13,6 +13,9 @@ GPT-Runner VSCode 扩展是 GPT-Runner 跟 VSCode 深度结合的结果。
 
 可帮助您管理 AI 预设并与代码进行 AI 驱动的对话，从而显着提高您的开发效率。
 
+
+[![GPT-Runner Intro](https://raw.githubusercontent.com/2214962083/2214962083/main/gpt-runner-vscode-intro.gif)](https://user-images.githubusercontent.com/35005637/252378643-f0d053ac-88db-4b92-966a-75a411a1ce6c.mp4 "GPT-Runner Intro")
+
 </div>
 
 <details>
