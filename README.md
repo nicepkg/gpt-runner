@@ -14,7 +14,7 @@ Use GPT-Runner to manage your AI presets, engage in AI-powered conversations wit
 [![Web][web-image]][web-url]
 [![VSCode][vscode-image]][vscode-url]
 ![License](https://img.shields.io/github/license/nicepkg/gpt-runner)
-![GitHub stars](https://img.shields.io/github/stars/nicepkg/gpt-runner?style=social)
+[![GitHub stars](https://img.shields.io/github/stars/nicepkg/gpt-runner?style=social)][gpt-runner-url]
 
 
 [CLI](https://github.com/nicepkg/gpt-runner/tree/main/packages/gpt-runner-cli/) / [Web Page](https://github.com/nicepkg/gpt-runner/tree/main/packages/gpt-runner-web/) / [VSCode Extension](https://github.com/nicepkg/gpt-runner/tree/main/packages/gpt-runner-vscode/) / [Issues](https://github.com/nicepkg/gpt-runner/issues) / [Buy Me a Coffee](https://bmc.link/jinmingyang)
@@ -23,6 +23,7 @@ Use GPT-Runner to manage your AI presets, engage in AI-powered conversations wit
 
 [cli-url]: https://github.com/nicepkg/gpt-runner/tree/main/packages/gpt-runner-cli/
 [cli-image]: https://img.shields.io/badge/CLI-Node.js-green?logo=node.js
+[gpt-runner-url]: https://github.com/nicepkg/gpt-runner/tree/main
 [web-url]: https://github.com/nicepkg/gpt-runner/tree/main/packages/gpt-runner-web/
 [web-image]: https://img.shields.io/badge/Web-React-blue?logo=react
 [vscode-url]: https://github.com/nicepkg/gpt-runner/tree/main/packages/gpt-runner-vscode/
