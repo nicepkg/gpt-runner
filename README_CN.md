@@ -11,13 +11,14 @@
 [![Web][web-image]][web-url]
 [![VSCode][vscode-image]][vscode-url]
 ![License](https://img.shields.io/github/license/nicepkg/gpt-runner)
-![GitHub stars](https://img.shields.io/github/stars/nicepkg/gpt-runner?style=social)
+[![GitHub stars](https://img.shields.io/github/stars/nicepkg/gpt-runner?style=social)][gpt-runner-url]
 
 
 [终端工具](https://github.com/nicepkg/gpt-runner/tree/main/packages/gpt-runner-cli/README_CN.md) / [网页版](https://github.com/nicepkg/gpt-runner/tree/main/packages/gpt-runner-web/) / [VSCode 扩展](https://github.com/nicepkg/gpt-runner/tree/main/packages/gpt-runner-vscode/README_CN.md) / [反馈](https://github.com/nicepkg/gpt-runner/issues) / [打赏开发者](https://github.com/nicepkg/gpt-runner/assets/35005637/98a4962a-8a2e-4177-8781-1e1ee886ecdc)
 
 [cli-url]: https://github.com/nicepkg/gpt-runner/blob/main/packages/gpt-runner-cli/README_CN.md
 [cli-image]: https://img.shields.io/badge/CLI-Node.js-green?logo=node.js
+[gpt-runner-url]: https://github.com/nicepkg/gpt-runner/tree/main
 [web-url]: https://github.com/nicepkg/gpt-runner/tree/main/packages/gpt-runner-web/README_CN.md
 [web-image]: https://img.shields.io/badge/Web-React-blue?logo=react
 [vscode-url]: https://github.com/nicepkg/gpt-runner/tree/main/packages/gpt-runner-vscode/README_CN.md
