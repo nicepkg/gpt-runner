@@ -21,20 +21,12 @@ export const AnthropicModelSettings: FC<AnthropicModelSettingsProps> = memo((pro
 
   const [modelTipOptions] = useState<ISelectOption[]>([
     {
-      label: 'claude-1',
-      value: 'claude-1',
-    },
-    {
-      label: 'claude-1-100k',
-      value: 'claude-1-100k',
+      label: 'claude-2',
+      value: 'claude-2',
     },
     {
       label: 'claude-instant-1',
       value: 'claude-instant-1',
-    },
-    {
-      label: 'claude-instant-1-100k',
-      value: 'claude-instant-1-100k',
     },
   ])
 
