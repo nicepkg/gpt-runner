@@ -4,7 +4,7 @@
   "displayName": "GPT Runner",
   "version": "0.6.7",
   "private": true,
-  "description": "Use GPT-Runner to manage your AI presets, engage in AI-powered conversations with your code, and significantly boost the development efficiency of both you and your team!",
+  "description": "Conversations with your files! Manage your AI presets!",
   "license": "MIT",
   "funding": "https://github.com/sponsors/2214962083",
   "homepage": "https://github.com/nicepkg/gpt-runner/tree/main/packages/gpt-runner-vscode#readme",

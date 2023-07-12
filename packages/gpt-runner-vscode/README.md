@@ -8,9 +8,10 @@
 [![VSCode](https://img.shields.io/badge/VSCode-Extension-blue?logo=visualstudiocode)](https://marketplace.visualstudio.com/items?itemName=nicepkg.gpt-runner) [![License](https://img.shields.io/github/license/nicepkg/gpt-runner)](https://github.com/nicepkg/gpt-runner/blob/main/LICENSE)
 [![GitHub stars](https://img.shields.io/github/stars/nicepkg/gpt-runner?style=social)](https://github.com/nicepkg/gpt-runner)
 
-The GPT-Runner VSCode extension is the result of integrating GPT-Runner and VSCode.
+**Conversations with your files! Manage and run your AI presets!**
 
-This extension helps you manage AI presets and drive conversations with code using AI, thereby significantly boosting your development efficiency.
+**与你的文件对话！管理并运行你的 AI 预设！**
+
 
 [![GPT-Runner Intro](https://raw.githubusercontent.com/2214962083/2214962083/main/gpt-runner-vscode-intro.gif)](https://user-images.githubusercontent.com/35005637/252378643-f0d053ac-88db-4b92-966a-75a411a1ce6c.mp4 "GPT-Runner Intro")
 
