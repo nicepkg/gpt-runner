@@ -1,5 +1,9 @@
 <div align="center">
-<img src="https://github.com/nicepkg/vr360/assets/35005637/102953c3-e804-46db-b0b3-acc26a8d37da" alt="icon"/>
+
+[![GPT-Runner Intro](https://raw.githubusercontent.com/2214962083/2214962083/main/gpt-runner-vscode-intro.gif)](https://user-images.githubusercontent.com/35005637/252378643-f0d053ac-88db-4b92-966a-75a411a1ce6c.mp4 "GPT-Runner Intro")
+
+<h3 align="center">Conversations with your files! Manage and run your AI presets!</h3>
+<h3 align="center">与你的文件对话！管理并运行你的 AI 预设！</h3>
 
 <h1 align="center">GPT-Runner VSCode 🧑‍💻</h1>
 
@@ -8,10 +12,6 @@
 
 [![VSCode](https://img.shields.io/badge/VSCode-Extension-blue?logo=visualstudiocode)](https://marketplace.visualstudio.com/items?itemName=nicepkg.gpt-runner) [![License](https://img.shields.io/github/license/nicepkg/gpt-runner)](https://github.com/nicepkg/gpt-runner/blob/main/LICENSE)
 [![GitHub stars](https://img.shields.io/github/stars/nicepkg/gpt-runner?style=social)](https://github.com/nicepkg/gpt-runner)
-
-**与你的文件对话！管理并运行你的 AI 预设！**
-
-[![GPT-Runner Intro](https://raw.githubusercontent.com/2214962083/2214962083/main/gpt-runner-vscode-intro.gif)](https://user-images.githubusercontent.com/35005637/252378643-f0d053ac-88db-4b92-966a-75a411a1ce6c.mp4 "GPT-Runner Intro")
 
 </div>
 
