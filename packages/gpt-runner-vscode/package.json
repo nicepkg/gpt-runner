@@ -2,7 +2,7 @@
   "publisher": "nicepkg",
   "name": "gpt-runner",
   "displayName": "GPT Runner",
-  "version": "0.6.6",
+  "version": "0.6.7",
   "private": true,
   "description": "Use GPT-Runner to manage your AI presets, engage in AI-powered conversations with your code, and significantly boost the development efficiency of both you and your team!",
   "license": "MIT",
