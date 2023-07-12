@@ -7,6 +7,7 @@
     "tab_settings": "Settings",
     "tab_about": "About",
     "tab_file_editor": "Editor",
+    "file_empty_tips": "Please select a file to edit",
     "continue_inputting_prompt": "Please continue",
     "copy_btn": "Copy",
     "insert_btn": "Insert",

@@ -7,6 +7,7 @@
     "tab_settings": "设置",
     "tab_about": "关于",
     "tab_file_editor": "编辑器",
+    "file_empty_tips": "请选择要编辑的文件",
     "continue_inputting_prompt": "请继续",
     "copy_btn": "复制",
     "insert_btn": "插入",

@@ -10,7 +10,7 @@ import { PanelTab } from '../../../../components/panel-tab'
 import type { FileEditorItem } from '../../../../store/zustand/file-editor/file-editor-item'
 import { useElementSizeRealTime } from '../../../../hooks/use-element-size-real-time.hook'
 import { saveFileContent } from '../../../../networks/editor'
-import { FileEditorWrapper } from './file-editor.styles'
+import { EmptyEditorWrapper, FileEditorWrapper } from './file-editor.styles'
 import { FileEditorTabLabel } from './components/file-editor-tab-label'
 import { FileContentEditor } from './components/file-content-editor'
 
@@ -38,6 +38,7 @@ export const FileEditor: FC<FileEditorProps> = memo((props) => {
     updateFileEditorItem,
     removeFileEditorItem,
   } = useFileEditorStore()
+  console.log('fileEditorItems', fileEditorItems)
   const [isLoading, setIsLoading] = useState(false)
   const { mutate: saveFileToRemote, isLoading: saveFileLoading } = useMutation({
     mutationFn: (params: SaveFileContentReqParams) => saveFileContent(params),
@@ -75,7 +76,7 @@ export const FileEditor: FC<FileEditorProps> = memo((props) => {
         fileName,
         dirPath,
       }
-
+      // If user open the same name file, we need to show parent path
       if (fileName) {
         const count = fileNameMap.get(fileName) || 0
         fileNameMap.set(fileName, count + 1)
@@ -149,8 +150,8 @@ export const FileEditor: FC<FileEditorProps> = memo((props) => {
 
   return <FileEditorWrapper ref={fileEditorRef}>
     {isLoading && <LoadingView absolute></LoadingView>}
-
-    <PanelTab
+    {fileTabItems.length
+      ? (<PanelTab
       items={fileTabItems}
       activeId={activeFileFullPath}
       onChange={(id) => {
@@ -167,7 +168,8 @@ export const FileEditor: FC<FileEditorProps> = memo((props) => {
       tabItemStyles={{
         padding: 0,
       }}
-    />
+    />)
+      : <EmptyEditorWrapper>{t('chat_page.file_empty_tips')}</EmptyEditorWrapper>}
   </FileEditorWrapper>
 })
 
