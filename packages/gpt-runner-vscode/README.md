@@ -6,7 +6,7 @@
 [简体中文 🌏](https://github.com/nicepkg/gpt-runner/tree/main/packages/gpt-runner-vscode/README_CN.md) / English
 
 [![VSCode](https://img.shields.io/badge/VSCode-Extension-blue?logo=visualstudiocode)](https://marketplace.visualstudio.com/items?itemName=nicepkg.gpt-runner) [![License](https://img.shields.io/github/license/nicepkg/gpt-runner)](https://github.com/nicepkg/gpt-runner/blob/main/LICENSE)
-![GitHub stars](https://img.shields.io/github/stars/nicepkg/gpt-runner?style=social)
+[![GitHub stars](https://img.shields.io/github/stars/nicepkg/gpt-runner?style=social)](https://github.com/nicepkg/gpt-runner)
 
 The GPT-Runner VSCode extension is the result of integrating GPT-Runner and VSCode.
 

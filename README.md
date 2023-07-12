@@ -13,7 +13,7 @@ Use GPT-Runner to manage your AI presets, engage in AI-powered conversations wit
 [![CLI][cli-image]][cli-url]
 [![Web][web-image]][web-url]
 [![VSCode][vscode-image]][vscode-url]
-![License](https://img.shields.io/github/license/nicepkg/gpt-runner)
+[![License](https://img.shields.io/github/license/nicepkg/gpt-runner)][gpt-runner-license]
 [![GitHub stars](https://img.shields.io/github/stars/nicepkg/gpt-runner?style=social)][gpt-runner-url]
 
 
@@ -23,7 +23,8 @@ Use GPT-Runner to manage your AI presets, engage in AI-powered conversations wit
 
 [cli-url]: https://github.com/nicepkg/gpt-runner/tree/main/packages/gpt-runner-cli/
 [cli-image]: https://img.shields.io/badge/CLI-Node.js-green?logo=node.js
-[gpt-runner-url]: https://github.com/nicepkg/gpt-runner/tree/main
+[gpt-runner-license]: https://github.com/nicepkg/gpt-runner/tree/main/LICENSE
+[gpt-runner-url]: https://github.com/nicepkg/gpt-runner
 [web-url]: https://github.com/nicepkg/gpt-runner/tree/main/packages/gpt-runner-web/
 [web-image]: https://img.shields.io/badge/Web-React-blue?logo=react
 [vscode-url]: https://github.com/nicepkg/gpt-runner/tree/main/packages/gpt-runner-vscode/
@@ -149,6 +150,7 @@ GPT-Runner is made possible thanks to the inspirations from the following projec
 > in alphabet order
 
 - [Docusaurus](https://github.com/facebook/docusaurus)
+- [Gradio](https://github.com/gradio-app/gradio)
 - [LangchainJs](https://github.com/hwchase17/langchainjs)
 - [Monaco-React](https://github.com/suren-atoyan/monaco-react)
 - [UnoCss](https://github.com/unocss/unocss)
