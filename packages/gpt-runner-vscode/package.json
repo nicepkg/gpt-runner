@@ -1,10 +1,10 @@
 {
   "publisher": "nicepkg",
   "name": "gpt-runner",
-  "displayName": "GPT Runner",
+  "displayName": "GPT Runner - Support Chatgpt and Claude",
   "version": "0.6.8",
   "private": true,
-  "description": "Conversations with your files! Manage your AI presets!",
+  "description": "Conversations with files! Manage AI presets!",
   "license": "MIT",
   "funding": "https://github.com/sponsors/2214962083",
   "homepage": "https://github.com/nicepkg/gpt-runner/tree/main/packages/gpt-runner-vscode#readme",
