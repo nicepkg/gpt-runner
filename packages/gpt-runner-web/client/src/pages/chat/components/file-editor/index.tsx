@@ -38,7 +38,6 @@ export const FileEditor: FC<FileEditorProps> = memo((props) => {
     updateFileEditorItem,
     removeFileEditorItem,
   } = useFileEditorStore()
-  console.log('fileEditorItems', fileEditorItems)
   const [isLoading, setIsLoading] = useState(false)
   const { mutate: saveFileToRemote, isLoading: saveFileLoading } = useMutation({
     mutationFn: (params: SaveFileContentReqParams) => saveFileContent(params),
