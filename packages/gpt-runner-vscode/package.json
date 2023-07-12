@@ -1,7 +1,7 @@
 {
   "publisher": "nicepkg",
   "name": "gpt-runner",
-  "displayName": "GPT Runner - Support Chatgpt and Claude",
+  "displayName": "GPT Runner - Chatgpt & Claude",
   "version": "0.6.9",
   "private": true,
   "description": "Conversations with files! Manage AI presets!",
