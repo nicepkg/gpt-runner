@@ -2,7 +2,7 @@
   "publisher": "nicepkg",
   "name": "gpt-runner",
   "displayName": "GPT Runner",
-  "version": "0.6.7",
+  "version": "0.6.8",
   "private": true,
   "description": "Conversations with your files! Manage your AI presets!",
   "license": "MIT",
