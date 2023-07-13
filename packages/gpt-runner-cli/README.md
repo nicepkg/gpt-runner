@@ -1,5 +1,5 @@
 <div align="center">
-<img src="https://github.com/nicepkg/vr360/assets/35005637/102953c3-e804-46db-b0b3-acc26a8d37da" alt="icon"/>
+<img src="https://github.com/2214962083/2214962083/assets/34775414/a48b745f-c803-4884-95a8-26c63f7f5b53" alt="icon"/>
 
 <h1 align="center">GPT-Runner CLI 🛠️</h1>
 
