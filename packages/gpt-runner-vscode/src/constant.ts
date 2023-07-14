@@ -8,6 +8,7 @@ export enum Commands {
   OpenInBrowser = `${EXT_NAME}.openInBrowser`,
   InsertCodes = `${EXT_NAME}.insertCodes`,
   DiffCodes = `${EXT_NAME}.diffCodes`,
+  AskSelection = `${EXT_NAME}.askSelection`,
 }
 
 export const URI_SCHEME = 'gpt-runner'

@@ -81,6 +81,11 @@
         "title": "Open GPT Runner Chat",
         "icon": "res/logo.svg",
         "category": "GPT Runner"
+      },
+      {
+        "command": "gpt-runner.askSelection",
+        "title": "💬 Ask GPT Runner",
+        "category": "GPT Runner"
       }
     ],
     "configuration": {
@@ -109,6 +114,13 @@
           "command": "gpt-runner.openChat",
           "group": "navigation",
           "icon": "res/logo.svg"
+        }
+      ],
+      "editor/context": [
+        {
+          "command": "gpt-runner.askSelection",
+          "group": "gpt-runner",
+          "when": "editorHasSelection"
         }
       ]
     },

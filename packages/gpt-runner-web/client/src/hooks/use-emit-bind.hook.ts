@@ -2,10 +2,21 @@ import { useEffect } from 'react'
 import { ClientEventName, toUnixPath } from '@nicepkg/gpt-runner-shared/common'
 import { emitter } from '../helpers/emitter'
 import { useTempStore } from '../store/zustand/temp'
+import { useGlobalStore } from '../store/zustand/global'
 import { useOn } from './use-on.hook'
+import { useChatInstance } from './use-chat-instance.hook'
 
 export function useEmitBind(deps: any[] = []) {
-  const { updateIdeSelectedText, updateIdeOpeningFilePaths, updateIdeActiveFilePath } = useTempStore()
+  const {
+    updateIdeSelectedText,
+    updateIdeOpeningFilePaths,
+    updateIdeActiveFilePath,
+  } = useTempStore()
+
+  const { activeChatId } = useGlobalStore()
+  const { updateCurrentChatInstance } = useChatInstance({
+    chatId: activeChatId,
+  })
 
   useEffect(() => {
     emitter.emit(ClientEventName.InitSuccess)
@@ -35,9 +46,17 @@ export function useEmitBind(deps: any[] = []) {
 
   useOn({
     eventName: ClientEventName.UpdateUserSelectedText,
-    listener: ({ text }) => {
-      updateIdeSelectedText(text)
+    listener: ({ text, insertInputPrompt }) => {
+      if (!insertInputPrompt) {
+        updateIdeSelectedText(text)
+      }
+      else {
+        updateIdeSelectedText('')
+        updateCurrentChatInstance({
+          inputtingPrompt: text,
+        })
+      }
     },
-    deps: [...deps, updateIdeSelectedText],
+    deps: [...deps, updateIdeSelectedText, updateCurrentChatInstance],
   })
 }
