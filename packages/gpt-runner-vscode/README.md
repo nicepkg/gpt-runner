@@ -80,6 +80,12 @@ For details about `gptr.config.json` configuration file, `xxx.gpt.md` AI preset 
 
 ## ❓ FAQ
 
+> You can contact me via [2214962083@qq.com](mailto:2214962083@qq.com)
+> 
+> 对 AI 提升开发效率感兴趣的，可以加我 wechat: qq2214962083 入群交流
+> 
+> 要求：会科学上网，使用过 chatgpt
+
 [English > FAQ](https://github.com/nicepkg/gpt-runner/tree/main/docs/faq.en.md)
 
 ## 💖 Sponsor
