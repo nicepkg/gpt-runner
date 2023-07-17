@@ -2,20 +2,20 @@ import type { SingleChatMessage } from '@nicepkg/gpt-runner-shared/common'
 import { ChatRole } from '@nicepkg/gpt-runner-shared/common'
 import { AIMessagePromptTemplate, HumanMessagePromptTemplate, SystemMessagePromptTemplate } from 'langchain/prompts'
 import type { BaseMessageStringPromptTemplate } from 'langchain/dist/prompts/chat'
-import type { BaseChatMessage } from 'langchain/schema'
-import { AIChatMessage, HumanChatMessage, SystemChatMessage } from 'langchain/schema'
+import type { BaseMessage } from 'langchain/schema'
+import { AIMessage, HumanMessage, SystemMessage } from 'langchain/schema'
 
 export function mapStoredMessagesToChatMessages(
   messages: SingleChatMessage[],
-): BaseChatMessage[] {
+): BaseMessage[] {
   return messages.map((message) => {
     switch (message.name) {
       case ChatRole.User:
-        return new HumanChatMessage(message.text)
+        return new HumanMessage(message.text)
       case ChatRole.Assistant:
-        return new AIChatMessage(message.text)
+        return new AIMessage(message.text)
       case ChatRole.System:
-        return new SystemChatMessage(message.text)
+        return new SystemMessage(message.text)
       default:
         throw new Error('Role must be defined for generic messages')
     }

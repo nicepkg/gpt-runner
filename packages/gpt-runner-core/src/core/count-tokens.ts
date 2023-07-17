@@ -1,25 +1,20 @@
 import fs from 'node:fs'
-
-// import { Tiktoken } from 'tiktoken/lite'
-// import cl100kBase from 'tiktoken/encoders/cl100k_base.json'
 import { PathUtils } from '@nicepkg/gpt-runner-shared/node'
+import { isChineseCharacter } from '@nicepkg/gpt-runner-shared'
 
-// slow but accurate
-// export function countTokens(text: string) {
-//   const encoding = new Tiktoken(
-//     cl100kBase.bpe_ranks,
-//     cl100kBase.special_tokens,
-//     cl100kBase.pat_str,
-//   )
-//   const tokens = encoding.encode(text)
-//   encoding.free()
-//   return tokens.length
-// }
+export function countTokenQuick(text: string): number {
+  let chineseCount = 0
+  let otherCount = 0
 
-// fast but inaccurate
-export function countTokenQuick(text: string) {
-  // int
-  return Math.floor(text.length / 3.5)
+  for (const char of text) {
+    if (isChineseCharacter(char))
+      chineseCount += 1
+
+    else
+      otherCount += 1
+  }
+
+  return chineseCount * 2 + (otherCount / 3.5)
 }
 
 export function countFileTokens(filePath: string, quick = true) {

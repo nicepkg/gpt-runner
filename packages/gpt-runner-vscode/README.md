@@ -1,18 +1,18 @@
 <div align="center">
-<img src="https://github.com/2214962083/2214962083/assets/34775414/a48b745f-c803-4884-95a8-26c63f7f5b53" alt="icon"/>
+
+[![GPT-Runner Intro](https://raw.githubusercontent.com/2214962083/2214962083/main/gpt-runner-vscode-intro.gif)](https://user-images.githubusercontent.com/35005637/252378643-f0d053ac-88db-4b92-966a-75a411a1ce6c.mp4 "GPT-Runner Intro")
+
+<h3 align="center">Conversations with your files! Manage and run your AI presets!</h3>
+<h3 align="center">与你的文件对话！管理并运行你的 AI 预设！</h3>
 
 <h1 align="center">GPT-Runner VSCode 🧑‍💻</h1>
 
 [简体中文 🌏](https://github.com/nicepkg/gpt-runner/tree/main/packages/gpt-runner-vscode/README_CN.md) / English
 
 [![VSCode](https://img.shields.io/badge/VSCode-Extension-blue?logo=visualstudiocode)](https://marketplace.visualstudio.com/items?itemName=nicepkg.gpt-runner) [![License](https://img.shields.io/github/license/nicepkg/gpt-runner)](https://github.com/nicepkg/gpt-runner/blob/main/LICENSE)
-![GitHub stars](https://img.shields.io/github/stars/nicepkg/gpt-runner?style=social)
+[![GitHub stars](https://img.shields.io/github/stars/nicepkg/gpt-runner?style=social)](https://github.com/nicepkg/gpt-runner)
 
-The GPT-Runner VSCode extension is the result of integrating GPT-Runner and VSCode.
 
-This extension helps you manage AI presets and drive conversations with code using AI, thereby significantly boosting your development efficiency.
-
-[![GPT-Runner Intro](https://raw.githubusercontent.com/2214962083/2214962083/main/gpt-runner-vscode-intro.gif)](https://user-images.githubusercontent.com/35005637/252378643-f0d053ac-88db-4b92-966a-75a411a1ce6c.mp4 "GPT-Runner Intro")
 
 </div>
 
@@ -79,6 +79,12 @@ For details about `gptr.config.json` configuration file, `xxx.gpt.md` AI preset 
 
 
 ## ❓ FAQ
+
+> You can contact me via [2214962083@qq.com](mailto:2214962083@qq.com)
+> 
+> 对 AI 提升开发效率感兴趣的，可以加我 wechat: qq2214962083 入群交流
+> 
+> 要求：会科学上网，使用过 chatgpt
 
 [English > FAQ](https://github.com/nicepkg/gpt-runner/tree/main/docs/faq.en.md)
 

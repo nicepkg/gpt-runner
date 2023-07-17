@@ -8,7 +8,7 @@
 [![npm](https://img.shields.io/npm/v/@nicepkg/gpt-runner-cli.svg)](https://www.npmjs.com/package/@nicepkg/gpt-runner-cli)
 [![CLI](https://img.shields.io/badge/CLI-Node.js-green?logo=node.js)](https://github.com/nicepkg/gpt-runner/tree/main/packages/gpt-runner-cli/)
 [![License](https://img.shields.io/github/license/nicepkg/gpt-runner)](https://github.com/nicepkg/gpt-runner/blob/main/LICENSE)
-![GitHub stars](https://img.shields.io/github/stars/nicepkg/gpt-runner?style=social)
+[![GitHub stars](https://img.shields.io/github/stars/nicepkg/gpt-runner?style=social)](https://github.com/nicepkg/gpt-runner)
 
 GPT-Runner CLI 是一款功能强大的命令行工具，可帮助您管理 AI 预设并与代码进行 AI 驱动的对话，从而显着提高您的开发效率 💪。
 
@@ -122,6 +122,10 @@ gptr --port 8080 --config ./gptr.config.json --share --no-open --debug
 [GPT-Runner Ui使用介绍](https://github.com/nicepkg/gpt-runner/blob/main/docs/ui-usage.cn.md)
 
 ## ❓ 常见问题
+
+> 对 AI 提升开发效率感兴趣的，可以加我 wechat: qq2214962083 入群交流
+> 
+> 要求：会科学上网，使用过 chatgpt
 
 [简体中文 > 常见问题](https://github.com/nicepkg/gpt-runner/tree/main/docs/faq.cn.md)
 

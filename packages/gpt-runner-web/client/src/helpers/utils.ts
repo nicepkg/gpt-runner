@@ -1,5 +1,5 @@
 import type { ParsedUrlQuery } from 'node:querystring'
-import { formatSourceValue } from '@nicepkg/gpt-runner-shared/common'
+import { formatSourceValue, isChineseCharacter } from '@nicepkg/gpt-runner-shared/common'
 import type { MutableRefObject, Ref } from 'react'
 
 export function createEl<T extends keyof HTMLElementTagNameMap>(tag: T,
@@ -44,9 +44,19 @@ export function formatNumWithK(num: number) {
   return `${(num / 1000).toFixed(1)}k`
 }
 
-export function countTokenQuick(text: string) {
-  // int
-  return Math.floor(text.length / 3.5)
+export function countTokenQuick(text: string): number {
+  let chineseCount = 0
+  let otherCount = 0
+
+  for (const char of text) {
+    if (isChineseCharacter(char))
+      chineseCount += 1
+
+    else
+      otherCount += 1
+  }
+
+  return chineseCount * 2 + (otherCount / 3.5)
 }
 
 export function isDomHidden(el: HTMLElement) {

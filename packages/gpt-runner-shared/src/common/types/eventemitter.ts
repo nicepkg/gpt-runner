@@ -27,6 +27,7 @@ export interface ClientEventData {
 
   [ClientEventName.UpdateUserSelectedText]: {
     text: string
+    insertInputPrompt?: boolean
   }
 
   [ClientEventName.OpenFileInIde]: {

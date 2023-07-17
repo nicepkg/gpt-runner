@@ -10,7 +10,7 @@
 [![CLI][cli-image]][cli-url]
 [![Web][web-image]][web-url]
 [![VSCode][vscode-image]][vscode-url]
-![License](https://img.shields.io/github/license/nicepkg/gpt-runner)
+[![License](https://img.shields.io/github/license/nicepkg/gpt-runner)][gpt-runner-license]
 [![GitHub stars](https://img.shields.io/github/stars/nicepkg/gpt-runner?style=social)][gpt-runner-url]
 
 
@@ -18,7 +18,8 @@
 
 [cli-url]: https://github.com/nicepkg/gpt-runner/blob/main/packages/gpt-runner-cli/README_CN.md
 [cli-image]: https://img.shields.io/badge/CLI-Node.js-green?logo=node.js
-[gpt-runner-url]: https://github.com/nicepkg/gpt-runner/tree/main
+[gpt-runner-license]: https://github.com/nicepkg/gpt-runner/tree/main/LICENSE
+[gpt-runner-url]: https://github.com/nicepkg/gpt-runner
 [web-url]: https://github.com/nicepkg/gpt-runner/tree/main/packages/gpt-runner-web/README_CN.md
 [web-image]: https://img.shields.io/badge/Web-React-blue?logo=react
 [vscode-url]: https://github.com/nicepkg/gpt-runner/tree/main/packages/gpt-runner-vscode/README_CN.md
@@ -120,6 +121,10 @@ npx gptr
 
 ## ❓ 常见问题
 
+> 对 AI 提升开发效率感兴趣的，可以加我 wechat: qq2214962083 入群交流
+> 
+> 要求：会科学上网，使用过 chatgpt
+
 [简体中文 > 常见问题](https://github.com/nicepkg/gpt-runner/tree/main/docs/faq.cn.md)
 
 ## 💖 赞助者
@@ -143,6 +148,7 @@ npx gptr
 > 字母顺序排列
 
 - [Docusaurus](https://github.com/facebook/docusaurus)
+- [Gradio](https://github.com/gradio-app/gradio)
 - [LangchainJs](https://github.com/hwchase17/langchainjs)
 - [Monaco-React](https://github.com/suren-atoyan/monaco-react)
 - [UnoCss](https://github.com/unocss/unocss)

@@ -1,10 +1,10 @@
 {
   "publisher": "nicepkg",
   "name": "gpt-runner",
-  "displayName": "GPT Runner",
-  "version": "0.6.6",
+  "displayName": "GPT Runner - Chatgpt & Claude",
+  "version": "1.0.0",
   "private": true,
-  "description": "Use GPT-Runner to manage your AI presets, engage in AI-powered conversations with your code, and significantly boost the development efficiency of both you and your team!",
+  "description": "Conversations with files! Manage AI presets!",
   "license": "MIT",
   "funding": "https://github.com/sponsors/2214962083",
   "homepage": "https://github.com/nicepkg/gpt-runner/tree/main/packages/gpt-runner-vscode#readme",
@@ -81,6 +81,11 @@
         "title": "Open GPT Runner Chat",
         "icon": "res/logo.svg",
         "category": "GPT Runner"
+      },
+      {
+        "command": "gpt-runner.askSelection",
+        "title": "💬 Ask GPT Runner",
+        "category": "GPT Runner"
       }
     ],
     "configuration": {
@@ -110,6 +115,13 @@
           "group": "navigation",
           "icon": "res/logo.svg"
         }
+      ],
+      "editor/context": [
+        {
+          "command": "gpt-runner.askSelection",
+          "group": "gpt-runner",
+          "when": "editorHasSelection"
+        }
       ]
     },
     "jsonValidation": [
@@ -134,7 +146,7 @@
     "@nicepkg/gpt-runner-web": "workspace:*",
     "@types/vscode": "^1.71.0",
     "@vscode/vsce": "^2.19.0",
-    "esno": "^0.16.3",
+    "esno": "^0.17.0",
     "eventemitter3": "^5.0.1",
     "execa": "^7.1.1",
     "fs-extra": "^11.1.1",
