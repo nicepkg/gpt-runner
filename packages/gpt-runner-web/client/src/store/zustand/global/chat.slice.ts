@@ -296,6 +296,7 @@ export const createChatSlice: StateCreator<
     chatIdAbortCtrlMap.set(chatId, abortCtrl)
 
     const contextFilePaths = state.getContextFilePaths()
+    const shouldProvideEditingPath = state.provideFileInfoToGptMap.activeIdeFileContents || state.provideFileInfoToGptMap.openingIdeFileContents
 
     await fetchLlmStream({
       signal: abortCtrl.signal,
@@ -304,7 +305,7 @@ export const createChatSlice: StateCreator<
       appendSystemPrompt,
       singleFilePath,
       contextFilePaths,
-      editingFilePath: tempState.ideActiveFilePath,
+      editingFilePath: shouldProvideEditingPath ? tempState.ideActiveFilePath : undefined,
       overrideModelType: state.overrideModelType || undefined,
       overrideModelsConfig: state.overrideModelsConfig,
       rootPath: getGlobalConfig().rootPath,
