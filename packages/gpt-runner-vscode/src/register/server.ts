@@ -3,6 +3,7 @@ import { getPort } from '@nicepkg/gpt-runner-shared/node'
 import type { Disposable, ExtensionContext } from 'vscode'
 import * as vscode from 'vscode'
 import waitPort from 'wait-port'
+import { toUnixPath } from '@nicepkg/gpt-runner-shared/common'
 import type { ContextLoader } from '../contextLoader'
 import { Commands } from '../constant'
 import { state } from '../state'
@@ -36,6 +37,8 @@ export async function registerServer(
         autoFreePort: true,
         excludePorts: [3003, 3006],
       })
+
+      process.env.GPTR_DEFAULT_ROOT_PATH = toUnixPath(cwd)
 
       await startServer({
         port: finalPort,

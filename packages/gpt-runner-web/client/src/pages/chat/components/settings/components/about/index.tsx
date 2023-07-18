@@ -7,7 +7,7 @@ import { useGlobalStore } from '../../../../../../store/zustand/global'
 import { useConfetti } from '../../../../../../hooks/use-confetti.hook'
 import { AboutWrapper, Content, List, ListItem, StyledLogo, Title } from './about.styles'
 
-export const About = memo(forwardRef<HTMLDivElement, {}>((_props, ref) => {
+export const About = memo(forwardRef<HTMLDivElement>((_props, ref) => {
   const { t } = useTranslation()
   const { langId } = useGlobalStore()
   const { runConfettiAnime } = useConfetti()

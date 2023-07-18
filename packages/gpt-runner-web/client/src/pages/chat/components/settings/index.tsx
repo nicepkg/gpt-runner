@@ -1,6 +1,7 @@
-import { type CSSProperties, type FC, memo, useEffect, useMemo, useState } from 'react'
+import { type CSSProperties, type FC, Fragment, memo, useEffect, useMemo, useState } from 'react'
 import { VSCodePanelTab, VSCodePanelView } from '@vscode/webview-ui-toolkit/react'
 import { useTranslation } from 'react-i18next'
+import { ChatModelType } from '@nicepkg/gpt-runner-shared/common'
 import { StyledVSCodePanels } from '../../chat.styles'
 import { FormTitle } from '../../../../components/form-title'
 import { useGlobalStore } from '../../../../store/zustand/global'
@@ -60,6 +61,21 @@ export const Settings: FC<SettingsProps> = memo((props) => {
   }
 
   const renderOverrideSetting = () => {
+    const showModelTypeSecretsSettings: ChatModelType[] = [
+      ChatModelType.Openai,
+      ChatModelType.Anthropic,
+    ].sort((a, b) => {
+      const currentModelType = singleFileConfig?.model?.type || ChatModelType.Openai
+
+      if (a === currentModelType)
+        return -1
+
+      if (b === currentModelType)
+        return 1
+
+      return 0
+    })
+
     return <ConfigInfoWrapper>
       <FormTitle size="large">
         {t('chat_page.settings_general')}
@@ -69,11 +85,17 @@ export const Settings: FC<SettingsProps> = memo((props) => {
         {t('chat_page.settings_proxy')}
       </FormTitle>
       <ProxySettings></ProxySettings>
-      <FormTitle size="large">
-        <ModelSettings userConfig={userConfig} singleFileConfig={singleFileConfig} viewType='title'></ModelSettings>
-        {` ${t('chat_page.settings_config')}`}
-      </FormTitle>
-      <ModelSettings userConfig={userConfig} singleFileConfig={singleFileConfig} viewType='secrets'></ModelSettings>
+
+      {/* model settings */}
+      {showModelTypeSecretsSettings.map((modelType) => {
+        return <Fragment key={modelType}>
+          <FormTitle size="large">
+            <ModelSettings viewType='title' modelType={modelType}></ModelSettings>
+            {` ${t('chat_page.settings_config')}`}
+          </FormTitle>
+          <ModelSettings viewType='secrets' modelType={modelType}></ModelSettings>
+        </Fragment>
+      })}
     </ConfigInfoWrapper>
   }
 

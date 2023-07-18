@@ -25,6 +25,7 @@ import { emitter } from '../../../../helpers/emitter'
 import { ModelSettings } from '../settings/components/model-settings'
 import { ContentWrapper } from '../../chat.styles'
 import { ContextSettings } from '../settings/components/context-settings'
+import { OverrideModelTypeSettings } from '../settings/components/model-settings/override-model-type'
 import { ChatPanelPopoverTreeWrapper, ChatPanelWrapper } from './chat-panel.styles'
 import { createRemarkOpenEditorPlugin } from './remark-plugin'
 
@@ -50,6 +51,7 @@ export const ChatPanel: FC<ChatPanelProps> = memo((props) => {
   const { t } = useTranslation()
   const {
     themeName,
+    overrideModelType,
     createChatAndActive,
     getGptFileTreeItemFromChatId,
   } = useGlobalStore()
@@ -127,7 +129,7 @@ export const ChatPanel: FC<ChatPanelProps> = memo((props) => {
     catch (error) {
       toast.error(getErrorMsg(error))
     }
-  }, [])
+  }, [t])
 
   // insert codes
   const handleInsertCodes = useCallback((value: string) => {
@@ -203,7 +205,7 @@ export const ChatPanel: FC<ChatPanelProps> = memo((props) => {
       inputtingPrompt: t('chat_page.continue_inputting_prompt'),
     }, false)
     generateCurrentChatAnswer()
-  }, [chatInstance, updateCurrentChatInstance, generateCurrentChatAnswer])
+  }, [chatInstance, updateCurrentChatInstance, generateCurrentChatAnswer, t])
 
   // stop
   const handleStopGenerateAnswer = useCallback(() => {
@@ -253,7 +255,7 @@ export const ChatPanel: FC<ChatPanelProps> = memo((props) => {
     messageItems: chatInstance?.messages.map((message, i) => {
       const isLast = i === chatInstance.messages.length - 1
       const isLastTwo = i >= chatInstance.messages.length - 2
-      const isAi = message.name === ChatRole.ASSISTANT
+      const isAi = message.name === ChatRole.Assistant
 
       const handleRegenerateMessage = () => {
         if (!isLast)
@@ -375,11 +377,25 @@ export const ChatPanel: FC<ChatPanelProps> = memo((props) => {
           return <ContentWrapper $isPopoverContent style={{
             maxWidth: '400px',
           }}>
+            {/* override model type */}
             <FormTitle>
-              <ModelSettings rootPath={rootPath} singleFilePath={chatInstance?.singleFilePath} viewType='title'></ModelSettings>
+              {t('chat_page.override_model_type')}
+            </FormTitle>
+            <OverrideModelTypeSettings></OverrideModelTypeSettings>
+
+            {/* override model configs */}
+            <FormTitle>
+              <ModelSettings viewType='title' modelType={overrideModelType || undefined}></ModelSettings>
               {` ${t('chat_page.override_settings')}`}
             </FormTitle>
-            <ModelSettings rootPath={rootPath} singleFilePath={chatInstance?.singleFilePath} viewType='model'></ModelSettings>
+            <ModelSettings
+              viewType='model'
+              modelType={overrideModelType || undefined}
+              rootPath={rootPath}
+              singleFilePath={chatInstance?.singleFilePath}
+            ></ModelSettings>
+
+            {/* context settings */}
             <FormTitle>
               {t('chat_page.context_settings')}
             </FormTitle>

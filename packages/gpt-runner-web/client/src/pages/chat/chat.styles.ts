@@ -2,7 +2,7 @@ import { css, styled } from 'styled-components'
 import { VSCodePanels } from '@vscode/webview-ui-toolkit/react'
 import { withBreakpoint } from '../../helpers/with-breakpoint'
 
-export const ContentWrapper = styled.div<{ $isPopoverContent: boolean; $isTopToolbarPopover?: boolean }>`
+export const ContentWrapper = styled.div<{ $isPopoverContent?: boolean; $isTopToolbarPopover?: boolean }>`
   width: 100%;
   height: 100%;
   flex-shrink: 0;

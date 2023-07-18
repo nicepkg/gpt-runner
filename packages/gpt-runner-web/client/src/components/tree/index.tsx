@@ -14,7 +14,7 @@ export interface TreeProps<OtherInfo extends TreeItemBaseStateOtherInfo = TreeIt
   renderTreeItemRightSlot?: TreeItemProps<OtherInfo>['renderRightSlot']
 }
 
-export function Tree_<OtherInfo extends TreeItemBaseStateOtherInfo = TreeItemBaseStateOtherInfo>(props: TreeProps<OtherInfo>) {
+function Tree_<OtherInfo extends TreeItemBaseStateOtherInfo = TreeItemBaseStateOtherInfo>(props: TreeProps<OtherInfo>) {
   const {
     items,
     buildTreeItem,
@@ -46,8 +46,9 @@ export function Tree_<OtherInfo extends TreeItemBaseStateOtherInfo = TreeItemBas
           onTreeItemContextMenu?.(state)
         },
         onClick(state) {
-          item.onClick?.(state)
-          onTreeItemClick?.(state)
+          const isStopA = item.onClick?.(state)
+          const isStopB = onTreeItemClick?.(state)
+          return (isStopA === false || isStopB === false) ? false : undefined
         },
         onExpand(state) {
           item.onExpand?.(state)

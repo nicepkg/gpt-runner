@@ -1,6 +1,7 @@
 import type { Disposable, ExtensionContext } from 'vscode'
 import * as vscode from 'vscode'
 import { openInBrowser } from '@nicepkg/gpt-runner-shared/node'
+import { toUnixPath } from '@nicepkg/gpt-runner-shared/common'
 import type { ContextLoader } from '../contextLoader'
 import { Commands } from '../constant'
 import { getServerBaseUrl } from '../utils'
@@ -19,10 +20,22 @@ export async function registerOpenInBrowser(
   const registerProvider = () => {
     dispose()
 
-    disposable = vscode.commands.registerCommand(Commands.OpenInBrowser, () => {
-      openInBrowser({
-        url: `${getServerBaseUrl(true)}/#/chat?rootPath=${cwd}`,
+    process.env.GPTR_DEFAULT_ROOT_PATH = toUnixPath(cwd)
+    disposable = vscode.commands.registerCommand(Commands.OpenInBrowser, async () => {
+      const options: string[] = [
+        getServerBaseUrl(false),
+        getServerBaseUrl(true),
+      ]
+
+      const selectResult = await vscode.window.showQuickPick(options, {
+        placeHolder: 'Select an option',
       })
+
+      if (selectResult) {
+        openInBrowser({
+          url: selectResult,
+        })
+      }
     })
 
     return disposable

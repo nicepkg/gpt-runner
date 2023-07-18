@@ -19,9 +19,9 @@ export default defineConfig(async () => {
   return {
     root: resolvePath('./'),
     publicDir: resolvePath('./public'),
-    optimizeDeps: {
-      include: ['@nicepkg/gpt-runner-shared'],
-    },
+    // optimizeDeps: {
+    //   include: ['@nicepkg/gpt-runner-shared'],
+    // },
     plugins: [
       React(),
       Svgr(),

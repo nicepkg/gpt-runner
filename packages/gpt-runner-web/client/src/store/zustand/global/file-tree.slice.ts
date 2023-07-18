@@ -42,8 +42,8 @@ function getInitialState() {
     provideFileInfoToGptMap: {
       allFilePaths: false,
       checkedFileContents: true,
-      activeIdeFileContents: false,
-      openingIdeFileContents: true,
+      activeIdeFileContents: true,
+      openingIdeFileContents: false,
       userSelectedText: true,
     },
     provideFileInfoPromptMap: {

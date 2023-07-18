@@ -27,11 +27,18 @@ export interface ClientEventData {
 
   [ClientEventName.UpdateUserSelectedText]: {
     text: string
+    insertInputPrompt?: boolean
   }
 
   [ClientEventName.OpenFileInIde]: {
     filePath: string
   }
+
+  [ClientEventName.OpenFileInFileEditor]: {
+    fileFullPath: string
+  }
+
+  [ClientEventName.GoToChatPanel]: void
 }
 
 export type EventEmitterMap = {

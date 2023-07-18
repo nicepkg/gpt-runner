@@ -15,7 +15,10 @@ import { useChatInstance } from '../../../../hooks/use-chat-instance.hook'
 import { useOn } from '../../../../hooks/use-on.hook'
 import { getGlobalConfig } from '../../../../helpers/global-config'
 import { emitter } from '../../../../helpers/emitter'
-import { MAYBE_IDE } from '../../../../helpers/constant'
+import { IS_SAFE } from '../../../../helpers/constant'
+import { useFileEditorStore } from '../../../../store/zustand/file-editor'
+import { useKeyIsPressed } from '../../../../hooks/use-keyboard.hook'
+import { openEditor } from '../../../../networks/editor'
 import { StyledIcon } from './chat-sidebar.styles'
 
 export interface ChatSidebarProps {
@@ -39,11 +42,12 @@ export const ChatSidebar: FC<ChatSidebarProps> = memo((props) => {
     updateSidebarTreeFromRemote,
   } = useGlobalStore()
 
+  const { addFileEditorItem } = useFileEditorStore()
   const [isLoading, setIsLoading] = useState(false)
-
   const { removeChatInstance } = useChatInstance({
     chatId,
   })
+  const isPressedCtrl = useKeyIsPressed(['command', 'ctrl'])
 
   useEffect(() => {
     expandChatTreeItem(chatId)
@@ -81,9 +85,21 @@ export const ChatSidebar: FC<ChatSidebarProps> = memo((props) => {
   const handleClickTreeItem = useCallback((props: TreeItemState<GptFileInfoTreeItem>) => {
     const { otherInfo } = props
 
+    if (otherInfo?.type === GptFileTreeItemType.File
+      && otherInfo?.path
+      && isPressedCtrl
+      && IS_SAFE
+    ) {
+      // pressed ctrl + click then open file in editor
+      openEditor({
+        path: otherInfo.path,
+      })
+      return false
+    }
+
     if (otherInfo?.type === GptFileTreeItemType.Chat)
       updateActiveChatId(otherInfo.id)
-  }, [updateActiveChatId])
+  }, [updateActiveChatId, isPressedCtrl])
 
   const renderTreeItemLeftSlot = useCallback((props: TreeItemState<GptTreeItemOtherInfo>) => {
     const { isLeaf, isExpanded, otherInfo } = props
@@ -118,8 +134,16 @@ export const ChatSidebar: FC<ChatSidebarProps> = memo((props) => {
       if (!path)
         return
 
-      if (getGlobalConfig().editFileInIde)
+      if (getGlobalConfig().editFileInIde) {
         emitter.emit(ClientEventName.OpenFileInIde, { filePath: path })
+        return
+      }
+
+      if (IS_SAFE) {
+        addFileEditorItem({
+          fullPath: path,
+        })
+      }
     }
 
     if (otherInfo?.type === GptFileTreeItemType.Chat && isLeaf) {
@@ -135,7 +159,7 @@ export const ChatSidebar: FC<ChatSidebarProps> = memo((props) => {
     if (otherInfo?.type === GptFileTreeItemType.File) {
       return <>
         {/* TODO: implement edit file in web */}
-        {isHovering && MAYBE_IDE && <StyledIcon
+        {isHovering && <StyledIcon
           title={t('chat_page.edit_btn')}
           className='codicon-edit'
           onClick={handleEditGptFile}

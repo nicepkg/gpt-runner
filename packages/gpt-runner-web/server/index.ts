@@ -6,7 +6,7 @@ import history from 'connect-history-api-fallback'
 import { PathUtils, getPort } from '@nicepkg/gpt-runner-shared/node'
 import { setProxyUrl } from './src/proxy'
 import { processControllers } from './src/controllers'
-import { errorHandlerMiddleware } from './src/middleware'
+import { errorHandlerMiddleware, safeCheckMiddleware } from './src/middleware'
 
 const dirname = PathUtils.getCurrentDirName(import.meta.url, () => __dirname)
 
@@ -36,6 +36,8 @@ export async function startServer(props: StartServerProps): Promise<Express> {
   const router = express.Router()
 
   app.use(cors())
+
+  app.use(safeCheckMiddleware)
 
   processControllers(router)
 

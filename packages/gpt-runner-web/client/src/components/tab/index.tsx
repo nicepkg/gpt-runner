@@ -1,16 +1,16 @@
 import type { CSSProperties, ReactNode } from 'react'
-import { memo, useCallback, useEffect, useMemo, useState } from 'react'
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useMotionValue } from 'framer-motion'
 import { useElementSizeRealTime } from '../../hooks/use-element-size-real-time.hook'
-import { Icon } from '../icon'
 import { useDebounceFn } from '../../hooks/use-debounce-fn.hook'
 import { isElementVisible } from '../../helpers/utils'
 import {
   ActiveTabIndicator,
-  MoreIcon,
+  MoreIconWrapper,
   MoreList,
   MoreListItem,
   MoreWrapper,
+  StyledMoreIcon,
   TabContainer,
   TabItemLabel,
   TabItemWrapper,
@@ -23,32 +23,34 @@ export interface TabItem<T extends string = string> {
   label: ReactNode
   id: T
   children?: ReactNode
-  visible?: boolean
 }
 
 export interface TabProps<T extends string = string> {
   defaultActiveId?: T
   activeId?: T
   items: TabItem<T>[]
-  style?: CSSProperties
+  tabListStyles?: CSSProperties
+  tabItemStyles?: CSSProperties
   onChange?: (activeTabId: T) => void
 }
 
-export function Tab_<T extends string = string>(props: TabProps<T>) {
+function Tab_<T extends string = string>(props: TabProps<T>) {
   const {
     defaultActiveId,
     activeId: activeIdFromProp,
     items = [],
+    tabListStyles,
+    tabItemStyles,
     onChange: onChangeFromProp,
   } = props
 
-  const DEFAULT_ACTIVE_ID = items[0].id
+  const DEFAULT_ACTIVE_ID = items?.[0]?.id
   const TAB_ID_ATTR = 'data-tab-id'
   const [activeIdFromPrivate, setActiveIdFromPrivate] = useState<T>()
-  const [showMore, setShowMore] = useState(false)
   const [moreList, setMoreList] = useState<TabItem<T>[]>([])
   const [moreListVisible, setMoreListVisible] = useState(false)
   const [tabRef, tabSize] = useElementSizeRealTime<HTMLDivElement>()
+  const showMore = moreList.length > 0
 
   // motion
   const indicatorWidth = useMotionValue(0)
@@ -57,6 +59,8 @@ export function Tab_<T extends string = string>(props: TabProps<T>) {
   const activeId = useMemo(() => {
     return activeIdFromProp ?? activeIdFromPrivate ?? defaultActiveId ?? DEFAULT_ACTIVE_ID
   }, [activeIdFromProp, activeIdFromPrivate, defaultActiveId])
+
+  const activeIdHistory = useRef<T[]>([])
 
   const setActiveId = useCallback((id: T) => {
     onChangeFromProp ? onChangeFromProp(id) : setActiveIdFromPrivate(id)
@@ -70,6 +74,20 @@ export function Tab_<T extends string = string>(props: TabProps<T>) {
     })
     return map
   }, [items])
+
+  useEffect(() => {
+    // if items change and the activeId is not in the new items, set the activeId to the previous activeId
+    if (!tabIdTabItemMap[activeId]) {
+      const validActiveId = activeIdHistory.current.reverse().find(id => Boolean(tabIdTabItemMap[id])) || items?.[0]?.id
+      setActiveId(validActiveId)
+    }
+  }, [items, activeId, setActiveId, tabIdTabItemMap])
+
+  useEffect(() => {
+    // update activeIdHistory
+    if (activeIdHistory.current[activeIdHistory.current.length - 1] !== activeId)
+      activeIdHistory.current.push(activeId)
+  }, [activeId])
 
   const getTabItemById = useCallback((id: T): TabItem<T> | undefined => {
     return tabIdTabItemMap[id]
@@ -88,31 +106,19 @@ export function Tab_<T extends string = string>(props: TabProps<T>) {
     setMoreListVisible(false)
   }, [setActiveId, setMoreListVisible])
 
-  const calcTabChildrenWidth = useCallback(() => {
-    const labelDoms = getLabelDoms()
-
-    if (!labelDoms.length)
-      return 0
-
-    const tabsWidth = labelDoms.reduce((acc, cur) => {
-      return acc + cur.offsetWidth
-    }, 0)
-
-    return tabsWidth
-  }, [getLabelDoms])
-
   useEffect(() => {
     const activeLabelDom = getActiveLabelDom()
 
-    if (!activeLabelDom)
+    if (!activeLabelDom || !tabRef.current)
       return
 
-    activeLabelDom.scrollIntoView({
+    const scrollLeft = activeLabelDom.offsetLeft - (tabRef.current.offsetWidth / 2 - activeLabelDom.offsetWidth / 2)
+
+    tabRef.current?.scrollTo({
+      left: scrollLeft,
       behavior: 'smooth',
-      block: 'nearest',
-      inline: 'center',
     })
-  }, [getActiveLabelDom, tabSize.width])
+  }, [getActiveLabelDom, tabSize.width, tabRef.current, activeId])
 
   // let it scroll when mouse wheel on tab list
   const handleTabListScroll = useCallback((event: React.WheelEvent<HTMLDivElement>) => {
@@ -131,12 +137,11 @@ export function Tab_<T extends string = string>(props: TabProps<T>) {
       const tabItem = getTabItemById(tabId)
       const isVisible = isElementVisible(item, item.parentElement!, 0.6)
 
-      if (!tabItem)
+      if (!tabItem || isVisible)
         return
 
       _moreList.push({
         ...tabItem,
-        visible: isVisible,
       })
     })
 
@@ -163,15 +168,18 @@ export function Tab_<T extends string = string>(props: TabProps<T>) {
   }, [updateIndicatorPosition, tabSize.width])
 
   useEffect(() => {
-    const tabsTotalWidth = calcTabChildrenWidth()
-    setShowMore(tabsTotalWidth > tabSize.width)
     updateMoreList()
-  }, [calcTabChildrenWidth, setShowMore, updateMoreList, tabSize.width])
+  }, [updateMoreList, activeId, tabSize.width])
 
   return (
     <TabContainer>
       <TabListHeader data-show-more={showMore}>
-        <TabListWrapper ref={tabRef} data-show-more={showMore} onWheel={handleTabListScroll}>
+        <TabListWrapper
+          ref={tabRef}
+          data-show-more={showMore}
+          onWheel={handleTabListScroll}
+          style={tabListStyles}
+        >
           {items.map(item => (
             <div {...{
               key: item.id,
@@ -181,6 +189,7 @@ export function Tab_<T extends string = string>(props: TabProps<T>) {
                 <TabItemLabel
                   className={activeId === item.id ? 'tab-item-active' : ''}
                   tabIndex={activeId === item.id ? 0 : -1}
+                  style={tabItemStyles}
                 >
                   {item.label}
                 </TabItemLabel>
@@ -198,18 +207,17 @@ export function Tab_<T extends string = string>(props: TabProps<T>) {
 
         {showMore && (
           <MoreWrapper>
-            <MoreIcon onClick={() => setMoreListVisible(!moreListVisible)}>
-              <Icon className="codicon-more" />
-            </MoreIcon>
-            {moreListVisible && (
-              <MoreList>
-                {moreList.map(item => (
-                  !item.visible && <MoreListItem key={item.id} onClick={() => handleTabItemClick(item)}>
-                    {item.label}
-                  </MoreListItem>
-                ))}
-              </MoreList>
-            )}
+            <MoreIconWrapper onClick={() => setMoreListVisible(!moreListVisible)}>
+              <StyledMoreIcon className="codicon-more" />
+            </MoreIconWrapper>
+            {moreListVisible && <MoreList>
+              {moreList.map(item => (
+                <MoreListItem key={item.id} onClick={() => handleTabItemClick(item)}>
+                  {item.label}
+                </MoreListItem>
+              ))}
+            </MoreList>
+            }
           </MoreWrapper>
         )}
       </TabListHeader>

@@ -1,5 +1,5 @@
-import { DEFAULT_OPENAI_API_BASE_PATH } from '@nicepkg/gpt-runner-shared/common'
-import type { OpenaiSecrets, SingleFileConfig } from '@nicepkg/gpt-runner-shared/common'
+import { ChatModelType, DEFAULT_OPENAI_API_BASE_PATH } from '@nicepkg/gpt-runner-shared/common'
+import type { OpenaiSecrets } from '@nicepkg/gpt-runner-shared/common'
 import { type FC, memo } from 'react'
 import { VSCodeLink } from '@vscode/webview-ui-toolkit/react'
 import { useTranslation } from 'react-i18next'
@@ -11,12 +11,9 @@ interface FormData extends Pick<OpenaiSecrets, 'apiKey' | 'accessToken' | 'baseP
 }
 
 export interface OpenaiSecretsSettingsProps {
-  singleFileConfig: SingleFileConfig
 }
 
 export const OpenaiSecretsSettings: FC<OpenaiSecretsSettingsProps> = memo((props) => {
-  const { singleFileConfig } = props
-
   const { t } = useTranslation()
 
   const formConfig: BaseSecretsSettingsFormItemConfig<FormData>[] = [
@@ -67,7 +64,7 @@ export const OpenaiSecretsSettings: FC<OpenaiSecretsSettingsProps> = memo((props
     },
   ]
 
-  return <BaseSecretsSettings singleFileConfig={singleFileConfig} formConfig={formConfig} />
+  return <BaseSecretsSettings modelType={ChatModelType.Openai} formConfig={formConfig} />
 })
 
 OpenaiSecretsSettings.displayName = 'OpenaiSecretsSettings'

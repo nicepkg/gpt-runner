@@ -7,21 +7,17 @@ import {
   PanelTabContent,
 } from './panel-tab.styles'
 
-export interface PanelTabProps<T extends string = string> extends Pick<TabProps<T>, 'defaultActiveId' | 'items' | 'onChange' | 'activeId'> {
+export interface PanelTabProps<T extends string = string> extends Pick<TabProps<T>, 'defaultActiveId' | 'items' | 'onChange' | 'activeId' | 'tabListStyles' | 'tabItemStyles'> {
   style?: CSSProperties
-  tabStyle?: CSSProperties
 }
 
-export function PanelTab_<T extends string = string>(props: PanelTabProps<T>) {
-  const { style, tabStyle, ...otherProps } = props
+function PanelTab_<T extends string = string>(props: PanelTabProps<T>) {
+  const { style, ...otherProps } = props
 
   return (
     <PanelTabContainer style={style}>
       <PanelTabContent>
-        <Tab
-          style={tabStyle}
-          {...otherProps}
-        />
+        <Tab {...otherProps} />
       </PanelTabContent>
     </PanelTabContainer>
   )

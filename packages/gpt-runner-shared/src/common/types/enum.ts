@@ -1,12 +1,13 @@
 export enum ChatModelType {
   Openai = 'openai',
   HuggingFace = 'huggingFace',
+  Anthropic = 'anthropic',
 }
 
 export enum ChatRole {
   User = 'user',
-  ASSISTANT = 'assistant',
-  SYSTEM = 'system',
+  Assistant = 'assistant',
+  System = 'system',
 }
 
 export enum ChatMessageStatus {
@@ -26,6 +27,8 @@ export enum ClientEventName {
   UpdateIdeActiveFilePath = 'updateIdeActiveFilePath',
   UpdateUserSelectedText = 'updateUserSelectedText',
   OpenFileInIde = 'openFileInIde',
+  OpenFileInFileEditor = 'openFileInFileEditor',
+  GoToChatPanel = 'goToChatPanel',
 }
 
 export enum GptFileTreeItemType {
@@ -57,6 +60,8 @@ export enum LocaleLang {
 }
 
 export enum SecretStorageKey {
+  Anthropic = 'anthropic',
+  HuggingFace = 'huggingFace',
   Openai = 'openai',
   Proxy = 'proxy',
 }

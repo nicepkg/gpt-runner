@@ -1,5 +1,4 @@
 import { ChatModelType, ServerStorageName, getModelConfigTypeSchema } from '@nicepkg/gpt-runner-shared/common'
-import type { SingleFileConfig } from '@nicepkg/gpt-runner-shared/common'
 import { memo, useEffect } from 'react'
 import type { ReactNode } from 'react'
 import { useForm } from 'react-hook-form'
@@ -24,16 +23,16 @@ export interface BaseSecretsSettingsFormItemConfig<FormData extends Record<strin
 }
 
 export interface BaseSecretsSettingsProps<FormData extends Record<string, any>> {
-  singleFileConfig?: SingleFileConfig
+  modelType?: ChatModelType
   formConfig: BaseSecretsSettingsFormItemConfig<FormData>[]
 }
 
 function BaseSecretsSettings_<FormData extends Record<string, any>>(props: BaseSecretsSettingsProps<FormData>) {
-  const { singleFileConfig, formConfig } = props
+  const { modelType, formConfig } = props
 
   const { t } = useTranslation()
   const { setLoading } = useLoading()
-  const currentModelType = singleFileConfig?.model?.type || ChatModelType.Openai
+  const currentModelType = modelType || ChatModelType.Openai
 
   const { data: querySecretsRes } = useQuery({
     queryKey: ['secrets', currentModelType],

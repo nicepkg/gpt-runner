@@ -2,6 +2,7 @@ export const MIN_NODE_VERSION = '16.15.0'
 export const SECRET_KEY_PLACEHOLDER = '********'
 export const STREAM_DONE_FLAG = '[DONE]'
 export const GPT_RUNNER_OFFICIAL_FOLDER = '.gpt-runner'
+export const DEFAULT_ANTHROPIC_API_BASE_PATH = 'https://api.anthropic.com'
 export const DEFAULT_OPENAI_API_BASE_PATH = 'https://api.openai.com/v1'
 
 export const DEFAULT_EXCLUDE_FILES = [

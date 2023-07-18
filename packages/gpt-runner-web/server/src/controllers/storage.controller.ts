@@ -16,15 +16,12 @@ export const storageControllers: ControllerConfig = {
         verifyParamsByZod(query, StorageGetItemReqParamsSchema)
 
         const { key, storageName } = query
-
         const { storage, cacheDir } = await getStorage(storageName)
         let value = await storage.get(key)
-
-        const reqHostName = req.hostname
-        const isLocal = ['localhost', '127.0.0.1'].includes(reqHostName)
+        const isSafe = req.isSafe
 
         // Don't send secrets config to client when not open in localhost
-        if (storageName === ServerStorageName.SecretsConfig && !isLocal) {
+        if (storageName === ServerStorageName.SecretsConfig && !isSafe) {
           value = typeof value === 'object'
             ? Object.fromEntries(Object.entries(value || {})
               .map(([k, v]) => [k, v ? '*'.repeat(v.length) : null]))
@@ -50,11 +47,7 @@ export const storageControllers: ControllerConfig = {
         const { storageName, key, value } = body
         const { storage } = await getStorage(storageName)
 
-        const reqHostName = req.hostname
-        const isLocal = ['localhost', '127.0.0.1'].includes(reqHostName)
-
-        // Don't send secrets config to client when not open in localhost
-        if (storageName === ServerStorageName.SecretsConfig && !isLocal)
+        if (storageName === ServerStorageName.SecretsConfig && !req.isSafe)
           throw new Error('Cannot set secrets config when not open in localhost')
 
         await storage.set(key, value)
@@ -68,6 +61,7 @@ export const storageControllers: ControllerConfig = {
     {
       url: '/',
       method: 'delete',
+      requireSafe: true,
       handler: async (req, res) => {
         const body = req.body as StorageRemoveItemReqParams
 
@@ -75,7 +69,6 @@ export const storageControllers: ControllerConfig = {
 
         const { key, storageName } = body
         const { storage } = await getStorage(storageName)
-
         await storage.delete(key)
 
         sendSuccessResponse(res, {
@@ -86,6 +79,7 @@ export const storageControllers: ControllerConfig = {
     {
       url: '/clear',
       method: 'post',
+      requireSafe: true,
       handler: async (req, res) => {
         const body = req.body as StorageClearReqParams
 
@@ -93,7 +87,6 @@ export const storageControllers: ControllerConfig = {
 
         const { storageName } = body
         const { storage } = await getStorage(storageName)
-
         await storage.clear()
 
         sendSuccessResponse(res, {

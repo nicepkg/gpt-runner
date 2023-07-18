@@ -1,6 +1,6 @@
 import type { FileInfoTree } from './common-file'
 import type { PartialChatModelTypeMap, SingleChatMessage, SingleFileConfig, UserConfig } from './config'
-import type { ServerStorageName } from './enum'
+import type { ChatModelType, ServerStorageName } from './enum'
 import type { GptFileInfo, GptFileInfoTree } from './gpt-file'
 
 export interface BaseResponse<T = any> {
@@ -27,6 +27,12 @@ export interface ChatStreamReqParams {
    */
   systemPrompt?: string
   appendSystemPrompt?: string
+
+  /**
+   * send system prompt as user prompt
+   * @default false
+   */
+  systemPromptAsUserPrompt?: boolean
   singleFilePath?: string
 
   /**
@@ -34,6 +40,7 @@ export interface ChatStreamReqParams {
    * and get the real time singleFileConfig and then provide singleFileConfig to LangchainJs
    */
   singleFileConfig?: SingleFileConfig
+  overrideModelType?: ChatModelType
   overrideModelsConfig?: PartialChatModelTypeMap
   contextFilePaths?: string[]
   editingFilePath?: string
@@ -132,3 +139,39 @@ export interface OpenEditorReqParams {
 }
 
 export type OpenEditorResData = null
+
+export interface CreateFilePathReqParams {
+  fileFullPath: string
+  isDir: boolean
+}
+
+export type CreateFilePathResData = null
+
+export interface RenameFilePathReqParams {
+  oldFileFullPath: string
+  newFileFullPath: string
+}
+
+export type RenameFilePathResData = null
+
+export interface DeleteFilePathReqParams {
+  fileFullPath: string
+}
+
+export type DeleteFilePathResData = null
+
+export interface GetFileInfoReqParams {
+  fileFullPath: string
+}
+
+export interface GetFileInfoResData {
+  content: string
+  isDir: boolean
+}
+
+export interface SaveFileContentReqParams {
+  fileFullPath: string
+  content: string
+}
+
+export type SaveFileContentResData = null

@@ -1,9 +1,5 @@
-import { zodToJsonSchema } from 'zod-to-json-schema'
-import { SingleFileConfigSchema, UserConfigForUserSchema } from '../src/common'
+import { singleFileJsonSchema, userConfigJsonSchema } from '../src/common'
 import { FileUtils, PathUtils } from '../src/node'
-
-const userConfigJsonSchema = zodToJsonSchema(UserConfigForUserSchema)
-const singleFileJsonSchema = zodToJsonSchema(SingleFileConfigSchema)
 
 interface JsonSchemaFile {
   fileName: string

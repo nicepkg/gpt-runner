@@ -15,7 +15,7 @@ export async function gptMdFileParser(params: GptMdFileParserParams): Promise<Si
   // match ```json
   const configJsonString = content.match(/^\s*?```json([\s\S]*?)```/i)?.[1]?.trim()
 
-  const singleFileConfig = singleFileConfigWithDefault(configJsonString ? tryParseJson(configJsonString) : {})
+  const singleFileConfig = singleFileConfigWithDefault(configJsonString ? tryParseJson(configJsonString, true) : {})
 
   type ResolveConfigKey = 'userPrompt' | 'systemPrompt'
   const resolveTitleConfig: {

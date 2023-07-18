@@ -1,4 +1,4 @@
-import type { OpenaiModelConfig, SingleFileConfig } from '@nicepkg/gpt-runner-shared/common'
+import { ChatModelType, type OpenaiModelConfig, type SingleFileConfig } from '@nicepkg/gpt-runner-shared/common'
 import { memo, useState } from 'react'
 import type { FC } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -29,6 +29,10 @@ export const OpenaiModelSettings: FC<OpenaiModelSettingsProps> = memo((props) =>
       value: 'gpt-4',
     },
     {
+      label: 'gpt-4-32k',
+      value: 'gpt-4-32k',
+    },
+    {
       label: 'gpt-3.5-turbo',
       value: 'gpt-3.5-turbo',
     },
@@ -41,7 +45,7 @@ export const OpenaiModelSettings: FC<OpenaiModelSettingsProps> = memo((props) =>
         return <>
           <HookFormInput
             name="modelName"
-            label={buildLabel(t('chat_page.openai_model_name'))}
+            label={buildLabel(t('chat_page.model_name'))}
             labelInLeft
             placeholder={''}
             errors={formState.errors}
@@ -62,7 +66,7 @@ export const OpenaiModelSettings: FC<OpenaiModelSettingsProps> = memo((props) =>
         return <>
           <HookFormInput
             name="temperature"
-            label={buildLabel(t('chat_page.openai_temperature'))}
+            label={buildLabel(t('chat_page.temperature'))}
             labelInLeft
             isNumber
             placeholder={'0 ~ 1'}
@@ -78,7 +82,7 @@ export const OpenaiModelSettings: FC<OpenaiModelSettingsProps> = memo((props) =>
         return <>
           <HookFormInput
             name="maxTokens"
-            label={buildLabel(t('chat_page.openai_max_tokens'))}
+            label={buildLabel(t('chat_page.max_tokens'))}
             labelInLeft
             isNumber
             minNumber={0}
@@ -95,7 +99,7 @@ export const OpenaiModelSettings: FC<OpenaiModelSettingsProps> = memo((props) =>
         return <>
           <HookFormInput
             name="topP"
-            label={buildLabel(t('chat_page.openai_top_p'))}
+            label={buildLabel(t('chat_page.top_p'))}
             labelInLeft
             minNumber={0}
             maxNumber={1}
@@ -113,7 +117,7 @@ export const OpenaiModelSettings: FC<OpenaiModelSettingsProps> = memo((props) =>
         return <>
           <HookFormInput
             name="frequencyPenalty"
-            label={buildLabel(t('chat_page.openai_frequency_penalty'))}
+            label={buildLabel(t('chat_page.frequency_penalty'))}
             labelInLeft
             isNumber
             minNumber={-2}
@@ -131,7 +135,7 @@ export const OpenaiModelSettings: FC<OpenaiModelSettingsProps> = memo((props) =>
         return <>
           <HookFormInput
             name="presencePenalty"
-            label={buildLabel(t('chat_page.openai_presence_penalty'))}
+            label={buildLabel(t('chat_page.presence_penalty'))}
             labelInLeft
             isNumber
             minNumber={-2}
@@ -145,7 +149,11 @@ export const OpenaiModelSettings: FC<OpenaiModelSettingsProps> = memo((props) =>
     },
   ]
 
-  return <BaseModelSettings singleFileConfig={singleFileConfig} formConfig={formConfig} />
+  return <BaseModelSettings
+    modelType={ChatModelType.Openai}
+    singleFileConfig={singleFileConfig}
+    formConfig={formConfig}
+  />
 })
 
 OpenaiModelSettings.displayName = 'OpenaiModelSettings'

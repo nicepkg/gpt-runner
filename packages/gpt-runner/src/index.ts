@@ -6,7 +6,7 @@ export * from '@nicepkg/gpt-runner-shared/node'
 type GetStaticValueFromChatModelType<T extends ChatModelType> = T extends ChatModelType ? `${T}` : never
 
 export type UserConfig = {
-  [Key in keyof IUserConfig]: Key extends 'model' ? Omit<NonNullable<IUserConfig[Key]>, 'type'> & {
+  [Key in keyof Omit<IUserConfig, 'rootPath' | 'exts'>]: Key extends 'model' ? Omit<NonNullable<IUserConfig[Key]>, 'type'> & {
     type: GetStaticValueFromChatModelType<NonNullable<IUserConfig[Key]>['type']>
   } : IUserConfig[Key]
 }

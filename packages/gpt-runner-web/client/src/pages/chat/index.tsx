@@ -1,6 +1,6 @@
 import type { FC } from 'react'
 import React, { memo, useCallback, useEffect, useState } from 'react'
-import { ChatMessageStatus } from '@nicepkg/gpt-runner-shared/common'
+import { ChatMessageStatus, ClientEventName } from '@nicepkg/gpt-runner-shared/common'
 import { useWindowSize } from 'react-use'
 import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
@@ -19,6 +19,9 @@ import { useSize } from '../../hooks/use-size.hook'
 import { useGetCommonFilesTree } from '../../hooks/use-get-common-files-tree.hook'
 import type { TabItem } from '../../components/tab'
 import { IconButton } from '../../components/icon-button'
+import { IS_SAFE } from '../../helpers/constant'
+import { useOn } from '../../hooks/use-on.hook'
+import { useFileEditorStore } from '../../store/zustand/file-editor'
 import { ContentWrapper } from './chat.styles'
 import { ChatSidebar } from './components/chat-sidebar'
 import { ChatPanel } from './components/chat-panel'
@@ -26,13 +29,18 @@ import { FileTree } from './components/file-tree'
 import { Settings, SettingsTabId } from './components/settings'
 import { InitGptFiles } from './components/init-gpt-files'
 import { TopToolbar } from './components/top-toolbar'
+import { FileEditor } from './components/file-editor'
 
-enum TabId {
+enum MobileTabId {
   Presets = 'presets',
   Chat = 'chat',
   Files = 'files',
-  Settings = 'settings',
-  About = 'about',
+  FileEditor = 'file-editor',
+}
+
+enum PcTabId {
+  Chat = 'chat',
+  FileEditor = 'file-editor',
 }
 
 const Chat: FC = memo(() => {
@@ -43,10 +51,12 @@ const Chat: FC = memo(() => {
   const { activeChatId, sidebarTree, updateActiveChatId, updateSidebarTreeFromRemote } = useGlobalStore()
   const { chatInstance } = useChatInstance({ chatId: activeChatId })
   const [scrollDownRef, scrollDown, getScrollBottom] = useScrollDown()
-  const [tabActiveId, setTabActiveId] = useState(TabId.Presets)
+  const [mobileTabActiveId, setMobileTabActiveId] = useState<MobileTabId>(MobileTabId.Presets)
+  const [pcTabActiveId, setPcTabActiveId] = useState<PcTabId>(PcTabId.Chat)
   const showFileTreeOnRightSide = windowWidth >= 1000
   const chatPanelHeight = windowHeight - toolbarHeight
   const [isOpenTreeDrawer, setIsOpenTreeDrawer] = useState(true)
+  const { activeFileFullPath, updateActiveFileFullPath } = useFileEditorStore()
 
   const { data: fetchProjectInfoRes } = useQuery({
     queryKey: ['fetchProjectInfo'],
@@ -65,8 +75,18 @@ const Chat: FC = memo(() => {
 
   // when active chat id change, change tab active id
   useEffect(() => {
-    setTabActiveId(activeChatId ? TabId.Chat : TabId.Presets)
+    setMobileTabActiveId(activeChatId ? MobileTabId.Chat : MobileTabId.Presets)
+    if (activeChatId)
+      setPcTabActiveId(PcTabId.Chat)
   }, [activeChatId, isMobile])
+
+  useOn({
+    eventName: ClientEventName.GoToChatPanel,
+    listener: () => {
+      setMobileTabActiveId(MobileTabId.Chat)
+      setPcTabActiveId(PcTabId.Chat)
+    },
+  })
 
   // any status will scroll down
   useEffect(() => {
@@ -86,6 +106,15 @@ const Chat: FC = memo(() => {
       scrollDown()
     }, 0)
   }, [scrollDownRef.current])
+
+  useOn({
+    eventName: ClientEventName.OpenFileInFileEditor,
+    listener: ({ fileFullPath }) => {
+      setPcTabActiveId(PcTabId.FileEditor)
+      setMobileTabActiveId(MobileTabId.FileEditor)
+      updateActiveFileFullPath(fileFullPath)
+    },
+  })
 
   const renderSidebar = useCallback((isPopover = false, reverseTreeUi?: boolean) => {
     if (!rootPath)
@@ -114,6 +143,21 @@ const Chat: FC = memo(() => {
     </ContentWrapper>
   }, [activeChatId])
 
+  const renderFileEditor = useCallback(() => {
+    if (!rootPath)
+      return null
+
+    return <ContentWrapper>
+      <FileEditor
+        rootPath={rootPath}
+        activeFileFullPath={activeFileFullPath || ''}
+        onActiveFileChange={(item) => {
+          updateActiveFileFullPath(item.fullPath)
+        }}
+      ></FileEditor>
+    </ContentWrapper>
+  }, [activeFileFullPath, rootPath])
+
   const renderChatPanel = useCallback(() => {
     return <ChatPanel
       rootPath={rootPath}
@@ -140,27 +184,51 @@ const Chat: FC = memo(() => {
     return <ErrorView text={fetchProjectInfoRes?.data?.nodeVersionValidMessage}></ErrorView>
 
   const renderChat = () => {
+    // mobile
     if (isMobile) {
-      const tabIdViewMap: TabItem<TabId>[] = [
+      const mobileTabItems: TabItem<MobileTabId>[] = [
         {
-          id: TabId.Presets,
+          id: MobileTabId.Presets,
           label: t('chat_page.tab_presets'),
           children: renderSidebar(),
         },
         {
-          id: TabId.Chat,
+          id: MobileTabId.Chat,
           label: t('chat_page.tab_chat'),
           children: renderChatPanel(),
         },
         {
-          id: TabId.Files,
+          id: MobileTabId.Files,
           label: t('chat_page.tab_files'),
           children: renderFileTree(),
         },
       ]
 
-      return <PanelTab items={tabIdViewMap} activeId={tabActiveId} onChange={setTabActiveId} />
+      if (IS_SAFE && !getGlobalConfig().editFileInIde) {
+        mobileTabItems.push(
+          {
+            id: MobileTabId.FileEditor,
+            label: t('chat_page.tab_file_editor'),
+            children: renderFileEditor(),
+          })
+      }
+
+      return <PanelTab items={mobileTabItems} activeId={mobileTabActiveId} onChange={setMobileTabActiveId} />
     }
+
+    // pc
+    const pcTabItems: TabItem<PcTabId>[] = [
+      {
+        id: PcTabId.Chat,
+        label: t('chat_page.tab_chat'),
+        children: renderChatPanel(),
+      },
+      {
+        id: PcTabId.FileEditor,
+        label: t('chat_page.tab_file_editor'),
+        children: renderFileEditor(),
+      },
+    ]
 
     return <FlexRow style={{ height: '100%', overflow: 'hidden' }}>
       <DragResizeView
@@ -176,7 +244,19 @@ const Chat: FC = memo(() => {
         {renderSidebar()}
       </DragResizeView>
 
-      {renderChatPanel()}
+      {IS_SAFE && !getGlobalConfig().editFileInIde
+        ? <PanelTab
+          items={pcTabItems}
+          activeId={pcTabActiveId}
+          onChange={setPcTabActiveId}
+          style={{
+            flex: 1,
+          }}
+          tabListStyles={{
+            justifyContent: 'flex-start',
+          }}
+        />
+        : renderChatPanel()}
 
       {showFileTreeOnRightSide
         ? <DragResizeView

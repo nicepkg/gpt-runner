@@ -45,6 +45,7 @@ export const gptFilesControllers: ControllerConfig = {
     {
       url: '/init-gpt-files',
       method: 'post',
+      requireSafe: true,
       handler: async (req, res) => {
         const body = req.body as InitGptFilesReqParams
 

@@ -1,5 +1,5 @@
-import { ChatModelType, getModelConfigTypeSchema } from '@nicepkg/gpt-runner-shared/common'
-import type { BaseModelConfig, SingleFileConfig } from '@nicepkg/gpt-runner-shared/common'
+import { getModelConfigTypeSchema } from '@nicepkg/gpt-runner-shared/common'
+import type { BaseModelConfig, ChatModelType, SingleFileConfig } from '@nicepkg/gpt-runner-shared/common'
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { ReactNode } from 'react'
 import type { Path, UseFormReturn } from 'react-hook-form'
@@ -22,17 +22,22 @@ export interface BaseModelSettingsFormItemConfig<FormData extends BaseModelConfi
 }
 
 export interface BaseModelSettingsProps<FormData extends BaseModelConfig> {
+  modelType: ChatModelType
   singleFileConfig?: SingleFileConfig
   formConfig: BaseModelSettingsFormItemConfig<FormData>[]
 }
 
 function BaseModelSettings_<FormData extends BaseModelConfig>(props: BaseModelSettingsProps<FormData>) {
-  const { singleFileConfig, formConfig } = props
+  const { modelType, singleFileConfig, formConfig } = props
 
   const { t } = useTranslation()
   const { overrideModelsConfig, updateOverrideModelsConfig } = useGlobalStore()
-  const currentModel = singleFileConfig?.model as FormData | undefined
-  const currentModelType = currentModel?.type || ChatModelType.Openai
+  const modelFromSingleFileConfig = singleFileConfig?.model as FormData | undefined
+
+  const currentModelType = modelType
+  const currentModel = currentModelType === modelFromSingleFileConfig?.type ? modelFromSingleFileConfig : undefined
+  const isUserConfigLoaded = singleFileConfig === undefined || singleFileConfig?.model !== undefined
+
   const isInitCheckMap = useRef(false)
 
   const currentModelOverrideConfig = useMemo(() => {
@@ -84,7 +89,7 @@ function BaseModelSettings_<FormData extends BaseModelConfig>(props: BaseModelSe
 
   // init
   useEffect(() => {
-    if (isInitCheckMap.current || !singleFileConfig?.model || !currentModelOverrideConfig)
+    if (isInitCheckMap.current || !isUserConfigLoaded || !currentModelOverrideConfig)
       return
 
     // init checked map
@@ -109,7 +114,7 @@ function BaseModelSettings_<FormData extends BaseModelConfig>(props: BaseModelSe
     })
 
     isInitCheckMap.current = true
-  }, [isInitCheckMap.current, singleFileConfig?.model, JSON.stringify(currentModelOverrideConfig)])
+  }, [isInitCheckMap.current, currentModel, isUserConfigLoaded, JSON.stringify(currentModelOverrideConfig)])
 
   const buildLabel = (label: string, formName: keyof FormData) => {
     return <LabelWrapper>

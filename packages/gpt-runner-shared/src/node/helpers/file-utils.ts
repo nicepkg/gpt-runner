@@ -15,6 +15,15 @@ export interface WriteFileParams {
   valid?: boolean
 }
 
+export interface EnsurePathParams {
+  filePath: string
+}
+
+export interface MovePathParams {
+  oldPath: string
+  newPath: string
+}
+
 export interface TravelFilesParams {
   filePath: string
   isValidPath: (filePath: string) => MaybePromise<boolean>
@@ -59,14 +68,16 @@ export class FileUtils {
 
     if (valid) {
       // check if path is file and is writable
-      if (PathUtils.isAccessible(filePath, 'W'))
+      if (!PathUtils.isAccessible(filePath, 'W'))
         return
 
       if (!PathUtils.isFile(filePath))
         return
     }
 
-    await fs.mkdir(PathUtils.getDirPath(filePath), { recursive: true })
+    const dir = PathUtils.getDirPath(filePath)
+    if (!PathUtils.isExit(dir))
+      await fs.mkdir(dir, { recursive: true })
 
     if (overwrite)
       await fs.writeFile(filePath, content, { encoding: 'utf8' })
@@ -78,6 +89,20 @@ export class FileUtils {
   static async deletePath(fullPath: string): Promise<void> {
     if (!PathUtils.isAccessible(fullPath, 'W'))
       await fs.rm(fullPath, { recursive: true })
+  }
+
+  static async ensurePath(params: EnsurePathParams): Promise<void> {
+    const { filePath } = params
+
+    if (!PathUtils.isAccessible(filePath, 'W'))
+      await fs.mkdir(filePath, { recursive: true })
+  }
+
+  static async movePath(params: MovePathParams): Promise<void> {
+    const { oldPath, newPath } = params
+
+    if (PathUtils.isAccessible(oldPath, 'W'))
+      await fs.rename(oldPath, newPath)
   }
 
   static async travelFiles(params: TravelFilesParams): Promise<void> {

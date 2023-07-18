@@ -9,11 +9,11 @@ export const OpenaiSecretsSchema = z.object({
   // username: z.string().optional().describe('The OpenAI username'),
   // password: z.string().optional().describe('The OpenAI password'),
   accessToken: z.string().optional().describe('The OpenAI access token'),
-  basePath: z.string().optional().default(DEFAULT_OPENAI_API_BASE_PATH).describe('The Chatgpt base path'),
+  basePath: z.string().optional().default(DEFAULT_OPENAI_API_BASE_PATH).describe('The OpenAI base API path'),
 }) satisfies z.ZodType<OpenaiSecrets>
 
 export const OpenaiModelConfigSchema = BaseModelConfigSchema.extend({
-  type: z.literal(ChatModelType.Openai).describe('Use Open AI model'),
+  type: z.literal(ChatModelType.Openai).describe('Use OpenAI model'),
   secrets: OpenaiSecretsSchema.optional().describe('The OpenAI API secrets config'),
   temperature: z.number().optional().describe('The temperature for the OpenAI model'),
   maxTokens: z.number().optional().describe('The maximum number of tokens for the OpenAI model'),

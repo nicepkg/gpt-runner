@@ -15,6 +15,7 @@ import { initI18n } from './helpers/i18n'
 import { Toast } from './components/toast'
 import { LoadingView } from './components/loading-view'
 import { ConfettiProvider } from './store/context/confetti-context'
+import { ModalProvider } from './store/context/modal-context'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -74,7 +75,9 @@ export const AppProviders: FC<PropsWithChildren> = memo(({ children }) => {
         <Toast></Toast>
         <ConfettiProvider>
           <LoadingProvider>
-            {children}
+            <ModalProvider>
+              {children}
+            </ModalProvider>
           </LoadingProvider>
         </ConfettiProvider>
       </QueryClientProvider>

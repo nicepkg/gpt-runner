@@ -1,7 +1,7 @@
 {
   "name": "@nicepkg/gpt-runner-cli",
-  "version": "0.5.1",
-  "description": "CLI for GPT Runner",
+  "version": "1.1.0",
+  "description": "GPT-Runner CLI helps manage AI presets and enables AI-driven conversations with your code, streamlining development workflows and boosting efficiency.",
   "author": {
     "name": "Jinming Yang",
     "email": "2214962083@qq.com",
@@ -20,10 +20,14 @@
   },
   "keywords": [
     "gpt-runner",
+    "langchain",
     "chatgpt",
     "prompt",
-    "langchain",
-    "ai"
+    "ai",
+    "storybook",
+    "openai",
+    "huggingFace",
+    "anthropic"
   ],
   "bin": {
     "gptr": "./bin/gpt-runner.mjs"
@@ -48,7 +52,7 @@
     "cac": "^6.7.14",
     "chokidar": "^3.5.3",
     "colorette": "^2.0.20",
-    "consola": "^3.2.2",
+    "consola": "^3.2.3",
     "execa": "^7.1.1",
     "wait-port": "^1.0.4"
   }

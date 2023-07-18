@@ -118,9 +118,10 @@ class ChatViewProvider implements vscode.WebviewViewProvider {
         showDiffCodesBtn: true,
         showInsertCodesBtn: true,
         defaultLangId: '${getLang()}',
+        defaultTheme: 'vscodeDynamic',
         showIdeFileContextOptions: true,
         showUserSelectedTextContextOptions: true,
-        editFileInIde: true
+        editFileInIde: true,
       }
 
       window.addEventListener('message', event => {

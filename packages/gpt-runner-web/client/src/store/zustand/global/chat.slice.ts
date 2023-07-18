@@ -1,5 +1,5 @@
 import type { StateCreator } from 'zustand'
-import type { PartialChatModelTypeMap, SingleChat } from '@nicepkg/gpt-runner-shared/common'
+import type { ChatModelType, PartialChatModelTypeMap, SingleChat } from '@nicepkg/gpt-runner-shared/common'
 import { ChatMessageStatus, ChatRole, STREAM_DONE_FLAG, travelTree } from '@nicepkg/gpt-runner-shared/common'
 import { v4 as uuidv4 } from 'uuid'
 import type { GetState } from '../types'
@@ -14,9 +14,13 @@ export enum GenerateAnswerType {
   Regenerate = 'regenerate',
 }
 
+export type OverrideModelType = ChatModelType | ''
+
 export interface ChatSlice {
   activeChatId: string
   chatInstances: SingleChat[]
+  systemPromptAsUserPrompt: boolean
+  overrideModelType: OverrideModelType
   overrideModelsConfig: PartialChatModelTypeMap
   updateActiveChatId: (activeChatId: string) => void
 
@@ -40,8 +44,10 @@ export interface ChatSlice {
   generateChatAnswer: (chatId: string, type?: GenerateAnswerType) => Promise<void>
   regenerateLastChatAnswer: (chatId: string) => Promise<void>
   stopGeneratingChatAnswer: (chatId: string) => void
+  updateOverrideModelType: (overrideModelType: OverrideModelType) => void
   updateOverrideModelsConfig: (overrideModelsConfig: PartialChatModelTypeMap | ((oldModelOverrideConfig: PartialChatModelTypeMap) => PartialChatModelTypeMap)) => void
   getContextFilePaths: () => string[]
+  updateSystemPromptAsUserPrompt: (systemPromptAsUserPrompt: boolean) => void
 }
 
 export type ChatState = GetState<ChatSlice>
@@ -50,6 +56,8 @@ function getInitialState() {
   return {
     activeChatId: '',
     chatInstances: [],
+    systemPromptAsUserPrompt: false,
+    overrideModelType: '',
     overrideModelsConfig: {},
   } satisfies ChatState
 }
@@ -228,7 +236,7 @@ export const createChatSlice: StateCreator<
       }
 
       finalMessages.push({
-        name: ChatRole.ASSISTANT,
+        name: ChatRole.Assistant,
         text: '',
       })
 
@@ -291,15 +299,18 @@ export const createChatSlice: StateCreator<
     chatIdAbortCtrlMap.set(chatId, abortCtrl)
 
     const contextFilePaths = state.getContextFilePaths()
+    const shouldProvideEditingPath = state.provideFileInfoToGptMap.activeIdeFileContents || state.provideFileInfoToGptMap.openingIdeFileContents
 
     await fetchLlmStream({
       signal: abortCtrl.signal,
       messages: sendMessages,
       prompt: sendInputtingPrompt,
       appendSystemPrompt,
+      systemPromptAsUserPrompt: state.systemPromptAsUserPrompt,
       singleFilePath,
       contextFilePaths,
-      editingFilePath: tempState.ideActiveFilePath,
+      editingFilePath: shouldProvideEditingPath ? tempState.ideActiveFilePath : undefined,
+      overrideModelType: state.overrideModelType || undefined,
       overrideModelsConfig: state.overrideModelsConfig,
       rootPath: getGlobalConfig().rootPath,
       onError(e) {
@@ -353,6 +364,9 @@ export const createChatSlice: StateCreator<
       status: ChatMessageStatus.Success,
     }, false)
   },
+  updateOverrideModelType(overrideModelType) {
+    set({ overrideModelType })
+  },
   updateOverrideModelsConfig(overrideModelsConfig) {
     const state = get()
     const finalModelOverrideConfig = typeof overrideModelsConfig === 'function' ? overrideModelsConfig(state.overrideModelsConfig) : overrideModelsConfig
@@ -375,5 +389,8 @@ export const createChatSlice: StateCreator<
       contextPaths.push(...tempState.ideOpeningFilePaths)
 
     return [...new Set(contextPaths)]
+  },
+  updateSystemPromptAsUserPrompt(systemPromptAsUserPrompt) {
+    set({ systemPromptAsUserPrompt })
   },
 })

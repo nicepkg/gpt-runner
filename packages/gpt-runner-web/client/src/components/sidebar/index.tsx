@@ -20,7 +20,7 @@ export interface SidebarProps<OtherInfo extends TreeItemBaseStateOtherInfo = Tre
   buildUnderSearchSlot?: () => React.ReactNode
 }
 
-export function Sidebar_<OtherInfo extends TreeItemBaseStateOtherInfo = TreeItemBaseStateOtherInfo>(props: SidebarProps<OtherInfo>) {
+function Sidebar_<OtherInfo extends TreeItemBaseStateOtherInfo = TreeItemBaseStateOtherInfo>(props: SidebarProps<OtherInfo>) {
   const {
     defaultSearchKeyword = '',
     placeholder,

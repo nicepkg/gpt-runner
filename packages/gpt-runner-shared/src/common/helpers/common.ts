@@ -1,4 +1,5 @@
 import { AxiosError } from 'axios'
+import * as jsonc from 'jsonc-parser'
 import type { TreeItem } from '../types'
 
 export function sleep(ms: number) {
@@ -82,9 +83,10 @@ export function travelTreeDeepFirst<T extends TreeItem<Record<string, any>>, R e
   return travel(tree) as R[]
 }
 
-export function tryParseJson(str: string) {
+export function tryParseJson(str: string, supportJsonc = false) {
   try {
-    return JSON.parse(str?.trim() ?? '')
+    const target = str?.trim() ?? ''
+    return supportJsonc ? jsonc.parse(target) : JSON.parse(target)
   }
   catch (e) {
     console.error('tryParseJson error: ', str, e)
@@ -245,4 +247,16 @@ export function waitForCondition(conditionFn: (...args: any[]) => boolean, timeo
       }
     }, 100)
   })
+}
+
+export function isChineseCharacter(char: string): boolean {
+  const charCode = char.charCodeAt(0)
+  return (charCode >= 0x4E00 && charCode <= 0x9FFF)
+         || (charCode >= 0x3400 && charCode <= 0x4DBF)
+         || (charCode >= 0x20000 && charCode <= 0x2A6DF)
+         || (charCode >= 0x2A700 && charCode <= 0x2B73F)
+         || (charCode >= 0x2B740 && charCode <= 0x2B81F)
+         || (charCode >= 0x2B820 && charCode <= 0x2CEAF)
+         || (charCode >= 0xF900 && charCode <= 0xFAFF)
+         || (charCode >= 0x2F800 && charCode <= 0x2FA1F)
 }

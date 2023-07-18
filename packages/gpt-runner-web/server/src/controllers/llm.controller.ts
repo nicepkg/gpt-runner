@@ -32,8 +32,10 @@ export const llmControllers: ControllerConfig = {
           singleFilePath,
           singleFileConfig: singleFileConfigFromParams,
           appendSystemPrompt = '',
+          systemPromptAsUserPrompt = false,
           contextFilePaths,
           editingFilePath,
+          overrideModelType,
           overrideModelsConfig,
           rootPath,
         } = body
@@ -54,6 +56,14 @@ export const llmControllers: ControllerConfig = {
             filePath: singleFilePath,
             userConfig,
           })
+        }
+
+        if (overrideModelType && overrideModelType !== singleFileConfig?.model?.type) {
+          singleFileConfig = {
+            model: {
+              type: overrideModelType,
+            },
+          }
         }
 
         const model = {
@@ -101,6 +111,7 @@ export const llmControllers: ControllerConfig = {
           const chain = await llmChain({
             messages,
             systemPrompt: finalSystemPrompt,
+            systemPromptAsUserPrompt,
             model: {
               ...model!,
               secrets: finalSecrets,

@@ -25,7 +25,10 @@ export const useGlobalStore = createStore('GlobalStore')<GlobalSlice, any>(
 
     {
       name: 'global-slice', // name of the item in the storage (must be unique)
-      storage: createJSONStorage(() => new CustomStorage(localStorage)), // (optional) by default, 'localStorage' is used
+      storage: createJSONStorage(() => new CustomStorage({
+        storage: localStorage,
+        syncToServer: true,
+      })),
     },
   ),
 )

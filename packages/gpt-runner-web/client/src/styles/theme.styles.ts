@@ -12,8 +12,6 @@ function buildThemeCssString(themes: typeof themeMap) {
     finalThemeString += `
       body[data-theme="${themeName}"] > * {
         ${themeString}
-        color: var(--foreground);
-        background: var(--background);
       }
 
       ${theme['--background']

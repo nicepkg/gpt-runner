@@ -1,6 +1,7 @@
-import type { NextFunction, Router } from 'express'
+import type { NextFunction, Response, Router } from 'express'
 import { WssActionName, WssUtils, buildFailResponse } from '@nicepkg/gpt-runner-shared/common'
-import type { Controller, ControllerConfig } from '../types'
+import { sendFailResponse } from '@nicepkg/gpt-runner-shared/node'
+import type { Controller, ControllerConfig, MyRequest } from '../types'
 import { llmControllers } from './llm.controller'
 import { commonFilesControllers } from './common-files.controller'
 import { configControllers } from './config.controller'
@@ -23,10 +24,19 @@ export function processControllers(router: Router) {
     const { namespacePath, controllers } = controllerConfig
 
     controllers.forEach((controller) => {
-      const { url, method, handler } = controller
+      const { url, method, requireSafe, handler } = controller
 
       const withCatchHandler: Controller['handler'] = async function (this: any, ...args) {
         try {
+          const req = args[0] as MyRequest
+          const res = args[1] as Response
+          if (requireSafe && !req.isSafe) {
+            sendFailResponse(res, {
+              message: 'This request is not allowed without localhost access!',
+            })
+            return
+          }
+
           return await handler.apply(this, args)
         }
         catch (error) {
@@ -35,7 +45,7 @@ export function processControllers(router: Router) {
         }
       }
 
-      router[method](`${namespacePath}${url}`, withCatchHandler)
+      router[method](`${namespacePath}${url}`, withCatchHandler as any)
     })
   })
 }

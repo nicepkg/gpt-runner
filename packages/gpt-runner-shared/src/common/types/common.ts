@@ -5,3 +5,9 @@ export type ReadonlyDeep<T> = {
   readonly [P in keyof T]: ReadonlyDeep<T[P]>
 }
 export type ValueOf<T> = T[keyof T]
+
+export type DeepRequired<T> = {
+  [P in keyof T]-?: DeepRequired<T[P]>
+}
+
+export type PartialKeys<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>
