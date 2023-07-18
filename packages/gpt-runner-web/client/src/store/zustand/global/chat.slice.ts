@@ -19,6 +19,7 @@ export type OverrideModelType = ChatModelType | ''
 export interface ChatSlice {
   activeChatId: string
   chatInstances: SingleChat[]
+  systemPromptAsUserPrompt: boolean
   overrideModelType: OverrideModelType
   overrideModelsConfig: PartialChatModelTypeMap
   updateActiveChatId: (activeChatId: string) => void
@@ -46,6 +47,7 @@ export interface ChatSlice {
   updateOverrideModelType: (overrideModelType: OverrideModelType) => void
   updateOverrideModelsConfig: (overrideModelsConfig: PartialChatModelTypeMap | ((oldModelOverrideConfig: PartialChatModelTypeMap) => PartialChatModelTypeMap)) => void
   getContextFilePaths: () => string[]
+  updateSystemPromptAsUserPrompt: (systemPromptAsUserPrompt: boolean) => void
 }
 
 export type ChatState = GetState<ChatSlice>
@@ -54,6 +56,7 @@ function getInitialState() {
   return {
     activeChatId: '',
     chatInstances: [],
+    systemPromptAsUserPrompt: false,
     overrideModelType: '',
     overrideModelsConfig: {},
   } satisfies ChatState
@@ -303,6 +306,7 @@ export const createChatSlice: StateCreator<
       messages: sendMessages,
       prompt: sendInputtingPrompt,
       appendSystemPrompt,
+      systemPromptAsUserPrompt: state.systemPromptAsUserPrompt,
       singleFilePath,
       contextFilePaths,
       editingFilePath: shouldProvideEditingPath ? tempState.ideActiveFilePath : undefined,
@@ -385,5 +389,8 @@ export const createChatSlice: StateCreator<
       contextPaths.push(...tempState.ideOpeningFilePaths)
 
     return [...new Set(contextPaths)]
+  },
+  updateSystemPromptAsUserPrompt(systemPromptAsUserPrompt) {
+    set({ systemPromptAsUserPrompt })
   },
 })

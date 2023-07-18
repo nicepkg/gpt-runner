@@ -29,6 +29,10 @@ export const OpenaiModelSettings: FC<OpenaiModelSettingsProps> = memo((props) =>
       value: 'gpt-4',
     },
     {
+      label: 'gpt-4-32k',
+      value: 'gpt-4-32k',
+    },
+    {
       label: 'gpt-3.5-turbo',
       value: 'gpt-3.5-turbo',
     },

@@ -56,6 +56,7 @@
     "override_settings": "Override Settings",
     "override_all_settings": "Override All Settings",
     "context_settings": "Context Settings",
+    "context_settings_system_prompt_as_user_prompt_tips": "Send System Prompt as message, useful for APIs that don't support System Prompt",
     "context_settings_selected_text_checkbox_tips": "Selected Text As Prompt <TokenNumWrapper>{{tokenNum}}</TokenNumWrapper> Tokens.",
     "context_settings_opening_ide_file_contents_checkbox_tips": "Opening IDE File Contents As Prompt <FileNumWrapper>{{fileNum}}</FileNumWrapper> Files <TokenNumWrapper>{{tokenNum}}</TokenNumWrapper> Tokens.",
     "context_settings_active_ide_file_contents_checkbox_tips": "Active IDE File Contents As Prompt <TokenNumWrapper>{{tokenNum}}</TokenNumWrapper> Tokens.",

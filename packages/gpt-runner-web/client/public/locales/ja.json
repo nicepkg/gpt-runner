@@ -56,6 +56,7 @@
     "override_settings": "設定を上書き",
     "override_all_settings": "すべての設定を上書きする",
     "context_settings": "コンテキスト設定",
+    "context_settings_system_prompt_as_user_prompt_tips": "システムプロンプトをメッセージとして送信します。システムプロンプトをサポートしていないAPIに便利です",
     "context_settings_selected_text_checkbox_tips": "選択したテキストをプロンプトとして使用<TokenNumWrapper>{{tokenNum}}</TokenNumWrapper>トークン。",
     "context_settings_opening_ide_file_contents_checkbox_tips": "開いているIDEファイルの内容をプロンプトとして使用<FileNumWrapper>{{fileNum}}</FileNumWrapper>ファイル<TokenNumWrapper>{{tokenNum}}</TokenNumWrapper>トークン。",
     "context_settings_active_ide_file_contents_checkbox_tips": "アクティブなIDEファイルの内容をプロンプトとして使用<TokenNumWrapper>{{tokenNum}}</TokenNumWrapper>トークン。",

@@ -8,6 +8,7 @@ export const ChatStreamReqParamsSchema = z.object({
   prompt: z.string(),
   systemPrompt: z.string().optional(),
   appendSystemPrompt: z.string().optional(),
+  systemPromptAsUserPrompt: z.boolean().optional(),
   singleFilePath: z.string().optional(),
   singleFileConfig: SingleFileConfigSchema.optional(),
   overrideModelType: ChatModelTypeSchema.optional(),

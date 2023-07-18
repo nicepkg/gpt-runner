@@ -32,6 +32,7 @@ export const llmControllers: ControllerConfig = {
           singleFilePath,
           singleFileConfig: singleFileConfigFromParams,
           appendSystemPrompt = '',
+          systemPromptAsUserPrompt = false,
           contextFilePaths,
           editingFilePath,
           overrideModelType,
@@ -110,6 +111,7 @@ export const llmControllers: ControllerConfig = {
           const chain = await llmChain({
             messages,
             systemPrompt: finalSystemPrompt,
+            systemPromptAsUserPrompt,
             model: {
               ...model!,
               secrets: finalSecrets,

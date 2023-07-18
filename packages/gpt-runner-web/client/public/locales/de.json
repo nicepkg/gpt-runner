@@ -56,6 +56,7 @@
     "override_settings": "Einstellungen überschreiben",
     "override_all_settings": "Alle Einstellungen überschreiben",
     "context_settings": "Kontext-Einstellungen",
+    "context_settings_system_prompt_as_user_prompt_tips": "Senden Sie Systemprompt als Nachricht, nützlich für APIs, die keine Systemprompt unterstützen",
     "context_settings_selected_text_checkbox_tips": "Ausgewählter Text als Aufforderung<TokenNumWrapper>{{tokenNum}}</TokenNumWrapper>Token.",
     "context_settings_opening_ide_file_contents_checkbox_tips": "Öffnen von IDE-Dateiinhalten als Aufforderung<FileNumWrapper>{{fileNum}}</FileNumWrapper>Dateien<TokenNumWrapper>{{tokenNum}}</TokenNumWrapper>Token.",
     "context_settings_active_ide_file_contents_checkbox_tips": "Aktive IDE-Dateiinhalte als Aufforderung<TokenNumWrapper>{{tokenNum}}</TokenNumWrapper>Token.",

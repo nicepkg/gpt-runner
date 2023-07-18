@@ -21,9 +21,11 @@ export const ContextSettings = memo((props: ContextSettingsProps) => {
 
   const { t } = useTranslation()
   const {
+    systemPromptAsUserPrompt,
     provideFileInfoToGptMap,
     checkedFilePaths,
     updateProvideFileInfoToGptMap,
+    updateSystemPromptAsUserPrompt,
   } = useGlobalStore()
 
   const {
@@ -81,6 +83,14 @@ export const ContextSettings = memo((props: ContextSettingsProps) => {
 
   return <StyledForm>
     {isLoading && <LoadingView absolute></LoadingView>}
+
+    {/* system prompt as user prompt */}
+    <StyledVSCodeCheckbox
+      checked={systemPromptAsUserPrompt}
+      onClick={() => updateSystemPromptAsUserPrompt(!systemPromptAsUserPrompt)}
+    >
+      {t('chat_page.context_settings_system_prompt_as_user_prompt_tips')}
+    </StyledVSCodeCheckbox>
 
     {/* selected text */}
     {getGlobalConfig().showUserSelectedTextContextOptions && <StyledVSCodeCheckbox

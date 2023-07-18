@@ -27,6 +27,12 @@ export interface ChatStreamReqParams {
    */
   systemPrompt?: string
   appendSystemPrompt?: string
+
+  /**
+   * send system prompt as user prompt
+   * @default false
+   */
+  systemPromptAsUserPrompt?: boolean
   singleFilePath?: string
 
   /**
