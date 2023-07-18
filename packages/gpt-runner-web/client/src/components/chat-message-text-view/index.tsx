@@ -2,6 +2,7 @@ import ReactMarkdown from 'react-markdown'
 import { type FC, memo } from 'react'
 import remarkGfm from 'remark-gfm'
 import type { PluginOptions } from 'react-markdown/lib/react-markdown'
+import { isShallowDeepEqual } from '@nicepkg/gpt-runner-shared/common'
 import type { MessageCodeBlockProps } from '../chat-message-code-block'
 import { MessageCodeBlock } from '../chat-message-code-block'
 
@@ -48,6 +49,6 @@ export const MessageTextView: FC<MessageTextViewProps> = memo((props) => {
       {contents}
     </ReactMarkdown>
   )
-})
+}, isShallowDeepEqual)
 
 MessageTextView.displayName = 'MessageTextView'

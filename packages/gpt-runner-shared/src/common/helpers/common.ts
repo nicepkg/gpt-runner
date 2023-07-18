@@ -94,12 +94,12 @@ export function tryParseJson(str: string, supportJsonc = false) {
   }
 }
 
-export function tryStringifyJson(obj: any) {
+export function tryStringifyJson(obj: any, ignoreError = false) {
   try {
     return JSON.stringify(obj)
   }
   catch (e) {
-    console.error('tryStringifyJson error: ', e)
+    !ignoreError && console.error('tryStringifyJson error: ', e)
     return ''
   }
 }
