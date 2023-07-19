@@ -2,10 +2,10 @@ import type { BaseLanguageModel } from 'langchain/dist/base_language'
 import { ChatModelType } from '@nicepkg/gpt-runner-shared/common'
 import { ChatOpenAI } from 'langchain/chat_models/openai'
 import { CallbackManager } from 'langchain/callbacks'
-import type { GetLLMChainParams } from '../type'
+import type { GetModelParams } from '../type'
 
-export function getOpenaiLLM(params: GetLLMChainParams): BaseLanguageModel | null {
-  const { model, onTokenStream, onComplete, onError } = params
+export function getOpenaiModel(params: GetModelParams): BaseLanguageModel | null {
+  const { streaming, model, onTokenStream, onComplete, onError } = params
 
   if (model.type === ChatModelType.Openai) {
     const { secrets, modelName, temperature, maxTokens, topP, frequencyPenalty, presencePenalty } = model
@@ -22,7 +22,7 @@ export function getOpenaiLLM(params: GetLLMChainParams): BaseLanguageModel | nul
     }
 
     return new ChatOpenAI({
-      streaming: true,
+      streaming,
       maxRetries: 1,
       openAIApiKey: secrets?.apiKey,
       modelName,

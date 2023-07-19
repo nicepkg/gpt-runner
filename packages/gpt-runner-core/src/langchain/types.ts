@@ -1,5 +1,6 @@
-export interface BaseStreamChainParams<Message> {
-  messages: Message[]
+export interface BaseModelParams<Message> {
+  streaming?: boolean
+  messages?: Message[]
   systemPrompt?: string
   systemPromptAsUserPrompt?: boolean
   onTokenStream?: (token: string) => void

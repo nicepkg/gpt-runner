@@ -46,7 +46,7 @@
 
 ## 📦 安装
 
-> 1. 要求 VSCode >= 1.72.0
+> 1. 要求 VSCode >= 1.78.0
 > 2. 确保你有一个 Open AI Key 或 Anthropic Key，如果没有，请访问 [Open AI](https://platform.openai.com/account/api-keys) 或 [Anthropic](https://www.anthropic.com/product/) 申请。
 
 

@@ -91,7 +91,7 @@ npx gptr
 
 ### 方式二：VSCode 扩展
 
-> 要求 VSCode >= 1.72.0
+> 要求 VSCode >= 1.78.0
 
 从 VSCode Marketplace 安装 [GPT-Runner VSCode 扩展](https://marketplace.visualstudio.com/items?itemName=nicepkg.gpt-runner)。
 

@@ -97,7 +97,7 @@ You can see the web interface in your browser at [http://localhost:3003](http://
 
 ### The second way:  VSCode Extension
 
-> Requirements VSCode >= 1.72.0
+> Requirements VSCode >= 1.78.0
 
 Install the [GPT-Runner VSCode Extension](https://marketplace.visualstudio.com/items?itemName=nicepkg.gpt-runner) from the VSCode Marketplace.
 

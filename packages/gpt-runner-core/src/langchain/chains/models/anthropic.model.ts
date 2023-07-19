@@ -1,25 +1,25 @@
 import type { BaseLanguageModel } from 'langchain/dist/base_language'
 import { ChatModelType } from '@nicepkg/gpt-runner-shared/common'
+import { ChatAnthropic } from 'langchain/chat_models/anthropic'
 import { CallbackManager } from 'langchain/callbacks'
-import { HuggingFaceInference } from 'langchain/llms/hf'
-import type { GetLLMChainParams } from '../type'
+import type { GetModelParams } from '../type'
 
-export function getHuggingFaceLLM(params: GetLLMChainParams): BaseLanguageModel | null {
-  const { model, onTokenStream, onComplete, onError } = params
+export function getAnthropicModel(params: GetModelParams): BaseLanguageModel | null {
+  const { streaming, model, onTokenStream, onComplete, onError } = params
 
-  if (model.type === ChatModelType.HuggingFace) {
-    const { secrets, modelName, temperature, maxTokens, topP, topK, frequencyPenalty } = model
+  if (model.type === ChatModelType.Anthropic) {
+    const { secrets, modelName, temperature, maxTokens, topP, topK } = model
 
-    return new HuggingFaceInference({
-      // streaming: true,
+    return new ChatAnthropic({
+      streaming,
       maxRetries: 1,
-      apiKey: secrets?.apiKey,
-      model: modelName,
+      anthropicApiKey: secrets?.apiKey,
+      anthropicApiUrl: secrets?.basePath,
+      modelName,
       temperature,
-      maxTokens,
+      maxTokensToSample: maxTokens,
       topP,
       topK,
-      frequencyPenalty,
       callbackManager: CallbackManager.fromHandlers({
         handleLLMNewToken: async (token: string) => {
           onTokenStream?.(token)

@@ -2,7 +2,7 @@ import type { Request, Response } from 'express'
 import type { ChatModelType, ChatStreamReqParams, FailResponse, SingleFileConfig, SuccessResponse } from '@nicepkg/gpt-runner-shared/common'
 import { ChatStreamReqParamsSchema, Debug, STREAM_DONE_FLAG, buildFailResponse, buildSuccessResponse, toUnixPath } from '@nicepkg/gpt-runner-shared/common'
 import { PathUtils, verifyParamsByZod } from '@nicepkg/gpt-runner-shared/node'
-import { createFileContext, getSecrets, llmChain, loadUserConfig, parseGptFile } from '@nicepkg/gpt-runner-core'
+import { createFileContext, getLLMChain, getSecrets, loadUserConfig, parseGptFile } from '@nicepkg/gpt-runner-core'
 import { getValidFinalPath } from '../services/valid-path'
 import type { ControllerConfig } from '../types'
 
@@ -108,7 +108,7 @@ export const llmControllers: ControllerConfig = {
 
           finalSystemPrompt += appendSystemPrompt
 
-          const chain = await llmChain({
+          const llmChain = await getLLMChain({
             messages,
             systemPrompt: finalSystemPrompt,
             systemPromptAsUserPrompt,
@@ -124,9 +124,22 @@ export const llmControllers: ControllerConfig = {
             },
           })
 
-          await chain.call({
+          await llmChain.call({
             'global.input': prompt,
           })
+
+          // const structDataChain = await getStructDataChain({
+          //   model: {
+          //     ...model!,
+          //     secrets: finalSecrets,
+          //   },
+          // })
+
+          // const structDataChainAnswer = await structDataChain.call({
+          //   input: answer,
+          // })
+
+          // console.log('structDataChainAnswer', structDataChainAnswer)
         }
         catch (error: any) {
           console.log('chatgptChain error', error)
