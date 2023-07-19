@@ -96,6 +96,11 @@
           "type": "boolean",
           "default": false,
           "description": "Disable the GPT Runner extension"
+        },
+        "gpt-runner.excludePorts": {
+          "type": "string",
+          "default": "",
+          "description": "GPT-Runner server excludes ports, multiple separated by ','  For example: 8080,9090"
         }
       }
     },

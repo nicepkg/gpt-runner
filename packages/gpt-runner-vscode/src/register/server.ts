@@ -7,6 +7,7 @@ import { toUnixPath } from '@nicepkg/gpt-runner-shared/common'
 import type { ContextLoader } from '../contextLoader'
 import { Commands } from '../constant'
 import { state } from '../state'
+import { getExtConfiguration } from '../utils'
 
 export async function registerServer(
   cwd: string,
@@ -31,11 +32,12 @@ export async function registerServer(
       const serverUri = vscode.Uri.joinPath(extensionUri, './dist/web/server.cjs')
       // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
       const { startServer } = require(serverUri.fsPath)
+      const extConfig = getExtConfiguration()
 
       // always get a random free port
       const finalPort = await getPort({
         autoFreePort: true,
-        excludePorts: [3003, 3006],
+        excludePorts: [3003, 3006, ...extConfig.excludePorts],
       })
 
       process.env.GPTR_DEFAULT_ROOT_PATH = toUnixPath(cwd)

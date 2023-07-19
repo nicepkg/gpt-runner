@@ -23,14 +23,18 @@ export function getOpenedTab(uri: vscode.Uri): vscode.Tab | null {
 
 export interface ExtensionConfiguration {
   disabled: boolean
+  excludePorts: number[]
 }
 
 export function getExtConfiguration(): ExtensionConfiguration {
   const config = vscode.workspace.getConfiguration(EXT_NAME)
   const disabled = config.get<boolean>('disable', false)
+  const excludePortsStr = config.get<string>('excludePorts', '')
+  const excludePorts = excludePortsStr.split(/[\,，]/).map(port => Number(port?.trim()))
 
   return {
     disabled,
+    excludePorts,
   }
 }
 
