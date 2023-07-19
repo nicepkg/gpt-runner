@@ -6,7 +6,8 @@
     "no-console": "off",
     "no-mixed-operators": "off",
     "no-restricted-globals": "off",
-    "unicorn/prefer-number-properties": "off"
+    "unicorn/prefer-number-properties": "off",
+    "n/prefer-global/process": "off"
   },
   "overrides": [
     {
