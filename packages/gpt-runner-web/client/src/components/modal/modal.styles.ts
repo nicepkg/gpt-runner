@@ -1,8 +1,9 @@
 import { styled } from 'styled-components'
 import { VSCodeButton } from '@vscode/webview-ui-toolkit/react'
+import { motion } from 'framer-motion'
 import { Icon } from '../icon'
 
-export const ModalWrapper = styled.div`
+export const ModalWrapper = styled(motion.div)`
   position: fixed;
   top: 0;
   left: 0;
@@ -21,7 +22,7 @@ export const ModalContentWrapper = styled.div`
   flex-direction: column;
   max-width: 100%;
   max-height: 80vh;
-  width: min(500px, calc(100vw -1rem));
+  width: min(500px, calc(100vw - 1rem));
   overflow: hidden;
   background: var(--panel-view-background);
   border-radius: 0.5rem;

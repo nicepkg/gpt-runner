@@ -2,7 +2,7 @@ import { FileUtils, PathUtils, launchEditorByPathAndContent, sendSuccessResponse
 import type { CreateFilePathReqParams, CreateFilePathResData, DeleteFilePathReqParams, DeleteFilePathResData, GetFileInfoReqParams, GetFileInfoResData, OpenEditorReqParams, OpenEditorResData, RenameFilePathReqParams, RenameFilePathResData, SaveFileContentReqParams, SaveFileContentResData } from '@nicepkg/gpt-runner-shared/common'
 import { CreateFilePathReqParamsSchema, DeleteFilePathReqParamsSchema, GetFileInfoReqParamsSchema, OpenEditorReqParamsSchema, RenameFilePathReqParamsSchema, SaveFileContentReqParamsSchema } from '@nicepkg/gpt-runner-shared/common'
 import type { ControllerConfig } from '../types'
-import { getValidFinalPath } from '../services/valid-path'
+import { getValidFinalPath } from '../helpers/valid-path'
 
 export const editorControllers: ControllerConfig = {
   namespacePath: '/editor',

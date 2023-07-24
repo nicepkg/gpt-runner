@@ -1,10 +1,11 @@
 import { checkNodeVersion, sendSuccessResponse, verifyParamsByZod } from '@nicepkg/gpt-runner-shared/node'
-import type { GetProjectConfigResData, GetUserConfigReqParams, GetUserConfigResData } from '@nicepkg/gpt-runner-shared/common'
-import { EnvConfig, GetUserConfigReqParamsSchema, removeUserConfigUnsafeKey } from '@nicepkg/gpt-runner-shared/common'
+import type { GetAppConfigReqParams, GetAppConfigResData, GetProjectConfigResData, GetUserConfigReqParams, GetUserConfigResData, MarkAsVisitedAppConfigReqParams, MarkAsVisitedAppConfigResData } from '@nicepkg/gpt-runner-shared/common'
+import { EnvConfig, GetAppConfigReqParamsSchema, GetUserConfigReqParamsSchema, MarkAsVisitedAppConfigReqParamsSchema, removeUserConfigUnsafeKey } from '@nicepkg/gpt-runner-shared/common'
 import { loadUserConfig } from '@nicepkg/gpt-runner-core'
 import pkg from '../../../package.json'
 import type { ControllerConfig } from '../types'
-import { getValidFinalPath } from '../services/valid-path'
+import { getValidFinalPath } from '../helpers/valid-path'
+import { AppConfigService } from '../services/app-config.service'
 
 export const configControllers: ControllerConfig = {
   namespacePath: '/config',
@@ -58,6 +59,43 @@ export const configControllers: ControllerConfig = {
           data: {
             userConfig,
           } satisfies GetUserConfigResData,
+        })
+      },
+    },
+    {
+      url: '/app-config',
+      method: 'get',
+      handler: async (req, res) => {
+        const query = req.query as GetAppConfigReqParams
+
+        verifyParamsByZod(query, GetAppConfigReqParamsSchema)
+
+        const { langId } = query
+
+        langId && AppConfigService.instance.updateLangId(langId)
+        const currentAppConfig = await AppConfigService.instance.getCurrentAppConfig(true)
+
+        sendSuccessResponse(res, {
+          data: {
+            ...currentAppConfig,
+          } satisfies GetAppConfigResData,
+        })
+      },
+    },
+    {
+      url: '/mark-as-visited-app-config',
+      method: 'post',
+      handler: async (req, res) => {
+        const body = req.body as MarkAsVisitedAppConfigReqParams
+
+        verifyParamsByZod(body, MarkAsVisitedAppConfigReqParamsSchema)
+
+        const { types } = body
+
+        await AppConfigService.instance.markedAsVisited(types)
+
+        sendSuccessResponse(res, {
+          data: null satisfies MarkAsVisitedAppConfigResData,
         })
       },
     },

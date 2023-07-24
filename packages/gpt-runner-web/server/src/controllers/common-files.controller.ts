@@ -2,7 +2,7 @@ import { PathUtils, sendSuccessResponse, verifyParamsByZod } from '@nicepkg/gpt-
 import { DEFAULT_EXCLUDE_FILE_EXTS, type GetCommonFilesReqParams, GetCommonFilesReqParamsSchema, type GetCommonFilesResData } from '@nicepkg/gpt-runner-shared/common'
 import { getCommonFileTree, loadUserConfig } from '@nicepkg/gpt-runner-core'
 import type { ControllerConfig } from '../types'
-import { getValidFinalPath } from '../services/valid-path'
+import { getValidFinalPath } from '../helpers/valid-path'
 
 export const commonFilesControllers: ControllerConfig = {
   namespacePath: '/common-files',

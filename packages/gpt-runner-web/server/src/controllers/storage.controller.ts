@@ -2,7 +2,7 @@ import { getStorage, sendSuccessResponse, verifyParamsByZod } from '@nicepkg/gpt
 import type { StorageClearReqParams, StorageClearResData, StorageGetItemReqParams, StorageGetItemResData, StorageRemoveItemReqParams, StorageRemoveItemResData, StorageSetItemReqParams, StorageSetItemResData } from '@nicepkg/gpt-runner-shared/common'
 import { ServerStorageName, StorageClearReqParamsSchema, StorageGetItemReqParamsSchema, StorageRemoveItemReqParamsSchema, StorageSetItemReqParamsSchema } from '@nicepkg/gpt-runner-shared/common'
 import type { ControllerConfig } from '../types'
-import { handleStorageKeySet } from '../services/handle-storage-key-set'
+import { handleStorageKeySet } from '../helpers/handle-storage-key-set'
 
 export const storageControllers: ControllerConfig = {
   namespacePath: '/storage',

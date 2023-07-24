@@ -2,16 +2,18 @@ import type { StateCreator } from 'zustand'
 import type { GetState } from '../types'
 import { createStore } from '../utils'
 import { FileSidebarTreeItem } from '../global/file-tree.slice'
-import { BaseResponse, GetCommonFilesResData, travelTree } from '@nicepkg/gpt-runner-shared/common'
+import { BaseResponse, CurrentAppConfig, GetCommonFilesResData, travelTree } from '@nicepkg/gpt-runner-shared/common'
 import { useGlobalStore } from '../global'
 
 export interface TempSlice {
+  currentAppConfig: CurrentAppConfig | null
   userSelectedText: string
   ideActiveFilePath: string
   ideOpeningFilePaths: string[]
   filesTree: FileSidebarTreeItem[]
   fullPathFileMap: Record<string, FileSidebarTreeItem>
   filesRelativePaths: string[]
+  updateCurrentAppConfig: (currentAppConfig: Partial<CurrentAppConfig> | null) => void
   updateIdeSelectedText: (userSelectedText: string) => void
   updateIdeActiveFilePath: (ideActiveFilePath: string) => void
   updateIdeOpeningFilePaths: (ideOpeningFilePaths: string[] | ((oldIdeOpeningFilePaths: string[]) => string[])) => void
@@ -26,6 +28,7 @@ export type TempState = GetState<TempSlice>
 
 function getInitialState() {
   return {
+    currentAppConfig: null,
     userSelectedText: '',
     ideActiveFilePath: '',
     ideOpeningFilePaths: [],
@@ -42,6 +45,15 @@ export const createTempSlice: StateCreator<
   TempSlice
 > = (set, get) => ({
   ...getInitialState(),
+  updateCurrentAppConfig(currentAppConfig) {
+    const state = get()
+    set({
+      currentAppConfig: {
+        ...state.currentAppConfig!,
+        ...currentAppConfig
+      },
+    })
+  },
   updateIdeSelectedText(userSelectedText) {
     set({
       userSelectedText,

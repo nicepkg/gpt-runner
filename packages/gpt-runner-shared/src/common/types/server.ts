@@ -1,6 +1,7 @@
+import type { CurrentAppConfig, MarkedAsVisitedType } from './app-config'
 import type { FileInfoTree } from './common-file'
 import type { PartialChatModelTypeMap, SingleChatMessage, SingleFileConfig, UserConfig } from './config'
-import type { ChatModelType, ServerStorageName } from './enum'
+import type { ChatModelType, LocaleLang, ServerStorageName } from './enum'
 import type { GptFileInfo, GptFileInfoTree } from './gpt-file'
 
 export interface BaseResponse<T = any> {
@@ -15,6 +16,10 @@ export type FailResponse<T = any> = Omit<BaseResponse<T>, 'type'> & { type: 'Fai
 
 export interface ProxySecrets {
   proxyUrl: string
+}
+
+export type ModelTypeVendorNameMap = {
+  [K in ChatModelType]?: string
 }
 
 export interface ChatStreamReqParams {
@@ -42,6 +47,12 @@ export interface ChatStreamReqParams {
   singleFileConfig?: SingleFileConfig
   overrideModelType?: ChatModelType
   overrideModelsConfig?: PartialChatModelTypeMap
+
+  /**
+   * models type vendor name map
+   */
+  modelTypeVendorNameMap?: ModelTypeVendorNameMap
+
   contextFilePaths?: string[]
   editingFilePath?: string
   rootPath?: string
@@ -79,6 +90,18 @@ export interface GetProjectConfigResData {
   nodeVersion: string
   nodeVersionValidMessage: string
 }
+
+export interface GetAppConfigReqParams {
+  langId?: LocaleLang
+}
+
+export type GetAppConfigResData = CurrentAppConfig
+
+export interface MarkAsVisitedAppConfigReqParams {
+  types: MarkedAsVisitedType[]
+}
+
+export type MarkAsVisitedAppConfigResData = null
 
 export interface GetUserConfigReqParams {
   rootPath: string

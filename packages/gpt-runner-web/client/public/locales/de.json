@@ -75,6 +75,8 @@
     "reward": "Belohnung",
     "contributors": "Mitwirkende",
     "buy_me_a_coffee": "Kauf mir einen Kaffee",
+    "third_party_api_providers": "Drittanbieter-API-Anbieter",
+    "custom": "Benutzerdefiniert",
     "anthropic_api_key": "Anthropic API-Schlüssel",
     "anthropic_api_key_placeholder": "Bitte geben Sie den Anthropic API-Schlüssel ein",
     "anthropic_api_base_path": "Anthropic API-Basispfad",

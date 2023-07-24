@@ -40,6 +40,7 @@ export enum GptFileTreeItemType {
 export enum ServerStorageName {
   FrontendState = 'frontend-state',
   SecretsConfig = 'secrets-config',
+  GlobalState = 'global-state',
   WebPreset = 'web-preset',
 }
 
@@ -64,4 +65,11 @@ export enum SecretStorageKey {
   HuggingFace = 'huggingFace',
   Openai = 'openai',
   Proxy = 'proxy',
+}
+
+export enum VendorTag {
+  Free = 'free',
+  Official = 'official',
+  Unofficial = 'unofficial',
+  Recommended = 'recommended',
 }

@@ -75,6 +75,8 @@
     "reward": "Reward",
     "contributors": "Contributors",
     "buy_me_a_coffee": "buy me a coffee",
+    "third_party_api_providers": "Third-Party API Providers",
+    "custom": "Custom",
     "anthropic_api_key": "Anthropic API Key",
     "anthropic_api_key_placeholder": "Please input Anthropic API Key",
     "anthropic_api_base_path": "Anthropic API Base Path",

@@ -115,6 +115,8 @@ export const ChatPanel: FC<ChatPanelProps> = memo((props) => {
     // return finalPathInfos
   }, [filesRelativePaths])
 
+  const remarkPlugins = useMemo(() => [createRemarkOpenEditorPlugin(filesPathsAllPartsInfo)], [filesPathsAllPartsInfo])
+
   useEffect(() => {
     const gptFileTreeItem = getGptFileTreeItemFromChatId(chatId)
     setGptFileTreeItem(gptFileTreeItem)
@@ -251,80 +253,96 @@ export const ChatPanel: FC<ChatPanelProps> = memo((props) => {
 
   const codeBlockTheme: MessageCodeBlockTheme = isDarkTheme(themeName) ? 'dark' : 'light'
 
-  const messagePanelProps: ChatMessagePanelProps = {
-    messageItems: chatInstance?.messages.map((message, i) => {
-      const isLast = i === chatInstance.messages.length - 1
-      const isLastTwo = i >= chatInstance.messages.length - 2
-      const isAi = message.name === ChatRole.Assistant
+  const messagePanelProps: ChatMessagePanelProps = useMemo(() => {
+    return {
+      messageItems: chatInstance?.messages.map((message, i) => {
+        const isLast = i === chatInstance.messages.length - 1
+        const isLastTwo = i >= chatInstance.messages.length - 2
+        const isAi = message.name === ChatRole.Assistant
 
-      const handleRegenerateMessage = () => {
-        if (!isLast)
-          return
+        const handleRegenerateMessage = () => {
+          if (!isLast)
+            return
 
-        if (status === ChatMessageStatus.Pending) {
-          // is generating, stop first
-          stopCurrentGeneratingChatAnswer()
+          if (status === ChatMessageStatus.Pending) {
+            // is generating, stop first
+            stopCurrentGeneratingChatAnswer()
+          }
+
+          regenerateCurrentLastChatAnswer()
         }
 
-        regenerateCurrentLastChatAnswer()
-      }
+        const handleDeleteMessage = () => {
+          updateCurrentChatInstance({
+            messages: chatInstance.messages.filter((_, index) => index !== i),
+          }, false)
+        }
 
-      const handleDeleteMessage = () => {
-        updateCurrentChatInstance({
-          messages: chatInstance.messages.filter((_, index) => index !== i),
-        }, false)
-      }
-
-      const buildMessageToolbar: MessageItemProps['buildMessageToolbar'] = ({ text }) => {
-        return <>
-          <IconButton
-            text={t('chat_page.copy_btn')}
-            iconClassName='codicon-copy'
-            onClick={() => handleCopy(text)}
-          >
-          </IconButton>
-
-          <IconButton
-            text={t('chat_page.edit_btn')}
-            iconClassName='codicon-edit'
-            onClick={() => handleEditMessage(text)}
-          >
-          </IconButton>
-
-          {isAi && isLast && <IconButton
-            text={status === ChatMessageStatus.Error ? t('chat_page.retry_btn') : t('chat_page.regenerate_btn')}
-            iconClassName='codicon-sync'
-            onClick={handleRegenerateMessage}
-          ></IconButton>}
-
-          {status === ChatMessageStatus.Pending && isLast
-            ? <IconButton
-              text={t('chat_page.stop_btn')}
-              iconClassName='codicon-chrome-maximize'
-              hoverShowText={false}
-              onClick={handleStopGenerateAnswer}
-            ></IconButton>
-            : <IconButton
-              text={t('chat_page.delete_btn')}
-              iconClassName='codicon-trash'
-              onClick={handleDeleteMessage}
+        const buildMessageToolbar: MessageItemProps['buildMessageToolbar'] = ({ text }) => {
+          return <>
+            <IconButton
+              text={t('chat_page.copy_btn')}
+              iconClassName='codicon-copy'
+              onClick={() => handleCopy(text)}
             >
-            </IconButton>}
-        </>
-      }
+            </IconButton>
 
-      return {
-        ...message,
-        remarkPlugins: [createRemarkOpenEditorPlugin(filesPathsAllPartsInfo)],
-        status: isLast ? status : ChatMessageStatus.Success,
-        showToolbar: isLastTwo ? 'always' : 'hover',
-        showAvatar: chatPanelWidth > 600,
-        theme: codeBlockTheme,
-        buildCodeToolbar: status === ChatMessageStatus.Pending ? undefined : buildCodeToolbar,
-        buildMessageToolbar,
-      } satisfies MessageItemProps
-    }) ?? [],
-  }
+            <IconButton
+              text={t('chat_page.edit_btn')}
+              iconClassName='codicon-edit'
+              onClick={() => handleEditMessage(text)}
+            >
+            </IconButton>
+
+            {isAi && isLast && <IconButton
+              text={status === ChatMessageStatus.Error ? t('chat_page.retry_btn') : t('chat_page.regenerate_btn')}
+              iconClassName='codicon-sync'
+              onClick={handleRegenerateMessage}
+            ></IconButton>}
+
+            {status === ChatMessageStatus.Pending && isLast
+              ? <IconButton
+                text={t('chat_page.stop_btn')}
+                iconClassName='codicon-chrome-maximize'
+                hoverShowText={false}
+                onClick={handleStopGenerateAnswer}
+              ></IconButton>
+              : <IconButton
+                text={t('chat_page.delete_btn')}
+                iconClassName='codicon-trash'
+                onClick={handleDeleteMessage}
+              >
+              </IconButton>}
+          </>
+        }
+
+        return {
+          ...message,
+          remarkPlugins,
+          status: isLast ? status : ChatMessageStatus.Success,
+          showToolbar: isLastTwo ? 'always' : 'hover',
+          showAvatar: chatPanelWidth > 600,
+          theme: codeBlockTheme,
+          buildCodeToolbar: status === ChatMessageStatus.Pending ? undefined : buildCodeToolbar,
+          buildMessageToolbar,
+        } satisfies MessageItemProps
+      }) ?? [],
+    }
+  }, [
+    chatInstance?.messages,
+    status,
+    chatPanelWidth,
+    remarkPlugins,
+    codeBlockTheme,
+    buildCodeToolbar,
+    handleCopy,
+    handleEditMessage,
+    handleStopGenerateAnswer,
+    regenerateCurrentLastChatAnswer,
+    stopCurrentGeneratingChatAnswer,
+    updateCurrentChatInstance,
+    t,
+  ])
 
   const renderInputToolbar = () => {
     return <>

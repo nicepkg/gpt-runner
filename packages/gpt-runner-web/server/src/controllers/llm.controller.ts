@@ -1,10 +1,10 @@
 import type { Request, Response } from 'express'
-import type { ChatModelType, ChatStreamReqParams, FailResponse, SingleFileConfig, SuccessResponse } from '@nicepkg/gpt-runner-shared/common'
-import { ChatStreamReqParamsSchema, Debug, STREAM_DONE_FLAG, buildFailResponse, buildSuccessResponse, toUnixPath } from '@nicepkg/gpt-runner-shared/common'
-import { PathUtils, verifyParamsByZod } from '@nicepkg/gpt-runner-shared/node'
-import { createFileContext, getLLMChain, getSecrets, loadUserConfig, parseGptFile } from '@nicepkg/gpt-runner-core'
-import { getValidFinalPath } from '../services/valid-path'
+import type { ChatStreamReqParams, FailResponse, SuccessResponse } from '@nicepkg/gpt-runner-shared/common'
+import { ChatStreamReqParamsSchema, Debug, STREAM_DONE_FLAG, buildFailResponse, buildSuccessResponse } from '@nicepkg/gpt-runner-shared/common'
+import { verifyParamsByZod } from '@nicepkg/gpt-runner-shared/node'
+import { getLLMChain } from '@nicepkg/gpt-runner-core'
 import type { ControllerConfig } from '../types'
+import { LLMService } from '../services/llm.service'
 
 export const llmControllers: ControllerConfig = {
   namespacePath: '/chatgpt',
@@ -26,60 +26,10 @@ export const llmControllers: ControllerConfig = {
         verifyParamsByZod(body, ChatStreamReqParamsSchema)
 
         const {
-          messages = [],
           prompt = '',
-          systemPrompt: systemPromptFromParams = '',
-          singleFilePath,
-          singleFileConfig: singleFileConfigFromParams,
-          appendSystemPrompt = '',
-          systemPromptAsUserPrompt = false,
-          contextFilePaths,
-          editingFilePath,
-          overrideModelType,
-          overrideModelsConfig,
-          rootPath,
         } = body
 
-        const finalPath = getValidFinalPath({
-          path: rootPath,
-          assertType: 'directory',
-          fieldName: 'rootPath',
-        })
-
-        const { config: userConfig } = await loadUserConfig(finalPath)
-
-        let singleFileConfig: SingleFileConfig | undefined = singleFileConfigFromParams
-
-        if (singleFilePath && PathUtils.isFile(singleFilePath)) {
-          // keep realtime config
-          singleFileConfig = await parseGptFile({
-            filePath: singleFilePath,
-            userConfig,
-          })
-        }
-
-        if (overrideModelType && overrideModelType !== singleFileConfig?.model?.type) {
-          singleFileConfig = {
-            model: {
-              type: overrideModelType,
-            },
-          }
-        }
-
-        const model = {
-          ...singleFileConfig?.model,
-          ...overrideModelsConfig?.[singleFileConfig?.model?.type as ChatModelType || ''],
-        } as SingleFileConfig['model']
-
-        const secretFromUserConfig = userConfig.model?.type === model?.type ? userConfig.model?.secrets : undefined
-        let secretsFromStorage = await getSecrets(model?.type as ChatModelType || null)
-        // if some secret value is '' or null or undefined, should remove
-        secretsFromStorage = Object.fromEntries(Object.entries(secretsFromStorage || {}).filter(([_, value]) => value != null && value !== '' && value !== undefined))
-
-        const finalSecrets = {
-          ...secretFromUserConfig,
-          ...secretsFromStorage,
-        }
+        const llmChainParams = await LLMService.getLLMChainParams(body)
 
         const sendSuccessData = (options: Omit<SuccessResponse, 'type'>) => {
           return res.write(`data: ${JSON.stringify(buildSuccessResponse(options))}\n\n`)
@@ -90,32 +40,11 @@ export const llmControllers: ControllerConfig = {
           return res.write(`data: ${JSON.stringify(buildFailResponse(options))}\n\n`)
         }
 
-        debug.log('model config', model)
+        debug.log('model config', llmChainParams.model)
 
         try {
-          let finalSystemPrompt = systemPromptFromParams || singleFileConfig?.systemPrompt || ''
-
-          // provide file context
-          if (contextFilePaths && finalPath) {
-            const fileContext = await createFileContext({
-              rootPath: finalPath,
-              filePaths: contextFilePaths?.map(toUnixPath),
-              editingFilePath: toUnixPath(editingFilePath),
-            })
-
-            finalSystemPrompt += `\n${fileContext}\n`
-          }
-
-          finalSystemPrompt += appendSystemPrompt
-
           const llmChain = await getLLMChain({
-            messages,
-            systemPrompt: finalSystemPrompt,
-            systemPromptAsUserPrompt,
-            model: {
-              ...model!,
-              secrets: finalSecrets,
-            },
+            ...llmChainParams,
             onTokenStream: (token: string) => {
               sendSuccessData({ data: token })
             },

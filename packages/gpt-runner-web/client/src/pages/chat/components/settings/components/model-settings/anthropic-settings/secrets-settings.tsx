@@ -3,9 +3,10 @@ import type { AnthropicSecrets } from '@nicepkg/gpt-runner-shared/common'
 import { type FC, memo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { HookFormInput } from '../../../../../../../components/hook-form/hook-form-input'
-import { BaseSecretsSettings, type BaseSecretsSettingsFormItemConfig } from '../base-secrets-settings'
+import { BaseSecretsSettings } from '../base-secrets-settings'
+import type { BaseSecretsFormData, BaseSecretsSettingsFormItemConfig } from '../base-secrets-settings'
 
-interface FormData extends Pick<AnthropicSecrets, 'apiKey' | 'basePath'> {
+interface FormData extends Pick<AnthropicSecrets, 'apiKey' | 'basePath'>, BaseSecretsFormData {
 }
 
 export interface AnthropicSecretsSettingsProps {
@@ -17,12 +18,13 @@ export const AnthropicSecretsSettings: FC<AnthropicSecretsSettingsProps> = memo(
   const formConfig: BaseSecretsSettingsFormItemConfig<FormData>[] = [
     {
       name: 'apiKey',
-      buildView: ({ useFormReturns: { control, formState } }) => {
+      buildView: ({ useFormReturns: { control, formState }, currentVendorConfig }) => {
         return <>
           <HookFormInput
             label={t('chat_page.anthropic_api_key')}
             placeholder={t('chat_page.anthropic_api_key_placeholder')}
             name="apiKey"
+            disabled={Boolean(currentVendorConfig?.vendorSecrets)}
             errors={formState.errors}
             control={control}
             type="password"
@@ -32,12 +34,13 @@ export const AnthropicSecretsSettings: FC<AnthropicSecretsSettingsProps> = memo(
     },
     {
       name: 'basePath',
-      buildView: ({ useFormReturns: { control, formState } }) => {
+      buildView: ({ useFormReturns: { control, formState }, currentVendorConfig }) => {
         return <>
           <HookFormInput
             label={t('chat_page.anthropic_api_base_path')}
             placeholder={DEFAULT_ANTHROPIC_API_BASE_PATH}
             name="basePath"
+            disabled={Boolean(currentVendorConfig?.vendorSecrets)}
             errors={formState.errors}
             control={control}
           />

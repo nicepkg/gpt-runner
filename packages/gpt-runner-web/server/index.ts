@@ -8,6 +8,8 @@ import { setProxyUrl } from './src/proxy'
 import { processControllers } from './src/controllers'
 import { errorHandlerMiddleware, safeCheckMiddleware } from './src/middleware'
 
+export * from './src/helpers/app-config'
+
 const dirname = PathUtils.getCurrentDirName(import.meta.url, () => __dirname)
 
 const resolvePath = (...paths: string[]) => PathUtils.resolve(dirname, ...paths)

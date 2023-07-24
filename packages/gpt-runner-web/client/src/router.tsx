@@ -8,6 +8,7 @@ import Error404 from './pages/error/404'
 import { useLoading } from './hooks/use-loading.hook'
 import Chat from './pages/chat'
 import { getGlobalConfig } from './helpers/global-config'
+import { Layout } from './views/layout'
 
 const HackRouter: FC = () => {
   const navigate = useNavigate()
@@ -46,14 +47,16 @@ export const AppRouter: FC = () => {
       {loading && <VSCodeProgressRing />}
 
       <Suspense fallback={<VSCodeProgressRing />}>
-        <Router>
-          <HackRouter></HackRouter>
-          <Routes>
-            <Route index element={<Home />} />
-            <Route path="chat" element={<Chat />} />
-            <Route path="*" element={<Error404 />} />
-          </Routes>
-        </Router>
+        <Layout>
+          <Router>
+            <HackRouter></HackRouter>
+            <Routes>
+              <Route index element={<Home />} />
+              <Route path="chat" element={<Chat />} />
+              <Route path="*" element={<Error404 />} />
+            </Routes>
+          </Router>
+        </Layout>
       </Suspense>
     </>
   )

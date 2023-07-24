@@ -8,6 +8,7 @@ import { getGlobalConfig } from '../../../helpers/global-config'
 import { useTempStore } from '../temp'
 import type { SidebarTreeItem, SidebarTreeSlice } from './sidebar-tree.slice'
 import type { FileTreeSlice } from './file-tree.slice'
+import type { GeneralSlice } from './general.slice'
 
 export enum GenerateAnswerType {
   Generate = 'generate',
@@ -67,7 +68,7 @@ const chatIdChatInstanceMap = new Map<string, SingleChat>()
 const singleFilePathChatInstancesMap = new Map<string, SingleChat[]>()
 
 export const createChatSlice: StateCreator<
-  ChatSlice & SidebarTreeSlice & FileTreeSlice,
+  ChatSlice & SidebarTreeSlice & FileTreeSlice & GeneralSlice,
   [],
   [],
   ChatSlice
@@ -312,6 +313,7 @@ export const createChatSlice: StateCreator<
       editingFilePath: shouldProvideEditingPath ? tempState.ideActiveFilePath : undefined,
       overrideModelType: state.overrideModelType || undefined,
       overrideModelsConfig: state.overrideModelsConfig,
+      modelTypeVendorNameMap: state.modelTypeVendorNameMap,
       rootPath: getGlobalConfig().rootPath,
       onError(e) {
         console.error('fetchLlmStream error:', e)

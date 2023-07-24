@@ -1,5 +1,3 @@
-import { tryStringifyJson } from './common'
-
 export function isNumber<T extends number>(value: T | unknown): value is number {
   return Object.prototype.toString.call(value) === '[object Number]'
 }
@@ -71,11 +69,46 @@ export function isShallowEqual<T>(
   return true
 }
 
-export function isShallowDeepEqual(
-  objA: any,
-  objB: any,
-): boolean {
-  return isShallowEqual(objA, objB, (a, b) => {
-    return tryStringifyJson(a, true) === tryStringifyJson(b, true)
-  })
+// export function isShallowDeepEqual(
+//   objA: any,
+//   objB: any,
+// ): boolean {
+//   return isShallowEqual(objA, objB, (a, b) => {
+//     return tryStringifyJson(a, true) === tryStringifyJson(b, true)
+//   })
+// }
+// export function isDeepEqual<T>(objA: any, objB: any): boolean {
+//   const compare = (a: any, b: any) => {
+//     if (typeof a === 'object' && a !== null && typeof b === 'object' && b !== null) {
+//       // For objects, perform a deep comparison
+//       return isDeepEqual(a, b)
+//     }
+
+//     // For primitives, perform a shallow comparison
+//     return Object.is(a, b)
+//   }
+
+//   return isShallowEqual(objA, objB, compare)
+// }
+
+export function isDeepEqual(objA: any, objB: any, maxDepth = 20, visited: any[] = [], depth: number = 0): boolean {
+  if (depth > maxDepth) {
+    // Limit the maximum recursion depth to prevent "Maximum call stack size exceeded" error
+    return true
+  }
+
+  if (visited.includes(objA) || visited.includes(objB))
+    return true
+
+  const compare = (a: any, b: any) => {
+    if (typeof a === 'object' && a !== null && typeof b === 'object' && b !== null) {
+      // For objects, perform a deep comparison
+      return isDeepEqual(a, b, maxDepth, [...visited, a, b], depth + 1)
+    }
+
+    // For primitives, perform a shallow comparison
+    return Object.is(a, b)
+  }
+
+  return isShallowEqual(objA, objB, compare)
 }

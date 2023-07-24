@@ -4,7 +4,7 @@ import { sendSuccessResponse, verifyParamsByZod } from '@nicepkg/gpt-runner-shar
 import type { GetGptFileInfoReqParams, GetGptFileInfoResData, GetGptFilesReqParams, GetGptFilesResData, InitGptFilesReqParams, InitGptFilesResData } from '@nicepkg/gpt-runner-shared/common'
 import { Debug, GetGptFileInfoReqParamsSchema, GetGptFilesReqParamsSchema, InitGptFilesReqParamsSchema, removeUserConfigUnsafeKey } from '@nicepkg/gpt-runner-shared/common'
 import type { ControllerConfig } from '../types'
-import { getValidFinalPath } from '../services/valid-path'
+import { getValidFinalPath } from '../helpers/valid-path'
 
 export const gptFilesControllers: ControllerConfig = {
   namespacePath: '/gpt-files',

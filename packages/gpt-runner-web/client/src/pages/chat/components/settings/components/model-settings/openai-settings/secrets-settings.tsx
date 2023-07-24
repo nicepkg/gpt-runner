@@ -5,9 +5,10 @@ import { VSCodeLink } from '@vscode/webview-ui-toolkit/react'
 import { useTranslation } from 'react-i18next'
 import { HookFormInput } from '../../../../../../../components/hook-form/hook-form-input'
 import { HookFormTextarea } from '../../../../../../../components/hook-form/hook-form-textarea'
-import { BaseSecretsSettings, type BaseSecretsSettingsFormItemConfig } from '../base-secrets-settings'
+import { BaseSecretsSettings } from '../base-secrets-settings'
+import type { BaseSecretsFormData, BaseSecretsSettingsFormItemConfig } from '../base-secrets-settings'
 
-interface FormData extends Pick<OpenaiSecrets, 'apiKey' | 'accessToken' | 'basePath'> {
+interface FormData extends Pick<OpenaiSecrets, 'apiKey' | 'accessToken' | 'basePath'>, BaseSecretsFormData {
 }
 
 export interface OpenaiSecretsSettingsProps {
@@ -19,12 +20,13 @@ export const OpenaiSecretsSettings: FC<OpenaiSecretsSettingsProps> = memo((props
   const formConfig: BaseSecretsSettingsFormItemConfig<FormData>[] = [
     {
       name: 'apiKey',
-      buildView: ({ useFormReturns: { control, formState } }) => {
+      buildView: ({ useFormReturns: { control, formState }, currentVendorConfig }) => {
         return <>
           <HookFormInput
             label={t('chat_page.openai_api_key')}
             placeholder={t('chat_page.openai_api_key_placeholder')}
             name="apiKey"
+            disabled={Boolean(currentVendorConfig?.vendorSecrets)}
             errors={formState.errors}
             control={control}
             type="password"
@@ -34,12 +36,13 @@ export const OpenaiSecretsSettings: FC<OpenaiSecretsSettingsProps> = memo((props
     },
     {
       name: 'basePath',
-      buildView: ({ useFormReturns: { control, formState } }) => {
+      buildView: ({ useFormReturns: { control, formState }, currentVendorConfig }) => {
         return <>
           <HookFormInput
             label={t('chat_page.openai_api_base_path')}
             placeholder={DEFAULT_OPENAI_API_BASE_PATH}
             name="basePath"
+            disabled={Boolean(currentVendorConfig?.vendorSecrets)}
             errors={formState.errors}
             control={control}
           />
@@ -47,11 +50,12 @@ export const OpenaiSecretsSettings: FC<OpenaiSecretsSettingsProps> = memo((props
       },
     }, {
       name: 'accessToken',
-      buildView: ({ useFormReturns: { control, formState } }) => {
+      buildView: ({ useFormReturns: { control, formState }, currentVendorConfig }) => {
         return <>
           <HookFormTextarea
             label={t('chat_page.openai_access_token')}
             name="accessToken"
+            disabled={Boolean(currentVendorConfig?.vendorSecrets)}
             placeholder={t('chat_page.openai_access_token_placeholder')}
             errors={formState.errors}
             control={control}

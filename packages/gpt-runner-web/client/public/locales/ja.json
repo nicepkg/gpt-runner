@@ -75,6 +75,8 @@
     "reward": "寄付",
     "contributors": "貢献者",
     "buy_me_a_coffee": "コーヒーを買ってください",
+    "third_party_api_providers": "サードパーティAPIプロバイダー",
+    "custom": "カスタム",
     "anthropic_api_key": "Anthropic APIキー",
     "anthropic_api_key_placeholder": "Anthropic API キーを入力してください",
     "anthropic_api_base_path": "Anthropic API ベースパス",

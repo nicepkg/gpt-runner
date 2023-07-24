@@ -91,7 +91,7 @@ const Chat: FC = memo(() => {
   // any status will scroll down
   useEffect(() => {
     scrollDown()
-  }, [chatInstance?.status, scrollDownRef.current, scrollDown])
+  }, [chatInstance?.status, scrollDownRef.current, scrollDown, chatInstance?.id])
 
   // if is pending and scroll bottom is less than 40, scroll down
   // when you scroll by yourself, scrollDown will stop auto scrollDown

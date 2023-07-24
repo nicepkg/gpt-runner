@@ -75,6 +75,8 @@
     "reward": "贊賞",
     "contributors": "貢獻者",
     "buy_me_a_coffee": "請我喝杯咖啡",
+    "third_party_api_providers": "第三方 API 提供者",
+    "custom": "自定義",
     "anthropic_api_key": "Anthropic API Key",
     "anthropic_api_key_placeholder": "請輸入 Anthropic API Key",
     "anthropic_api_base_path": "Anthropic API 基礎路徑",

@@ -1,7 +1,7 @@
 import { z } from 'zod'
-import type { ChatStreamReqParams, CreateFilePathReqParams, DeleteFilePathReqParams, GetCommonFilesReqParams, GetFileInfoReqParams, GetGptFileInfoReqParams, GetGptFilesReqParams, GetUserConfigReqParams, InitGptFilesReqParams, OpenEditorReqParams, RenameFilePathReqParams, SaveFileContentReqParams, StorageClearReqParams, StorageGetItemReqParams, StorageRemoveItemReqParams, StorageSetItemReqParams } from '../types'
+import type { ChatStreamReqParams, CreateFilePathReqParams, DeleteFilePathReqParams, GetAppConfigReqParams, GetCommonFilesReqParams, GetFileInfoReqParams, GetGptFileInfoReqParams, GetGptFilesReqParams, GetUserConfigReqParams, InitGptFilesReqParams, MarkAsVisitedAppConfigReqParams, OpenEditorReqParams, RenameFilePathReqParams, SaveFileContentReqParams, StorageClearReqParams, StorageGetItemReqParams, StorageRemoveItemReqParams, StorageSetItemReqParams } from '../types'
 import { PartialChatModelTypeMapSchema, SingleChatMessageSchema, SingleFileConfigSchema } from './config'
-import { ChatModelTypeSchema, ServerStorageNameSchema } from './enum.zod'
+import { ChatModelTypeSchema, LocaleLangSchema, ServerStorageNameSchema } from './enum.zod'
 
 export const ChatStreamReqParamsSchema = z.object({
   messages: z.array(SingleChatMessageSchema),
@@ -13,6 +13,7 @@ export const ChatStreamReqParamsSchema = z.object({
   singleFileConfig: SingleFileConfigSchema.optional(),
   overrideModelType: ChatModelTypeSchema.optional(),
   overrideModelsConfig: PartialChatModelTypeMapSchema.optional(),
+  modelTypeVendorNameMap: z.record(z.string()).optional(),
   contextFilePaths: z.array(z.string()).optional(),
   editingFilePath: z.string().optional(),
   rootPath: z.string().optional(),
@@ -89,3 +90,14 @@ export const SaveFileContentReqParamsSchema = z.object({
   fileFullPath: z.string(),
   content: z.string(),
 }) satisfies z.ZodType<SaveFileContentReqParams>
+
+export const GetAppConfigReqParamsSchema = z.object({
+  langId: LocaleLangSchema.optional(),
+}) satisfies z.ZodType<GetAppConfigReqParams>
+
+export const MarkAsVisitedAppConfigReqParamsSchema = z.object({
+  types: z.array(z.union([
+    z.literal('notificationDate'),
+    z.literal('releaseDate'),
+  ])),
+}) satisfies z.ZodType<MarkAsVisitedAppConfigReqParams>

@@ -1,3 +1,4 @@
+export * from './app-config'
 export * from './client'
 export * from './common-file'
 export * from './common'

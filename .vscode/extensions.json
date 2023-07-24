@@ -1,0 +1,7 @@
+{
+  "recommendations": [
+    "jsynowiec.vscode-insertdatestring",
+    "EditorConfig.EditorConfig",
+    "dbaeumer.vscode-eslint"
+  ]
+}

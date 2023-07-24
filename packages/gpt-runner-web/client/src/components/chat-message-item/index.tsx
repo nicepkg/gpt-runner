@@ -1,7 +1,7 @@
 import { type FC, memo } from 'react'
 import clsx from 'clsx'
 import type { SingleChatMessage } from '@nicepkg/gpt-runner-shared/common'
-import { ChatMessageStatus, ChatRole, isShallowDeepEqual } from '@nicepkg/gpt-runner-shared/common'
+import { ChatMessageStatus, ChatRole } from '@nicepkg/gpt-runner-shared/common'
 import type { MessageTextViewProps } from '../chat-message-text-view'
 import { MessageTextView } from '../chat-message-text-view'
 import { Icon } from '../icon'
@@ -87,6 +87,6 @@ export const MessageItem: FC<MessageItemProps> = memo((props) => {
       </MsgContentWrapper>
     </MsgWrapper>
   )
-}, isShallowDeepEqual)
+})
 
 MessageItem.displayName = 'MessageItem'
