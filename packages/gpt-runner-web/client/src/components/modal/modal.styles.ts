@@ -27,6 +27,7 @@ export const ModalContentWrapper = styled.div`
   background: var(--panel-view-background);
   border-radius: 0.5rem;
   position: relative;
+  user-select: text;
 `
 
 export const ModalContentHeader = styled.div`
