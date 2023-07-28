@@ -1,6 +1,6 @@
 {
   "name": "@nicepkg/gpt-runner-cli",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "GPT-Runner CLI helps manage AI presets and enables AI-driven conversations with your code, streamlining development workflows and boosting efficiency.",
   "author": {
     "name": "Jinming Yang",
