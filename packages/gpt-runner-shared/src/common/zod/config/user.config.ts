@@ -34,6 +34,10 @@ export const UserConfigSchema = z.object({
   includes: FilterPatternSchema.optional().default(null).describe('The include patterns for filtering files'),
   excludes: FilterPatternSchema.optional().default(null).describe('The exclude patterns for filtering files'),
   respectGitIgnore: z.boolean().optional().default(true).describe('Whether to respect .gitignore rules'),
+  urlConfig: z.record(z.object({
+    modelNames: z.array(z.string()).optional().describe('The model name that will be displayed in the model selector'),
+    httpRequestHeader: z.record(z.string()).optional().describe('Additional request headers are required'),
+  })).optional().default({}).describe('Custom http request headers and models names for specific urls'),
 }) satisfies z.ZodType<UserConfig>
 
 export const UserConfigForUserSchema = UserConfigSchema.omit({

@@ -22,6 +22,7 @@ export function userConfigWithDefault(userConfig?: Partial<UserConfig>) {
     excludes: DEFAULT_EXCLUDE_FILES,
     exts: ['.gpt.md'],
     respectGitIgnore: true,
+    urlConfig: {},
     ...userConfig,
   } as const) satisfies ReadonlyDeep<UserConfig>
 }

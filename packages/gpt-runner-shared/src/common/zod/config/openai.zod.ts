@@ -1,15 +1,15 @@
 import { z } from 'zod'
 import { ChatModelType, type OpenaiModelConfig, type OpenaiSecrets } from '../../types'
-import { DEFAULT_OPENAI_API_BASE_PATH } from '../../helpers'
-import { BaseModelConfigSchema } from './base.zod'
+import { DEFAULT_API_BASE_PATH } from '../../helpers'
+import { BaseModelConfigSchema, BaseSecretsSchema } from './base.zod'
 
-export const OpenaiSecretsSchema = z.object({
+export const OpenaiSecretsSchema = BaseSecretsSchema.extend({
   apiKey: z.string().optional().describe('The OpenAI API key'),
   organization: z.string().optional().describe('The OpenAI organization'),
   // username: z.string().optional().describe('The OpenAI username'),
   // password: z.string().optional().describe('The OpenAI password'),
   accessToken: z.string().optional().describe('The OpenAI access token'),
-  basePath: z.string().optional().default(DEFAULT_OPENAI_API_BASE_PATH).describe('The OpenAI base API path'),
+  basePath: z.string().optional().default(DEFAULT_API_BASE_PATH[ChatModelType.Openai]).describe('The OpenAI base API path'),
 }) satisfies z.ZodType<OpenaiSecrets>
 
 export const OpenaiModelConfigSchema = BaseModelConfigSchema.extend({

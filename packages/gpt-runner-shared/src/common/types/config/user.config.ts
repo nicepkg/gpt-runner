@@ -29,9 +29,33 @@ export interface UserConfig {
   excludes?: FilterPattern
 
   /**
-     * @default true
-     */
+   * @default true
+   */
   respectGitIgnore?: boolean
+
+  /**
+   * custom http request headers for specific urls
+   * @default {}
+   *
+   * @example
+   * {
+   *  'https://api.openai.com/*': {
+   *     modelNames: [
+   *       'gpt-3.5-turbo-16k',
+   *       'gpt-4',
+   *     ],
+   *     httpRequestHeader: {
+   *       'host': 'api.openai.com',
+   *     }
+   *  }
+   * }
+   */
+  urlConfig?: {
+    [urlMatch: string]: {
+      modelNames?: string[]
+      httpRequestHeader?: Record<string, string>
+    }
+  }
 }
 
 export type UserConfigForUser = Omit<UserConfig, 'rootPath'>

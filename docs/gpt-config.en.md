@@ -101,6 +101,33 @@ export interface UserConfig {
    * @default true
    */
   respectGitIgnore?: boolean
+
+  /**
+   * api url configuration
+   * @default {}
+   * @example
+   * {
+   *   "https://api.openai.com/*": {
+   *     "modelNames": ["gpt-3.5-turbo-16k", "gpt-4"],
+   *     "httpRequestHeader": {
+   *       "User-Agent": "GPT-Runner"
+   *     }
+   *   }
+   * }
+   */
+  urlConfig?: {
+    [urlMatch: string]: {
+      /**
+       * The model name that will be displayed in the model selector
+       */
+      modelNames?: string[]
+
+      /**
+       * Additional request headers are required
+       */
+      httpRequestHeader?: Record<string, string>
+    }
+  }
 }
 
 export interface ModelConfig {
@@ -179,7 +206,20 @@ export default defineConfig({
     "**/.serverless",
     "**/.parcel-cache"
   ],
-  "respectGitIgnore": true
+  "respectGitIgnore": true,
+  "urlConfig": {
+    "https://openrouter.ai/*": {
+      "modelNames": [
+        "openai/gpt-3.5-turbo-16k",
+        "openai/gpt-4",
+        "openai/gpt-4-32k"
+      ],
+      "httpRequestHeader": {
+        "HTTP-Referer": "http://localhost:3003/",
+        "X-Title": "localhost"
+      }
+    }
+  }
 }
 ```
 

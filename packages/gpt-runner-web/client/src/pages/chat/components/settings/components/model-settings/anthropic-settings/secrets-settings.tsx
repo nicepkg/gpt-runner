@@ -1,4 +1,4 @@
-import { ChatModelType, DEFAULT_ANTHROPIC_API_BASE_PATH } from '@nicepkg/gpt-runner-shared/common'
+import { ChatModelType, DEFAULT_API_BASE_PATH } from '@nicepkg/gpt-runner-shared/common'
 import type { AnthropicSecrets } from '@nicepkg/gpt-runner-shared/common'
 import { type FC, memo } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -38,7 +38,7 @@ export const AnthropicSecretsSettings: FC<AnthropicSecretsSettingsProps> = memo(
         return <>
           <HookFormInput
             label={t('chat_page.anthropic_api_base_path')}
-            placeholder={DEFAULT_ANTHROPIC_API_BASE_PATH}
+            placeholder={DEFAULT_API_BASE_PATH[ChatModelType.Anthropic]}
             name="basePath"
             disabled={Boolean(currentVendorConfig?.vendorSecrets)}
             errors={formState.errors}

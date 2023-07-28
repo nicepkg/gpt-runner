@@ -1,8 +1,10 @@
 import type { EventSourceMessage } from '@microsoft/fetch-event-source'
 import { fetchEventSource } from '@microsoft/fetch-event-source'
-import { type BaseResponse, type ChatStreamReqParams, STREAM_DONE_FLAG, getErrorMsg } from '@nicepkg/gpt-runner-shared/common'
+import { STREAM_DONE_FLAG, getErrorMsg, objectToQueryString } from '@nicepkg/gpt-runner-shared/common'
+import type { BaseResponse, ChatStreamReqParams, GetModelNamesForChooseReqParams, GetModelNamesForChooseResData } from '@nicepkg/gpt-runner-shared/common'
 import * as uuid from 'uuid'
 import { getGlobalConfig } from '../helpers/global-config'
+import { myFetch } from '../helpers/fetch'
 
 export interface FetchChatStreamReqParams extends ChatStreamReqParams {
   namespace?: string
@@ -98,4 +100,15 @@ export async function fetchLlmStream(
     console.log('fetchLlmStream error', error)
     onError(error)
   }
+}
+
+export async function getModelNamesForChoose(params: GetModelNamesForChooseReqParams): Promise<BaseResponse<GetModelNamesForChooseResData>> {
+  return await myFetch(`${getGlobalConfig().serverBaseUrl}/api/chatgpt/model-names-for-choose?${objectToQueryString({
+    ...params,
+  })}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
 }

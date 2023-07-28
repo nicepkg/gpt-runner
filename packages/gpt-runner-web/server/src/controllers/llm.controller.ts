@@ -1,7 +1,6 @@
-import type { Request, Response } from 'express'
-import type { ChatStreamReqParams, FailResponse, SuccessResponse } from '@nicepkg/gpt-runner-shared/common'
-import { ChatStreamReqParamsSchema, Debug, STREAM_DONE_FLAG, buildFailResponse, buildSuccessResponse } from '@nicepkg/gpt-runner-shared/common'
-import { verifyParamsByZod } from '@nicepkg/gpt-runner-shared/node'
+import type { ChatStreamReqParams, FailResponse, GetModelNamesForChooseReqParams, GetModelNamesForChooseResData, SuccessResponse } from '@nicepkg/gpt-runner-shared/common'
+import { ChatStreamReqParamsSchema, Debug, GetModelNamesForChooseReqParamsSchema, STREAM_DONE_FLAG, buildFailResponse, buildSuccessResponse } from '@nicepkg/gpt-runner-shared/common'
+import { sendSuccessResponse, verifyParamsByZod } from '@nicepkg/gpt-runner-shared/node'
 import { getLLMChain } from '@nicepkg/gpt-runner-core'
 import type { ControllerConfig } from '../types'
 import { LLMService } from '../services/llm.service'
@@ -12,7 +11,7 @@ export const llmControllers: ControllerConfig = {
     {
       url: '/chat-stream',
       method: 'post',
-      handler: async (req: Request, res: Response) => {
+      handler: async (req, res) => {
         const debug = new Debug('llm.controller')
 
         res.writeHead(200, {
@@ -80,6 +79,23 @@ export const llmControllers: ControllerConfig = {
           })
           res.end()
         }
+      },
+    },
+    {
+      url: '/model-names-for-choose',
+      method: 'get',
+      handler: async (req, res) => {
+        const query = req.query as GetModelNamesForChooseReqParams
+
+        verifyParamsByZod(query, GetModelNamesForChooseReqParamsSchema)
+
+        const modelNames = await LLMService.getLLMModelsNames(query)
+
+        sendSuccessResponse(res, {
+          data: {
+            modelNames,
+          } satisfies GetModelNamesForChooseResData,
+        })
       },
     },
   ],

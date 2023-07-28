@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import type { ChatStreamReqParams, CreateFilePathReqParams, DeleteFilePathReqParams, GetAppConfigReqParams, GetCommonFilesReqParams, GetFileInfoReqParams, GetGptFileInfoReqParams, GetGptFilesReqParams, GetUserConfigReqParams, InitGptFilesReqParams, MarkAsVisitedAppConfigReqParams, OpenEditorReqParams, RenameFilePathReqParams, SaveFileContentReqParams, StorageClearReqParams, StorageGetItemReqParams, StorageRemoveItemReqParams, StorageSetItemReqParams } from '../types'
+import type { ChatStreamReqParams, CreateFilePathReqParams, DeleteFilePathReqParams, GetAppConfigReqParams, GetCommonFilesReqParams, GetFileInfoReqParams, GetGptFileInfoReqParams, GetGptFilesReqParams, GetModelNamesForChooseReqParams, GetUserConfigReqParams, InitGptFilesReqParams, MarkAsVisitedAppConfigReqParams, OpenEditorReqParams, RenameFilePathReqParams, SaveFileContentReqParams, StorageClearReqParams, StorageGetItemReqParams, StorageRemoveItemReqParams, StorageSetItemReqParams } from '../types'
 import { PartialChatModelTypeMapSchema, SingleChatMessageSchema, SingleFileConfigSchema } from './config'
 import { ChatModelTypeSchema, LocaleLangSchema, ServerStorageNameSchema } from './enum.zod'
 
@@ -18,6 +18,12 @@ export const ChatStreamReqParamsSchema = z.object({
   editingFilePath: z.string().optional(),
   rootPath: z.string().optional(),
 }) satisfies z.ZodType<ChatStreamReqParams>
+
+export const GetModelNamesForChooseReqParamsSchema = z.object({
+  rootPath: z.string(),
+  modelType: ChatModelTypeSchema,
+  modelTypeVendorNameMap: z.record(z.string()).optional(),
+}) satisfies z.ZodType<GetModelNamesForChooseReqParams>
 
 export const GetGptFilesReqParamsSchema = z.object({
   rootPath: z.string(),

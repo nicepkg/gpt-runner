@@ -1,7 +1,7 @@
 import type { ChatModelType } from '../enum'
-import type { BaseModelConfig } from './base.config'
+import type { BaseModelConfig, BaseSecrets } from './base.config'
 
-export interface OpenaiSecrets {
+export interface OpenaiSecrets extends BaseSecrets {
   /**
      * The API key to use for OpenAI API requests.
      */
@@ -26,11 +26,6 @@ export interface OpenaiSecrets {
    * OpenAI access token
    */
   accessToken?: string
-
-  /**
-   * override Chatgpt base path
-   */
-  basePath?: string
 }
 
 export interface OpenaiModelConfig extends BaseModelConfig {

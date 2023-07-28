@@ -58,6 +58,16 @@ export interface ChatStreamReqParams {
   rootPath?: string
 }
 
+export interface GetModelNamesForChooseReqParams {
+  rootPath: string
+  modelType: ChatModelType
+  modelTypeVendorNameMap?: ModelTypeVendorNameMap
+}
+
+export interface GetModelNamesForChooseResData {
+  modelNames: string[]
+}
+
 export interface GetGptFilesReqParams {
   rootPath: string
 }

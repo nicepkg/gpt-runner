@@ -4,7 +4,7 @@ import { HuggingFaceInference } from 'langchain/llms/hf'
 import type { GetModelParams } from '../type'
 
 export function getHuggingFaceModel(params: GetModelParams): BaseLanguageModel | null {
-  const { model, onTokenStream, onComplete, onError } = params
+  const { model, buildRequestHeaders, onTokenStream, onComplete, onError } = params
 
   if (model.type === ChatModelType.HuggingFace) {
     const { secrets, modelName, temperature, maxTokens, topP, topK, frequencyPenalty } = model

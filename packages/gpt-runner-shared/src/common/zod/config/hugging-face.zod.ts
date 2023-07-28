@@ -1,8 +1,8 @@
 import { z } from 'zod'
 import { ChatModelType, type HuggingFaceModelConfig, type HuggingFaceSecrets } from '../../types'
-import { BaseModelConfigSchema } from './base.zod'
+import { BaseModelConfigSchema, BaseSecretsSchema } from './base.zod'
 
-export const HuggingFaceSecretsSchema = z.object({
+export const HuggingFaceSecretsSchema = BaseSecretsSchema.extend({
   apiKey: z.string().optional().describe('The HuggingFace API key'),
 }) satisfies z.ZodType<HuggingFaceSecrets>
 

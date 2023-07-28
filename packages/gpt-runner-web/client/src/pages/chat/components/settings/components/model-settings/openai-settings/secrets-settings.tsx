@@ -1,4 +1,4 @@
-import { ChatModelType, DEFAULT_OPENAI_API_BASE_PATH } from '@nicepkg/gpt-runner-shared/common'
+import { ChatModelType, DEFAULT_API_BASE_PATH } from '@nicepkg/gpt-runner-shared/common'
 import type { OpenaiSecrets } from '@nicepkg/gpt-runner-shared/common'
 import { type FC, memo } from 'react'
 import { VSCodeLink } from '@vscode/webview-ui-toolkit/react'
@@ -40,7 +40,7 @@ export const OpenaiSecretsSettings: FC<OpenaiSecretsSettingsProps> = memo((props
         return <>
           <HookFormInput
             label={t('chat_page.openai_api_base_path')}
-            placeholder={DEFAULT_OPENAI_API_BASE_PATH}
+            placeholder={DEFAULT_API_BASE_PATH[ChatModelType.Openai]}
             name="basePath"
             disabled={Boolean(currentVendorConfig?.vendorSecrets)}
             errors={formState.errors}

@@ -26,8 +26,8 @@ export interface ModelSettingsSecretsViewProps extends ModelSettingsBaseViewProp
 
 export interface ModelSettingsModelViewProps extends ModelSettingsBaseViewProps {
   viewType: 'model'
+  rootPath: string
   modelType?: ChatModelType
-  rootPath?: string
   singleFilePath?: string
   singleFileConfig?: SingleFileConfig
   userConfig?: UserConfig
@@ -69,7 +69,7 @@ export const ModelSettings: FC<ModelSettingsProps> = memo((props) => {
   const modelTypeViewMap: Record<ChatModelType, Record<ModelSettingsViewType, () => ReactNode>> = {
     [ChatModelType.Anthropic]: {
       secrets: () => <AnthropicSecretsSettings />,
-      model: () => <AnthropicModelSettings singleFileConfig={resolvedSingleFileConfig} />,
+      model: () => <AnthropicModelSettings rootPath={rootPath} singleFileConfig={resolvedSingleFileConfig} />,
       title: () => <>Anthropic</>,
     },
     [ChatModelType.HuggingFace]: {
@@ -79,7 +79,7 @@ export const ModelSettings: FC<ModelSettingsProps> = memo((props) => {
     },
     [ChatModelType.Openai]: {
       secrets: () => <OpenaiSecretsSettings />,
-      model: () => <OpenaiModelSettings singleFileConfig={resolvedSingleFileConfig} />,
+      model: () => <OpenaiModelSettings rootPath={rootPath} singleFileConfig={resolvedSingleFileConfig} />,
       title: () => <>OpenAI</>,
     },
   }

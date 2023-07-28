@@ -1,4 +1,5 @@
-import { ChatModelType, type ChatStreamReqParams, type SingleFileConfig, toUnixPath } from '@nicepkg/gpt-runner-shared/common'
+import { ChatModelType, DEFAULT_MODEL_NAMES_FOR_CHOOSE, toUnixPath } from '@nicepkg/gpt-runner-shared/common'
+import type { ChatStreamReqParams, GetModelNamesForChooseReqParams, ModelTypeVendorNameMap, SingleFileConfig, UserConfig } from '@nicepkg/gpt-runner-shared/common'
 import type { LLMChainParams } from '@nicepkg/gpt-runner-core'
 import { createFileContext, getSecrets, loadUserConfig, parseGptFile } from '@nicepkg/gpt-runner-core'
 import { PathUtils } from '@nicepkg/gpt-runner-shared/node'
@@ -6,6 +7,36 @@ import { getValidFinalPath } from '../helpers/valid-path'
 import { AppConfigService } from './app-config.service'
 
 export class LLMService {
+  static async getLLMModelsNames(params: GetModelNamesForChooseReqParams): Promise<string[]> {
+    const { rootPath, modelType, modelTypeVendorNameMap } = params
+
+    const finalPath = getValidFinalPath({
+      path: rootPath,
+      assertType: 'directory',
+      fieldName: 'rootPath',
+    })
+
+    const { config: userConfig } = await loadUserConfig(finalPath)
+
+    const finalSecrets = await LLMService.getSecretsFormAllWays({
+      modelType,
+      userConfig,
+      modelTypeVendorNameMap,
+    })
+
+    let result: string[] = []
+
+    result = Object.entries(userConfig.urlConfig || {}).find(([urlMatcher]) => {
+      // for example: urlMatcher maybe 'https://api.openai.com/*'
+      return Boolean(finalSecrets.basePath?.match(urlMatcher))
+    })?.[1]?.modelNames || []
+
+    if (!result.length)
+      return DEFAULT_MODEL_NAMES_FOR_CHOOSE[modelType]
+
+    return result
+  }
+
   static async getLLMChainParams(params: ChatStreamReqParams): Promise<LLMChainParams> {
     const {
       messages = [],
@@ -54,22 +85,11 @@ export class LLMService {
       ...overrideModelsConfig?.[singleFileConfig?.model?.type as ChatModelType || ''],
     } as SingleFileConfig['model']
 
-    const secretFromUserConfig = userConfig.model?.type === model?.type ? userConfig.model?.secrets : undefined
-    let secretsFromStorage = await getSecrets(model?.type as ChatModelType || null)
-    // if some secret value is '' or null or undefined, should remove
-    secretsFromStorage = Object.fromEntries(Object.entries(secretsFromStorage || {}).filter(([_, value]) => value != null && value !== '' && value !== undefined))
-
-    // if user use vendor secrets
-    const currentVendorName = modelTypeVendorNameMap?.[model!.type] || ''
-    const vendorSecrets = await AppConfigService.instance.getSecretsConfig({
-      modelType: model!.type,
-      vendorName: currentVendorName,
+    const finalSecrets = await LLMService.getSecretsFormAllWays({
+      modelType: model?.type,
+      userConfig,
+      modelTypeVendorNameMap,
     })
-
-    const finalSecrets = vendorSecrets || {
-      ...secretFromUserConfig,
-      ...secretsFromStorage,
-    }
 
     const finalSystemPrompt = await LLMService.getFinalSystemPrompt({
       finalPath,
@@ -88,7 +108,46 @@ export class LLMService {
         ...model!,
         secrets: finalSecrets,
       },
+      buildRequestHeaders(url, requestHeaders) {
+        const requestHeadersFromUserConfig: Record<string, string> = Object.entries(userConfig.urlConfig || {}).find(([urlMatcher]) => {
+          // for example: urlMatcher maybe 'https://api.openai.com/*'
+          return Boolean(url?.match(urlMatcher))
+        })?.[1]?.httpRequestHeader || {}
+
+        return {
+          ...requestHeaders,
+          ...requestHeadersFromUserConfig,
+        }
+      },
     }
+  }
+
+  static async getSecretsFormAllWays(params: {
+    modelType: ChatModelType | undefined
+    userConfig: UserConfig
+    modelTypeVendorNameMap: ModelTypeVendorNameMap | undefined
+  }) {
+    const { modelType = ChatModelType.Openai, userConfig, modelTypeVendorNameMap } = params
+
+    const secretFromUserConfig = userConfig.model?.type === modelType ? userConfig.model?.secrets : undefined
+    let secretsFromStorage = await getSecrets(modelType || null)
+
+    // if some secret value is '' or null or undefined, should remove
+    secretsFromStorage = Object.fromEntries(Object.entries(secretsFromStorage || {}).filter(([_, value]) => value != null && value !== '' && value !== undefined))
+
+    // if user use vendor secrets
+    const currentVendorName = modelTypeVendorNameMap?.[modelType] || ''
+    const vendorSecrets = await AppConfigService.instance.getSecretsConfig({
+      modelType,
+      vendorName: currentVendorName,
+    })
+
+    const finalSecrets = vendorSecrets || {
+      ...secretFromUserConfig,
+      ...secretsFromStorage,
+    }
+
+    return finalSecrets as typeof secretsFromStorage
   }
 
   static async getFinalSystemPrompt(params: {

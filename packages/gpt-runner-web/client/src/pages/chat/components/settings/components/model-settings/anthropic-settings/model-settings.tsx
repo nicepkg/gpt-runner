@@ -1,39 +1,29 @@
 import { type AnthropicModelConfig, ChatModelType, type SingleFileConfig } from '@nicepkg/gpt-runner-shared/common'
-import { memo, useState } from 'react'
+import { memo } from 'react'
 import type { FC } from 'react'
 import { useTranslation } from 'react-i18next'
 import { HookFormInput } from '../../../../../../../components/hook-form/hook-form-input'
-import { type ISelectOption, SelectOption } from '../../../../../../../components/select-option'
-import { BaseModelSettings, type BaseModelSettingsFormItemConfig } from '../base-model-settings'
+import { SelectOption } from '../../../../../../../components/select-option'
+import { BaseModelSettings } from '../base-model-settings'
+import type { BaseModelSettingsFormItemConfig, BaseModelSettingsProps } from '../base-model-settings'
 
 interface FormData extends Pick<AnthropicModelConfig, 'modelName' | 'temperature' | 'maxTokens' | 'topP' | 'topK'> {
 
 }
 
-export interface AnthropicModelSettingsProps {
+export interface AnthropicModelSettingsProps extends Omit<BaseModelSettingsProps<FormData>, 'modelType' | 'formConfig'> {
   singleFileConfig?: SingleFileConfig
 }
 
 export const AnthropicModelSettings: FC<AnthropicModelSettingsProps> = memo((props) => {
-  const { singleFileConfig } = props
+  const { rootPath, singleFileConfig } = props
 
   const { t } = useTranslation()
-
-  const [modelTipOptions] = useState<ISelectOption[]>([
-    {
-      label: 'claude-2',
-      value: 'claude-2',
-    },
-    {
-      label: 'claude-instant-1',
-      value: 'claude-instant-1',
-    },
-  ])
 
   const formConfig: BaseModelSettingsFormItemConfig<FormData>[] = [
     {
       name: 'modelName',
-      buildView: ({ buildLabel, useFormReturns: { control, formState, watch, setValue } }) => {
+      buildView: ({ buildLabel, modelTipOptions, useFormReturns: { control, formState, watch, setValue } }) => {
         return <>
           <HookFormInput
             name="modelName"
@@ -124,6 +114,7 @@ export const AnthropicModelSettings: FC<AnthropicModelSettingsProps> = memo((pro
   ]
 
   return <BaseModelSettings
+    rootPath={rootPath}
     modelType={ChatModelType.Anthropic}
     singleFileConfig={singleFileConfig}
     formConfig={formConfig}

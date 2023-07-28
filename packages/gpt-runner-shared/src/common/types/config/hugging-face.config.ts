@@ -1,10 +1,10 @@
 import type { ChatModelType } from '../enum'
-import type { BaseModelConfig } from './base.config'
+import type { BaseModelConfig, BaseSecrets } from './base.config'
 
-export interface HuggingFaceSecrets {
+export interface HuggingFaceSecrets extends BaseSecrets {
   /**
-     * The API key to use for Hugging Face API requests.
-     */
+   * The API key to use for Hugging Face API requests.
+   */
   apiKey?: string
 }
 

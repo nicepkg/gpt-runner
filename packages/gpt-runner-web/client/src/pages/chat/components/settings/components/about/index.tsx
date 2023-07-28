@@ -14,7 +14,7 @@ export const About = memo(forwardRef<HTMLDivElement>((_props, ref) => {
   const version = pkg.version
   const githubLink = pkg.repository.url
   const enBuyMeACoffeeLink = 'https://bmc.link/jinmingyang'
-  const cnBuyMeACoffeeLink = 'https://github.com/nicepkg/gpt-runner/assets/35005637/98a4962a-8a2e-4177-8781-1e1ee886ecdc'
+  const cnBuyMeACoffeeLink = 'https://user-images.githubusercontent.com/35005637/255805279-da299e44-ab7a-4038-b945-86d33128a775.jpg'
   const buyMeACoffeeLink = langId === LocaleLang.ChineseSimplified ? cnBuyMeACoffeeLink : enBuyMeACoffeeLink
 
   const data: { title: React.ReactNode; content?: React.ReactNode }[] = [

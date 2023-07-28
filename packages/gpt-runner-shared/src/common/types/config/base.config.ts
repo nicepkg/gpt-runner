@@ -3,6 +3,13 @@ import type { AnthropicModelConfig } from './anthropic.config'
 import type { HuggingFaceModelConfig } from './hugging-face.config'
 import type { OpenaiModelConfig } from './openai.config'
 
+export interface BaseSecrets {
+  /**
+   * override api request base url
+   */
+  basePath?: string
+}
+
 export interface BaseModelConfig {
   /**
    * mode type

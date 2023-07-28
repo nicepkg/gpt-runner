@@ -1,16 +1,11 @@
 import type { ChatModelType } from '../enum'
-import type { BaseModelConfig } from './base.config'
+import type { BaseModelConfig, BaseSecrets } from './base.config'
 
-export interface AnthropicSecrets {
+export interface AnthropicSecrets extends BaseSecrets {
   /**
      * The API key to use for Anthropic API requests.
      */
   apiKey?: string
-
-  /**
-   * override Anthropic base API url
-   */
-  basePath?: string
 }
 
 export interface AnthropicModelConfig extends BaseModelConfig {

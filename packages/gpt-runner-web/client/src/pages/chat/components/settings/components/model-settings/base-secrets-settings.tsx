@@ -1,5 +1,5 @@
 import type { ModelApiVendor } from '@nicepkg/gpt-runner-shared/common'
-import { ChatModelType, ServerStorageName, getModelConfigTypeSchema } from '@nicepkg/gpt-runner-shared/common'
+import { ChatModelType, ServerStorageName, getModelConfig } from '@nicepkg/gpt-runner-shared/common'
 import { memo, useEffect, useMemo } from 'react'
 import type { ReactNode } from 'react'
 import { useForm } from 'react-hook-form'
@@ -97,7 +97,7 @@ function BaseSecretsSettings_<FormData extends BaseSecretsFormData, M extends Ch
 
   const useFormReturns = useForm<FormData>({
     mode: 'onBlur',
-    resolver: zodResolver(getModelConfigTypeSchema(currentModelType, 'secrets')),
+    resolver: zodResolver(getModelConfig(currentModelType, 'secrets')),
     defaultValues: {
       vendorName: modelTypeVendorNameMap[currentModelType] || '',
     } as any,

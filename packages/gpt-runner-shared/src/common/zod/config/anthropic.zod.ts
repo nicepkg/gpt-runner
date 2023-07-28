@@ -1,11 +1,11 @@
 import { z } from 'zod'
 import { type AnthropicModelConfig, type AnthropicSecrets, ChatModelType } from '../../types'
-import { DEFAULT_ANTHROPIC_API_BASE_PATH } from '../../helpers'
-import { BaseModelConfigSchema } from './base.zod'
+import { DEFAULT_API_BASE_PATH } from '../../helpers'
+import { BaseModelConfigSchema, BaseSecretsSchema } from './base.zod'
 
-export const AnthropicSecretsSchema = z.object({
+export const AnthropicSecretsSchema = BaseSecretsSchema.extend({
   apiKey: z.string().optional().describe('The Anthropic API key'),
-  basePath: z.string().optional().default(DEFAULT_ANTHROPIC_API_BASE_PATH).describe('The Anthropic base API url'),
+  basePath: z.string().optional().default(DEFAULT_API_BASE_PATH[ChatModelType.Anthropic]).describe('The Anthropic base API url'),
 }) satisfies z.ZodType<AnthropicSecrets>
 
 export const AnthropicModelConfigSchema = BaseModelConfigSchema.extend({

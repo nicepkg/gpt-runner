@@ -1,4 +1,4 @@
-import { getModelConfigTypeSchema } from '@nicepkg/gpt-runner-shared/common'
+import { getModelConfig } from '@nicepkg/gpt-runner-shared/common'
 import type { BaseModelConfig, ChatModelType, SingleFileConfig } from '@nicepkg/gpt-runner-shared/common'
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { ReactNode } from 'react'
@@ -7,13 +7,17 @@ import { useForm } from 'react-hook-form'
 import { VSCodeCheckbox } from '@vscode/webview-ui-toolkit/react'
 import { useTranslation } from 'react-i18next'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useQuery } from '@tanstack/react-query'
 import { StyledForm, StyledFormItem } from '../../settings.styles'
 import { useGlobalStore } from '../../../../../../store/zustand/global'
+import type { ISelectOption } from '../../../../../../components/select-option'
+import { getModelNamesForChoose } from '../../../../../../networks/llm'
 import { InlineFormItem, LabelWrapper } from './model-settings.styles'
 
 export interface BaseModelSettingsFormItemBuildViewState<FormData extends BaseModelConfig> {
   buildLabel: (label: string) => ReactNode
   useFormReturns: UseFormReturn<FormData, any, undefined>
+  modelTipOptions: ISelectOption[]
 }
 
 export interface BaseModelSettingsFormItemConfig<FormData extends BaseModelConfig> {
@@ -22,16 +26,17 @@ export interface BaseModelSettingsFormItemConfig<FormData extends BaseModelConfi
 }
 
 export interface BaseModelSettingsProps<FormData extends BaseModelConfig> {
+  rootPath: string
   modelType: ChatModelType
   singleFileConfig?: SingleFileConfig
   formConfig: BaseModelSettingsFormItemConfig<FormData>[]
 }
 
 function BaseModelSettings_<FormData extends BaseModelConfig>(props: BaseModelSettingsProps<FormData>) {
-  const { modelType, singleFileConfig, formConfig } = props
+  const { rootPath, modelType, singleFileConfig, formConfig } = props
 
   const { t } = useTranslation()
-  const { overrideModelsConfig, updateOverrideModelsConfig } = useGlobalStore()
+  const { overrideModelsConfig, modelTypeVendorNameMap, updateOverrideModelsConfig } = useGlobalStore()
   const modelFromSingleFileConfig = singleFileConfig?.model as FormData | undefined
 
   const currentModelType = modelType
@@ -51,9 +56,28 @@ function BaseModelSettings_<FormData extends BaseModelConfig>(props: BaseModelSe
     return acc
   }, {} as Record<keyof FormData, boolean>))
 
+  const { data: getModelNamesForChooseData } = useQuery({
+    queryKey: ['get-model-names-for-choose', rootPath, currentModelType, modelTypeVendorNameMap],
+    enabled: Boolean(rootPath && currentModelType),
+    queryFn: () => getModelNamesForChoose({
+      rootPath,
+      modelType: currentModelType,
+      modelTypeVendorNameMap,
+    }),
+  })
+
+  const modelTipOptions = useMemo<ISelectOption[]>(() => {
+    return getModelNamesForChooseData?.data?.modelNames.map((modelName) => {
+      return {
+        label: modelName,
+        value: modelName,
+      }
+    }) ?? []
+  }, [getModelNamesForChooseData])
+
   const useFormReturns = useForm<FormData>({
     mode: 'onBlur',
-    resolver: zodResolver(getModelConfigTypeSchema(currentModelType, 'config')),
+    resolver: zodResolver(getModelConfig(currentModelType, 'config')),
   })
 
   const { setValue, watch } = useFormReturns
@@ -161,6 +185,7 @@ function BaseModelSettings_<FormData extends BaseModelConfig>(props: BaseModelSe
           return buildLabel(label, formItemConfig.name)
         },
         useFormReturns,
+        modelTipOptions,
       }
 
       return (<StyledFormItem key={index}>

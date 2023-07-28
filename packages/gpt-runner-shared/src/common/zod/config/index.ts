@@ -9,13 +9,13 @@ export * from './base.zod'
 export * from './openai.zod'
 export * from './user.config'
 
-export function getModelConfigTypeSchema<T extends ChatModelType>(modelType: T, schemaType: 'config' | 'secrets') {
-  const chatModelTypeSchemaMap: {
-    [key in ChatModelType]: {
-      config: z.ZodType<GetModelConfigType<key, 'config'>>
-      secrets: z.ZodType<GetModelConfigType<key, 'secrets'>>
-    }
-  } = {
+interface ModelConfig<T extends ChatModelType> {
+  config: z.ZodType<GetModelConfigType<T, 'config'>>
+  secrets: z.ZodType<GetModelConfigType<T, 'secrets'>>
+}
+
+export function getModelConfig<T extends ChatModelType, K extends keyof ModelConfig<T>>(modelType: T, key: K) {
+  const chatModelConfigMap = ({
     [ChatModelType.Anthropic]: {
       config: AnthropicModelConfigSchema,
       secrets: AnthropicSecretsSchema,
@@ -28,6 +28,9 @@ export function getModelConfigTypeSchema<T extends ChatModelType>(modelType: T, 
       config: OpenaiModelConfigSchema,
       secrets: OpenaiSecretsSchema,
     },
+  } as const) satisfies {
+    [Key in ChatModelType]: ModelConfig<Key>
   }
-  return chatModelTypeSchemaMap[modelType][schemaType]
+
+  return chatModelConfigMap[modelType][key]
 }

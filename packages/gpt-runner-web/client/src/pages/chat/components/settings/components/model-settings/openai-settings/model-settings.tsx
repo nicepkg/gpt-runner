@@ -1,47 +1,29 @@
 import { ChatModelType, type OpenaiModelConfig, type SingleFileConfig } from '@nicepkg/gpt-runner-shared/common'
-import { memo, useState } from 'react'
+import { memo } from 'react'
 import type { FC } from 'react'
 import { useTranslation } from 'react-i18next'
 import { HookFormInput } from '../../../../../../../components/hook-form/hook-form-input'
-import { type ISelectOption, SelectOption } from '../../../../../../../components/select-option'
-import { BaseModelSettings, type BaseModelSettingsFormItemConfig } from '../base-model-settings'
+import { SelectOption } from '../../../../../../../components/select-option'
+import { BaseModelSettings } from '../base-model-settings'
+import type { BaseModelSettingsFormItemConfig, BaseModelSettingsProps } from '../base-model-settings'
 
 interface FormData extends Pick<OpenaiModelConfig, 'modelName' | 'temperature' | 'maxTokens' | 'topP' | 'frequencyPenalty' | 'presencePenalty'> {
 
 }
 
-export interface OpenaiModelSettingsProps {
+export interface OpenaiModelSettingsProps extends Omit<BaseModelSettingsProps<FormData>, 'modelType' | 'formConfig'> {
   singleFileConfig?: SingleFileConfig
 }
 
 export const OpenaiModelSettings: FC<OpenaiModelSettingsProps> = memo((props) => {
-  const { singleFileConfig } = props
+  const { rootPath, singleFileConfig } = props
 
   const { t } = useTranslation()
-
-  const [modelTipOptions] = useState<ISelectOption[]>([
-    {
-      label: 'gpt-3.5-turbo-16k',
-      value: 'gpt-3.5-turbo-16k',
-    },
-    {
-      label: 'gpt-4',
-      value: 'gpt-4',
-    },
-    {
-      label: 'gpt-4-32k',
-      value: 'gpt-4-32k',
-    },
-    {
-      label: 'gpt-3.5-turbo',
-      value: 'gpt-3.5-turbo',
-    },
-  ])
 
   const formConfig: BaseModelSettingsFormItemConfig<FormData>[] = [
     {
       name: 'modelName',
-      buildView: ({ buildLabel, useFormReturns: { control, formState, watch, setValue } }) => {
+      buildView: ({ buildLabel, modelTipOptions, useFormReturns: { control, formState, watch, setValue } }) => {
         return <>
           <HookFormInput
             name="modelName"
@@ -150,6 +132,7 @@ export const OpenaiModelSettings: FC<OpenaiModelSettingsProps> = memo((props) =>
   ]
 
   return <BaseModelSettings
+    rootPath={rootPath}
     modelType={ChatModelType.Openai}
     singleFileConfig={singleFileConfig}
     formConfig={formConfig}
