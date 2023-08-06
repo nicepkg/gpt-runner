@@ -1,17 +1,26 @@
 import { motion } from 'framer-motion'
 import styled from 'styled-components'
 import { Icon } from '../icon'
+import { backDropBg } from '../../styles/utils'
 
 export const TabContainer = styled.div`
   display: flex;
   flex-direction: column;
   height: 100%;
+  position: relative;
+  padding-top: calc(var(--design-unit) * 7px + var(--border-width) * 3px);
 `
 
 export const TabListHeader = styled.div`
   flex-shrink: 0;
   position: relative;
   padding: calc(var(--border-width) * 3px) 1rem;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  width: 100%;
+  ${backDropBg}
 
   &[data-show-more=true] {
     padding-right: 2rem;

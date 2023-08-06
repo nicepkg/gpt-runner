@@ -15,7 +15,6 @@ export const ContentWrapper = styled.div<{ $isPopoverContent?: boolean; $isTopTo
   ${props => props.$isPopoverContent && css`
     width: calc(100vw - 1rem);
     height: 100%;
-    background: var(--panel-view-background);
     max-width: 500px;
 
     ${withBreakpoint('sm', css`

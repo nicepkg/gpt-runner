@@ -5,6 +5,7 @@ const lineWeight = '8px'
 
 export const DragLine = styled.div<{ $dragLineColor: string; $dragLineActiveColor: string; $dragLineWidth: string }>`
   position: absolute;
+  z-index: 10;
   /* background: ${({ $dragLineColor }) => $dragLineColor}; */
   border-color: ${({ $dragLineColor }) => $dragLineColor};
   border-style: solid;

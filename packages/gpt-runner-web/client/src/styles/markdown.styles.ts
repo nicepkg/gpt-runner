@@ -173,6 +173,7 @@ export const MarkdownStyle = createGlobalStyle`
     blockquote {
       border-left: 4px solid var(--panel-view-border);
       padding: 0 15px;
+      margin-left: 15px;
     }
     blockquote > :first-child {
       margin-top: 0;

@@ -1,5 +1,6 @@
 import { styled } from 'styled-components'
 import { Logo } from '../logo'
+import { backDropBg } from '../../styles/utils'
 
 export const Wrapper = styled.div`
   display: flex;
@@ -9,6 +10,7 @@ export const Wrapper = styled.div`
   flex-shrink: 0;
   padding: 0.5rem;
   border-top: 1px solid var(--panel-view-border);
+  ${backDropBg}
 `
 
 export const ToolbarWrapper = styled.div`
@@ -33,6 +35,18 @@ export const TextAreaWrapper = styled.div`
 
     &:hover {
       border-color: var(--focus-border);
+    }
+
+    .monaco-editor {
+      background-color: transparent !important;
+
+      .margin {
+        background-color: transparent !important;
+      }
+    }
+
+    .monaco-editor-background {
+      background-color: transparent !important;
     }
   }
 `

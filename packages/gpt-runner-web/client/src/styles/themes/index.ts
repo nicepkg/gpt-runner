@@ -23,9 +23,4 @@ if (getGlobalConfig().defaultTheme !== 'default') {
   ;(themeMap as any).default = defaultTheme
 }
 
-export function isDarkTheme(themeName: ThemeName) {
-  const darkThemes: ThemeName[] = ['default', 'gptrDark', 'vscodeDynamic', 'vscodeDark', 'jetbrainsDark']
-  return darkThemes.includes(themeName)
-}
-
 export type ThemeName = keyof typeof themeMap

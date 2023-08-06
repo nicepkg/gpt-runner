@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { type ComponentType, type FC, type PropsWithChildren, Suspense, memo, useEffect } from 'react'
+import { type ComponentType, type FC, type PropsWithChildren, Suspense, memo, useEffect, useMemo } from 'react'
 import type { FallbackProps } from 'react-error-boundary'
 import { ErrorBoundary } from 'react-error-boundary'
 import { useTranslation } from 'react-i18next'
@@ -16,6 +16,7 @@ import { Toast } from './components/toast'
 import { LoadingView } from './components/loading-view'
 import { ConfettiProvider } from './store/context/confetti-context'
 import { ModalProvider } from './store/context/modal-context'
+import { useCssVarColor } from './hooks/use-css-var-color.hook'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -86,10 +87,38 @@ export const AppProviders: FC<PropsWithChildren> = memo(({ children }) => {
 })
 
 export const App: FC = memo(() => {
+  const { rgba: backgroundRgba, isDark } = useCssVarColor({
+    cssVarName: '--panel-view-background',
+  })
+
+  const { rgba: borderRgba } = useCssVarColor({
+    cssVarName: '--panel-view-border',
+  })
+
+  const myBackdropBg = useMemo(() => {
+    if (!backgroundRgba)
+      return 'transparent'
+
+    return `rgba(${backgroundRgba.r}, ${backgroundRgba.g}, ${backgroundRgba.b}, ${isDark ? '0.6' : '0.8'})`
+  }, [backgroundRgba, isDark])
+
+  const [myScrollbarBg, myScrollbarHoverBg] = useMemo(() => {
+    if (!borderRgba)
+      return ['var(--panel-view-border)', 'var(--panel-view-border)'] as const
+
+    return [`rgba(${borderRgba.r}, ${borderRgba.g}, ${borderRgba.b}, 0.2)`, `rgba(${borderRgba.r}, ${borderRgba.g}, ${borderRgba.b}, 0.8)`] as const
+  }, [borderRgba, isDark])
+
   return (
     <Suspense fallback={<LoadingView absolute />}>
       <AppProviders>
-        <GlobalStyle />
+        <GlobalStyle appendCss={`
+       body {
+        --my-backdrop-bg: ${myBackdropBg};
+        --my-scrollbar-bg: ${myScrollbarBg};
+        --my-scrollbar-hover-bg: ${myScrollbarHoverBg};
+       }
+        `} />
         <GlobalThemeStyle />
         <MarkdownStyle />
         <AppRouter />

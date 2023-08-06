@@ -5,7 +5,8 @@ import type { TreeProps } from '../tree'
 import { Tree } from '../tree'
 import type { TreeItemBaseStateOtherInfo, TreeItemProps } from '../tree-item'
 import { LoadingView } from '../loading-view'
-import { SidebarHeader, SidebarSearch, SidebarSearchRightWrapper, SidebarSearchWrapper, SidebarTreeWrapper, SidebarUnderSearchWrapper, SidebarWrapper } from './sidebar.styles'
+import { useElementSizeRealTime } from '../../hooks/use-element-size-real-time.hook'
+import { SidebarHeader, SidebarSearch, SidebarSearchRightWrapper, SidebarSearchWrapper, SidebarTopBlurContainer, SidebarTreeWrapper, SidebarUnderSearchWrapper, SidebarWrapper } from './sidebar.styles'
 
 export interface SidebarProps<OtherInfo extends TreeItemBaseStateOtherInfo = TreeItemBaseStateOtherInfo> {
   defaultSearchKeyword?: string
@@ -37,6 +38,7 @@ function Sidebar_<OtherInfo extends TreeItemBaseStateOtherInfo = TreeItemBaseSta
   const [searchKeyword, setSearchKeyword] = useState(defaultSearchKeyword)
   const [debouncedSearchKeyword, setDebouncedSearchKeyword] = useState(defaultSearchKeyword)
   const [finalItems, setFinalItems] = useState<TreeItemProps<OtherInfo>[]>([])
+  const [SidebarTopBlurContainerRef, { height: SidebarTopBlurContainerHeight }] = useElementSizeRealTime<HTMLDivElement>()
 
   useDebounce(() => {
     setDebouncedSearchKeyword(searchKeyword)
@@ -78,26 +80,38 @@ function Sidebar_<OtherInfo extends TreeItemBaseStateOtherInfo = TreeItemBaseSta
   return <SidebarWrapper style={{
     flexDirection: reverseTreeUi ? 'column-reverse' : 'column',
   }}>
-    <SidebarHeader>
-      {buildTopToolbarSlot?.()}
-    </SidebarHeader>
-    <SidebarSearchWrapper>
-      <SidebarSearch
-        placeholder={placeholder}
-        value={searchKeyword}
-        onInput={(e: any) => {
-          setSearchKeyword(e.target?.value)
-        }}>
-      </SidebarSearch>
-      <SidebarSearchRightWrapper>
-        {buildSearchRightSlot?.()}
-      </SidebarSearchRightWrapper>
-    </SidebarSearchWrapper>
-    <SidebarUnderSearchWrapper>
-      {buildUnderSearchSlot?.()}
-    </SidebarUnderSearchWrapper>
+    <SidebarTopBlurContainer ref={SidebarTopBlurContainerRef}>
+      <SidebarHeader>
+        {buildTopToolbarSlot?.()}
+      </SidebarHeader>
+      <SidebarSearchWrapper>
+        <SidebarSearch
+          placeholder={placeholder}
+          value={searchKeyword}
+          onInput={(e: any) => {
+            setSearchKeyword(e.target?.value)
+          }}>
+        </SidebarSearch>
+        <SidebarSearchRightWrapper>
+          {buildSearchRightSlot?.()}
+        </SidebarSearchRightWrapper>
+      </SidebarSearchWrapper>
+      <SidebarUnderSearchWrapper>
+        {buildUnderSearchSlot?.()}
+      </SidebarUnderSearchWrapper>
+    </SidebarTopBlurContainer>
+
     <SidebarTreeWrapper>
       {loading && <LoadingView absolute></LoadingView>}
+
+      <div style={{
+        flexShrink: '0',
+        width: '100%',
+        height: SidebarTopBlurContainerHeight,
+      }}>
+
+      </div>
+
       <Tree
         {...tree}
         items={finalItems}

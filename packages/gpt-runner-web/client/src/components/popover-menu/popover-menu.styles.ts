@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+import { backDropBg } from '../../styles/utils'
 
 export const MenuMask = styled.div`
   overflow: hidden;
@@ -16,19 +17,19 @@ export const Toolbar = styled.div`
 `
 
 export const Menu = styled.div`
+  position: relative;
   display: flex;
   flex-direction: column;
-  background-color: var(--panel-view-background);
   border: 1px solid var(--panel-view-border);
   border-radius: 0.5rem;
   overflow: hidden;
+  ${backDropBg}
 `
 
 export const MenuChildrenWrapper = styled.div`
   flex: 1;
   overflow-x: hidden;
   overflow-y: auto;
-
 
   & > .icon-button {
     margin-left: 0;

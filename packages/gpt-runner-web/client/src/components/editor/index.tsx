@@ -4,8 +4,7 @@ import type { FC } from 'react'
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import * as monaco from 'monaco-editor'
 import type { MonacoEditorInstance } from '../../types/monaco-editor'
-import { useGlobalStore } from '../../store/zustand/global'
-import { isDarkTheme } from '../../styles/themes'
+import { useDarkTheme } from '../../hooks/use-css-var-color.hook'
 import { initLanguageSettings } from './monaco/init-languages-settings'
 import { createSwitchLanguageCommand } from './monaco/commands/switch-language'
 import { createCtrlSToSaveAction } from './monaco/actions/ctrls-to-save'
@@ -67,10 +66,7 @@ export const Editor: FC<EditorProps> = memo((props) => {
   const defaultLanguage = defaultLanguageFromProps || DEFAULT_LANGUAGE
   const language = languageFromProps || currentExtLanguage || defaultLanguage
 
-  const {
-    themeName,
-  } = useGlobalStore()
-  const isDark = isDarkTheme(themeName)
+  const isDark = useDarkTheme()
 
   const handleEditorWillMount = useCallback((monaco: Monaco) => {
     // here is the monaco instance

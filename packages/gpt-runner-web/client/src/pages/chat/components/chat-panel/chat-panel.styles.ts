@@ -2,6 +2,7 @@ import { css, styled } from 'styled-components'
 import { withBreakpoint } from '../../../../helpers/with-breakpoint'
 
 export const ChatPanelWrapper = styled.div`
+  position: relative;
   display: flex;
   flex-direction: column;
   flex: 1;
@@ -15,5 +16,4 @@ export const ChatPanelWrapper = styled.div`
 `
 
 export const ChatPanelPopoverTreeWrapper = styled.div`
-  height: 100%;
 `

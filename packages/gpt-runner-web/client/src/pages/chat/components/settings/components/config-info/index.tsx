@@ -3,12 +3,12 @@ import type { SingleFileConfig, UserConfig } from '@nicepkg/gpt-runner-shared/co
 import { useGlobalStore } from '../../../../../../store/zustand/global'
 import type { MessageCodeBlockTheme } from '../../../../../../components/chat-message-code-block'
 import { MessageCodeBlock } from '../../../../../../components/chat-message-code-block'
-import { isDarkTheme } from '../../../../../../styles/themes'
 import { useUserConfig } from '../../../../../../hooks/use-user-config.hook'
 import { ConfigInfoWrapper } from '../../settings.styles'
 import { FormTitle } from '../../../../../../components/form-title'
 import { FlexColumn } from '../../../../../../styles/global.styles'
 import { LoadingView } from '../../../../../../components/loading-view'
+import { useDarkTheme } from '../../../../../../hooks/use-css-var-color.hook'
 
 export interface ConfigInfoProps {
   rootPath?: string
@@ -19,11 +19,12 @@ export interface ConfigInfoProps {
 
 export const ConfigInfo: FC<ConfigInfoProps> = memo((props) => {
   const { rootPath, chatId, singleFileConfig: singleFileConfigFromProps, userConfig: userConfigFromProps } = props
-  const { themeName, getGptFileTreeItemFromChatId } = useGlobalStore()
+  const { getGptFileTreeItemFromChatId } = useGlobalStore()
 
+  const isDark = useDarkTheme()
   const codeBlockTheme: MessageCodeBlockTheme = useMemo(() => {
-    return isDarkTheme(themeName) ? 'dark' : 'light'
-  }, [themeName])
+    return isDark ? 'dark' : 'light'
+  }, [isDark])
 
   const gptFileTreeItem = useMemo(() => {
     if (!chatId)

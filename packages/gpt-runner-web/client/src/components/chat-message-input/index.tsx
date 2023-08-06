@@ -138,7 +138,7 @@ export const ChatMessageInput: FC<ChatMessageInputProps> = memo((props) => {
       {toolbarSlot}
 
       {showTopLogo && <LogoWrapper>
-        <StyledLogo color={'var(--panel-tab-foreground)'} {...logoProps} ></StyledLogo>
+        <StyledLogo color={'var(--focus-border)'} {...logoProps} ></StyledLogo>
       </LogoWrapper>}
     </ToolbarWrapper>
 

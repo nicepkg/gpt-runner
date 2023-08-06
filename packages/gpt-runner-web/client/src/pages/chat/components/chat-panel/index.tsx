@@ -1,9 +1,10 @@
 import type { FC, RefObject } from 'react'
-import { memo, useCallback, useEffect, useMemo, useState } from 'react'
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { ChatMessageStatus, ChatRole, ClientEventName, getErrorMsg } from '@nicepkg/gpt-runner-shared/common'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-hot-toast'
 import { copyToClipboard } from '@nicepkg/gpt-runner-shared/browser'
+import { motion } from 'framer-motion'
 import type { ChatMessagePanelProps } from '../../../../components/chat-message-panel'
 import { FormTitle } from '../../../../components/form-title'
 import { ChatMessagePanel } from '../../../../components/chat-message-panel'
@@ -16,16 +17,17 @@ import { useGlobalStore } from '../../../../store/zustand/global'
 import type { GptFileTreeItem } from '../../../../store/zustand/global/sidebar-tree.slice'
 import { getGlobalConfig } from '../../../../helpers/global-config'
 import { PopoverMenu } from '../../../../components/popover-menu'
+import type { DragResizeViewRef } from '../../../../components/drag-resize-view'
 import { DragResizeView } from '../../../../components/drag-resize-view'
 import { useElementSizeRealTime } from '../../../../hooks/use-element-size-real-time.hook'
 import { useTempStore } from '../../../../store/zustand/temp'
 import type { MessageCodeBlockTheme } from '../../../../components/chat-message-code-block'
-import { isDarkTheme } from '../../../../styles/themes'
 import { emitter } from '../../../../helpers/emitter'
 import { ModelSettings } from '../settings/components/model-settings'
 import { ContentWrapper } from '../../chat.styles'
 import { ContextSettings } from '../settings/components/context-settings'
 import { OverrideModelTypeSettings } from '../settings/components/model-settings/override-model-type'
+import { useDarkTheme } from '../../../../hooks/use-css-var-color.hook'
 import { ChatPanelPopoverTreeWrapper, ChatPanelWrapper } from './chat-panel.styles'
 import { createRemarkOpenEditorPlugin } from './remark-plugin'
 
@@ -68,6 +70,7 @@ export const ChatPanel: FC<ChatPanelProps> = memo((props) => {
   const [gptFileTreeItem, setGptFileTreeItem] = useState<GptFileTreeItem>()
   const [chatPanelRef, { width: chatPanelWidth, height: chatPanelHeight }] = useElementSizeRealTime<HTMLDivElement>()
   const { filesRelativePaths } = useTempStore()
+  const dargChatInputRef = useRef<DragResizeViewRef>(null)
 
   const defaultInitChatInputHeight = useMemo(() => {
     const DEFAULT_CHAT_INPUT_HEIGHT = 250
@@ -251,13 +254,13 @@ export const ChatPanel: FC<ChatPanelProps> = memo((props) => {
     </>
   }, [handleCopy, handleInsertCodes, handleDiffCodes])
 
-  const codeBlockTheme: MessageCodeBlockTheme = isDarkTheme(themeName) ? 'dark' : 'light'
+  const isDark = useDarkTheme()
+  const codeBlockTheme: MessageCodeBlockTheme = isDark ? 'dark' : 'light'
 
   const messagePanelProps: ChatMessagePanelProps = useMemo(() => {
     return {
       messageItems: chatInstance?.messages.map((message, i) => {
         const isLast = i === chatInstance.messages.length - 1
-        const isLastTwo = i >= chatInstance.messages.length - 2
         const isAi = message.name === ChatRole.Assistant
 
         const handleRegenerateMessage = () => {
@@ -320,7 +323,6 @@ export const ChatPanel: FC<ChatPanelProps> = memo((props) => {
           ...message,
           remarkPlugins,
           status: isLast ? status : ChatMessageStatus.Success,
-          showToolbar: isLastTwo ? 'always' : 'hover',
           showAvatar: chatPanelWidth > 600,
           theme: codeBlockTheme,
           buildCodeToolbar: status === ChatMessageStatus.Pending ? undefined : buildCodeToolbar,
@@ -482,6 +484,9 @@ export const ChatPanel: FC<ChatPanelProps> = memo((props) => {
         childrenInMenuWhenOpen={true}
         buildChildrenSlot={({ isHovering }) => {
           return <IconButton
+            style={{
+              paddingLeft: isHovering ? '0' : '0.5rem',
+            }}
             text={t('chat_page.clear_history_btn')}
             iconClassName='codicon-clear-all'
             hoverShowText={!isHovering}
@@ -523,30 +528,53 @@ export const ChatPanel: FC<ChatPanelProps> = memo((props) => {
   }
 
   return <ChatPanelWrapper ref={chatPanelRef}>
-    <ChatMessagePanel ref={scrollDownRef} {...messagePanelProps}></ChatMessagePanel>
+    <ChatMessagePanel
+      ref={scrollDownRef}
+      {...messagePanelProps}
+      bottomSlot={
+        <motion.div
+          style={{
+            flexShrink: '0',
+            width: '100%',
+            height: dargChatInputRef.current?.motionDragHeight,
+          }}
+        ></motion.div>
+      }
+    ></ChatMessagePanel>
 
-    {initChatInputHeight && <DragResizeView
-      initHeight={initChatInputHeight}
-      dragDirectionConfigs={[
-        {
-          direction: 'top',
-          boundary: [-(maxInitChatInputHeight - initChatInputHeight), 100],
-        },
-      ]}>
-      <ChatMessageInput
-        showTopLogo={chatPanelWidth > 600}
-        showBottomLogo={chatPanelWidth <= 600}
-        value={chatInstance?.inputtingPrompt || ''}
-        onChange={handleInputChange}
-        toolbarSlot={renderInputToolbar()}
-        onSendMessage={handleGenerateAnswer}
-        logoProps={{
-          onClick() {
-            setInitChatInputHeight(initChatInputHeight === defaultInitChatInputHeight ? maxInitChatInputHeight : defaultInitChatInputHeight)
+    {initChatInputHeight
+      && <DragResizeView
+        ref={dargChatInputRef}
+        initHeight={initChatInputHeight}
+        dragDirectionConfigs={[
+          {
+            direction: 'top',
+            boundary: [-(maxInitChatInputHeight - initChatInputHeight), 100],
           },
+        ]}
+        dragStyle={{
+          position: 'absolute',
+          bottom: '0',
+          left: '0',
+          zIndex: '9',
+          width: '100%',
         }}
-      ></ChatMessageInput>
-    </DragResizeView>}
+      >
+        <ChatMessageInput
+          showTopLogo={chatPanelWidth > 600}
+          showBottomLogo={chatPanelWidth <= 600}
+          value={chatInstance?.inputtingPrompt || ''}
+          onChange={handleInputChange}
+          toolbarSlot={renderInputToolbar()}
+          onSendMessage={handleGenerateAnswer}
+          logoProps={{
+            onClick() {
+              setInitChatInputHeight(initChatInputHeight === defaultInitChatInputHeight ? maxInitChatInputHeight : defaultInitChatInputHeight)
+            },
+          }}
+        ></ChatMessageInput>
+      </DragResizeView>
+    }
   </ChatPanelWrapper>
 })
 

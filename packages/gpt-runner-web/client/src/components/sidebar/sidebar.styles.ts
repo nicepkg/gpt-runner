@@ -1,13 +1,28 @@
 import { VSCodeTextField } from '@vscode/webview-ui-toolkit/react'
 import { styled } from 'styled-components'
+import { backDropBg } from '../../styles/utils'
 
 export const SidebarWrapper = styled.div`
+  position: relative;
   display: flex;
   flex-direction: column;
   width: 100%;
   height: 100%;
   padding: 0 0.5rem;
   overflow: hidden;
+`
+
+export const SidebarTopBlurContainer = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  overflow: hidden;
+  padding: 0 0.5rem;
+  ${backDropBg}
 `
 
 export const SidebarHeader = styled.div`

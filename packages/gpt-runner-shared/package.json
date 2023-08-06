@@ -106,8 +106,8 @@
     "launch-editor": "^2.6.0",
     "minimatch": "^9.0.3",
     "open": "^8.4.2",
-    "socket.io": "^4.7.1",
-    "socket.io-client": "^4.7.1",
+    "socket.io": "^4.7.2",
+    "socket.io-client": "^4.7.2",
     "zod": "^3.21.4",
     "zod-to-json-schema": "^3.21.4"
   },

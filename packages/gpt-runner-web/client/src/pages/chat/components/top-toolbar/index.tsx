@@ -8,6 +8,7 @@ import { useIsMobile } from '../../../../hooks/use-is-mobile.hook'
 import type { UseTokenNumProps } from '../../../../hooks/use-token-num.hook'
 import { useTokenNum } from '../../../../hooks/use-token-num.hook'
 import { formatNumWithK } from '../../../../helpers/utils'
+import { useTempStore } from '../../../../store/zustand/temp'
 import { TopToolbarBlank, TopToolbarLeft, TopToolbarRight, TopToolbarWrapper } from './top-toolbar.styles'
 
 export interface TopToolbarProps extends UseTokenNumProps {
@@ -23,13 +24,15 @@ export const TopToolbar = memo(forwardRef<HTMLDivElement, TopToolbarProps>((prop
   const { t } = useTranslation()
   const isMobile = useIsMobile()
   const { totalTokenNum } = useTokenNum(useTokenNumProps)
+  const { updateCurrentAppConfig } = useTempStore()
 
-  const popMenus: {
+  const menus: {
     text: string
     alwaysShowText?: boolean
     iconClassName: string
     menuView?: React.ReactNode
     menuProps?: PopoverMenuProps
+    onClick?: () => void
   }[] = [{
     text: t('chat_page.settings_btn'),
     alwaysShowText: true,
@@ -45,12 +48,21 @@ export const TopToolbar = memo(forwardRef<HTMLDivElement, TopToolbarProps>((prop
     alwaysShowText: !isMobile,
     iconClassName: 'codicon-info',
     menuView: aboutView,
+  }, {
+    text: t('chat_page.settings_tab_notifications'),
+    alwaysShowText: !isMobile,
+    iconClassName: 'codicon-bell',
+    onClick() {
+      updateCurrentAppConfig({
+        showNotificationModal: true,
+      })
+    },
   }]
 
   return <>
     <TopToolbarWrapper ref={ref}>
       <TopToolbarLeft>
-        {popMenus.map((popMenu, index) => {
+        {menus.map((popMenu, index) => {
           const { text, alwaysShowText, iconClassName, menuView, menuProps } = popMenu
 
           return <PopoverMenu
@@ -73,8 +85,15 @@ export const TopToolbar = memo(forwardRef<HTMLDivElement, TopToolbarProps>((prop
                 text={text}
                 iconClassName={iconClassName}
                 hoverShowText={!alwaysShowText && !isHovering}
+                transparentBgWhenNotHover
                 style={{
                   paddingLeft: '0.5rem',
+                }}
+                onClick={(e: any) => {
+                  if (popMenu.onClick) {
+                    e.stopPropagation()
+                    popMenu.onClick?.()
+                  }
                 }}
               ></IconButton>
             }}

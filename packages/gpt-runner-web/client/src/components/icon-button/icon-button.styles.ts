@@ -1,13 +1,13 @@
 import { css, styled } from 'styled-components'
 
-export const ButtonWrapper = styled.div<{ $hoverShowText?: boolean }>`
+export const ButtonWrapper = styled.div<{ $transparentBgWhenNotHover: boolean; $hoverShowText?: boolean }>`
   display: flex;
   flex-shrink: 0;
   overflow: hidden;
 
   vscode-button {
     &:not(:hover) {
-      background: transparent;
+      background: ${({ $transparentBgWhenNotHover }) => ($transparentBgWhenNotHover ? 'transparent' : '')};
     }
 
     /* &::part(control) {

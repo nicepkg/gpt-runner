@@ -1,9 +1,8 @@
-import type { FC } from 'react'
-import { memo, useEffect, useMemo, useRef } from 'react'
+import { forwardRef, memo, useEffect, useImperativeHandle, useMemo, useRef } from 'react'
 import type { UserDragConfig } from '@use-gesture/react'
 import { useDrag } from '@use-gesture/react'
-import type { SpringOptions } from 'framer-motion'
-import { motion, useMotionValue, useSpring } from 'framer-motion'
+import type { MotionValue, SpringOptions } from 'framer-motion'
+import { AnimatePresence, motion, useMotionValue, useSpring } from 'framer-motion'
 import { isDomHidden } from '../../helpers/utils'
 import { DragLine } from './drag-resize-view.styles'
 
@@ -16,6 +15,12 @@ export interface DragDirectionConfig {
    */
   boundary: number[]
 }
+
+export interface DragResizeViewRef {
+  motionDragWidth: MotionValue<number> | undefined
+  motionDragHeight: MotionValue<number> | undefined
+}
+
 export interface DragResizeViewProps {
   initWidth?: number
   initHeight?: number
@@ -29,14 +34,10 @@ export interface DragResizeViewProps {
   dragLineActiveColor?: string
   dragLineWidth?: string
   children: React.ReactNode
-
-  // drawer
-  drawerClassName?: string
-  drawerStyle?: React.CSSProperties
   open?: boolean
 }
 
-export const DragResizeView: FC<DragResizeViewProps> = memo((props) => {
+export const DragResizeView = memo(forwardRef<DragResizeViewRef, DragResizeViewProps>((props, ref) => {
   const {
     initWidth,
     initHeight,
@@ -51,13 +52,11 @@ export const DragResizeView: FC<DragResizeViewProps> = memo((props) => {
     dragLineWidth = '1px',
     children,
 
-    // drawer
-    drawerClassName,
-    drawerStyle,
+    // drag
     open = true,
   } = props
 
-  const ref = useRef<HTMLDivElement>(null)
+  const dragRef = useRef<HTMLDivElement>(null)
   const finalWidth = useMotionValue(initWidth)
   const finalHeight = useMotionValue(initHeight)
 
@@ -83,9 +82,9 @@ export const DragResizeView: FC<DragResizeViewProps> = memo((props) => {
 
   useEffect(() => {
     const handleWindowResize = () => {
-      if (ref.current && !isDomHidden(ref.current)) {
-        finalWidth.set(ref.current.offsetWidth)
-        finalHeight.set(ref.current.offsetHeight)
+      if (dragRef.current && !isDomHidden(dragRef.current)) {
+        finalWidth.set(dragRef.current.offsetWidth)
+        finalHeight.set(dragRef.current.offsetHeight)
       }
     }
 
@@ -198,39 +197,33 @@ export const DragResizeView: FC<DragResizeViewProps> = memo((props) => {
   const dragWidth = useSpring(finalWidth, springConfig)
   const dragHeight = useSpring(finalHeight, springConfig)
 
-  // drawer
-  const drawerWidth = useSpring(finalWidth, springConfig)
-  const drawerHeight = useSpring(finalHeight, springConfig)
-
   useEffect(() => {
-    drawerWidth.set(!open && isX ? 0 : finalWidth.get())
+    // drawer
+    dragWidth.set(!open && isX ? 0 : finalWidth.get())
   }, [open, isX])
 
   useEffect(() => {
-    drawerHeight.set(!open && isY ? 0 : finalHeight.get())
+    // drawer
+    dragHeight.set(!open && isY ? 0 : finalHeight.get())
   }, [open, isY])
 
-  // drawer
-  return <motion.div
-    className={drawerClassName}
-    style={{
-      ...drawerStyle,
-      width: initWidth !== undefined ? drawerWidth : '',
-      height: initHeight !== undefined ? drawerHeight : '',
-      overflow: 'hidden',
-    }}
-  >
+  useImperativeHandle(ref, () => ({
+    motionDragWidth: initWidth !== undefined ? dragWidth : undefined,
+    motionDragHeight: initHeight !== undefined ? dragHeight : undefined,
+  }), [initWidth, initHeight])
 
-    {/* drag */}
+  // drag & drag
+  return <AnimatePresence>
     <motion.div
+      ref={dragRef}
       className={dragClassName}
       style={{
-        ...dragStyle,
         width: initWidth !== undefined ? dragWidth : '',
         height: initHeight !== undefined ? dragHeight : '',
         position: 'relative',
+        overflow: 'hidden',
+        ...dragStyle,
       }}
-      ref={ref}
     >
       {children}
 
@@ -250,7 +243,7 @@ export const DragResizeView: FC<DragResizeViewProps> = memo((props) => {
           : null
       })}
     </motion.div>
-  </motion.div>
-})
+  </AnimatePresence>
+}))
 
 DragResizeView.displayName = 'DragResizeView'

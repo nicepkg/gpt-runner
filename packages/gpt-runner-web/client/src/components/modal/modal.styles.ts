@@ -22,7 +22,8 @@ export const ModalContentWrapper = styled.div`
   flex-direction: column;
   max-width: 100%;
   max-height: 80vh;
-  width: min(500px, calc(100vw - 1rem));
+  width: 100%;
+  max-width: min(800px, calc(100vw - 1rem));
   overflow: hidden;
   background: var(--panel-view-background);
   border-radius: 0.5rem;

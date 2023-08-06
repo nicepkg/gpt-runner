@@ -1,12 +1,13 @@
 import { useMutation, useQuery } from '@tanstack/react-query'
 import type { ReactNode } from 'react'
-import { memo, useMemo } from 'react'
+import { memo } from 'react'
 import type { MarkAsVisitedAppConfigReqParams } from '@nicepkg/gpt-runner-shared/common'
 import { useTempStore } from '../../store/zustand/temp'
 import { useGlobalStore } from '../../store/zustand/global'
 import { fetchAppConfig, markAsVisitedAppConfig } from '../../networks/config'
 import { Modal } from '../../components/modal'
 import { MessageTextView } from '../../components/chat-message-text-view'
+import { Wrapper } from './layout.styles'
 
 export interface LayoutProps {
   children?: ReactNode
@@ -37,18 +38,18 @@ export const Layout = memo((props: LayoutProps) => {
   })
 
   const notificationConfig = currentAppConfig?.currentConfig?.notificationConfig
-  const releaseConfig = currentAppConfig?.currentConfig?.releaseConfig
+  // const releaseConfig = currentAppConfig?.currentConfig?.releaseConfig
 
-  const releaseLog = useMemo(() => {
-    let content = ''
-    releaseConfig?.changeLogs.forEach((log) => {
-      content += `## ${log.version}\n`
-      content += `${log.changes}\n\n`
-    })
-    return content
-  }, [releaseConfig?.changeLogs])
+  // const releaseLog = useMemo(() => {
+  //   let content = ''
+  //   releaseConfig?.changeLogs.forEach((log) => {
+  //     content += `## ${log.version}\n`
+  //     content += `${log.changes}\n\n`
+  //   })
+  //   return content
+  // }, [releaseConfig?.changeLogs])
 
-  return <>
+  return <Wrapper>
     {/* notification modal */}
     <Modal
       zIndex={99}
@@ -73,7 +74,7 @@ export const Layout = memo((props: LayoutProps) => {
     </Modal>
 
     {/* release log modal */}
-    <Modal
+    {/* <Modal
       zIndex={100}
       open={Boolean(currentAppConfig?.showReleaseModal)}
       title={'Release Log'}
@@ -93,10 +94,10 @@ export const Layout = memo((props: LayoutProps) => {
     >
       <MessageTextView
         contents={releaseLog} />
-    </Modal>
+    </Modal> */}
 
     {children}
-  </>
+  </Wrapper>
 })
 
 Layout.displayName = 'Layout'

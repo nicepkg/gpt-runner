@@ -154,7 +154,7 @@ export const PopoverMenu: React.FC<PopoverMenuProps> = memo((props) => {
       },
       menu: {
         maxHeight: Math.min(childrenY, windowHeight) - minusHeightSpace,
-        height: childrenInMenuWhenOpen ? 'unset' : '100vh',
+        height: childrenInMenuWhenOpen ? 'unset' : 'auto',
       },
     },
     bottom: {
@@ -164,7 +164,7 @@ export const PopoverMenu: React.FC<PopoverMenuProps> = memo((props) => {
       },
       menu: {
         maxHeight: Math.min(windowHeight - childrenY - childrenHeight, windowHeight) - minusHeightSpace,
-        height: childrenInMenuWhenOpen ? 'unset' : '100vh',
+        height: childrenInMenuWhenOpen ? 'unset' : 'auto',
       },
     },
   }
@@ -234,7 +234,9 @@ export const PopoverMenu: React.FC<PopoverMenuProps> = memo((props) => {
             >
               {yPosition === 'bottom' && renderToolbar()}
 
-              <MenuChildrenWrapper>
+              <MenuChildrenWrapper style={{
+                display: childrenInMenuWhenOpen ? '' : 'flex',
+              }}>
                 {yPosition === 'top' && buildMenuSlot()}
 
                 {childrenInMenuWhenOpen
@@ -250,6 +252,7 @@ export const PopoverMenu: React.FC<PopoverMenuProps> = memo((props) => {
               </MenuChildrenWrapper>
 
               {yPosition === 'top' && renderToolbar()}
+
             </Menu>
           </MenuMask>
         </div>

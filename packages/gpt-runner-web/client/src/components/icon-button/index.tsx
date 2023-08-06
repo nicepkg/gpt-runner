@@ -17,6 +17,7 @@ export interface IconButtonProps extends GetComponentProps<InstanceType<typeof V
   radius?: string
   showText?: boolean
   hoverShowText?: boolean
+  transparentBgWhenNotHover?: boolean
   isAnimating?: boolean
   animateDuration?: number
   animateEase?: Tween['ease']
@@ -35,6 +36,7 @@ export const IconButton: FC<IconButtonProps> = memo((props) => {
     iconClassName,
     showText = true,
     hoverShowText = true,
+    transparentBgWhenNotHover = false,
     radius = '0.25rem',
     className, style,
     buttonStyle,
@@ -95,7 +97,7 @@ export const IconButton: FC<IconButtonProps> = memo((props) => {
     },
   }
 
-  return <ButtonWrapper className={clsx('icon-button', className)} style={style} $hoverShowText={hoverShowText}>
+  return <ButtonWrapper $transparentBgWhenNotHover={transparentBgWhenNotHover} className={clsx('icon-button', className)} style={style} $hoverShowText={hoverShowText}>
     <VSCodeButton
       onClick={handleClick}
       appearance="secondary"

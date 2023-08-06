@@ -1,5 +1,4 @@
 import { styled } from 'styled-components'
-import type { MessageItemProps } from '.'
 
 export const MsgWrapper = styled.div<{ $isMe: boolean }>`
   display: flex;
@@ -26,7 +25,7 @@ export const MsgContentWrapper = styled.div<{ $isMe: boolean }>`
   position: relative;
 `
 
-export const MsgContent = styled.div<{ $showToolbar: MessageItemProps['showToolbar']; $isMe: boolean }>`
+export const MsgContent = styled.div<{ $isMe: boolean }>`
   display: flex;
   flex-direction: column;
   border-radius: 0.5rem;
@@ -43,34 +42,6 @@ export const MsgContent = styled.div<{ $showToolbar: MessageItemProps['showToolb
   & .msg-content-footer {
     flex-wrap: wrap;
   }
-
-  ${({ $showToolbar, $isMe }) => ($showToolbar === 'hover'
-? `
-    position: absolute;
-    top: 0;
-    ${$isMe ? 'right' : 'left'}: 0;
-    z-index: 1;
-    min-height: 100%;
-
-    & .msg-content-footer {
-      opacity: 0;
-      margin-top: 0;
-      height: 0;
-    }
-
-    &:hover .msg-content-footer {
-      opacity: 1;
-      margin-top: 0.5rem;
-      height: auto;
-    }
-  `
-: $showToolbar === 'never'
-? `
-  & .msg-content-footer {
-    display: none;
-  }
-`
-: '')}
 `
 
 export const MsgContentFooterWrapper = styled.div`
