@@ -14,7 +14,7 @@ export const cnNotificationConfig: NotificationConfig = {
 
 > vscode 用户重启 vscode 后即可在扩展处更新。
 >
-> cli 用户执行 \`npm i -g gptr\` 即可更新。
+> cli 用户执行 \`npm update -g gptr\` 即可更新。
 
 1. 针对语言为简体中文的用户提供 OpenAI API key 第三方供应商，也就是你可以白嫖了。
 2. 点击左上角设置，切换供应商即可。

@@ -3,10 +3,12 @@ import type { Express } from 'express'
 import express from 'express'
 import cors from 'cors'
 import history from 'connect-history-api-fallback'
-import { PathUtils, getPort } from '@nicepkg/gpt-runner-shared/node'
+import { PathUtils, addNodejsPolyfill, getPort } from '@nicepkg/gpt-runner-shared/node'
 import { setProxyUrl } from './src/proxy'
 import { processControllers } from './src/controllers'
 import { errorHandlerMiddleware, safeCheckMiddleware } from './src/middleware'
+
+addNodejsPolyfill()
 
 export * from './src/helpers/app-config'
 

@@ -89,6 +89,8 @@
     "minimatch": "*",
     "socket.io": "*",
     "socket.io-client": "*",
+    "undici": "*",
+    "web-streams-polyfill": "*",
     "zod": "*",
     "zod-to-json-schema": "*"
   },
@@ -108,6 +110,8 @@
     "open": "^8.4.2",
     "socket.io": "^4.7.2",
     "socket.io-client": "^4.7.2",
+    "undici": "^5.23.0",
+    "web-streams-polyfill": "^3.2.1",
     "zod": "^3.21.4",
     "zod-to-json-schema": "^3.21.4"
   },

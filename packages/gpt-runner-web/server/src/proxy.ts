@@ -1,17 +1,6 @@
-import { canUseNodeFetchWithoutCliFlag, getDefaultProxyUrl } from '@nicepkg/gpt-runner-shared/node'
+import { getDefaultProxyUrl } from '@nicepkg/gpt-runner-shared/node'
 import { bootstrap } from 'global-agent'
-import { Headers, ProxyAgent, Request, Response, fetch, setGlobalDispatcher } from 'undici'
-import { ReadableStream } from 'web-streams-polyfill/ponyfill'
-
-if (!canUseNodeFetchWithoutCliFlag()) {
-  console.log('GPT Runner: add polyfill for fetch', process.version)
-  // polyfill for nodejs < 18.0.0
-  globalThis.fetch = fetch as any
-  globalThis.Headers = Headers as any
-  globalThis.Request = Request as any
-  globalThis.Response = Response as any
-  globalThis.ReadableStream = ReadableStream as any
-}
+import { ProxyAgent, setGlobalDispatcher } from 'undici'
 
 // global proxy
 async function startProxy() {
