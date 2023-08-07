@@ -30,7 +30,7 @@ export default defineConfig(async () => {
         customDistPath() {
           return resolvePath('../dist/browser/monaco-editor')
         },
-      }),
+      }) as any,
     ],
     build: {
       outDir: resolvePath('../dist/browser'),

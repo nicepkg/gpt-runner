@@ -72,7 +72,7 @@ export function getAnthropicModel(params: GetModelParams): BaseLanguageModel | n
       }
     })
 
-    return chatAnthropic
+    return chatAnthropic as unknown as InstanceType<typeof ChatAnthropic>
   }
 
   return null
