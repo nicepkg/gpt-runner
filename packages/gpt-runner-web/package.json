@@ -1,6 +1,6 @@
 {
   "name": "@nicepkg/gpt-runner-web",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "Gpt-runner Web is a significant part of GPT-Runner, providing a web interface for users to interact with AI-powered code automation tool with enhanced efficiency. It uses Express for the server-side and React + Vite for the client side.",
   "author": "Jinming Yang <2214962083@qq.com>",
   "license": "MIT",
