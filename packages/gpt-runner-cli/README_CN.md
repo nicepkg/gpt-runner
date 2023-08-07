@@ -58,7 +58,7 @@ npm install -g gptr
 gptr --version
 
 # 升级版本
-# npm update -g gptr
+# npm i -g gptr
 ```
 
 此命令告诉 npm ( Node.js 包管理器) 全局安装 GPT-Runner CLI。其中，`-g` 选项表示全局安装，这意味着您可以在任何地方运行 GPT-Runner CLI。

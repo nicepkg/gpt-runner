@@ -60,7 +60,7 @@ npm install -g gptr
 gptr --version
 
 # upgrade version
-# npm update -g gptr
+# npm i -g gptr
 ```
 
 This command tells npm (Node.js package manager) to install GPT-Runner CLI globally. Among them, the `-g` option means global installation, which means you can run GPT-Runner CLI anywhere.
