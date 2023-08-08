@@ -6,8 +6,8 @@ export const MsgWrapper = styled.div<{ $isMe: boolean }>`
   margin-bottom: 1rem;
 `
 
-export const MsgAvatarWrapper = styled.div<{ $isMe: boolean; $showAvatar: boolean }>`
-  display: ${({ $showAvatar }) => $showAvatar ? 'flex' : 'none'};
+export const MsgAvatarWrapper = styled.div<{ $isMe: boolean }>`
+  display: flex;
   width: 2rem;
   height: 2rem;
   justify-content: center;
@@ -23,6 +23,7 @@ export const MsgContentWrapper = styled.div<{ $isMe: boolean }>`
   flex-direction: ${({ $isMe }) => $isMe ? 'row-reverse' : 'row'};
   width: 100%;
   position: relative;
+  max-width: calc(100% - 6rem);
 `
 
 export const MsgContent = styled.div<{ $isMe: boolean }>`

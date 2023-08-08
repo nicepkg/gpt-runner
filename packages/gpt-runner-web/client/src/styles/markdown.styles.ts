@@ -134,6 +134,7 @@ export const MarkdownStyle = createGlobalStyle`
     }
     ul, ol {
       padding-left: 30px;
+      overflow: auto;
     }
 
     ul :first-child, ol :first-child {

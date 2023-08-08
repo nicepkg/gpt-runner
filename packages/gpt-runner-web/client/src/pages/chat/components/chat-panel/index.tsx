@@ -323,7 +323,6 @@ export const ChatPanel: FC<ChatPanelProps> = memo((props) => {
           ...message,
           remarkPlugins,
           status: isLast ? status : ChatMessageStatus.Success,
-          showAvatar: chatPanelWidth > 600,
           theme: codeBlockTheme,
           buildCodeToolbar: status === ChatMessageStatus.Pending ? undefined : buildCodeToolbar,
           buildMessageToolbar,
@@ -333,7 +332,6 @@ export const ChatPanel: FC<ChatPanelProps> = memo((props) => {
   }, [
     chatInstance?.messages,
     status,
-    chatPanelWidth,
     remarkPlugins,
     codeBlockTheme,
     buildCodeToolbar,
