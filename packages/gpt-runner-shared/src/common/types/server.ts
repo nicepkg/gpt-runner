@@ -1,8 +1,8 @@
 import type { CurrentAppConfig, MarkedAsVisitedType } from './app-config'
 import type { FileInfoTree } from './common-file'
-import type { PartialChatModelTypeMap, SingleChatMessage, SingleFileConfig, UserConfig } from './config'
+import type { AiPresetFileConfig, PartialChatModelTypeMap, SingleChatMessage, UserConfig } from './config'
 import type { ChatModelType, LocaleLang, ServerStorageName } from './enum'
-import type { GptFileInfo, GptFileInfoTree } from './gpt-file'
+import type { GptFileInfo, GptFileInfoTree } from './ai-preset-file'
 
 export interface BaseResponse<T = any> {
   type: 'Success' | 'Fail'
@@ -38,13 +38,13 @@ export interface ChatStreamReqParams {
    * @default false
    */
   systemPromptAsUserPrompt?: boolean
-  singleFilePath?: string
+  aiPresetFilePath?: string
 
   /**
-   * most times we don't use singleFileConfig, we parse .gpt.md file
-   * and get the real time singleFileConfig and then provide singleFileConfig to LangchainJs
+   * most times we don't use aiPresetFileConfig, we parse .gpt.md file
+   * and get the real time aiPresetFileConfig and then provide aiPresetFileConfig to LangchainJs
    */
-  singleFileConfig?: SingleFileConfig
+  aiPresetFileConfig?: AiPresetFileConfig
   overrideModelType?: ChatModelType
   overrideModelsConfig?: PartialChatModelTypeMap
 
@@ -84,7 +84,7 @@ export interface GetGptFileInfoReqParams {
 
 export interface GetGptFileInfoResData {
   userConfig: UserConfig
-  singleFileConfig: SingleFileConfig
+  aiPresetFileConfig: AiPresetFileConfig
 }
 
 export interface InitGptFilesReqParams {

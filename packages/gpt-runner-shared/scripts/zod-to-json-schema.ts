@@ -1,4 +1,4 @@
-import { singleFileJsonSchema, userConfigJsonSchema } from '../src/common'
+import { aiPresetFileJsonSchema, userConfigJsonSchema } from '../src/common'
 import { FileUtils, PathUtils } from '../src/node'
 
 interface JsonSchemaFile {
@@ -13,7 +13,7 @@ async function generateJsonSchemaFile() {
     },
     {
       fileName: 'single-file-config.json',
-      content: JSON.stringify(singleFileJsonSchema, null, 2),
+      content: JSON.stringify(aiPresetFileJsonSchema, null, 2),
     },
   ]
 

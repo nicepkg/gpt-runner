@@ -67,9 +67,11 @@ export interface SingleChatMessage {
 
 type OmitChatModelTypeSecrets<T> = T extends ChatModel ? Omit<T, 'secrets'> : never
 
-export interface SingleFileConfig {
+export interface AiPresetFileConfig {
   model?: OmitChatModelTypeSecrets<ChatModel>
+  id?: string
   title?: string
+  avatar?: string
   userPrompt?: string
   systemPrompt?: string
   messages?: SingleChatMessage[]

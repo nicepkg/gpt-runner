@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { type ChatModel, ChatModelType, type FilterPattern, type FormCheckboxGroupConfig, type FormFieldBaseConfig, type FormInputConfig, type FormItemConfig, type FormOption, type FormRadioGroupConfig, type FormSelectConfig, type FormTextareaConfig, type SingleChatMessage, type SingleFileConfig, type UserConfig, type UserConfigForUser } from '../../types'
+import { type AiPresetFileConfig, type ChatModel, ChatModelType, type FilterPattern, type FormCheckboxGroupConfig, type FormFieldBaseConfig, type FormInputConfig, type FormItemConfig, type FormOption, type FormRadioGroupConfig, type FormSelectConfig, type FormTextareaConfig, type SingleChatMessage, type UserConfig, type UserConfigForUser } from '../../types'
 import { ChatRoleSchema } from '../enum.zod'
 import type { PartialChatModelTypeMap } from './../../types/config/base.config'
 import { AnthropicModelConfigSchema } from './anthropic.zod'
@@ -96,11 +96,11 @@ export const FormItemConfigSchema = z.union([
   FormRadioGroupConfigSchema,
 ]) satisfies z.ZodType<FormItemConfig>
 
-export const SingleFileConfigSchema = z.object({
+export const AiPresetFileConfigSchema = z.object({
   model: UserConfigSchema.shape.model,
   title: z.string().optional(),
   userPrompt: z.string().optional(),
   systemPrompt: z.string().optional(),
   messages: z.array(SingleChatMessageSchema).optional(),
   forms: z.record(FormItemConfigSchema).optional(),
-}) as z.ZodType<SingleFileConfig>
+}) as z.ZodType<AiPresetFileConfig>

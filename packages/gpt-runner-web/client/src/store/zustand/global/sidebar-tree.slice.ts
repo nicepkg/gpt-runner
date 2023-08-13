@@ -131,7 +131,7 @@ export const createSidebarTreeSlice: StateCreator<
         gptFilePaths.push(item.path)
 
         // const chatIds = currentGptFileIdChatIdsMap.get(item.id) || []
-        const chatInstances = state.getChatInstancesBySingleFilePath(item.path)
+        const chatInstances = state.getChatInstancesByAiPresetFilePath(item.path)
 
         result.children = chatInstances.map((chatInstance) => {
           const chatInfo = state.getChatInfo(chatInstance)
@@ -145,11 +145,11 @@ export const createSidebarTreeSlice: StateCreator<
     }) satisfies SidebarTreeItem[]
 
     // remove gptFilePaths that are not in the tree
-    const oldGptFilePaths = state.chatInstances.map(chatInstance => chatInstance.singleFilePath)
+    const oldGptFilePaths = state.chatInstances.map(chatInstance => chatInstance.aiPresetFilePath)
     oldGptFilePaths.forEach((gptFilePath) => {
       if (!gptFilePaths.includes(gptFilePath)) {
         // remove chat instances that are not in the tree
-        const chatInstances = state.getChatInstancesBySingleFilePath(gptFilePath)
+        const chatInstances = state.getChatInstancesByAiPresetFilePath(gptFilePath)
         chatInstances.forEach((chatInstance) => {
           state.removeChatInstance(chatInstance.id)
         })
@@ -163,10 +163,10 @@ export const createSidebarTreeSlice: StateCreator<
     const gptFileTreeItem = state.getSidebarTreeItem(gptFileId) as GptFileTreeItem
     const { chatInstance } = state.addChatInstance(gptFileId, {
       name: DEFAULT_CHAT_NAME,
-      inputtingPrompt: gptFileTreeItem?.otherInfo?.singleFileConfig.userPrompt || '',
-      systemPrompt: gptFileTreeItem?.otherInfo?.singleFileConfig.systemPrompt || '',
+      inputtingPrompt: gptFileTreeItem?.otherInfo?.aiPresetFileConfig.userPrompt || '',
+      systemPrompt: gptFileTreeItem?.otherInfo?.aiPresetFileConfig.systemPrompt || '',
       messages: [],
-      singleFilePath: gptFileTreeItem?.path || '',
+      aiPresetFilePath: gptFileTreeItem?.path || '',
       status: ChatMessageStatus.Success,
       createAt: Date.now(),
     })

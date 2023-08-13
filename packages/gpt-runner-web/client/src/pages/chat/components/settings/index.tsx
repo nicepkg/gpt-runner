@@ -48,9 +48,9 @@ export const Settings: FC<SettingsProps> = memo((props) => {
     return getGptFileTreeItemFromChatId(chatId)
   }, [chatId, getGptFileTreeItemFromChatId])
 
-  const { userConfig, singleFileConfig, isLoading: getGptFileInfoIsLoading } = useUserConfig({
+  const { userConfig, aiPresetFileConfig, isLoading: getGptFileInfoIsLoading } = useUserConfig({
     rootPath,
-    singleFilePath: gptFileTreeItem?.path,
+    aiPresetFilePath: gptFileTreeItem?.path,
   })
 
   const viewStyle: CSSProperties = {
@@ -65,7 +65,7 @@ export const Settings: FC<SettingsProps> = memo((props) => {
       ChatModelType.Openai,
       ChatModelType.Anthropic,
     ].sort((a, b) => {
-      const currentModelType = singleFileConfig?.model?.type || ChatModelType.Openai
+      const currentModelType = aiPresetFileConfig?.model?.type || ChatModelType.Openai
 
       if (a === currentModelType)
         return -1
@@ -115,7 +115,7 @@ export const Settings: FC<SettingsProps> = memo((props) => {
           ? <LoadingView absolute></LoadingView>
           : <ConfigInfo
             userConfig={userConfig}
-            singleFileConfig={singleFileConfig}
+            aiPresetFileConfig={aiPresetFileConfig}
           ></ConfigInfo>}
       </>,
     },

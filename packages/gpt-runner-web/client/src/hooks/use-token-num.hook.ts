@@ -1,5 +1,5 @@
 import { useCallback, useMemo } from 'react'
-import type { SingleChat, SingleFileConfig } from '@nicepkg/gpt-runner-shared/common'
+import type { AiPresetFileConfig, SingleChat } from '@nicepkg/gpt-runner-shared/common'
 import { countTokenQuick } from '../helpers/utils'
 import { useGlobalStore } from '../store/zustand/global'
 import { useTempStore } from '../store/zustand/temp'
@@ -8,10 +8,10 @@ import { useUserConfig } from './use-user-config.hook'
 export interface UseTokenNumProps {
   rootPath?: string
   chatIdOrChatInstance?: string | SingleChat
-  singleFileConfig?: SingleFileConfig
+  aiPresetFileConfig?: AiPresetFileConfig
 }
 export function useTokenNum(props?: UseTokenNumProps) {
-  const { rootPath, chatIdOrChatInstance, singleFileConfig: singleFileConfigFromParams } = props || {}
+  const { rootPath, chatIdOrChatInstance, aiPresetFileConfig: aiPresetFileConfigFromParams } = props || {}
 
   const {
     provideFileInfoPromptMap,
@@ -40,15 +40,15 @@ export function useTokenNum(props?: UseTokenNumProps) {
     return chatIdOrChatInstance
   }, [chatIdOrChatInstance, getChatInstance])
 
-  const { singleFileConfig: singleFileConfigFromRemote } = useUserConfig({
+  const { aiPresetFileConfig: aiPresetFileConfigFromRemote } = useUserConfig({
     rootPath,
-    singleFilePath: chatInstance?.singleFilePath,
-    enabled: !singleFileConfigFromParams,
+    aiPresetFilePath: chatInstance?.aiPresetFilePath,
+    enabled: !aiPresetFileConfigFromParams,
   })
 
-  const singleFileConfig = useMemo(() => {
-    return singleFileConfigFromParams || singleFileConfigFromRemote
-  }, [singleFileConfigFromParams, singleFileConfigFromRemote])
+  const aiPresetFileConfig = useMemo(() => {
+    return aiPresetFileConfigFromParams || aiPresetFileConfigFromRemote
+  }, [aiPresetFileConfigFromParams, aiPresetFileConfigFromRemote])
 
   const countFilePathsTokenNum = useCallback((filePaths: string[]) => {
     return filePaths.reduce((pre, cur) => {
@@ -58,13 +58,13 @@ export function useTokenNum(props?: UseTokenNumProps) {
   }, [fullPathFileMap])
 
   const systemPromptTokenNum = useMemo(() => {
-    const { systemPrompt } = singleFileConfig || {}
+    const { systemPrompt } = aiPresetFileConfig || {}
 
     if (!systemPrompt)
       return 0
 
     return countTokenQuick(systemPrompt)
-  }, [singleFileConfig, countTokenQuick])
+  }, [aiPresetFileConfig, countTokenQuick])
 
   const messageTokenNum = useMemo(() => {
     const { messages } = chatInstance || {}

@@ -1,5 +1,5 @@
 import { ChatModelType, DEFAULT_MODEL_NAMES_FOR_CHOOSE, toUnixPath } from '@nicepkg/gpt-runner-shared/common'
-import type { ChatStreamReqParams, GetModelNamesForChooseReqParams, ModelTypeVendorNameMap, SingleFileConfig, UserConfig } from '@nicepkg/gpt-runner-shared/common'
+import type { AiPresetFileConfig, ChatStreamReqParams, GetModelNamesForChooseReqParams, ModelTypeVendorNameMap, UserConfig } from '@nicepkg/gpt-runner-shared/common'
 import type { LLMChainParams } from '@nicepkg/gpt-runner-core'
 import { createFileContext, getSecrets, loadUserConfig, parseGptFile } from '@nicepkg/gpt-runner-core'
 import { PathUtils } from '@nicepkg/gpt-runner-shared/node'
@@ -41,8 +41,8 @@ export class LLMService {
     const {
       messages = [],
       systemPrompt: systemPromptFromParams = '',
-      singleFilePath,
-      singleFileConfig: singleFileConfigFromParams,
+      aiPresetFilePath,
+      aiPresetFileConfig: aiPresetFileConfigFromParams,
       appendSystemPrompt = '',
       systemPromptAsUserPrompt = false,
       contextFilePaths,
@@ -61,18 +61,18 @@ export class LLMService {
 
     const { config: userConfig } = await loadUserConfig(finalPath)
 
-    let singleFileConfig: SingleFileConfig | undefined = singleFileConfigFromParams
+    let aiPresetFileConfig: AiPresetFileConfig | undefined = aiPresetFileConfigFromParams
 
-    if (singleFilePath && PathUtils.isFile(singleFilePath)) {
+    if (aiPresetFilePath && PathUtils.isFile(aiPresetFilePath)) {
       // keep realtime config
-      singleFileConfig = await parseGptFile({
-        filePath: singleFilePath,
+      aiPresetFileConfig = await parseGptFile({
+        filePath: aiPresetFilePath,
         userConfig,
       })
     }
 
-    if (overrideModelType && overrideModelType !== singleFileConfig?.model?.type) {
-      singleFileConfig = {
+    if (overrideModelType && overrideModelType !== aiPresetFileConfig?.model?.type) {
+      aiPresetFileConfig = {
         model: {
           type: overrideModelType,
         },
@@ -81,9 +81,9 @@ export class LLMService {
 
     const model = {
       type: ChatModelType.Openai,
-      ...singleFileConfig?.model,
-      ...overrideModelsConfig?.[singleFileConfig?.model?.type as ChatModelType || ''],
-    } as SingleFileConfig['model']
+      ...aiPresetFileConfig?.model,
+      ...overrideModelsConfig?.[aiPresetFileConfig?.model?.type as ChatModelType || ''],
+    } as AiPresetFileConfig['model']
 
     const finalSecrets = await LLMService.getSecretsFormAllWays({
       modelType: model?.type,
@@ -94,7 +94,7 @@ export class LLMService {
     const finalSystemPrompt = await LLMService.getFinalSystemPrompt({
       finalPath,
       systemPrompt: systemPromptFromParams,
-      singleFileConfig,
+      aiPresetFileConfig,
       appendSystemPrompt,
       contextFilePaths,
       editingFilePath,
@@ -153,7 +153,7 @@ export class LLMService {
   static async getFinalSystemPrompt(params: {
     finalPath: string
     systemPrompt: string
-    singleFileConfig?: SingleFileConfig
+    aiPresetFileConfig?: AiPresetFileConfig
     appendSystemPrompt: string
     contextFilePaths?: string[]
     editingFilePath?: string
@@ -161,13 +161,13 @@ export class LLMService {
     const {
       finalPath,
       systemPrompt: systemPromptFromParams = '',
-      singleFileConfig,
+      aiPresetFileConfig,
       appendSystemPrompt = '',
       contextFilePaths,
       editingFilePath,
     } = params
 
-    let finalSystemPrompt = systemPromptFromParams || singleFileConfig?.systemPrompt || ''
+    let finalSystemPrompt = systemPromptFromParams || aiPresetFileConfig?.systemPrompt || ''
 
     // provide file context
     if (contextFilePaths && finalPath) {

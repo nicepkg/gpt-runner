@@ -1,5 +1,5 @@
 import { type FC, memo, useMemo } from 'react'
-import type { SingleFileConfig, UserConfig } from '@nicepkg/gpt-runner-shared/common'
+import type { AiPresetFileConfig, UserConfig } from '@nicepkg/gpt-runner-shared/common'
 import { useGlobalStore } from '../../../../../../store/zustand/global'
 import type { MessageCodeBlockTheme } from '../../../../../../components/chat-message-code-block'
 import { MessageCodeBlock } from '../../../../../../components/chat-message-code-block'
@@ -13,12 +13,12 @@ import { useDarkTheme } from '../../../../../../hooks/use-css-var-color.hook'
 export interface ConfigInfoProps {
   rootPath?: string
   chatId?: string
-  singleFileConfig?: SingleFileConfig
+  aiPresetFileConfig?: AiPresetFileConfig
   userConfig?: UserConfig
 }
 
 export const ConfigInfo: FC<ConfigInfoProps> = memo((props) => {
-  const { rootPath, chatId, singleFileConfig: singleFileConfigFromProps, userConfig: userConfigFromProps } = props
+  const { rootPath, chatId, aiPresetFileConfig: aiPresetFileConfigFromProps, userConfig: userConfigFromProps } = props
   const { getGptFileTreeItemFromChatId } = useGlobalStore()
 
   const isDark = useDarkTheme()
@@ -32,17 +32,17 @@ export const ConfigInfo: FC<ConfigInfoProps> = memo((props) => {
     return getGptFileTreeItemFromChatId(chatId)
   }, [chatId, getGptFileTreeItemFromChatId])
 
-  const { userConfig: userConfigFromRes, singleFileConfig: singleFileConfigFromRes, isLoading: getGptFileInfoIsLoading } = useUserConfig({
+  const { userConfig: userConfigFromRes, aiPresetFileConfig: aiPresetFileConfigFromRes, isLoading: getGptFileInfoIsLoading } = useUserConfig({
     rootPath,
-    singleFilePath: gptFileTreeItem?.path,
-    enabled: !singleFileConfigFromProps || !userConfigFromProps,
+    aiPresetFilePath: gptFileTreeItem?.path,
+    enabled: !aiPresetFileConfigFromProps || !userConfigFromProps,
   })
 
   const userConfig = userConfigFromProps || userConfigFromRes
-  const singleFileConfig = singleFileConfigFromProps || singleFileConfigFromRes
+  const aiPresetFileConfig = aiPresetFileConfigFromProps || aiPresetFileConfigFromRes
 
   const globalConfigInfo = JSON.stringify(userConfig, null, 4)
-  const singleFileConfigInfo = JSON.stringify(singleFileConfig, null, 4)
+  const aiPresetFileConfigInfo = JSON.stringify(aiPresetFileConfig, null, 4)
   const gptFileName = gptFileTreeItem?.path.split('/').pop()
 
   const renderGlobalConfigInfo = () => {
@@ -54,22 +54,22 @@ export const ConfigInfo: FC<ConfigInfoProps> = memo((props) => {
     </ConfigInfoWrapper>
   }
 
-  const renderSingleFileConfigInfo = () => {
+  const renderAiPresetFileConfigInfo = () => {
     return <ConfigInfoWrapper>
       <FormTitle size="large">
         {gptFileName}
       </FormTitle>
-      <MessageCodeBlock theme={codeBlockTheme} language='json' contents={singleFileConfigInfo}></MessageCodeBlock>
+      <MessageCodeBlock theme={codeBlockTheme} language='json' contents={aiPresetFileConfigInfo}></MessageCodeBlock>
     </ConfigInfoWrapper>
   }
 
-  if (!userConfig && !singleFileConfig)
+  if (!userConfig && !aiPresetFileConfig)
     return null
 
   return <FlexColumn style={{ position: 'relative', width: '100%' }}>
 
     {getGptFileInfoIsLoading && <LoadingView absolute></LoadingView>}
-    {renderSingleFileConfigInfo()}
+    {renderAiPresetFileConfigInfo()}
     {renderGlobalConfigInfo()}
   </FlexColumn>
 })

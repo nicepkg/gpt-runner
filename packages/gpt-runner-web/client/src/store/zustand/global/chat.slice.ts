@@ -30,7 +30,7 @@ export interface ChatSlice {
    */
   switchToNewActiveChatId: (oldActiveInstance?: SingleChat) => void
   getChatInstance: (chatId: string) => SingleChat | undefined
-  getChatInstancesBySingleFilePath: (singleFilePath: string) => SingleChat[]
+  getChatInstancesByAiPresetFilePath: (aiPresetFilePath: string) => SingleChat[]
   addChatInstance: (gptFileId: string, instance: Omit<SingleChat, 'id'>) => {
     chatSidebarTreeItem: SidebarTreeItem
     chatInstance: SingleChat
@@ -65,7 +65,7 @@ function getInitialState() {
 
 const chatIdAbortCtrlMap = new Map<string, AbortController>()
 const chatIdChatInstanceMap = new Map<string, SingleChat>()
-const singleFilePathChatInstancesMap = new Map<string, SingleChat[]>()
+const aiPresetFilePathChatInstancesMap = new Map<string, SingleChat[]>()
 
 export const createChatSlice: StateCreator<
   ChatSlice & SidebarTreeSlice & FileTreeSlice & GeneralSlice,
@@ -80,7 +80,7 @@ export const createChatSlice: StateCreator<
   switchToNewActiveChatId(_oldActiveInstance) {
     const state = get()
     const oldActiveInstance = _oldActiveInstance || state.getChatInstance(state.activeChatId)
-    const sameLevelChatInstances = state.getChatInstancesBySingleFilePath(oldActiveInstance?.singleFilePath ?? '')
+    const sameLevelChatInstances = state.getChatInstancesByAiPresetFilePath(oldActiveInstance?.aiPresetFilePath ?? '')
 
     if (!oldActiveInstance || !chatIdChatInstanceMap.has(oldActiveInstance.id) && sameLevelChatInstances.length === 0) {
       state.updateActiveChatId('')
@@ -101,10 +101,10 @@ export const createChatSlice: StateCreator<
 
     return chatIdChatInstanceMap.get(chatId)
   },
-  getChatInstancesBySingleFilePath(singleFilePath) {
-    if (!singleFilePath)
+  getChatInstancesByAiPresetFilePath(aiPresetFilePath) {
+    if (!aiPresetFilePath)
       return []
-    return singleFilePathChatInstancesMap.get(singleFilePath) || []
+    return aiPresetFilePathChatInstancesMap.get(aiPresetFilePath) || []
   },
   addChatInstance(gptFileId, instance) {
     const state = get()
@@ -114,7 +114,7 @@ export const createChatSlice: StateCreator<
     const finalInstance: SingleChat = {
       ...instance,
       id: chatId,
-      singleFilePath: gptFileIdTreeItem?.path || '',
+      aiPresetFilePath: gptFileIdTreeItem?.path || '',
     }
 
     const chatInfo = state.getChatInfo(finalInstance)
@@ -168,14 +168,14 @@ export const createChatSlice: StateCreator<
     const state = get()
     const chatInstances = _chatInstances || state.chatInstances || []
 
-    if (chatInstances.length !== chatIdChatInstanceMap.size || chatInstances.length !== singleFilePathChatInstancesMap.size) {
+    if (chatInstances.length !== chatIdChatInstanceMap.size || chatInstances.length !== aiPresetFilePathChatInstancesMap.size) {
       chatIdChatInstanceMap.clear()
-      singleFilePathChatInstancesMap.clear()
+      aiPresetFilePathChatInstancesMap.clear()
       chatInstances.forEach((chatInstance) => {
         chatIdChatInstanceMap.set(chatInstance.id, chatInstance)
-        const singleFilePathChatInstances = singleFilePathChatInstancesMap.get(chatInstance.singleFilePath) || []
-        singleFilePathChatInstances.push(chatInstance)
-        singleFilePathChatInstancesMap.set(chatInstance.singleFilePath, singleFilePathChatInstances)
+        const aiPresetFilePathChatInstances = aiPresetFilePathChatInstancesMap.get(chatInstance.aiPresetFilePath) || []
+        aiPresetFilePathChatInstances.push(chatInstance)
+        aiPresetFilePathChatInstancesMap.set(chatInstance.aiPresetFilePath, aiPresetFilePathChatInstances)
       })
     }
   },
@@ -218,7 +218,7 @@ export const createChatSlice: StateCreator<
     if (!chatInstance)
       throw new Error(`Chat instance with id ${chatId} not found`)
 
-    const { inputtingPrompt, singleFilePath, messages, status } = chatInstance
+    const { inputtingPrompt, aiPresetFilePath, messages, status } = chatInstance
 
     if (status === ChatMessageStatus.Pending)
       return
@@ -308,7 +308,7 @@ export const createChatSlice: StateCreator<
       prompt: sendInputtingPrompt,
       appendSystemPrompt,
       systemPromptAsUserPrompt: state.systemPromptAsUserPrompt,
-      singleFilePath,
+      aiPresetFilePath,
       contextFilePaths,
       editingFilePath: shouldProvideEditingPath ? tempState.ideActiveFilePath : undefined,
       overrideModelType: state.overrideModelType || undefined,

@@ -1,11 +1,11 @@
-import { ChatModelType, type ReadonlyDeep, type SingleFileConfig, type UserConfig } from '../types'
+import { type AiPresetFileConfig, ChatModelType, type ReadonlyDeep, type UserConfig } from '../types'
 import { getProcessCwd } from './common'
 import { DEFAULT_EXCLUDE_FILES } from './constants'
 import { EnvConfig } from './env-config'
 
-export function singleFileConfigWithDefault(singleFileConfig?: Partial<SingleFileConfig>): SingleFileConfig {
+export function aiPresetFileConfigWithDefault(aiPresetFileConfig?: Partial<AiPresetFileConfig>): AiPresetFileConfig {
   return {
-    ...singleFileConfig,
+    ...aiPresetFileConfig,
   }
 }
 
@@ -27,22 +27,22 @@ export function userConfigWithDefault(userConfig?: Partial<UserConfig>) {
   } as const) satisfies ReadonlyDeep<UserConfig>
 }
 
-export interface ResolveSingleFileCConfigParams {
+export interface ResolveAiPresetFileCConfigParams {
   userConfig: UserConfig
-  singleFileConfig: SingleFileConfig
+  aiPresetFileConfig: AiPresetFileConfig
 }
 
-export function resolveSingleFileConfig(params: ResolveSingleFileCConfigParams, withDefault = true): SingleFileConfig {
+export function resolveAiPresetFileConfig(params: ResolveAiPresetFileCConfigParams, withDefault = true): AiPresetFileConfig {
   let userConfig = (withDefault ? userConfigWithDefault(params.userConfig) : params.userConfig) as UserConfig
-  const singleFileConfig = withDefault ? singleFileConfigWithDefault(params.singleFileConfig) : params.singleFileConfig
+  const aiPresetFileConfig = withDefault ? aiPresetFileConfigWithDefault(params.aiPresetFileConfig) : params.aiPresetFileConfig
 
   userConfig = removeUserConfigUnsafeKey(userConfig)
 
-  const resolvedConfig: SingleFileConfig = {
-    ...singleFileConfig,
+  const resolvedConfig: AiPresetFileConfig = {
+    ...aiPresetFileConfig,
     model: {
       ...userConfig.model,
-      ...singleFileConfig.model!,
+      ...aiPresetFileConfig.model!,
     },
   }
 

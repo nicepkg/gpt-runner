@@ -1,4 +1,4 @@
-import { type AnthropicModelConfig, ChatModelType, type SingleFileConfig } from '@nicepkg/gpt-runner-shared/common'
+import { type AiPresetFileConfig, type AnthropicModelConfig, ChatModelType } from '@nicepkg/gpt-runner-shared/common'
 import { memo } from 'react'
 import type { FC } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -12,11 +12,11 @@ interface FormData extends Pick<AnthropicModelConfig, 'modelName' | 'temperature
 }
 
 export interface AnthropicModelSettingsProps extends Omit<BaseModelSettingsProps<FormData>, 'modelType' | 'formConfig'> {
-  singleFileConfig?: SingleFileConfig
+  aiPresetFileConfig?: AiPresetFileConfig
 }
 
 export const AnthropicModelSettings: FC<AnthropicModelSettingsProps> = memo((props) => {
-  const { rootPath, singleFileConfig } = props
+  const { rootPath, aiPresetFileConfig } = props
 
   const { t } = useTranslation()
 
@@ -116,7 +116,7 @@ export const AnthropicModelSettings: FC<AnthropicModelSettingsProps> = memo((pro
   return <BaseModelSettings
     rootPath={rootPath}
     modelType={ChatModelType.Anthropic}
-    singleFileConfig={singleFileConfig}
+    aiPresetFileConfig={aiPresetFileConfig}
     formConfig={formConfig}
   />
 })

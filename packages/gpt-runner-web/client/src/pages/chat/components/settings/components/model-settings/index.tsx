@@ -1,5 +1,5 @@
-import type { SingleFileConfig, UserConfig } from '@nicepkg/gpt-runner-shared/common'
-import { ChatModelType, resolveSingleFileConfig } from '@nicepkg/gpt-runner-shared/common'
+import type { AiPresetFileConfig, UserConfig } from '@nicepkg/gpt-runner-shared/common'
+import { ChatModelType, resolveAiPresetFileConfig } from '@nicepkg/gpt-runner-shared/common'
 import type { FC, ReactNode } from 'react'
 import { memo, useMemo } from 'react'
 import { useUserConfig } from '../../../../../../hooks/use-user-config.hook'
@@ -28,8 +28,8 @@ export interface ModelSettingsModelViewProps extends ModelSettingsBaseViewProps 
   viewType: 'model'
   rootPath: string
   modelType?: ChatModelType
-  singleFilePath?: string
-  singleFileConfig?: SingleFileConfig
+  aiPresetFilePath?: string
+  aiPresetFileConfig?: AiPresetFileConfig
   userConfig?: UserConfig
 }
 
@@ -38,38 +38,38 @@ export type ModelSettingsProps = ModelSettingsTitleViewProps | ModelSettingsSecr
 type ModelSettingsPropsMerge = Omit<ModelSettingsTitleViewProps, 'viewType'> & Omit<ModelSettingsSecretsViewProps, 'viewType'> & Omit<ModelSettingsModelViewProps, 'viewType'> & { viewType: ModelSettingsViewType }
 
 export const ModelSettings: FC<ModelSettingsProps> = memo((props) => {
-  const { rootPath, singleFilePath, singleFileConfig: singleFileConfigFromParams, userConfig: userConfigFromParams, viewType, modelType } = props as ModelSettingsPropsMerge
+  const { rootPath, aiPresetFilePath, aiPresetFileConfig: aiPresetFileConfigFromParams, userConfig: userConfigFromParams, viewType, modelType } = props as ModelSettingsPropsMerge
 
-  const { singleFileConfig: singleFileConfigFromRemote, userConfig: userConfigFromRemote } = useUserConfig({
+  const { aiPresetFileConfig: aiPresetFileConfigFromRemote, userConfig: userConfigFromRemote } = useUserConfig({
     rootPath,
-    singleFilePath,
-    enabled: !singleFileConfigFromParams && viewType === 'model',
+    aiPresetFilePath,
+    enabled: !aiPresetFileConfigFromParams && viewType === 'model',
   })
 
-  const singleFileConfig = singleFileConfigFromParams || singleFileConfigFromRemote
+  const aiPresetFileConfig = aiPresetFileConfigFromParams || aiPresetFileConfigFromRemote
   const userConfig = userConfigFromParams || userConfigFromRemote
 
-  const resolvedSingleFileConfig = useMemo(() => {
-    if (!userConfig || !singleFileConfig)
+  const resolvedAiPresetFileConfig = useMemo(() => {
+    if (!userConfig || !aiPresetFileConfig)
       return {}
 
-    const result = resolveSingleFileConfig({
+    const result = resolveAiPresetFileConfig({
       userConfig,
-      singleFileConfig,
+      aiPresetFileConfig,
     })
 
     if (modelType && result.model?.type !== modelType)
       return undefined
 
     return result
-  }, [singleFileConfig, userConfig, modelType])
+  }, [aiPresetFileConfig, userConfig, modelType])
 
-  const finalModelType = modelType || resolvedSingleFileConfig?.model?.type || ChatModelType.Openai
+  const finalModelType = modelType || resolvedAiPresetFileConfig?.model?.type || ChatModelType.Openai
 
   const modelTypeViewMap: Record<ChatModelType, Record<ModelSettingsViewType, () => ReactNode>> = {
     [ChatModelType.Anthropic]: {
       secrets: () => <AnthropicSecretsSettings />,
-      model: () => <AnthropicModelSettings rootPath={rootPath} singleFileConfig={resolvedSingleFileConfig} />,
+      model: () => <AnthropicModelSettings rootPath={rootPath} aiPresetFileConfig={resolvedAiPresetFileConfig} />,
       title: () => <>Anthropic</>,
     },
     [ChatModelType.HuggingFace]: {
@@ -79,7 +79,7 @@ export const ModelSettings: FC<ModelSettingsProps> = memo((props) => {
     },
     [ChatModelType.Openai]: {
       secrets: () => <OpenaiSecretsSettings />,
-      model: () => <OpenaiModelSettings rootPath={rootPath} singleFileConfig={resolvedSingleFileConfig} />,
+      model: () => <OpenaiModelSettings rootPath={rootPath} aiPresetFileConfig={resolvedAiPresetFileConfig} />,
       title: () => <>OpenAI</>,
     },
   }

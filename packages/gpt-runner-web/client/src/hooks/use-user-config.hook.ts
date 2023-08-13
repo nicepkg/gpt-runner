@@ -3,28 +3,28 @@ import { getGptFileInfo } from '../networks/gpt-files'
 
 export interface UseUserConfigProps {
   rootPath?: string
-  singleFilePath?: string
+  aiPresetFilePath?: string
   enabled?: boolean
 }
 
 export function useUserConfig(props: UseUserConfigProps) {
-  const { rootPath, singleFilePath, enabled = true } = props
-  const queryEnabled = !!singleFilePath && !!rootPath && enabled
+  const { rootPath, aiPresetFilePath, enabled = true } = props
+  const queryEnabled = !!aiPresetFilePath && !!rootPath && enabled
 
   const { data: getGptFileInfoRes, isLoading } = useQuery({
-    queryKey: ['settings-gpt-file-info', singleFilePath],
+    queryKey: ['settings-gpt-file-info', aiPresetFilePath],
     enabled: queryEnabled,
     queryFn: () => getGptFileInfo({
       rootPath: rootPath!,
-      filePath: singleFilePath!,
+      filePath: aiPresetFilePath!,
     }),
   })
 
-  const { userConfig, singleFileConfig } = getGptFileInfoRes?.data || {}
+  const { userConfig, aiPresetFileConfig } = getGptFileInfoRes?.data || {}
 
   return {
     isLoading: queryEnabled ? isLoading : false,
     userConfig,
-    singleFileConfig,
+    aiPresetFileConfig,
   }
 }

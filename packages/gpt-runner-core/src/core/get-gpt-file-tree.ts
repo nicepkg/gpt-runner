@@ -98,11 +98,11 @@ export async function getGptFilesInfo(params: GetGptFilesInfoParams): Promise<Ge
   const processFilePath = async (filePath: string) => {
     try {
       const content = await FileUtils.readFile({ filePath })
-      const singleFileConfig = await parseGptFile({
+      const aiPresetFileConfig = await parseGptFile({
         filePath,
         userConfig: resolvedUserConfig as UserConfig,
       })
-      const title = singleFileConfig.title || ''
+      const title = aiPresetFileConfig.title || ''
       const name = getName(title, filePath)
       const id = getId(title, name, filePath)
       const parentFileInfo = getParent(title)
@@ -116,7 +116,7 @@ export async function getGptFilesInfo(params: GetGptFilesInfoParams): Promise<Ge
         path: filePath,
         name,
         content,
-        singleFileConfig,
+        aiPresetFileConfig,
         type: GptFileTreeItemType.File,
       }
 

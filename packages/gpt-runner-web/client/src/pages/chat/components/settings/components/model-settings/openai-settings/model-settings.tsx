@@ -1,4 +1,4 @@
-import { ChatModelType, type OpenaiModelConfig, type SingleFileConfig } from '@nicepkg/gpt-runner-shared/common'
+import { type AiPresetFileConfig, ChatModelType, type OpenaiModelConfig } from '@nicepkg/gpt-runner-shared/common'
 import { memo } from 'react'
 import type { FC } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -12,11 +12,11 @@ interface FormData extends Pick<OpenaiModelConfig, 'modelName' | 'temperature' |
 }
 
 export interface OpenaiModelSettingsProps extends Omit<BaseModelSettingsProps<FormData>, 'modelType' | 'formConfig'> {
-  singleFileConfig?: SingleFileConfig
+  aiPresetFileConfig?: AiPresetFileConfig
 }
 
 export const OpenaiModelSettings: FC<OpenaiModelSettingsProps> = memo((props) => {
-  const { rootPath, singleFileConfig } = props
+  const { rootPath, aiPresetFileConfig } = props
 
   const { t } = useTranslation()
 
@@ -134,7 +134,7 @@ export const OpenaiModelSettings: FC<OpenaiModelSettingsProps> = memo((props) =>
   return <BaseModelSettings
     rootPath={rootPath}
     modelType={ChatModelType.Openai}
-    singleFileConfig={singleFileConfig}
+    aiPresetFileConfig={aiPresetFileConfig}
     formConfig={formConfig}
   />
 })

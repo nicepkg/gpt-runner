@@ -98,7 +98,7 @@ export const gptFilesControllers: ControllerConfig = {
 
         debug.log('userConfig', userConfig)
 
-        const singleFileConfig = await parseGptFile({
+        const aiPresetFileConfig = await parseGptFile({
           filePath: finalFilePath,
           userConfig,
         })
@@ -106,7 +106,7 @@ export const gptFilesControllers: ControllerConfig = {
         sendSuccessResponse(res, {
           data: {
             userConfig,
-            singleFileConfig,
+            aiPresetFileConfig,
           } satisfies GetGptFileInfoResData,
         })
       },

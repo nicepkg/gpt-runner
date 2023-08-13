@@ -1,5 +1,5 @@
 import { getModelConfig } from '@nicepkg/gpt-runner-shared/common'
-import type { BaseModelConfig, ChatModelType, SingleFileConfig } from '@nicepkg/gpt-runner-shared/common'
+import type { AiPresetFileConfig, BaseModelConfig, ChatModelType } from '@nicepkg/gpt-runner-shared/common'
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { ReactNode } from 'react'
 import type { Path, UseFormReturn } from 'react-hook-form'
@@ -28,20 +28,20 @@ export interface BaseModelSettingsFormItemConfig<FormData extends BaseModelConfi
 export interface BaseModelSettingsProps<FormData extends BaseModelConfig> {
   rootPath: string
   modelType: ChatModelType
-  singleFileConfig?: SingleFileConfig
+  aiPresetFileConfig?: AiPresetFileConfig
   formConfig: BaseModelSettingsFormItemConfig<FormData>[]
 }
 
 function BaseModelSettings_<FormData extends BaseModelConfig>(props: BaseModelSettingsProps<FormData>) {
-  const { rootPath, modelType, singleFileConfig, formConfig } = props
+  const { rootPath, modelType, aiPresetFileConfig, formConfig } = props
 
   const { t } = useTranslation()
   const { overrideModelsConfig, modelTypeVendorNameMap, updateOverrideModelsConfig } = useGlobalStore()
-  const modelFromSingleFileConfig = singleFileConfig?.model as FormData | undefined
+  const modelFromAiPresetFileConfig = aiPresetFileConfig?.model as FormData | undefined
 
   const currentModelType = modelType
-  const currentModel = currentModelType === modelFromSingleFileConfig?.type ? modelFromSingleFileConfig : undefined
-  const isUserConfigLoaded = singleFileConfig === undefined || singleFileConfig?.model !== undefined
+  const currentModel = currentModelType === modelFromAiPresetFileConfig?.type ? modelFromAiPresetFileConfig : undefined
+  const isUserConfigLoaded = aiPresetFileConfig === undefined || aiPresetFileConfig?.model !== undefined
 
   const isInitCheckMap = useRef(false)
 
