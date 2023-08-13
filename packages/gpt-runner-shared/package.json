@@ -29,24 +29,24 @@
   "exports": {
     ".": {
       "types": "./dist/common.d.ts",
-      "require": "./dist/common.cjs",
-      "import": "./dist/common.mjs"
+      "import": "./dist/common.mjs",
+      "require": "./dist/common.cjs"
     },
     "./*": "./*",
     "./browser": {
       "types": "./dist/browser.d.ts",
-      "require": "./dist/browser.cjs",
-      "import": "./dist/browser.mjs"
+      "import": "./dist/browser.mjs",
+      "require": "./dist/browser.cjs"
     },
     "./common": {
       "types": "./dist/common.d.ts",
-      "require": "./dist/common.cjs",
-      "import": "./dist/common.mjs"
+      "import": "./dist/common.mjs",
+      "require": "./dist/common.cjs"
     },
     "./node": {
       "types": "./dist/node.d.ts",
-      "require": "./dist/node.cjs",
-      "import": "./dist/node.mjs"
+      "import": "./dist/node.mjs",
+      "require": "./dist/node.cjs"
     }
   },
   "main": "dist/common.cjs",

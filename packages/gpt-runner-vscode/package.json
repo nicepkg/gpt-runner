@@ -150,7 +150,7 @@
     "@nicepkg/gpt-runner-shared": "workspace:*",
     "@nicepkg/gpt-runner-web": "workspace:*",
     "@types/vscode": "^1.71.0",
-    "@vscode/vsce": "^2.20.0",
+    "@vscode/vsce": "^2.20.1",
     "esno": "^0.17.0",
     "eventemitter3": "^5.0.1",
     "execa": "^7.2.0",

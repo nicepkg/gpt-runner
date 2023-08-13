@@ -76,9 +76,7 @@ export const configControllers: ControllerConfig = {
         const currentAppConfig = await AppConfigService.instance.getCurrentAppConfig(true)
 
         sendSuccessResponse(res, {
-          data: {
-            ...currentAppConfig,
-          } satisfies GetAppConfigResData,
+          data: currentAppConfig satisfies GetAppConfigResData,
         })
       },
     },

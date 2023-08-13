@@ -146,7 +146,7 @@ PromptTemplate.fromTemplate = function (template, { templateFormat = 'f-string',
       names.add(node.name)
   })
   return new PromptTemplate({
-    inputVariables: [...names],
+    inputVariables: [...names] as any[],
     templateFormat,
     template,
     ...rest,

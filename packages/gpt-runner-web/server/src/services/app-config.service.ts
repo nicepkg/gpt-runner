@@ -61,9 +61,12 @@ export class AppConfigService implements CurrentAppConfig {
     return storage
   }
 
-  async getCurrentAppConfig(safe = true): Promise<CurrentAppConfig> {
+  async getCurrentAppConfig(safe = true): Promise<CurrentAppConfig | null> {
     if (!this.appConfig)
       await this.loadAppConfig()
+
+    if (!this.appConfig)
+      return null
 
     await this.updateShouldShowModal()
 
@@ -106,7 +109,7 @@ export class AppConfigService implements CurrentAppConfig {
       await this.loadAppConfig()
 
     const { modelType, vendorName } = props
-    const { currentConfig } = await this.getCurrentAppConfig(false)
+    const { currentConfig } = await this.getCurrentAppConfig(false) || {}
     let result: GetModelConfigType<T, 'secrets'> | undefined
 
     if (currentConfig) {
@@ -128,6 +131,9 @@ export class AppConfigService implements CurrentAppConfig {
       const appConfig = await this.loadAppConfigPromise
       this.appConfig = appConfig || null
     }
+    catch (e) {
+      console.error(e)
+    }
     finally {
       this.loadAppConfigPromise = undefined
     }
@@ -136,6 +142,12 @@ export class AppConfigService implements CurrentAppConfig {
   async updateShouldShowModal(): Promise<void> {
     if (!this.appConfig)
       await this.loadAppConfig()
+
+    if (!this.appConfig) {
+      this.showNotificationModal = false
+      this.showReleaseModal = false
+      return
+    }
 
     const currentConfig = this.currentConfig
     const storage = await this.getStorage()

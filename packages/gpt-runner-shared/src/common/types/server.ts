@@ -105,7 +105,7 @@ export interface GetAppConfigReqParams {
   langId?: LocaleLang
 }
 
-export type GetAppConfigResData = CurrentAppConfig
+export type GetAppConfigResData = CurrentAppConfig | null
 
 export interface MarkAsVisitedAppConfigReqParams {
   types: MarkedAsVisitedType[]
