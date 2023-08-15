@@ -56,8 +56,10 @@ export async function startCli(cwd = PathUtils.resolve(process.cwd()), argv = pr
         autoFreePort: true,
       })
 
+      let startServerPromise: Promise<any> | undefined
+
       try {
-        await execa('node', [startServerJsPath, '--port', String(finalPort)], {
+        startServerPromise = execa('node', [startServerJsPath, '--port', String(finalPort)], {
           env: {
             ...process.env,
             ...getRunServerEnv(),
@@ -114,6 +116,8 @@ export async function startCli(cwd = PathUtils.resolve(process.cwd()), argv = pr
         })
 
         afterServerStartSuccess()
+
+        await startServerPromise
       }
       catch (error) {
         consola.error(error)
