@@ -56,17 +56,19 @@ export async function startCli(cwd = PathUtils.resolve(process.cwd()), argv = pr
         autoFreePort: true,
       })
 
-      const startServerProcessPromise = execa('node', [startServerJsPath, '--port', String(finalPort)], {
-        env: {
-          ...process.env,
-          ...getRunServerEnv(),
-          GPTR_ONLY_LOAD_CONFIG_PATH: options.config || '',
-        },
-      })
-
-      startServerProcessPromise.on('error', (error) => {
+      try {
+        await execa('node', [startServerJsPath, '--port', String(finalPort)], {
+          env: {
+            ...process.env,
+            ...getRunServerEnv(),
+            GPTR_ONLY_LOAD_CONFIG_PATH: options.config || '',
+          },
+          stdio: 'inherit',
+        })?.pipeStdout?.(process.stdout)?.pipeStderr?.(process.stderr)
+      }
+      catch (error) {
         consola.error(error)
-      })
+      }
 
       const afterServerStartSuccess = async () => {
         const getUrl = (isLocalIp = false) => {
@@ -101,12 +103,17 @@ export async function startCli(cwd = PathUtils.resolve(process.cwd()), argv = pr
         }
       }
 
-      waitPort({
-        port: finalPort,
-        output: 'silent',
-      }).then(afterServerStartSuccess).catch(consola.error)
+      try {
+        await waitPort({
+          port: finalPort,
+          output: 'silent',
+        })
 
-      await startServerProcessPromise
+        afterServerStartSuccess()
+      }
+      catch (error) {
+        consola.error(error)
+      }
     })
 
   cli.help()

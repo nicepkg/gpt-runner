@@ -1,5 +1,5 @@
 import { Headers, Request, Response, fetch } from 'undici'
-import { ReadableStream } from 'web-streams-polyfill'
+import 'web-streams-polyfill/polyfill'
 import { canUseNodeFetchWithoutCliFlag } from './check-node-version'
 
 export function addNodejsPolyfill() {
@@ -10,6 +10,5 @@ export function addNodejsPolyfill() {
     globalThis.Headers = Headers as any
     globalThis.Request = Request as any
     globalThis.Response = Response as any
-    globalThis.ReadableStream = ReadableStream as any
   }
 }
