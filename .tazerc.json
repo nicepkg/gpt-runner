@@ -6,7 +6,8 @@
     "msw",
     "open",
     "commander",
-    "axios"
+    "axios",
+    "execa"
   ],
   "packageMode": {
     "react": "minor"

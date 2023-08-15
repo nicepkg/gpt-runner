@@ -3,7 +3,7 @@ import { loadUserConfig } from '@nicepkg/gpt-runner-core'
 import { PathUtils, Tunnel, checkNodeVersion, getLocalHostname, getPort, getRunServerEnv, openInBrowser } from '@nicepkg/gpt-runner-shared/node'
 import { consola } from 'consola'
 import { cyan, green } from 'colorette'
-import { execa } from 'execa'
+import execa from 'execa'
 import waitPort from 'wait-port'
 import { Debug } from '@nicepkg/gpt-runner-shared/common'
 import { version } from '../package.json'
@@ -64,7 +64,11 @@ export async function startCli(cwd = PathUtils.resolve(process.cwd()), argv = pr
             GPTR_ONLY_LOAD_CONFIG_PATH: options.config || '',
           },
           stdio: 'inherit',
-        })?.pipeStdout?.(process.stdout)?.pipeStderr?.(process.stderr)
+        }).on('message', (message) => {
+          consola.info(message)
+        }).on('error', (error) => {
+          consola.error(error)
+        })
       }
       catch (error) {
         consola.error(error)

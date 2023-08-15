@@ -30,7 +30,7 @@
     "anthropic"
   ],
   "bin": {
-    "gptr": "./bin/gpt-runner.mjs"
+    "gptr": "./bin/gpt-runner.cjs"
   },
   "files": [
     "bin/",
@@ -46,14 +46,16 @@
     "stub": "unbuild --stub"
   },
   "dependencies": {
-    "@nicepkg/gpt-runner-core": "workspace:*",
-    "@nicepkg/gpt-runner-shared": "workspace:*",
-    "@nicepkg/gpt-runner-web": "workspace:*",
+    "@nicepkg/gpt-runner-web": "workspace:*"
+  },
+  "devDependencies": {
     "cac": "^6.7.14",
     "chokidar": "^3.5.3",
     "colorette": "^2.0.20",
     "consola": "^3.2.3",
-    "execa": "^7.2.0",
-    "wait-port": "^1.0.4"
+    "execa": "5.1.1",
+    "wait-port": "^1.0.4",
+    "@nicepkg/gpt-runner-core": "workspace:*",
+    "@nicepkg/gpt-runner-shared": "workspace:*"
   }
 }
