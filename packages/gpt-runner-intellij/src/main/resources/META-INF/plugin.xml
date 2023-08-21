@@ -20,6 +20,9 @@
     <projectService
       serviceInterface="cn.nicepkg.gptrunner.intellij.services.IGPTRunnerService"
       serviceImplementation="cn.nicepkg.gptrunner.intellij.services.impl.GPTRunnerService"/>
+
+    <applicationConfigurable instance="cn.nicepkg.gptrunner.intellij.NodeJsPathConfigurable" />
+
   </extensions>
 
   <applicationListeners>
