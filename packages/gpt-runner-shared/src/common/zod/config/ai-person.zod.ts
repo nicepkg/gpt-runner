@@ -1,7 +1,7 @@
 import { z } from 'zod'
-import { type ChatModel, ChatModelType, type FilterPattern, type FormCheckboxGroupConfig, type FormFieldBaseConfig, type FormInputConfig, type FormItemConfig, type FormOption, type FormRadioGroupConfig, type FormSelectConfig, type FormTextareaConfig, type SingleChatMessage, type SingleFileConfig, type UserConfig, type UserConfigForUser } from '../../types'
+import { type AiPersonConfig, type ChatModel, ChatModelType, type FilterPattern, type FormCheckboxGroupConfig, type FormFieldBaseConfig, type FormInputConfig, type FormItemConfig, type FormOption, type FormRadioGroupConfig, type FormSelectConfig, type FormTextareaConfig, type GlobalAiPersonConfig, type GlobalAiPersonConfigForUser, type SingleChatMessage } from '../../types'
 import { ChatRoleSchema } from '../enum.zod'
-import type { PartialChatModelTypeMap } from './../../types/config/base.config'
+import type { PartialChatModelTypeMap } from '../../types/config/base.config'
 import { AnthropicModelConfigSchema } from './anthropic.zod'
 import { HuggingFaceModelConfigSchema } from './hugging-face.zod'
 import { OpenaiModelConfigSchema } from './openai.zod'
@@ -27,7 +27,7 @@ export const PartialChatModelTypeMapSchema = z.object({
   [ChatModelType.Openai]: OpenaiModelConfigSchema.optional(),
 }) satisfies z.ZodType<PartialChatModelTypeMap>
 
-export const UserConfigSchema = z.object({
+export const GlobalAiPersonConfigSchema = z.object({
   model: ChatModelSchema.optional().describe('The LLM model configuration'),
   rootPath: z.string().optional().describe('The root path of the project'),
   exts: z.array(z.string()).optional().default(['.gpt.md']).describe('The file extensions to be used'),
@@ -38,12 +38,12 @@ export const UserConfigSchema = z.object({
     modelNames: z.array(z.string()).optional().describe('The model name that will be displayed in the model selector'),
     httpRequestHeader: z.record(z.string()).optional().describe('Additional request headers are required'),
   })).optional().default({}).describe('Custom http request headers and models names for specific urls'),
-}) satisfies z.ZodType<UserConfig>
+}) satisfies z.ZodType<GlobalAiPersonConfig>
 
-export const UserConfigForUserSchema = UserConfigSchema.omit({
+export const GlobalAiPersonConfigForUserSchema = GlobalAiPersonConfigSchema.omit({
   rootPath: true,
   exts: true,
-}) satisfies z.ZodType<UserConfigForUser>
+}) satisfies z.ZodType<GlobalAiPersonConfigForUser>
 
 export const SingleChatMessageSchema = z.object({
   name: ChatRoleSchema,
@@ -96,11 +96,11 @@ export const FormItemConfigSchema = z.union([
   FormRadioGroupConfigSchema,
 ]) satisfies z.ZodType<FormItemConfig>
 
-export const SingleFileConfigSchema = z.object({
-  model: UserConfigSchema.shape.model,
+export const AiPersonConfigSchema = z.object({
+  model: GlobalAiPersonConfigSchema.shape.model,
   title: z.string().optional(),
   userPrompt: z.string().optional(),
   systemPrompt: z.string().optional(),
   messages: z.array(SingleChatMessageSchema).optional(),
   forms: z.record(FormItemConfigSchema).optional(),
-}) as z.ZodType<SingleFileConfig>
+}) as z.ZodType<AiPersonConfig>

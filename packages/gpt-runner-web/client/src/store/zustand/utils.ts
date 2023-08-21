@@ -1,7 +1,9 @@
+import type { StateCreator } from 'zustand'
 import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
 import cloneDeep from 'lodash-es/cloneDeep'
 import { EnvConfig } from '@nicepkg/gpt-runner-shared/common'
+import { type BaseEntity, EntityEvent } from '../entities/base.entity'
 
 /**
  * The resetStateQueue is an array that holds callbacks to reset all stores.
@@ -46,4 +48,23 @@ export function createStore(devtoolsName: string, connectToDevTools = true) {
   }
 
   return newCreate as typeof create
+}
+
+export function createSliceCreatorFromEntity<T extends BaseEntity<any>>(entity: T): StateCreator<T, [], [], T> {
+  return (set, get) => {
+    Object.keys(entity).forEach((key) => {
+      const val = entity[key as keyof T]
+      const isFunction = typeof val === 'function'
+
+      if (isFunction) {
+        entity[key as keyof T] = function (...args: any[]) {
+          return (val as any).apply(get(), args)
+        } as any
+      }
+    })
+
+    entity.on(EntityEvent.Update, () => set({}))
+
+    return entity as T
+  }
 }

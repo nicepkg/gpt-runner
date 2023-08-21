@@ -1,4 +1,4 @@
-import { singleFileJsonSchema, userConfigJsonSchema } from '../src/common'
+import { aiPersonJsonSchema, globalAiPersonConfigJsonSchema } from '../src/common'
 import { FileUtils, PathUtils } from '../src/node'
 
 interface JsonSchemaFile {
@@ -9,11 +9,11 @@ async function generateJsonSchemaFile() {
   const jsonSchemaFiles: JsonSchemaFile[] = [
     {
       fileName: 'user-config.json',
-      content: JSON.stringify(userConfigJsonSchema, null, 2),
+      content: JSON.stringify(globalAiPersonConfigJsonSchema, null, 2),
     },
     {
       fileName: 'single-file-config.json',
-      content: JSON.stringify(singleFileJsonSchema, null, 2),
+      content: JSON.stringify(aiPersonJsonSchema, null, 2),
     },
   ]
 

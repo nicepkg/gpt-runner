@@ -7,7 +7,7 @@ import { FormTitle } from '../../../../components/form-title'
 import { useGlobalStore } from '../../../../store/zustand/global'
 import { useConfetti } from '../../../../hooks/use-confetti.hook'
 import { useElementVisible } from '../../../../hooks/use-element-visible.hook'
-import { useUserConfig } from '../../../../hooks/use-user-config.hook'
+import { useGlobalAiPersonConfig } from '../../../../hooks/use-user-config.hook'
 import { LoadingView } from '../../../../components/loading-view'
 import { ConfigInfoWrapper } from './settings.styles'
 import { GeneralSettings } from './components/general-settings'
@@ -48,9 +48,9 @@ export const Settings: FC<SettingsProps> = memo((props) => {
     return getGptFileTreeItemFromChatId(chatId)
   }, [chatId, getGptFileTreeItemFromChatId])
 
-  const { userConfig, singleFileConfig, isLoading: getGptFileInfoIsLoading } = useUserConfig({
+  const { globalAiPersonConfig, aiPersonConfig, isLoading: getGptFileInfoIsLoading } = useGlobalAiPersonConfig({
     rootPath,
-    singleFilePath: gptFileTreeItem?.path,
+    aiPersonFileSourcePath: gptFileTreeItem?.path,
   })
 
   const viewStyle: CSSProperties = {
@@ -65,7 +65,7 @@ export const Settings: FC<SettingsProps> = memo((props) => {
       ChatModelType.Openai,
       ChatModelType.Anthropic,
     ].sort((a, b) => {
-      const currentModelType = singleFileConfig?.model?.type || ChatModelType.Openai
+      const currentModelType = aiPersonConfig?.model?.type || ChatModelType.Openai
 
       if (a === currentModelType)
         return -1
@@ -114,8 +114,8 @@ export const Settings: FC<SettingsProps> = memo((props) => {
         {getGptFileInfoIsLoading
           ? <LoadingView absolute></LoadingView>
           : <ConfigInfo
-            userConfig={userConfig}
-            singleFileConfig={singleFileConfig}
+            globalAiPersonConfig={globalAiPersonConfig}
+            aiPersonConfig={aiPersonConfig}
           ></ConfigInfo>}
       </>,
     },

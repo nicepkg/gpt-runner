@@ -1,5 +1,5 @@
 import { cac } from 'cac'
-import { loadUserConfig } from '@nicepkg/gpt-runner-core'
+import { loadGlobalAiPersonConfig } from '@nicepkg/gpt-runner-core'
 import { PathUtils, Tunnel, checkNodeVersion, getLocalHostname, getPort, getRunServerEnv, openInBrowser } from '@nicepkg/gpt-runner-shared/node'
 import { consola } from 'consola'
 import { cyan, green } from 'colorette'
@@ -46,7 +46,7 @@ export async function startCli(cwd = PathUtils.resolve(process.cwd()), argv = pr
         process.exit(1)
       }
 
-      const { config } = await loadUserConfig(options.rootPath || options.cwd, options.config)
+      const { config } = await loadGlobalAiPersonConfig(options.rootPath || options.cwd, options.config)
 
       // TODO: add support for config file and watching
       debug.log('parse user config', config)

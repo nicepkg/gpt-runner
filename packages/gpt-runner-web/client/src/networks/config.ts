@@ -1,9 +1,9 @@
 import { objectToQueryString } from '@nicepkg/gpt-runner-shared/common'
-import type { BaseResponse, GetAppConfigReqParams, GetAppConfigResData, GetProjectConfigResData, GetUserConfigReqParams, GetUserConfigResData, MarkAsVisitedAppConfigReqParams, MarkAsVisitedAppConfigResData } from '@nicepkg/gpt-runner-shared/common'
+import type { BaseResponse, GetAppConfigReqParams, GetAppConfigResData, GetGlobalAiPersonConfigReqParams, GetGlobalAiPersonConfigResData, GetProjectConfigResData, MarkAsVisitedAppConfigReqParams, MarkAsVisitedAppConfigResData } from '@nicepkg/gpt-runner-shared/common'
 import { getGlobalConfig } from '../helpers/global-config'
 import { myFetch } from '../helpers/fetch'
 
-export async function fetchUserConfig(params: GetUserConfigReqParams): Promise<BaseResponse<GetUserConfigResData>> {
+export async function fetchGlobalAiPersonConfig(params: GetGlobalAiPersonConfigReqParams): Promise<BaseResponse<GetGlobalAiPersonConfigResData>> {
   return await myFetch(`${getGlobalConfig().serverBaseUrl}/api/config/user-config?${objectToQueryString({
     ...params,
   })}`, {

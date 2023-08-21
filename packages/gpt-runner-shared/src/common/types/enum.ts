@@ -31,10 +31,9 @@ export enum ClientEventName {
   GoToChatPanel = 'goToChatPanel',
 }
 
-export enum GptFileTreeItemType {
+export enum AiPersonTreeItemType {
   Folder = 'folder',
   File = 'file',
-  Chat = 'chat',
 }
 
 export enum ServerStorageName {

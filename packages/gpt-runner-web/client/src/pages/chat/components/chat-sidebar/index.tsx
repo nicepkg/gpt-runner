@@ -1,7 +1,7 @@
 import type { FC } from 'react'
 import { memo, useCallback, useEffect, useState } from 'react'
-import type { GptFileInfoTreeItem } from '@nicepkg/gpt-runner-shared/common'
-import { ClientEventName, GptFileTreeItemType } from '@nicepkg/gpt-runner-shared/common'
+import type { AiPersonTreeItemInfoTreeItem } from '@nicepkg/gpt-runner-shared/common'
+import { AiPersonTreeItemType, ClientEventName } from '@nicepkg/gpt-runner-shared/common'
 import clsx from 'clsx'
 import { useTranslation } from 'react-i18next'
 import type { SidebarProps } from '../../../../components/sidebar'
@@ -27,7 +27,7 @@ export interface ChatSidebarProps {
   reverseTreeUi?: boolean
 }
 
-export type GptTreeItemOtherInfo = GptFileInfoTreeItem
+export type GptTreeItemOtherInfo = AiPersonTreeItemInfoTreeItem
 
 export const ChatSidebar: FC<ChatSidebarProps> = memo((props) => {
   const { rootPath, chatId, reverseTreeUi } = props
@@ -82,10 +82,10 @@ export const ChatSidebar: FC<ChatSidebarProps> = memo((props) => {
     removeChatInstance(chatId)
   }, [removeChatInstance])
 
-  const handleClickTreeItem = useCallback((props: TreeItemState<GptFileInfoTreeItem>) => {
+  const handleClickTreeItem = useCallback((props: TreeItemState<AiPersonTreeItemInfoTreeItem>) => {
     const { otherInfo } = props
 
-    if (otherInfo?.type === GptFileTreeItemType.File
+    if (otherInfo?.type === AiPersonTreeItemType.File
       && otherInfo?.path
       && isPressedCtrl
       && IS_SAFE
@@ -97,7 +97,7 @@ export const ChatSidebar: FC<ChatSidebarProps> = memo((props) => {
       return false
     }
 
-    if (otherInfo?.type === GptFileTreeItemType.Chat)
+    if (otherInfo?.type === AiPersonTreeItemType.Chat)
       updateActiveChatId(otherInfo.id)
   }, [updateActiveChatId, isPressedCtrl])
 
@@ -108,7 +108,7 @@ export const ChatSidebar: FC<ChatSidebarProps> = memo((props) => {
       if (isLeaf)
         return 'codicon-comment'
 
-      if (otherInfo?.type === GptFileTreeItemType.File)
+      if (otherInfo?.type === AiPersonTreeItemType.File)
         return 'codicon-repo'
 
       return isExpanded ? 'codicon-folder-opened' : 'codicon-folder'
@@ -146,7 +146,7 @@ export const ChatSidebar: FC<ChatSidebarProps> = memo((props) => {
       }
     }
 
-    if (otherInfo?.type === GptFileTreeItemType.Chat && isLeaf) {
+    if (otherInfo?.type === AiPersonTreeItemType.Chat && isLeaf) {
       return <>
         <StyledIcon
           title={t('chat_page.delete_chat_btn')}
@@ -156,7 +156,7 @@ export const ChatSidebar: FC<ChatSidebarProps> = memo((props) => {
       </>
     }
 
-    if (otherInfo?.type === GptFileTreeItemType.File) {
+    if (otherInfo?.type === AiPersonTreeItemType.File) {
       return <>
         {/* TODO: implement edit file in web */}
         {isHovering && <StyledIcon
@@ -189,7 +189,7 @@ export const ChatSidebar: FC<ChatSidebarProps> = memo((props) => {
     ></IconButton>
   }, [refreshSidebarTree, t])
 
-  const handleExpandChange = useCallback((props: TreeItemState<GptFileInfoTreeItem>) => {
+  const handleExpandChange = useCallback((props: TreeItemState<AiPersonTreeItemInfoTreeItem>) => {
     updateSidebarTreeItem(props.id, {
       isExpanded: props.isExpanded,
     })
@@ -204,7 +204,7 @@ export const ChatSidebar: FC<ChatSidebarProps> = memo((props) => {
 
   const sortTreeItems = useCallback((items: TreeItemProps<GptTreeItemOtherInfo>[]) => {
     return items?.sort((a, b) => {
-      if (a.otherInfo?.type === GptFileTreeItemType.Chat && b.otherInfo?.type === GptFileTreeItemType.Chat) {
+      if (a.otherInfo?.type === AiPersonTreeItemType.Chat && b.otherInfo?.type === AiPersonTreeItemType.Chat) {
         // sort by create time, new is on before
         const aCreateTime = a.otherInfo?.createAt
         const bCreateTime = b.otherInfo?.createAt
@@ -216,7 +216,7 @@ export const ChatSidebar: FC<ChatSidebarProps> = memo((props) => {
       if (a.otherInfo?.type === a.otherInfo?.type)
         return a.name.localeCompare(b.name)
 
-      return a.otherInfo?.type === GptFileTreeItemType.Chat || b.otherInfo?.type === GptFileTreeItemType.Folder
+      return a.otherInfo?.type === AiPersonTreeItemType.Chat || b.otherInfo?.type === AiPersonTreeItemType.Folder
         ? 1
         : -1
     })

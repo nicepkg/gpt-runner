@@ -1,15 +1,15 @@
-import type { SingleFileConfig, UserConfig } from '@nicepkg/gpt-runner-shared/common'
-import { resolveSingleFileConfig } from '@nicepkg/gpt-runner-shared/common'
+import type { AiPersonConfig, GlobalAiPersonConfig } from '@nicepkg/gpt-runner-shared/common'
+import { resolveAiPersonConfig } from '@nicepkg/gpt-runner-shared/common'
 import { PathUtils } from '@nicepkg/gpt-runner-shared/node'
 import { gptMdFileParser } from './md'
 
-export interface parseGptFileParams {
+export interface parseAiPersonFileParams {
   filePath: string
-  userConfig: UserConfig
+  globalAiPersonConfig: GlobalAiPersonConfig
 }
 
-export async function parseGptFile(params: parseGptFileParams): Promise<SingleFileConfig> {
-  const { filePath, userConfig } = params
+export async function parseAiPersonFile(params: parseAiPersonFileParams): Promise<AiPersonConfig> {
+  const { filePath, globalAiPersonConfig } = params
 
   const ext = PathUtils.extname(filePath)
 
@@ -17,14 +17,14 @@ export async function parseGptFile(params: parseGptFileParams): Promise<SingleFi
     case '.md':
       return await gptMdFileParser({
         filePath,
-        userConfig,
+        globalAiPersonConfig,
       })
     default:
       break
   }
 
-  return resolveSingleFileConfig({
-    userConfig,
-    singleFileConfig: {},
+  return resolveAiPersonConfig({
+    globalAiPersonConfig,
+    aiPersonConfig: {},
   })
 }

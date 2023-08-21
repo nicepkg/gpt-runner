@@ -7,7 +7,7 @@ import { OpenaiModelConfigSchema, OpenaiSecretsSchema } from './openai.zod'
 
 export * from './base.zod'
 export * from './openai.zod'
-export * from './user.config'
+export * from './ai-person.zod'
 
 interface ModelConfig<T extends ChatModelType> {
   config: z.ZodType<GetModelConfigType<T, 'config'>>

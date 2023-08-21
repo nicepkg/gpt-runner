@@ -1,30 +1,30 @@
 import { useQuery } from '@tanstack/react-query'
 import { getGptFileInfo } from '../networks/gpt-files'
 
-export interface UseUserConfigProps {
+export interface UseGlobalAiPersonConfigProps {
   rootPath?: string
-  singleFilePath?: string
+  aiPersonFileSourcePath?: string
   enabled?: boolean
 }
 
-export function useUserConfig(props: UseUserConfigProps) {
-  const { rootPath, singleFilePath, enabled = true } = props
-  const queryEnabled = !!singleFilePath && !!rootPath && enabled
+export function useGlobalAiPersonConfig(props: UseGlobalAiPersonConfigProps) {
+  const { rootPath, aiPersonFileSourcePath, enabled = true } = props
+  const queryEnabled = !!aiPersonFileSourcePath && !!rootPath && enabled
 
   const { data: getGptFileInfoRes, isLoading } = useQuery({
-    queryKey: ['settings-gpt-file-info', singleFilePath],
+    queryKey: ['settings-gpt-file-info', aiPersonFileSourcePath],
     enabled: queryEnabled,
     queryFn: () => getGptFileInfo({
       rootPath: rootPath!,
-      filePath: singleFilePath!,
+      filePath: aiPersonFileSourcePath!,
     }),
   })
 
-  const { userConfig, singleFileConfig } = getGptFileInfoRes?.data || {}
+  const { globalAiPersonConfig, aiPersonConfig } = getGptFileInfoRes?.data || {}
 
   return {
     isLoading: queryEnabled ? isLoading : false,
-    userConfig,
-    singleFileConfig,
+    globalAiPersonConfig,
+    aiPersonConfig,
   }
 }

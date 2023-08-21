@@ -1,6 +1,6 @@
 import { PathUtils, sendSuccessResponse, verifyParamsByZod } from '@nicepkg/gpt-runner-shared/node'
 import { DEFAULT_EXCLUDE_FILE_EXTS, type GetCommonFilesReqParams, GetCommonFilesReqParamsSchema, type GetCommonFilesResData } from '@nicepkg/gpt-runner-shared/common'
-import { getCommonFileTree, loadUserConfig } from '@nicepkg/gpt-runner-core'
+import { getCommonFileTree, loadGlobalAiPersonConfig } from '@nicepkg/gpt-runner-core'
 import type { ControllerConfig } from '../types'
 import { getValidFinalPath } from '../helpers/valid-path'
 
@@ -27,7 +27,7 @@ export const commonFilesControllers: ControllerConfig = {
           fieldName: 'rootPath',
         })
 
-        const { config: userConfig } = await loadUserConfig(finalPath)
+        const { config: globalAiPersonConfig } = await loadGlobalAiPersonConfig(finalPath)
 
         const allFileExts: Set<string> = new Set()
 
@@ -41,9 +41,9 @@ export const commonFilesControllers: ControllerConfig = {
 
             return !excludeExts.some(ext => filePath.endsWith(ext))
           },
-          includes: userConfig.includes,
-          excludes: userConfig.excludes,
-          respectGitIgnore: userConfig.respectGitIgnore,
+          includes: globalAiPersonConfig.includes,
+          excludes: globalAiPersonConfig.excludes,
+          respectGitIgnore: globalAiPersonConfig.respectGitIgnore,
         })
 
         sendSuccessResponse(res, {

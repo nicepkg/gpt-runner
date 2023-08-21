@@ -2,7 +2,7 @@ import type { FilterPattern } from '../common'
 import type { ChatRole } from '../enum'
 import type { ChatModel } from './base.config'
 
-export interface UserConfig {
+export interface GlobalAiPersonConfig {
   /**
    * chat model
    */
@@ -58,7 +58,7 @@ export interface UserConfig {
   }
 }
 
-export type UserConfigForUser = Omit<UserConfig, 'rootPath'>
+export type GlobalAiPersonConfigForUser = Omit<GlobalAiPersonConfig, 'rootPath'>
 
 export interface SingleChatMessage {
   name: ChatRole
@@ -67,7 +67,7 @@ export interface SingleChatMessage {
 
 type OmitChatModelTypeSecrets<T> = T extends ChatModel ? Omit<T, 'secrets'> : never
 
-export interface SingleFileConfig {
+export interface AiPersonConfig {
   model?: OmitChatModelTypeSecrets<ChatModel>
   title?: string
   userPrompt?: string

@@ -64,7 +64,7 @@ echo '.gpt-runner' >> ~/.gitignore_global
 2. Its configuration type is as follows
 
 ```ts
-export interface UserConfig {
+export interface GlobalAiPersonConfig {
   /**
    * Model configuration
    */
@@ -145,7 +145,7 @@ export interface ModelConfig {
 }
 ```
 
-3. You can use `defineConfig` function in `gptr.config.ts` to configure `UserConfig` type configuration file. You can install `@nicepkg/gpt-runner` package.
+3. You can use `defineConfig` function in `gptr.config.ts` to configure `GlobalAiPersonConfig` type configuration file. You can install `@nicepkg/gpt-runner` package.
 
 ```bash
 npm i @nicepkg/gpt-runner

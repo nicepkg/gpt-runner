@@ -1,8 +1,8 @@
-import type { SingleFileConfig, UserConfig } from '@nicepkg/gpt-runner-shared/common'
-import { ChatModelType, resolveSingleFileConfig } from '@nicepkg/gpt-runner-shared/common'
+import type { AiPersonConfig, GlobalAiPersonConfig } from '@nicepkg/gpt-runner-shared/common'
+import { ChatModelType, resolveAiPersonConfig } from '@nicepkg/gpt-runner-shared/common'
 import type { FC, ReactNode } from 'react'
 import { memo, useMemo } from 'react'
-import { useUserConfig } from '../../../../../../hooks/use-user-config.hook'
+import { useGlobalAiPersonConfig } from '../../../../../../hooks/use-user-config.hook'
 import { AnthropicSecretsSettings } from './anthropic-settings/secrets-settings'
 import { AnthropicModelSettings } from './anthropic-settings/model-settings'
 import { OpenaiSecretsSettings } from './openai-settings/secrets-settings'
@@ -28,9 +28,9 @@ export interface ModelSettingsModelViewProps extends ModelSettingsBaseViewProps 
   viewType: 'model'
   rootPath: string
   modelType?: ChatModelType
-  singleFilePath?: string
-  singleFileConfig?: SingleFileConfig
-  userConfig?: UserConfig
+  aiPersonFileSourcePath?: string
+  aiPersonConfig?: AiPersonConfig
+  globalAiPersonConfig?: GlobalAiPersonConfig
 }
 
 export type ModelSettingsProps = ModelSettingsTitleViewProps | ModelSettingsSecretsViewProps | ModelSettingsModelViewProps
@@ -38,38 +38,38 @@ export type ModelSettingsProps = ModelSettingsTitleViewProps | ModelSettingsSecr
 type ModelSettingsPropsMerge = Omit<ModelSettingsTitleViewProps, 'viewType'> & Omit<ModelSettingsSecretsViewProps, 'viewType'> & Omit<ModelSettingsModelViewProps, 'viewType'> & { viewType: ModelSettingsViewType }
 
 export const ModelSettings: FC<ModelSettingsProps> = memo((props) => {
-  const { rootPath, singleFilePath, singleFileConfig: singleFileConfigFromParams, userConfig: userConfigFromParams, viewType, modelType } = props as ModelSettingsPropsMerge
+  const { rootPath, aiPersonFileSourcePath, aiPersonConfig: aiPersonConfigFromParams, globalAiPersonConfig: globalAiPersonConfigFromParams, viewType, modelType } = props as ModelSettingsPropsMerge
 
-  const { singleFileConfig: singleFileConfigFromRemote, userConfig: userConfigFromRemote } = useUserConfig({
+  const { aiPersonConfig: aiPersonConfigFromRemote, globalAiPersonConfig: globalAiPersonConfigFromRemote } = useGlobalAiPersonConfig({
     rootPath,
-    singleFilePath,
-    enabled: !singleFileConfigFromParams && viewType === 'model',
+    aiPersonFileSourcePath,
+    enabled: !aiPersonConfigFromParams && viewType === 'model',
   })
 
-  const singleFileConfig = singleFileConfigFromParams || singleFileConfigFromRemote
-  const userConfig = userConfigFromParams || userConfigFromRemote
+  const aiPersonConfig = aiPersonConfigFromParams || aiPersonConfigFromRemote
+  const globalAiPersonConfig = globalAiPersonConfigFromParams || globalAiPersonConfigFromRemote
 
-  const resolvedSingleFileConfig = useMemo(() => {
-    if (!userConfig || !singleFileConfig)
+  const resolvedAiPersonConfig = useMemo(() => {
+    if (!globalAiPersonConfig || !aiPersonConfig)
       return {}
 
-    const result = resolveSingleFileConfig({
-      userConfig,
-      singleFileConfig,
+    const result = resolveAiPersonConfig({
+      globalAiPersonConfig,
+      aiPersonConfig,
     })
 
     if (modelType && result.model?.type !== modelType)
       return undefined
 
     return result
-  }, [singleFileConfig, userConfig, modelType])
+  }, [aiPersonConfig, globalAiPersonConfig, modelType])
 
-  const finalModelType = modelType || resolvedSingleFileConfig?.model?.type || ChatModelType.Openai
+  const finalModelType = modelType || resolvedAiPersonConfig?.model?.type || ChatModelType.Openai
 
   const modelTypeViewMap: Record<ChatModelType, Record<ModelSettingsViewType, () => ReactNode>> = {
     [ChatModelType.Anthropic]: {
       secrets: () => <AnthropicSecretsSettings />,
-      model: () => <AnthropicModelSettings rootPath={rootPath} singleFileConfig={resolvedSingleFileConfig} />,
+      model: () => <AnthropicModelSettings rootPath={rootPath} aiPersonConfig={resolvedAiPersonConfig} />,
       title: () => <>Anthropic</>,
     },
     [ChatModelType.HuggingFace]: {
@@ -79,7 +79,7 @@ export const ModelSettings: FC<ModelSettingsProps> = memo((props) => {
     },
     [ChatModelType.Openai]: {
       secrets: () => <OpenaiSecretsSettings />,
-      model: () => <OpenaiModelSettings rootPath={rootPath} singleFileConfig={resolvedSingleFileConfig} />,
+      model: () => <OpenaiModelSettings rootPath={rootPath} aiPersonConfig={resolvedAiPersonConfig} />,
       title: () => <>OpenAI</>,
     },
   }

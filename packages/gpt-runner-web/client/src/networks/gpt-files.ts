@@ -1,9 +1,9 @@
 import { objectToQueryString } from '@nicepkg/gpt-runner-shared/common'
-import type { BaseResponse, GetGptFileInfoReqParams, GetGptFileInfoResData, GetGptFilesReqParams, GetGptFilesResData, InitGptFilesReqParams, InitGptFilesResData } from '@nicepkg/gpt-runner-shared/common'
+import type { BaseResponse, GetAiPersonFilesReqParams, GetAiPersonFilesResData, GetAiPersonTreeItemInfoReqParams, GetAiPersonTreeItemInfoResData, InitGptFilesReqParams, InitGptFilesResData } from '@nicepkg/gpt-runner-shared/common'
 import { getGlobalConfig } from '../helpers/global-config'
 import { myFetch } from '../helpers/fetch'
 
-export async function fetchGptFilesTree(params: GetGptFilesReqParams): Promise<BaseResponse<GetGptFilesResData>> {
+export async function fetchGptFilesTree(params: GetAiPersonFilesReqParams): Promise<BaseResponse<GetAiPersonFilesResData>> {
   return await myFetch(`${getGlobalConfig().serverBaseUrl}/api/gpt-files?${objectToQueryString({
     ...params,
   })}`, {
@@ -26,7 +26,7 @@ export async function initGptFiles(params: InitGptFilesReqParams): Promise<BaseR
   })
 }
 
-export async function getGptFileInfo(params: GetGptFileInfoReqParams): Promise<BaseResponse<GetGptFileInfoResData>> {
+export async function getGptFileInfo(params: GetAiPersonTreeItemInfoReqParams): Promise<BaseResponse<GetAiPersonTreeItemInfoResData>> {
   return await myFetch(`${getGlobalConfig().serverBaseUrl}/api/gpt-files/get-gpt-file-info?${objectToQueryString({
     ...params,
   })}`, {

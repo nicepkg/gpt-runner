@@ -1,8 +1,8 @@
 import type { CurrentAppConfig, MarkedAsVisitedType } from './app-config'
 import type { FileInfoTree } from './common-file'
-import type { PartialChatModelTypeMap, SingleChatMessage, SingleFileConfig, UserConfig } from './config'
+import type { AiPersonConfig, GlobalAiPersonConfig, PartialChatModelTypeMap, SingleChatMessage } from './config'
 import type { ChatModelType, LocaleLang, ServerStorageName } from './enum'
-import type { GptFileInfo, GptFileInfoTree } from './gpt-file'
+import type { AiPersonTreeItemInfo, AiPersonTreeItemInfoTreeItem } from './ai-person-file'
 
 export interface BaseResponse<T = any> {
   type: 'Success' | 'Fail'
@@ -38,13 +38,13 @@ export interface ChatStreamReqParams {
    * @default false
    */
   systemPromptAsUserPrompt?: boolean
-  singleFilePath?: string
+  aiPersonFileSourcePath?: string
 
   /**
-   * most times we don't use singleFileConfig, we parse .gpt.md file
-   * and get the real time singleFileConfig and then provide singleFileConfig to LangchainJs
+   * most times we don't use aiPersonConfig, we parse .gpt.md file
+   * and get the real time aiPersonConfig and then provide aiPersonConfig to LangchainJs
    */
-  singleFileConfig?: SingleFileConfig
+  aiPersonConfig?: AiPersonConfig
   overrideModelType?: ChatModelType
   overrideModelsConfig?: PartialChatModelTypeMap
 
@@ -68,23 +68,23 @@ export interface GetModelNamesForChooseResData {
   modelNames: string[]
 }
 
-export interface GetGptFilesReqParams {
+export interface GetAiPersonFilesReqParams {
   rootPath: string
 }
 
-export interface GetGptFilesResData {
-  filesInfo: GptFileInfo[]
-  filesInfoTree: GptFileInfoTree
+export interface GetAiPersonFilesResData {
+  filesInfo: AiPersonTreeItemInfo[]
+  filesInfoTree: AiPersonTreeItemInfoTreeItem[]
 }
 
-export interface GetGptFileInfoReqParams {
+export interface GetAiPersonTreeItemInfoReqParams {
   rootPath: string
   filePath: string
 }
 
-export interface GetGptFileInfoResData {
-  userConfig: UserConfig
-  singleFileConfig: SingleFileConfig
+export interface GetAiPersonTreeItemInfoResData {
+  globalAiPersonConfig: GlobalAiPersonConfig
+  aiPersonConfig: AiPersonConfig
 }
 
 export interface InitGptFilesReqParams {
@@ -113,12 +113,12 @@ export interface MarkAsVisitedAppConfigReqParams {
 
 export type MarkAsVisitedAppConfigResData = null
 
-export interface GetUserConfigReqParams {
+export interface GetGlobalAiPersonConfigReqParams {
   rootPath: string
 }
 
-export interface GetUserConfigResData {
-  userConfig: UserConfig
+export interface GetGlobalAiPersonConfigResData {
+  globalAiPersonConfig: GlobalAiPersonConfig
 }
 
 export interface StorageGetItemReqParams {

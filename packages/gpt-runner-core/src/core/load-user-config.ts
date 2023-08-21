@@ -2,17 +2,17 @@ import fs from 'node:fs'
 import { PathUtils } from '@nicepkg/gpt-runner-shared/node'
 import type { LoadConfigResult, LoadConfigSource } from 'unconfig'
 import { createConfigLoader as createLoader } from 'unconfig'
-import type { UserConfig } from '@nicepkg/gpt-runner-shared/common'
-import { EnvConfig, userConfigWithDefault } from '@nicepkg/gpt-runner-shared/common'
+import type { GlobalAiPersonConfig } from '@nicepkg/gpt-runner-shared/common'
+import { EnvConfig, globalAiPersonConfigWithDefault } from '@nicepkg/gpt-runner-shared/common'
 
 export type { LoadConfigResult, LoadConfigSource }
-export type IUserConfig = UserConfig & { configFile?: false | string }
+export type IGlobalAiPersonConfig = GlobalAiPersonConfig & { configFile?: false | string }
 
-export async function loadUserConfig<U extends IUserConfig = IUserConfig>(
+export async function loadGlobalAiPersonConfig<U extends IGlobalAiPersonConfig = IGlobalAiPersonConfig>(
   cwd = process.cwd(),
   configOrPath: string | U = cwd,
   extraConfigSources: LoadConfigSource[] = [],
-  defaults: Partial<UserConfig> = {},
+  defaults: Partial<GlobalAiPersonConfig> = {},
 ): Promise<LoadConfigResult<U>> {
   let inlineConfig = {} as U
   if (typeof configOrPath !== 'string') {
@@ -60,7 +60,7 @@ export async function loadUserConfig<U extends IUserConfig = IUserConfig>(
   })
 
   const result = await loader.load()
-  result.config = userConfigWithDefault(Object.assign({
+  result.config = globalAiPersonConfigWithDefault(Object.assign({
     rootPath: PathUtils.resolve(cwd),
   }, defaults, result.config || inlineConfig)) as U
 

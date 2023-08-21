@@ -1,6 +1,6 @@
 import { z } from 'zod'
-import type { ChatStreamReqParams, CreateFilePathReqParams, DeleteFilePathReqParams, GetAppConfigReqParams, GetCommonFilesReqParams, GetFileInfoReqParams, GetGptFileInfoReqParams, GetGptFilesReqParams, GetModelNamesForChooseReqParams, GetUserConfigReqParams, InitGptFilesReqParams, MarkAsVisitedAppConfigReqParams, OpenEditorReqParams, RenameFilePathReqParams, SaveFileContentReqParams, StorageClearReqParams, StorageGetItemReqParams, StorageRemoveItemReqParams, StorageSetItemReqParams } from '../types'
-import { PartialChatModelTypeMapSchema, SingleChatMessageSchema, SingleFileConfigSchema } from './config'
+import type { ChatStreamReqParams, CreateFilePathReqParams, DeleteFilePathReqParams, GetAiPersonFilesReqParams, GetAiPersonTreeItemInfoReqParams, GetAppConfigReqParams, GetCommonFilesReqParams, GetFileInfoReqParams, GetGlobalAiPersonConfigReqParams, GetModelNamesForChooseReqParams, InitGptFilesReqParams, MarkAsVisitedAppConfigReqParams, OpenEditorReqParams, RenameFilePathReqParams, SaveFileContentReqParams, StorageClearReqParams, StorageGetItemReqParams, StorageRemoveItemReqParams, StorageSetItemReqParams } from '../types'
+import { AiPersonConfigSchema, PartialChatModelTypeMapSchema, SingleChatMessageSchema } from './config'
 import { ChatModelTypeSchema, LocaleLangSchema, ServerStorageNameSchema } from './enum.zod'
 
 export const ChatStreamReqParamsSchema = z.object({
@@ -9,8 +9,8 @@ export const ChatStreamReqParamsSchema = z.object({
   systemPrompt: z.string().optional(),
   appendSystemPrompt: z.string().optional(),
   systemPromptAsUserPrompt: z.boolean().optional(),
-  singleFilePath: z.string().optional(),
-  singleFileConfig: SingleFileConfigSchema.optional(),
+  aiPersonPath: z.string().optional(),
+  aiPersonConfig: AiPersonConfigSchema.optional(),
   overrideModelType: ChatModelTypeSchema.optional(),
   overrideModelsConfig: PartialChatModelTypeMapSchema.optional(),
   modelTypeVendorNameMap: z.record(z.string()).optional(),
@@ -25,23 +25,23 @@ export const GetModelNamesForChooseReqParamsSchema = z.object({
   modelTypeVendorNameMap: z.record(z.string()).optional(),
 }) satisfies z.ZodType<GetModelNamesForChooseReqParams>
 
-export const GetGptFilesReqParamsSchema = z.object({
+export const GetAiPersonFilesReqParamsSchema = z.object({
   rootPath: z.string(),
-}) satisfies z.ZodType<GetGptFilesReqParams>
+}) satisfies z.ZodType<GetAiPersonFilesReqParams>
 
-export const GetGptFileInfoReqParamsSchema = z.object({
+export const GetAiPersonTreeItemInfoReqParamsSchema = z.object({
   rootPath: z.string(),
   filePath: z.string(),
-}) satisfies z.ZodType<GetGptFileInfoReqParams>
+}) satisfies z.ZodType<GetAiPersonTreeItemInfoReqParams>
 
 export const InitGptFilesReqParamsSchema = z.object({
   rootPath: z.string(),
   gptFilesNames: z.array(z.string()),
 }) satisfies z.ZodType<InitGptFilesReqParams>
 
-export const GetUserConfigReqParamsSchema = z.object({
+export const GetGlobalAiPersonConfigReqParamsSchema = z.object({
   rootPath: z.string(),
-}) satisfies z.ZodType<GetUserConfigReqParams>
+}) satisfies z.ZodType<GetGlobalAiPersonConfigReqParams>
 
 export const StorageGetItemReqParamsSchema = z.object({
   storageName: ServerStorageNameSchema,

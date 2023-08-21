@@ -5,7 +5,7 @@ addNodejsPolyfill()
 export * from './core'
 export * from './langchain'
 
-export interface UserConfig {
+export interface GlobalAiPersonConfig {
   configFile?: string | false
   configDeps?: string[]
 }

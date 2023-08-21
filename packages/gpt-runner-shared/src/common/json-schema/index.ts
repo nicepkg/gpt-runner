@@ -1,5 +1,5 @@
 import { zodToJsonSchema } from 'zod-to-json-schema'
-import { SingleFileConfigSchema, UserConfigForUserSchema } from '../zod'
+import { AiPersonConfigSchema, GlobalAiPersonConfigForUserSchema } from '../zod'
 
-export const userConfigJsonSchema = zodToJsonSchema(UserConfigForUserSchema)
-export const singleFileJsonSchema = zodToJsonSchema(SingleFileConfigSchema)
+export const globalAiPersonConfigJsonSchema = zodToJsonSchema(GlobalAiPersonConfigForUserSchema)
+export const aiPersonJsonSchema = zodToJsonSchema(AiPersonConfigSchema)

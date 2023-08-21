@@ -1,7 +1,7 @@
 import { checkNodeVersion, sendSuccessResponse, verifyParamsByZod } from '@nicepkg/gpt-runner-shared/node'
-import type { GetAppConfigReqParams, GetAppConfigResData, GetProjectConfigResData, GetUserConfigReqParams, GetUserConfigResData, MarkAsVisitedAppConfigReqParams, MarkAsVisitedAppConfigResData } from '@nicepkg/gpt-runner-shared/common'
-import { EnvConfig, GetAppConfigReqParamsSchema, GetUserConfigReqParamsSchema, MarkAsVisitedAppConfigReqParamsSchema, removeUserConfigUnsafeKey } from '@nicepkg/gpt-runner-shared/common'
-import { loadUserConfig } from '@nicepkg/gpt-runner-core'
+import type { GetAppConfigReqParams, GetAppConfigResData, GetGlobalAiPersonConfigReqParams, GetGlobalAiPersonConfigResData, GetProjectConfigResData, MarkAsVisitedAppConfigReqParams, MarkAsVisitedAppConfigResData } from '@nicepkg/gpt-runner-shared/common'
+import { EnvConfig, GetAppConfigReqParamsSchema, GetGlobalAiPersonConfigReqParamsSchema, MarkAsVisitedAppConfigReqParamsSchema, removeGlobalAiPersonConfigUnsafeKey } from '@nicepkg/gpt-runner-shared/common'
+import { loadGlobalAiPersonConfig } from '@nicepkg/gpt-runner-core'
 import pkg from '../../../package.json'
 import type { ControllerConfig } from '../types'
 import { getValidFinalPath } from '../helpers/valid-path'
@@ -40,9 +40,9 @@ export const configControllers: ControllerConfig = {
       url: '/user-config',
       method: 'get',
       handler: async (req, res) => {
-        const query = req.query as GetUserConfigReqParams
+        const query = req.query as GetGlobalAiPersonConfigReqParams
 
-        verifyParamsByZod(query, GetUserConfigReqParamsSchema)
+        verifyParamsByZod(query, GetGlobalAiPersonConfigReqParamsSchema)
 
         const { rootPath } = query
 
@@ -52,13 +52,13 @@ export const configControllers: ControllerConfig = {
           fieldName: 'rootPath',
         })
 
-        let { config: userConfig } = await loadUserConfig(finalPath)
-        userConfig = removeUserConfigUnsafeKey(userConfig)
+        let { config: globalAiPersonConfig } = await loadGlobalAiPersonConfig(finalPath)
+        globalAiPersonConfig = removeGlobalAiPersonConfigUnsafeKey(globalAiPersonConfig)
 
         sendSuccessResponse(res, {
           data: {
-            userConfig,
-          } satisfies GetUserConfigResData,
+            globalAiPersonConfig,
+          } satisfies GetGlobalAiPersonConfigResData,
         })
       },
     },

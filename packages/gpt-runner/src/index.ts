@@ -1,16 +1,16 @@
-import type { ChatModelType, UserConfig as IUserConfig } from '@nicepkg/gpt-runner-shared/common'
+import type { ChatModelType, GlobalAiPersonConfig as IGlobalAiPersonConfig } from '@nicepkg/gpt-runner-shared/common'
 
 export * from '@nicepkg/gpt-runner-shared/common'
 export * from '@nicepkg/gpt-runner-shared/node'
 
 type GetStaticValueFromChatModelType<T extends ChatModelType> = T extends ChatModelType ? `${T}` : never
 
-export type UserConfig = {
-  [Key in keyof Omit<IUserConfig, 'rootPath' | 'exts'>]: Key extends 'model' ? Omit<NonNullable<IUserConfig[Key]>, 'type'> & {
-    type: GetStaticValueFromChatModelType<NonNullable<IUserConfig[Key]>['type']>
-  } : IUserConfig[Key]
+export type GlobalAiPersonConfig = {
+  [Key in keyof Omit<IGlobalAiPersonConfig, 'rootPath' | 'exts'>]: Key extends 'model' ? Omit<NonNullable<IGlobalAiPersonConfig[Key]>, 'type'> & {
+    type: GetStaticValueFromChatModelType<NonNullable<IGlobalAiPersonConfig[Key]>['type']>
+  } : IGlobalAiPersonConfig[Key]
 }
 
-export function defineConfig(config: UserConfig) {
+export function defineConfig(config: GlobalAiPersonConfig) {
   return config
 }

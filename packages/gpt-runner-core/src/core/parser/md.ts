@@ -1,21 +1,21 @@
-import type { SingleFileConfig, UserConfig } from '@nicepkg/gpt-runner-shared/common'
-import { resolveSingleFileConfig, singleFileConfigWithDefault, tryParseJson } from '@nicepkg/gpt-runner-shared/common'
+import type { AiPersonConfig, GlobalAiPersonConfig } from '@nicepkg/gpt-runner-shared/common'
+import { aiPersonConfigWithDefault, resolveAiPersonConfig, tryParseJson } from '@nicepkg/gpt-runner-shared/common'
 import { FileUtils } from '@nicepkg/gpt-runner-shared/node'
 
 export interface GptMdFileParserParams {
   filePath: string
-  userConfig: UserConfig
+  globalAiPersonConfig: GlobalAiPersonConfig
 }
 
-export async function gptMdFileParser(params: GptMdFileParserParams): Promise<SingleFileConfig> {
-  const { filePath, userConfig } = params
+export async function gptMdFileParser(params: GptMdFileParserParams): Promise<AiPersonConfig> {
+  const { filePath, globalAiPersonConfig } = params
 
   const content = await FileUtils.readFile({ filePath })
 
   // match ```json
   const configJsonString = content.match(/^\s*?```json([\s\S]*?)```/i)?.[1]?.trim()
 
-  const singleFileConfig = singleFileConfigWithDefault(configJsonString ? tryParseJson(configJsonString, true) : {})
+  const aiPersonConfig = aiPersonConfigWithDefault(configJsonString ? tryParseJson(configJsonString, true) : {})
 
   type ResolveConfigKey = 'userPrompt' | 'systemPrompt'
   const resolveTitleConfig: {
@@ -41,10 +41,10 @@ export async function gptMdFileParser(params: GptMdFileParserParams): Promise<Si
     }
   }, {} as Record<ResolveConfigKey, string>)
 
-  return resolveSingleFileConfig({
-    userConfig,
-    singleFileConfig: {
-      ...singleFileConfig,
+  return resolveAiPersonConfig({
+    globalAiPersonConfig,
+    aiPersonConfig: {
+      ...aiPersonConfig,
       ...configKeyValueMap,
     },
   })

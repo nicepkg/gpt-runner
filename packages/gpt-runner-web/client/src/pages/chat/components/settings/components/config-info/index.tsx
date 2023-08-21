@@ -1,9 +1,9 @@
 import { type FC, memo, useMemo } from 'react'
-import type { SingleFileConfig, UserConfig } from '@nicepkg/gpt-runner-shared/common'
+import type { AiPersonConfig, GlobalAiPersonConfig } from '@nicepkg/gpt-runner-shared/common'
 import { useGlobalStore } from '../../../../../../store/zustand/global'
 import type { MessageCodeBlockTheme } from '../../../../../../components/chat-message-code-block'
 import { MessageCodeBlock } from '../../../../../../components/chat-message-code-block'
-import { useUserConfig } from '../../../../../../hooks/use-user-config.hook'
+import { useGlobalAiPersonConfig } from '../../../../../../hooks/use-user-config.hook'
 import { ConfigInfoWrapper } from '../../settings.styles'
 import { FormTitle } from '../../../../../../components/form-title'
 import { FlexColumn } from '../../../../../../styles/global.styles'
@@ -13,12 +13,12 @@ import { useDarkTheme } from '../../../../../../hooks/use-css-var-color.hook'
 export interface ConfigInfoProps {
   rootPath?: string
   chatId?: string
-  singleFileConfig?: SingleFileConfig
-  userConfig?: UserConfig
+  aiPersonConfig?: AiPersonConfig
+  globalAiPersonConfig?: GlobalAiPersonConfig
 }
 
 export const ConfigInfo: FC<ConfigInfoProps> = memo((props) => {
-  const { rootPath, chatId, singleFileConfig: singleFileConfigFromProps, userConfig: userConfigFromProps } = props
+  const { rootPath, chatId, aiPersonConfig: aiPersonConfigFromProps, globalAiPersonConfig: globalAiPersonConfigFromProps } = props
   const { getGptFileTreeItemFromChatId } = useGlobalStore()
 
   const isDark = useDarkTheme()
@@ -32,17 +32,17 @@ export const ConfigInfo: FC<ConfigInfoProps> = memo((props) => {
     return getGptFileTreeItemFromChatId(chatId)
   }, [chatId, getGptFileTreeItemFromChatId])
 
-  const { userConfig: userConfigFromRes, singleFileConfig: singleFileConfigFromRes, isLoading: getGptFileInfoIsLoading } = useUserConfig({
+  const { globalAiPersonConfig: globalAiPersonConfigFromRes, aiPersonConfig: aiPersonConfigFromRes, isLoading: getGptFileInfoIsLoading } = useGlobalAiPersonConfig({
     rootPath,
-    singleFilePath: gptFileTreeItem?.path,
-    enabled: !singleFileConfigFromProps || !userConfigFromProps,
+    aiPersonFileSourcePath: gptFileTreeItem?.path,
+    enabled: !aiPersonConfigFromProps || !globalAiPersonConfigFromProps,
   })
 
-  const userConfig = userConfigFromProps || userConfigFromRes
-  const singleFileConfig = singleFileConfigFromProps || singleFileConfigFromRes
+  const globalAiPersonConfig = globalAiPersonConfigFromProps || globalAiPersonConfigFromRes
+  const aiPersonConfig = aiPersonConfigFromProps || aiPersonConfigFromRes
 
-  const globalConfigInfo = JSON.stringify(userConfig, null, 4)
-  const singleFileConfigInfo = JSON.stringify(singleFileConfig, null, 4)
+  const globalConfigInfo = JSON.stringify(globalAiPersonConfig, null, 4)
+  const aiPersonConfigInfo = JSON.stringify(aiPersonConfig, null, 4)
   const gptFileName = gptFileTreeItem?.path.split('/').pop()
 
   const renderGlobalConfigInfo = () => {
@@ -54,22 +54,22 @@ export const ConfigInfo: FC<ConfigInfoProps> = memo((props) => {
     </ConfigInfoWrapper>
   }
 
-  const renderSingleFileConfigInfo = () => {
+  const renderAiPersonConfigInfo = () => {
     return <ConfigInfoWrapper>
       <FormTitle size="large">
         {gptFileName}
       </FormTitle>
-      <MessageCodeBlock theme={codeBlockTheme} language='json' contents={singleFileConfigInfo}></MessageCodeBlock>
+      <MessageCodeBlock theme={codeBlockTheme} language='json' contents={aiPersonConfigInfo}></MessageCodeBlock>
     </ConfigInfoWrapper>
   }
 
-  if (!userConfig && !singleFileConfig)
+  if (!globalAiPersonConfig && !aiPersonConfig)
     return null
 
   return <FlexColumn style={{ position: 'relative', width: '100%' }}>
 
     {getGptFileInfoIsLoading && <LoadingView absolute></LoadingView>}
-    {renderSingleFileConfigInfo()}
+    {renderAiPersonConfigInfo()}
     {renderGlobalConfigInfo()}
   </FlexColumn>
 })

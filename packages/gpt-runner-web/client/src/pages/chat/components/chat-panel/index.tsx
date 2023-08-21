@@ -410,7 +410,7 @@ export const ChatPanel: FC<ChatPanelProps> = memo((props) => {
               viewType='model'
               modelType={overrideModelType || undefined}
               rootPath={rootPath}
-              singleFilePath={chatInstance?.singleFilePath}
+              aiPersonFileSourcePath={chatInstance?.aiPersonFileSourcePath}
             ></ModelSettings>
 
             {/* context settings */}

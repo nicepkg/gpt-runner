@@ -1,28 +1,28 @@
-import type { GptFileInfo, GptFileInfoTree, GptFileInfoTreeItem, UserConfig } from '@nicepkg/gpt-runner-shared/common'
-import { GptFileTreeItemType, userConfigWithDefault } from '@nicepkg/gpt-runner-shared/common'
+import type { AiPersonTreeItemInfo, AiPersonTreeItemInfoTreeItem, GlobalAiPersonConfig } from '@nicepkg/gpt-runner-shared/common'
+import { AiPersonTreeItemType, globalAiPersonConfigWithDefault } from '@nicepkg/gpt-runner-shared/common'
 import { FileUtils, PathUtils } from '@nicepkg/gpt-runner-shared/node'
-import { parseGptFile } from './parser'
+import { parseAiPersonFile } from './parser'
 import { getIgnoreFunction } from './gitignore'
 
-export interface GetGptFilesInfoParams {
-  userConfig: UserConfig
+export interface GetAiPersonFilesInfoParams {
+  globalAiPersonConfig: GlobalAiPersonConfig
 }
 
-export interface GetGptFilesInfoResult {
-  filesInfo: GptFileInfo[]
-  filesInfoTree: GptFileInfoTree
+export interface GetAiPersonFilesInfoResult {
+  filesInfo: AiPersonTreeItemInfo[]
+  filesInfoTree: AiPersonTreeItemInfoTreeItem[]
 }
 
-export async function getGptFilesInfo(params: GetGptFilesInfoParams): Promise<GetGptFilesInfoResult> {
-  const { userConfig } = params
-  const resolvedUserConfig = userConfigWithDefault(userConfig)
+export async function getGptFilesInfo(params: GetAiPersonFilesInfoParams): Promise<GetAiPersonFilesInfoResult> {
+  const { globalAiPersonConfig } = params
+  const resolvedGlobalAiPersonConfig = globalAiPersonConfigWithDefault(globalAiPersonConfig)
   const {
     rootPath = '',
     exts,
     includes,
     excludes,
     respectGitIgnore = true,
-  } = resolvedUserConfig
+  } = resolvedGlobalAiPersonConfig
 
   const isGitIgnore = await getIgnoreFunction({ rootPath })
 
@@ -38,9 +38,9 @@ export async function getGptFilesInfo(params: GetGptFilesInfoParams): Promise<Ge
 
   const fullRootPath = PathUtils.resolve(rootPath)
 
-  const filesInfo: GptFileInfo[] = []
-  const filesInfoTree: GptFileInfoTree = []
-  const tempTitleFileInfoTMap = new Map<string, GptFileInfoTreeItem>()
+  const filesInfo: AiPersonTreeItemInfo[] = []
+  const filesInfoTree: AiPersonTreeItemInfoTreeItem[] = []
+  const tempTitleFileInfoTMap = new Map<string, AiPersonTreeItemInfoTreeItem>()
 
   const startWithRoot = (path: string) => {
     return path.startsWith('/') ? path : `/${path}`
@@ -64,7 +64,7 @@ export async function getGptFilesInfo(params: GetGptFilesInfoParams): Promise<Ge
     return startWithRoot(parentTitleParts.join('/').replace(/\/$/, ''))
   }
 
-  const getParent = (title: string): GptFileInfoTreeItem => {
+  const getParent = (title: string): AiPersonTreeItemInfoTreeItem => {
     const parentTitle = getParentTitle(title)
     let parentFileInfo = tempTitleFileInfoTMap.get(parentTitle)
 
@@ -75,7 +75,7 @@ export async function getGptFilesInfo(params: GetGptFilesInfoParams): Promise<Ge
         parentId: null,
         path: parentPath,
         name: getName(parentTitle, parentPath),
-        type: GptFileTreeItemType.Folder,
+        type: AiPersonTreeItemType.Folder,
         children: [],
       }
 
@@ -98,11 +98,11 @@ export async function getGptFilesInfo(params: GetGptFilesInfoParams): Promise<Ge
   const processFilePath = async (filePath: string) => {
     try {
       const content = await FileUtils.readFile({ filePath })
-      const singleFileConfig = await parseGptFile({
+      const aiPersonConfig = await parseAiPersonFile({
         filePath,
-        userConfig: resolvedUserConfig as UserConfig,
+        globalAiPersonConfig: resolvedGlobalAiPersonConfig as GlobalAiPersonConfig,
       })
-      const title = singleFileConfig.title || ''
+      const title = aiPersonConfig.title || ''
       const name = getName(title, filePath)
       const id = getId(title, name, filePath)
       const parentFileInfo = getParent(title)
@@ -110,14 +110,14 @@ export async function getGptFilesInfo(params: GetGptFilesInfoParams): Promise<Ge
       if (!parentFileInfo.children)
         parentFileInfo.children = []
 
-      const fileNodeInfo: GptFileInfo = {
+      const fileNodeInfo: AiPersonTreeItemInfo = {
         id,
         parentId: parentFileInfo.id,
         path: filePath,
         name,
         content,
-        singleFileConfig,
-        type: GptFileTreeItemType.File,
+        aiPersonConfig,
+        type: AiPersonTreeItemType.File,
       }
 
       parentFileInfo.children.push(fileNodeInfo)

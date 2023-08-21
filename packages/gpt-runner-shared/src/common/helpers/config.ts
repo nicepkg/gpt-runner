@@ -1,15 +1,15 @@
-import { ChatModelType, type ReadonlyDeep, type SingleFileConfig, type UserConfig } from '../types'
+import { type AiPersonConfig, ChatModelType, type GlobalAiPersonConfig, type ReadonlyDeep } from '../types'
 import { getProcessCwd } from './common'
 import { DEFAULT_EXCLUDE_FILES } from './constants'
 import { EnvConfig } from './env-config'
 
-export function singleFileConfigWithDefault(singleFileConfig?: Partial<SingleFileConfig>): SingleFileConfig {
+export function aiPersonConfigWithDefault(aiPersonConfig?: Partial<AiPersonConfig>): AiPersonConfig {
   return {
-    ...singleFileConfig,
+    ...aiPersonConfig,
   }
 }
 
-export function userConfigWithDefault(userConfig?: Partial<UserConfig>) {
+export function globalAiPersonConfigWithDefault(globalAiPersonConfig?: Partial<GlobalAiPersonConfig>) {
   return ({
     model: {
       type: ChatModelType.Openai,
@@ -23,42 +23,42 @@ export function userConfigWithDefault(userConfig?: Partial<UserConfig>) {
     exts: ['.gpt.md'],
     respectGitIgnore: true,
     urlConfig: {},
-    ...userConfig,
-  } as const) satisfies ReadonlyDeep<UserConfig>
+    ...globalAiPersonConfig,
+  } as const) satisfies ReadonlyDeep<GlobalAiPersonConfig>
 }
 
-export interface ResolveSingleFileCConfigParams {
-  userConfig: UserConfig
-  singleFileConfig: SingleFileConfig
+export interface ResolveAiPersonCConfigParams {
+  globalAiPersonConfig: GlobalAiPersonConfig
+  aiPersonConfig: AiPersonConfig
 }
 
-export function resolveSingleFileConfig(params: ResolveSingleFileCConfigParams, withDefault = true): SingleFileConfig {
-  let userConfig = (withDefault ? userConfigWithDefault(params.userConfig) : params.userConfig) as UserConfig
-  const singleFileConfig = withDefault ? singleFileConfigWithDefault(params.singleFileConfig) : params.singleFileConfig
+export function resolveAiPersonConfig(params: ResolveAiPersonCConfigParams, withDefault = true): AiPersonConfig {
+  let globalAiPersonConfig = (withDefault ? globalAiPersonConfigWithDefault(params.globalAiPersonConfig) : params.globalAiPersonConfig) as GlobalAiPersonConfig
+  const aiPersonConfig = withDefault ? aiPersonConfigWithDefault(params.aiPersonConfig) : params.aiPersonConfig
 
-  userConfig = removeUserConfigUnsafeKey(userConfig)
+  globalAiPersonConfig = removeGlobalAiPersonConfigUnsafeKey(globalAiPersonConfig)
 
-  const resolvedConfig: SingleFileConfig = {
-    ...singleFileConfig,
+  const resolvedConfig: AiPersonConfig = {
+    ...aiPersonConfig,
     model: {
-      ...userConfig.model,
-      ...singleFileConfig.model!,
+      ...globalAiPersonConfig.model,
+      ...aiPersonConfig.model!,
     },
   }
 
   return resolvedConfig
 }
 
-export function removeUserConfigUnsafeKey(userConfig: UserConfig): UserConfig {
-  const userConfigClone: UserConfig = {
-    ...userConfig,
+export function removeGlobalAiPersonConfigUnsafeKey(globalAiPersonConfig: GlobalAiPersonConfig): GlobalAiPersonConfig {
+  const globalAiPersonConfigClone: GlobalAiPersonConfig = {
+    ...globalAiPersonConfig,
     model: {
-      ...userConfig.model!,
+      ...globalAiPersonConfig.model!,
     },
   }
 
-  if (userConfigClone.model?.secrets)
-    delete userConfigClone.model.secrets
+  if (globalAiPersonConfigClone.model?.secrets)
+    delete globalAiPersonConfigClone.model.secrets
 
-  return userConfigClone
+  return globalAiPersonConfigClone
 }

@@ -1,8 +1,8 @@
 import type { GptInitFileName } from '@nicepkg/gpt-runner-core'
-import { getGptFilesInfo, initGptFiles, loadUserConfig, parseGptFile } from '@nicepkg/gpt-runner-core'
+import { getGptFilesInfo, initGptFiles, loadGlobalAiPersonConfig, parseAiPersonFile } from '@nicepkg/gpt-runner-core'
 import { sendSuccessResponse, verifyParamsByZod } from '@nicepkg/gpt-runner-shared/node'
-import type { GetGptFileInfoReqParams, GetGptFileInfoResData, GetGptFilesReqParams, GetGptFilesResData, InitGptFilesReqParams, InitGptFilesResData } from '@nicepkg/gpt-runner-shared/common'
-import { Debug, GetGptFileInfoReqParamsSchema, GetGptFilesReqParamsSchema, InitGptFilesReqParamsSchema, removeUserConfigUnsafeKey } from '@nicepkg/gpt-runner-shared/common'
+import type { GetAiPersonFilesReqParams, GetAiPersonFilesResData, GetAiPersonTreeItemInfoReqParams, GetAiPersonTreeItemInfoResData, InitGptFilesReqParams, InitGptFilesResData } from '@nicepkg/gpt-runner-shared/common'
+import { Debug, GetAiPersonFilesReqParamsSchema, GetAiPersonTreeItemInfoReqParamsSchema, InitGptFilesReqParamsSchema, removeGlobalAiPersonConfigUnsafeKey } from '@nicepkg/gpt-runner-shared/common'
 import type { ControllerConfig } from '../types'
 import { getValidFinalPath } from '../helpers/valid-path'
 
@@ -14,9 +14,9 @@ export const gptFilesControllers: ControllerConfig = {
       method: 'get',
       handler: async (req, res) => {
         const debug = new Debug('gpt-files.controller')
-        const query = req.query as GetGptFilesReqParams
+        const query = req.query as GetAiPersonFilesReqParams
 
-        verifyParamsByZod(query, GetGptFilesReqParamsSchema)
+        verifyParamsByZod(query, GetAiPersonFilesReqParamsSchema)
 
         const { rootPath } = query
         const finalPath = getValidFinalPath({
@@ -25,20 +25,20 @@ export const gptFilesControllers: ControllerConfig = {
           fieldName: 'rootPath',
         })
 
-        let { config: userConfig } = await loadUserConfig(finalPath)
-        userConfig = removeUserConfigUnsafeKey(userConfig)
+        let { config: globalAiPersonConfig } = await loadGlobalAiPersonConfig(finalPath)
+        globalAiPersonConfig = removeGlobalAiPersonConfigUnsafeKey(globalAiPersonConfig)
 
-        debug.log('userConfig', userConfig)
+        debug.log('globalAiPersonConfig', globalAiPersonConfig)
 
         const { filesInfo, filesInfoTree } = await getGptFilesInfo({
-          userConfig,
+          globalAiPersonConfig,
         })
 
         sendSuccessResponse(res, {
           data: {
             filesInfo,
             filesInfoTree,
-          } satisfies GetGptFilesResData,
+          } satisfies GetAiPersonFilesResData,
         })
       },
     },
@@ -74,9 +74,9 @@ export const gptFilesControllers: ControllerConfig = {
       method: 'get',
       handler: async (req, res) => {
         const debug = new Debug('gpt-files.controller')
-        const query = req.query as GetGptFileInfoReqParams
+        const query = req.query as GetAiPersonTreeItemInfoReqParams
 
-        verifyParamsByZod(query, GetGptFileInfoReqParamsSchema)
+        verifyParamsByZod(query, GetAiPersonTreeItemInfoReqParamsSchema)
 
         const { rootPath, filePath } = query
 
@@ -93,21 +93,21 @@ export const gptFilesControllers: ControllerConfig = {
           fieldName: 'filePath',
         })
 
-        let { config: userConfig } = await loadUserConfig(finalRootPath)
-        userConfig = removeUserConfigUnsafeKey(userConfig)
+        let { config: globalAiPersonConfig } = await loadGlobalAiPersonConfig(finalRootPath)
+        globalAiPersonConfig = removeGlobalAiPersonConfigUnsafeKey(globalAiPersonConfig)
 
-        debug.log('userConfig', userConfig)
+        debug.log('globalAiPersonConfig', globalAiPersonConfig)
 
-        const singleFileConfig = await parseGptFile({
+        const aiPersonConfig = await parseAiPersonFile({
           filePath: finalFilePath,
-          userConfig,
+          globalAiPersonConfig,
         })
 
         sendSuccessResponse(res, {
           data: {
-            userConfig,
-            singleFileConfig,
-          } satisfies GetGptFileInfoResData,
+            globalAiPersonConfig,
+            aiPersonConfig,
+          } satisfies GetAiPersonTreeItemInfoResData,
         })
       },
     },

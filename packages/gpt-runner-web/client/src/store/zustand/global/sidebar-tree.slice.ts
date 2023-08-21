@@ -1,6 +1,6 @@
 import type { StateCreator } from 'zustand'
-import type { GptChatInfo, GptFileInfo, GptFileInfoTreeItem, SingleChat } from '@nicepkg/gpt-runner-shared/common'
-import { ChatMessageStatus, GptFileTreeItemType, travelTree, travelTreeDeepFirst } from '@nicepkg/gpt-runner-shared/common'
+import type { AiPersonTreeItemInfo, AiPersonTreeItemInfoTreeItem, GptChatInfo, SingleChat } from '@nicepkg/gpt-runner-shared/common'
+import { AiPersonTreeItemType, ChatMessageStatus, travelTree, travelTreeDeepFirst } from '@nicepkg/gpt-runner-shared/common'
 import { v4 as uuidv4 } from 'uuid'
 import type { GetState } from '../types'
 import type { TreeItemBaseState } from '../../../components/tree-item'
@@ -8,9 +8,9 @@ import { fetchGptFilesTree } from '../../../networks/gpt-files'
 import { DEFAULT_CHAT_NAME } from '../../../helpers/constant'
 import type { ChatSlice } from './chat.slice'
 
-export type SidebarTreeItem = TreeItemBaseState<GptFileInfoTreeItem>
+export type SidebarTreeItem = TreeItemBaseState<AiPersonTreeItemInfoTreeItem>
 export type SidebarTree = SidebarTreeItem[]
-export type GptFileTreeItem = TreeItemBaseState<GptFileInfo>
+export type GptFileTreeItem = TreeItemBaseState<AiPersonTreeItemInfo>
 
 export interface SidebarTreeSlice {
   sidebarTree: SidebarTree
@@ -49,7 +49,7 @@ export const createSidebarTreeSlice: StateCreator<
     const state = get()
     const chatInstance = typeof chatIdOrChatInstance === 'string' ? state.getChatInstance(chatIdOrChatInstance) : chatIdOrChatInstance
     const chatInfo: GptChatInfo = {
-      type: GptFileTreeItemType.Chat,
+      type: AiPersonTreeItemType.Chat,
       id: chatInstance?.id || uuidv4(),
       parentId: null,
       path: '',
@@ -124,14 +124,14 @@ export const createSidebarTreeSlice: StateCreator<
         path: item.path,
         isLeaf: false,
         otherInfo: item,
-        isExpanded: oldIsExpanded || item.type === GptFileTreeItemType.Folder,
+        isExpanded: oldIsExpanded || item.type === AiPersonTreeItemType.Folder,
       }
 
-      if (item.type === GptFileTreeItemType.File) {
+      if (item.type === AiPersonTreeItemType.File) {
         gptFilePaths.push(item.path)
 
         // const chatIds = currentGptFileIdChatIdsMap.get(item.id) || []
-        const chatInstances = state.getChatInstancesBySingleFilePath(item.path)
+        const chatInstances = state.getChatInstancesByAiPersonPath(item.path)
 
         result.children = chatInstances.map((chatInstance) => {
           const chatInfo = state.getChatInfo(chatInstance)
@@ -145,11 +145,11 @@ export const createSidebarTreeSlice: StateCreator<
     }) satisfies SidebarTreeItem[]
 
     // remove gptFilePaths that are not in the tree
-    const oldGptFilePaths = state.chatInstances.map(chatInstance => chatInstance.singleFilePath)
+    const oldGptFilePaths = state.chatInstances.map(chatInstance => chatInstance.aiPersonPath)
     oldGptFilePaths.forEach((gptFilePath) => {
       if (!gptFilePaths.includes(gptFilePath)) {
         // remove chat instances that are not in the tree
-        const chatInstances = state.getChatInstancesBySingleFilePath(gptFilePath)
+        const chatInstances = state.getChatInstancesByAiPersonPath(gptFilePath)
         chatInstances.forEach((chatInstance) => {
           state.removeChatInstance(chatInstance.id)
         })
@@ -163,10 +163,10 @@ export const createSidebarTreeSlice: StateCreator<
     const gptFileTreeItem = state.getSidebarTreeItem(gptFileId) as GptFileTreeItem
     const { chatInstance } = state.addChatInstance(gptFileId, {
       name: DEFAULT_CHAT_NAME,
-      inputtingPrompt: gptFileTreeItem?.otherInfo?.singleFileConfig.userPrompt || '',
-      systemPrompt: gptFileTreeItem?.otherInfo?.singleFileConfig.systemPrompt || '',
+      inputtingPrompt: gptFileTreeItem?.otherInfo?.aiPersonConfig.userPrompt || '',
+      systemPrompt: gptFileTreeItem?.otherInfo?.aiPersonConfig.systemPrompt || '',
       messages: [],
-      singleFilePath: gptFileTreeItem?.path || '',
+      aiPersonPath: gptFileTreeItem?.path || '',
       status: ChatMessageStatus.Success,
       createAt: Date.now(),
     })
@@ -180,7 +180,7 @@ export const createSidebarTreeSlice: StateCreator<
     let gptFileTreeItem: SidebarTreeItem | undefined
 
     travelTree(sidebarTree, (treeItem) => {
-      if (treeItem.otherInfo?.type === GptFileTreeItemType.File) {
+      if (treeItem.otherInfo?.type === AiPersonTreeItemType.File) {
         const childrenContainChatId = treeItem.children?.some(child => child.id === chatId)
 
         if (childrenContainChatId)
