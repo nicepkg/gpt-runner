@@ -231,3 +231,150 @@ The one used in the current template project is the [Keep a Changelog][keep-a-ch
 [keep-a-changelog-how]: https://keepachangelog.com/en/1.0.0/#how
 [semver]: https://semver.org
 [xpath]: https://www.w3.org/TR/xpath-21/
+
+
+## 支持版本
+不支持2021年以及以前版本
+2022.1
+2022.2
+
+
+问题:
+
+1. gradle task启动cd packages/gpt-runner-web && pnpm build
+2.gradle build 将gpt-runner-web/dist给压缩到 dist.zip复制到resource.
+3. 解压启动 node resource/dist/start-server.cjs
+
+cd /Users/houzi/Library/Application\ Support/JetBrains/GoLand2022.2/plugins/GPT-Runner
+houzi@MichaeldeMacBook-Pro-4 github-copilot-intellij % tree
+.
+├── NOTICE.txt
+├── copilot-agent
+│   ├── bin
+│   │   ├── copilot-agent-linux
+│   │   ├── copilot-agent-macos
+│   │   ├── copilot-agent-macos-arm64
+│   │   └── copilot-agent-win.exe
+│   └── dist
+│       ├── agent.js
+│       ├── agent.js.LICENSE.txt
+│       ├── tokenizer_cushman001.json
+│       ├── tokenizer_cushman002.json
+│       ├── tree-sitter-go.wasm
+│       ├── tree-sitter-javascript.wasm
+│       ├── tree-sitter-python.wasm
+│       ├── tree-sitter-ruby.wasm
+│       ├── tree-sitter-typescript.wasm
+│       ├── tree-sitter.wasm
+│       ├── vocab_cushman001.bpe
+│       └── vocab_cushman002.bpe
+├── intellij-community-LICENSE.txt
+└── lib
+├── annotations-3.0.1u2.jar
+├── core-1.2.2.jar
+├── github-copilot-intellij-1.2.2.2371.jar
+├── jcip-annotations-1.0.jar
+├── jsr305-3.0.1.jar
+├── plugin-ideavim-1.2.2.jar
+└── plugin-textmate-1.2.2.jar
+
+
+houzi@MichaeldeMacBook-Pro-4 GPT-Runner % tree
+.
+└── lib
+├── annotations-23.0.0.jar
+├── instrumented-gpt-runner-intellij-0.0.1.jar
+├── kotlin-stdlib-1.8.20.jar
+├── kotlin-stdlib-common-1.8.20.jar
+├── kotlin-stdlib-jdk7-1.8.20.jar
+├── kotlin-stdlib-jdk8-1.8.20.jar
+├── kotlinx-coroutines-core-jvm-1.7.2.jar
+└── searchableOptions-0.0.1.jar
+└── dist
+...
+1 directory, 8 files
+
+思路
+实际上要做的内容是：在开发环境下不解压这玩意
+而是通过gradle task启动gpt-runner-web
+
+还有一个要做的是gradle build的时候，把gpt-runner-web也给build了然后压缩成zip放到resource目录下
+
+
+cn.nicepkg.gptrunner.intellij
+
+val copyDist = tasks.register("copyDist", Copy::class) {
+from("dist")
+into("build/resources/main/dist")
+}
+
+tasks.getByName("processResources") {
+dependsOn(copyDist)
+}
+
+//val startNodeServer by tasks.registering(Exec::class) {
+////  commandLine("node", "dist/start-server.cjs")
+//  // Set the working directory to the root of your project where "dist" and "dist/start-server.cjs" are located
+//  workingDir(project.projectDir)
+//}
+
+
+package cn.nicepkg.gptrunner.intellij.services.impl
+
+import cn.nicepkg.gptrunner.intellij.services.AbstractService
+import cn.nicepkg.gptrunner.intellij.services.IGPTRunnerExecutableService
+import org.apache.commons.lang3.SystemUtils
+import java.io.File
+import java.nio.file.Files
+import java.nio.file.StandardCopyOption
+import java.nio.file.attribute.FileAttribute
+import java.util.zip.ZipEntry
+import java.util.zip.ZipInputStream
+import kotlin.io.path.*
+import kotlin.reflect.jvm.internal.impl.builtins.StandardNames.FqNames.target
+
+
+class GPTRunnerExecutableService : AbstractService(),
+IGPTRunnerExecutableService {
+override val userHome = SystemUtils.getUserHome().toPath()
+override val gptRunnerExecutablesDir = userHome.resolve(".gpt-runner")
+override val gptRunnerExecutableDir =
+gptRunnerExecutablesDir.resolve("GPT-Runner-${plugin.version}")
+
+//  init {
+//    if (gptRunnerExecutableDir.notExists()) {
+//      gptRunnerExecutableDir.createDirectories()
+//      unzipGPTRunnerExecutable()
+//    } else if (gptRunnerExecutableDir.listDirectoryEntries().isEmpty()) {
+//      unzipGPTRunnerExecutable()
+//    }
+//  }
+
+private fun unzipGPTRunnerExecutable() {
+ZipInputStream(javaClass.getResourceAsStream("/dist.zip")!!).use { zis ->
+var nextEntry: ZipEntry?
+while (zis.nextEntry.also { nextEntry = it } != null) {
+val name: String = nextEntry!!.name
+val isDir = nextEntry!!.isDirectory
+
+        val toFile = gptRunnerExecutableDir.resolve(name).normalize()
+        if (isDir && !toFile.exists()) {
+          toFile.createDirectories()
+        } else {
+          if (!toFile.parent.exists()) toFile.parent.createDirectories()
+          Files.copy(zis, toFile, StandardCopyOption.REPLACE_EXISTING)
+        }
+      }
+    }
+}
+}
+
+
+用户的node
+pkg start-server.cjs --targets node16-macos-x64 --output server-executable
+
+用户的node
+pkg start-server.cjs --targets node16-macos-x64 --output server-executable
+
+用户arm
+--targets node16-macos-arm64
