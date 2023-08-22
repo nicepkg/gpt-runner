@@ -1,0 +1,6 @@
+
+houzi@MichaeldeMacBook-Pro-4 ~ % echo $PATH
+/Users/houzi/.jenv/shims:/Users/houzi/development/flutter/bin:/usr/local/opt/mongodb-community@4.4/bin:/usr/local/opt/mongodb-community@4.4/bin:/usr/local/opt/mongodb-community@4.4/bin:/Users/houzi/.nvm/versions/node/v16.16.0/bin:/Users/houzi/home/gradle/gradle-7.1.1/bin:/usr/local/opt/gradle@7.0/bin:/Users/houzi/opt/anaconda3/condabin:/Users/houzi/.local/share/solana/install/active_release/bin:/Users/houzi/.rbenv/shims:/Users/houzi/.rbenv/shims:/Users/houzi/home/aptos/aptos-core/target/debug:usr/local/Cellar/eosio/2.1.0/bin:/Users/houzi/yas/enumivo.cdt/build/tools/bin:/Users/houzi/yas/enumivo.cdt/build/bin:/Users/houzi/yas/enumivo/programs:/Users/houzi/yas/enumivo.cdt/build/bin:/usr/local/Cellar/python/3.7.7/bin:/usr/local/go/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin::/bin:/Users/houzi/.cargo/bin:/Users/houzi/flutter/bin:/Users/houzi/oo/bin:/usr/local/mongodb/bin:/Users/houzi/go/src/github.com/hover:/Users/houzi/javaprojects/demo/mvnw:/Users/houzi/Downloads/apache-maven-3.6.3/bin:/usr/local/mysql/bin:/Users/houzi/javaprojects/demo/mvnw:/Users/houzi/home/JAVA_environment/apache-maven-3.5.4/bin:/Users/houzi/go/bin
+
+2 / 2
+

@@ -1,0 +1,42 @@
+<!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
+<idea-plugin>
+  <id>cn.nicepkg.gptrunner.intellij</id>
+  <name>GPT-Runner</name>
+  <vendor>nicepkg</vendor>
+
+  <depends>com.intellij.modules.platform</depends>
+
+  <resource-bundle>messages.LangBundle</resource-bundle>
+
+  <extensions defaultExtensionNs="com.intellij">
+    <toolWindow
+      factoryClass="cn.nicepkg.gptrunner.intellij.ui.windows.GPTRunnerWindowFactory"
+      id="GPT-Runner"/>
+
+    <applicationService
+      serviceInterface="cn.nicepkg.gptrunner.intellij.services.IGPTRunnerExecutableService"
+      serviceImplementation="cn.nicepkg.gptrunner.intellij.services.impl.GPTRunnerExecutableService"/>
+
+    <projectService
+      serviceInterface="cn.nicepkg.gptrunner.intellij.services.IGPTRunnerService"
+      serviceImplementation="cn.nicepkg.gptrunner.intellij.services.impl.GPTRunnerService"/>
+
+    <applicationConfigurable instance="cn.nicepkg.gptrunner.intellij.NodeJsPathConfigurable" />
+
+  </extensions>
+
+  <applicationListeners>
+    <listener
+      class="cn.nicepkg.gptrunner.intellij.listeners.ProjectStateListener"
+      topic="com.intellij.openapi.project.ProjectManagerListener"/>
+
+    <listener
+      class="cn.nicepkg.gptrunner.intellij.listeners.PluginInstallerStateListener"
+      topic="com.intellij.ide.plugins.PluginStateListener"/>
+  </applicationListeners>
+
+  <actions>
+    <action id="cn.nicepkg.gptrunner.intellij.actions.OpenInEditorMode" class="cn.nicepkg.gptrunner.intellij.actions.OpenInEditorMode">
+    </action>
+  </actions>
+</idea-plugin>
