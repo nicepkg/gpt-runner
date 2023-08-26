@@ -9,12 +9,12 @@ fun environment(key: String) = providers.environmentVariable(key)
 
 plugins {
   id("java") // Java support
-  alias(libs.plugins.kotlin) // Kotlin support
-  alias(libs.plugins.gradleIntelliJPlugin) // Gradle IntelliJ Plugin
-  alias(libs.plugins.changelog) // Gradle Changelog Plugin
-  alias(libs.plugins.qodana) // Gradle Qodana Plugin
-  alias(libs.plugins.kover) // Gradle Kover Plugin
-  alias(libs.plugins.nodeGradle) // Gradle Node Plugin
+  id("org.jetbrains.kotlin.jvm") version "1.9.0" // Kotlin support
+  id("org.jetbrains.intellij") version "1.15.0" // Gradle IntelliJ Plugin
+  id("org.jetbrains.changelog") version "2.1.2" // Gradle Changelog Plugin
+  id("org.jetbrains.qodana") version "0.1.13" // Gradle Qodana Plugin
+  id("org.jetbrains.kotlinx.kover") version "0.7.3" // Gradle Kover Plugin
+  id("com.github.node-gradle.node") version "7.0.0" // Gradle Node Plugin
 }
 
 group = properties("pluginGroup").get()
@@ -22,13 +22,17 @@ version = properties("pluginVersion").get()
 
 // Configure project's dependencies
 repositories {
+  maven {
+    url = uri("https://maven.aliyun.com/repository/public")
+  }
   mavenCentral()
 }
 
 // Dependencies are managed with Gradle version catalog - read more: https://docs.gradle.org/current/userguide/platforms.html#sub:version-catalog
 dependencies {
 //    implementation(libs.annotations)
-  implementation(libs.coroutines)
+//  implementation(libs.coroutines)
+  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
 }
 
 // Set the JVM language level used to build the project. Use Java 11 for 2020.3+, and Java 17 for 2022.2+.
@@ -83,8 +87,8 @@ node {
 //  nodeProjectDir.set(File("../gpt-runner-web"))
 //  workDir.set(File("../gpt-runner-web"))
 
-  nodeProjectDir.set(File("./"))
-  workDir.set(File("./"))
+  nodeProjectDir.set(File("../gpt-runner-web"))
+  workDir.set(File("../gpt-runner-web"))
 }
 
 val buildGPTRunnerWebClientTask = tasks.register("buildGPTRunnerWebClient", PnpmTask::class) {
@@ -94,7 +98,7 @@ val buildGPTRunnerWebClientTask = tasks.register("buildGPTRunnerWebClient", Pnpm
 
 val runGPTRunnerServerTask = tasks.register("runGPTRunnerServerTask", NodeTask::class) {
   dependsOn(tasks.pnpmInstall)
-  script.set(File("../gpt-runner-web/dist/start-server.mjs"))
+  script.set(File("../gpt-runner-web/dist/start-server.cjs"))
 }
 
 tasks.withType<JavaCompile>().configureEach {

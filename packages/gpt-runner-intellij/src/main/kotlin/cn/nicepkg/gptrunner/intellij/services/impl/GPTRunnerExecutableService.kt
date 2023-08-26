@@ -2,17 +2,18 @@ package cn.nicepkg.gptrunner.intellij.services.impl
 
 import cn.nicepkg.gptrunner.intellij.services.AbstractService
 import cn.nicepkg.gptrunner.intellij.services.IGPTRunnerExecutableService
+import com.intellij.openapi.util.io.NioFiles
 import org.apache.commons.lang3.SystemUtils
-import java.io.File
 import java.net.HttpURLConnection
 import java.net.URL
 import java.nio.file.Files
 import java.nio.file.StandardCopyOption
-import java.nio.file.attribute.FileAttribute
 import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
-import kotlin.io.path.*
-import kotlin.reflect.jvm.internal.impl.builtins.StandardNames.FqNames.target
+import kotlin.io.path.createDirectories
+import kotlin.io.path.exists
+import kotlin.io.path.listDirectoryEntries
+import kotlin.io.path.notExists
 
 
 class GPTRunnerExecutableService : AbstractService(),
@@ -21,8 +22,14 @@ class GPTRunnerExecutableService : AbstractService(),
   override val gptRunnerExecutablesDir = userHome.resolve(".gpt-runner")
   override val gptRunnerExecutableDir = gptRunnerExecutablesDir.resolve("GPT-Runner-${plugin.version}")
 
-    init {
+  init {
     if (gptRunnerExecutableDir.notExists()) {
+      if (gptRunnerExecutablesDir.exists()) {
+        // clean
+        NioFiles.deleteRecursively(gptRunnerExecutablesDir)
+      }
+
+      // install
       gptRunnerExecutableDir.createDirectories()
       unzipGPTRunnerExecutable()
     } else if (gptRunnerExecutableDir.listDirectoryEntries().isEmpty()) {
