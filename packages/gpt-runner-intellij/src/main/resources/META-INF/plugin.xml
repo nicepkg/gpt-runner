@@ -40,12 +40,6 @@
     </action>
   </actions>
 
-  <projectListeners>
-    <listener
-      class="cn.nicepkg.gptrunner.intellij.listeners.FileEditorManagerListenerImpl"
-      topic="com.intellij.openapi.fileEditor.FileEditorManagerListener"/>
-  </projectListeners>
-
   <extensions defaultExtensionNs="com.intellij">
     <editorFactoryMouseListener
       implementation="cn.nicepkg.gptrunner.intellij.listeners.EditorMouseListenerImpl"/>

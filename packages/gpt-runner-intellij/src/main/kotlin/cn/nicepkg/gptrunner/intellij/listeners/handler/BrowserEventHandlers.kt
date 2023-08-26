@@ -9,6 +9,9 @@ import com.intellij.ui.jcef.JBCefJSQuery
 import java.util.*
 import kotlin.collections.HashMap
 
+/**
+ * handle browser events
+ */
 class BrowserEventHandlers(project: Project) : BaseBrowserEventHandler<String>(project) {
 
   private val handlers: HashMap<String, BaseBrowserEventHandler<JsonElement>> = HashMap()
@@ -26,7 +29,6 @@ class BrowserEventHandlers(project: Project) : BaseBrowserEventHandler<String>(p
       }
     }
 
-    // TODO 解析出事件类型
     val gson = Gson()
     val any = gson.fromJson(t, Any::class.java)
     if (any is JsonArray) {
