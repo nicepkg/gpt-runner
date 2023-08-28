@@ -39,4 +39,10 @@
     <action id="cn.nicepkg.gptrunner.intellij.actions.OpenInEditorMode" class="cn.nicepkg.gptrunner.intellij.actions.OpenInEditorMode">
     </action>
   </actions>
+
+  <extensions defaultExtensionNs="com.intellij">
+    <editorFactoryMouseListener
+      implementation="cn.nicepkg.gptrunner.intellij.listeners.EditorMouseListenerImpl"/>
+  </extensions>
+
 </idea-plugin>

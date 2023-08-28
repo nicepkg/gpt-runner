@@ -3,6 +3,8 @@ package cn.nicepkg.gptrunner.intellij.services.impl
 import cn.nicepkg.gptrunner.intellij.services.AbstractService
 import cn.nicepkg.gptrunner.intellij.services.IGPTRunnerExecutableService
 import cn.nicepkg.gptrunner.intellij.services.IGPTRunnerService
+import cn.nicepkg.gptrunner.intellij.services.RunnerAgentCommandLine
+import cn.nicepkg.gptrunner.intellij.utils.RunnerAgentUtil
 import com.intellij.codeInsight.hint.HintManager
 import com.intellij.ide.DataManager
 import com.intellij.notification.NotificationDisplayType
@@ -17,6 +19,8 @@ import kotlinx.coroutines.*
 import java.io.File
 import kotlin.concurrent.thread
 import com.intellij.openapi.actionSystem.CommonDataKeys
+import com.intellij.util.io.exists
+import kotlin.io.path.isExecutable
 
 
 // TODO: 需要提供几个action去启动/停止server
@@ -62,7 +66,8 @@ class GPTRunnerService(project: Project) : AbstractService(),
         port.toString(),
         "--client-dist-path",
         "browser"
-      ).directory(executableService.gptRunnerExecutableDir.toFile())  // Update this line
+      ).directory(executableService.gptRunnerExecutableDir.toFile().resolve("dist"))
+        // Update this line
         .start()
 //        val serverExecutablePath = executableService.gptRunnerExecutableDir.toFile().path+"/server-executable";
 //        process = ProcessBuilder(
@@ -123,6 +128,13 @@ class GPTRunnerService(project: Project) : AbstractService(),
 
 
   fun getMyNodePath(): String {
+    // 优先查找系统环境变量 - node
+    val nodeExecutablePath = RunnerAgentCommandLine.getNodeExecutablePath()
+    if (nodeExecutablePath != null && nodeExecutablePath.exists() && nodeExecutablePath.isExecutable()){
+      return nodeExecutablePath.toString();
+    }
+
+    // 其他
     val osName = System.getProperty("os.name").toLowerCase()
     if (osName.contains("mac") || osName.contains("nix") || osName.contains("nux")) {
       val nodePath = getNodePath()
