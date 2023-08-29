@@ -49,7 +49,6 @@ jobs:
           VSCE_TOKEN: ${{secrets.VSCE_TOKEN}}
           OVSX_TOKEN: ${{secrets.OVSX_TOKEN}}
 
-
       # Setup Java 11 environment for the next steps
       - name: Setup Java
         uses: actions/setup-java@v3
@@ -57,7 +56,7 @@ jobs:
           distribution: zulu
           java-version: 11
 
-       # Publish the plugin to the Marketplace
+      # Publish the plugin to the Marketplace
       # - name: Publish Plugin
       #   working-directory: ./packages/gpt-runner-intellij
       #   env:
