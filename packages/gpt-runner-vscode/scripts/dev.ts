@@ -30,7 +30,7 @@ async function dev() {
     )
   }
 
-  await execa('tsup', ['--watch', 'src'], { cwd: root, stdio: 'inherit' })
+  await execa('tsup', ['--watch', 'src', '--sourcemap'], { cwd: root, stdio: 'inherit' })
 }
 
 dev()
