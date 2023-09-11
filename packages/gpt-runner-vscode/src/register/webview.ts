@@ -189,7 +189,12 @@ export async function registerWebview(
   const registerProvider = () => {
     dispose()
 
-    sidebarWebviewDisposer = vscode.window.registerWebviewViewProvider(ChatViewProvider.viewType, provider)
+    sidebarWebviewDisposer = vscode.window.registerWebviewViewProvider(ChatViewProvider.viewType, provider,
+      {
+        webviewOptions: {
+          retainContextWhenHidden: true,
+        },
+      })
     webviewPanelDisposer = vscode.commands.registerCommand(Commands.OpenChat, () => {
       if (vscode.window.activeTextEditor)
         state.activeEditor = vscode.window.activeTextEditor
